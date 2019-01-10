@@ -23,10 +23,10 @@ contract MO {
     documentos[documentoCount] = Documento(documentoCount, timestamp, doc_hash, ipfs_hash, msg.sender);
   }
 
-  // Esta funcion debe tomar un string hash pasado por el front-end al contrato y chequearlo en un loop contra los hashes guardados en storage (en desarrollo, ayuda bienvenida)
+  /* Esta funcion debe tomar un string hash pasado por el front-end al contrato y chequearlo en un loop contra los hashes guardados en storage (en desarrollo, ayuda bienvenida)
   function checkHash (string memory _hash) public {
     for (uint i=1; i <= documentoCount; i++) {
 
     }
-  }
+  }*/
 }
