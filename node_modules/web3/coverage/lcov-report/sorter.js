@@ -7,7 +7,7 @@ var addSorting = (function () {
         };
 
     // returns the summary table element
-    function getTable() { return document.querySelector('.coverage-summary'); }
+    function getTable() { return document.querySelector('.coverage-summary table'); }
     // returns the thead element of the summary table
     function getTableHeader() { return getTable().querySelector('thead tr'); }
     // returns the tbody element of the summary table
@@ -132,9 +132,7 @@ var addSorting = (function () {
             };
         for (i =0 ; i < cols.length; i += 1) {
             if (cols[i].sortable) {
-                // add the click event handler on the th so users
-                // dont have to click on those tiny arrows
-                el = getNthColumn(i).querySelector('.sorter').parentElement;
+                el = getNthColumn(i).querySelector('.sorter');
                 if (el.addEventListener) {
                     el.addEventListener('click', ithSorter(i));
                 } else {
