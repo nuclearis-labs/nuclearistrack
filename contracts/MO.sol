@@ -29,4 +29,17 @@ contract MO {
 
     }
   }*/
+
+  function listdocHash (uint id) public view returns (string memory) {
+    return documentos[id].doc_hash;
+  }
+  function Cantdoc () public view returns (uint) {
+    return documentoCount;
+  }
+  function listipfsHash (uint id) public view returns (string memory) {
+    return documentos[id].ipfs_hash;
+  }
+  function listowner (uint id) public view returns (address) {
+    return documentos[id].owner;
+  }
 }

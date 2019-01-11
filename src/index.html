@@ -1,58 +1,53 @@
-<!--Primer diseño de un front end basico para listar documentos-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>NUCLEARIS Material Organization</title>
-    <script src="../node_modules/web3/dist/web3.min.js"></script>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Nuclearis Material Organization</title>
 
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
   </head>
   <body>
-    <div class="container" style="width: 650px;">
+    <div class="container">
       <div class="row">
-        <div class="col-lg-12">
-          <h1 class="text-center">NUCLEARIS Material Organization</h1>
+          <h1 class="text-center">Nuclearis Material Organization</h1>
           <hr/>
           <br/>
-          <div id="loader">
-            <p class="text-center">Loading</p>
-          </div>
-          <div id="content" style="display: none;">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">ID</th>
-                  <th scope="col">Doc Hash</th>
-                  <th scope="col">IPFS Hash</th>
-                  <th scope="col">Address</th>
+      </div>
 
-                </tr>
-              </thead>
-              <tbody id="candidatesResults">
-              </tbody>
-            </table>
-            <hr/>
-            <p id="accountAddress" class="text-center"></p>
-          </div>
-        </div>
+      <div id="docRow" class="row">
+
       </div>
     </div>
 
-    <script>
+    
+      <div id="docTemplate" style="display: none;">
+      <div class="panel panel-default panel-pet">
+        <div class="panel-body">
+          <strong>ID</strong>: <span class="id"></span><br/>
+          <strong>Doc Hash</strong>: <span class="doc_hash"></span><br/>
+          <strong>IPFS Hash</strong>: <span class="ipfs_hash"></span><br/>
+        </div>
+      </div>
+    </div>
+    
 
-      if (typeof web3 !== 'undefined') {
-          web3 = new Web3(web3.currentProvider);
-      } else {
-          // set the provider you want from Web3.providers
-          web3 = new Web3(new Web3.providers.HttpProvider("https://public-node.testnet.rsk.co"));
-      }
-
-  </script>
-
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>

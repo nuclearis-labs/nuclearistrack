@@ -1,32 +1,18 @@
 {
-  "name": "materialorganization",
+  "name": "pet-shop",
   "version": "1.0.0",
-  "description": "MO dApp",
-  "main": "truffle-config.js",
+  "description": "",
+  "main": "truffle.js",
   "directories": {
     "test": "test"
   },
-  "dependencies": {
-    "uglify-js": "^2.8.29",
-    "web3": "^0.2.8"
-  },
-  "devDependencies": {},
   "scripts": {
+    "dev": "lite-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Sebastinez/MaterialOrganization.git"
-  },
-  "keywords": [
-    "dApp",
-    "RSK",
-    "Blockchain"
-  ],
-  "author": "Sebastinez",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Sebastinez/MaterialOrganization/issues"
-  },
-  "homepage": "https://github.com/Sebastinez/MaterialOrganization#readme"
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "lite-server": "^2.3.0"
+  }
 }
