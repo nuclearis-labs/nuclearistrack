@@ -2,104 +2,41 @@
   "contractName": "MO",
   "abi": [
     {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "name": "documentos",
-      "outputs": [
-        {
-          "name": "id",
-          "type": "uint256"
-        },
-        {
-          "name": "timestamp",
-          "type": "uint256"
-        },
-        {
-          "name": "doc_hash",
-          "type": "string"
-        },
-        {
-          "name": "ipfs_hash",
-          "type": "string"
-        },
-        {
-          "name": "owner",
-          "type": "address"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function",
-      "signature": "0xbb674f20"
-    },
-    {
-      "constant": true,
       "inputs": [],
-      "name": "documentoCount",
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint256"
-        }
-      ],
       "payable": false,
-      "stateMutability": "view",
-      "type": "function",
-      "signature": "0xe45ace15"
+      "stateMutability": "nonpayable",
+      "type": "constructor",
+      "signature": "constructor"
     },
     {
       "constant": false,
       "inputs": [
         {
-          "name": "timestamp",
-          "type": "uint256"
-        },
-        {
-          "name": "doc_hash",
-          "type": "string"
-        },
-        {
-          "name": "ipfs_hash",
-          "type": "string"
+          "name": "hash",
+          "type": "bytes32"
         }
       ],
-      "name": "addHash",
+      "name": "addDocHash",
       "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function",
-      "signature": "0x82426e59"
+      "signature": "0x133a48f3"
     },
     {
       "constant": true,
       "inputs": [
         {
-          "name": "id",
-          "type": "uint256"
+          "name": "hash",
+          "type": "bytes32"
         }
       ],
-      "name": "listdocHash",
+      "name": "findDocHash",
       "outputs": [
         {
           "name": "",
-          "type": "string"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function",
-      "signature": "0x9f6945a6"
-    },
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "Cantdoc",
-      "outputs": [
+          "type": "uint256"
+        },
         {
           "name": "",
           "type": "uint256"
@@ -108,78 +45,35 @@
       "payable": false,
       "stateMutability": "view",
       "type": "function",
-      "signature": "0xbd65591d"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "id",
-          "type": "uint256"
-        }
-      ],
-      "name": "listipfsHash",
-      "outputs": [
-        {
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function",
-      "signature": "0x9c74f6aa"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "id",
-          "type": "uint256"
-        }
-      ],
-      "name": "listowner",
-      "outputs": [
-        {
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function",
-      "signature": "0xee8c60fb"
+      "signature": "0x4cf00d3f"
     }
   ],
-  "bytecode": "0x608060405234801561001057600080fd5b50610aa2806100206000396000f3fe608060405260043610610083576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806382426e59146100885780639c74f6aa146101f15780639f6945a6146102a5578063bb674f2014610359578063bd65591d146104ba578063e45ace15146104e5578063ee8c60fb14610510575b600080fd5b34801561009457600080fd5b506101ef600480360360608110156100ab57600080fd5b8101908080359060200190929190803590602001906401000000008111156100d257600080fd5b8201836020820111156100e457600080fd5b8035906020019184600183028401116401000000008311171561010657600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505091929192908035906020019064010000000081111561016957600080fd5b82018360208201111561017b57600080fd5b8035906020019184600183028401116401000000008311171561019d57600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050919291929050505061058b565b005b3480156101fd57600080fd5b5061022a6004803603602081101561021457600080fd5b810190808035906020019092919050505061068e565b6040518080602001828103825283818151815260200191508051906020019080838360005b8381101561026a57808201518184015260208101905061024f565b50505050905090810190601f1680156102975780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b3480156102b157600080fd5b506102de600480360360208110156102c857600080fd5b8101908080359060200190929190505050610745565b6040518080602001828103825283818151815260200191508051906020019080838360005b8381101561031e578082015181840152602081019050610303565b50505050905090810190601f16801561034b5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34801561036557600080fd5b506103926004803603602081101561037c57600080fd5b81019080803590602001909291905050506107fc565b6040518086815260200185815260200180602001806020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001838103835286818151815260200191508051906020019080838360005b838110156104145780820151818401526020810190506103f9565b50505050905090810190601f1680156104415780820380516001836020036101000a031916815260200191505b50838103825285818151815260200191508051906020019080838360005b8381101561047a57808201518184015260208101905061045f565b50505050905090810190601f1680156104a75780820380516001836020036101000a031916815260200191505b5097505050505050505060405180910390f35b3480156104c657600080fd5b506104cf610982565b6040518082815260200191505060405180910390f35b3480156104f157600080fd5b506104fa61098c565b6040518082815260200191505060405180910390f35b34801561051c57600080fd5b506105496004803603602081101561053357600080fd5b8101908080359060200190929190505050610992565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60016000815480929190600101919050555060a06040519081016040528060015481526020018481526020018381526020018281526020013373ffffffffffffffffffffffffffffffffffffffff168152506000806001548152602001908152602001600020600082015181600001556020820151816001015560408201518160020190805190602001906106219291906109d1565b50606082015181600301908051906020019061063e9291906109d1565b5060808201518160040160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550905050505050565b60606000808381526020019081526020016000206003018054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156107395780601f1061070e57610100808354040283529160200191610739565b820191906000526020600020905b81548152906001019060200180831161071c57829003601f168201915b50505050509050919050565b60606000808381526020019081526020016000206002018054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156107f05780601f106107c5576101008083540402835291602001916107f0565b820191906000526020600020905b8154815290600101906020018083116107d357829003601f168201915b50505050509050919050565b6000602052806000526040600020600091509050806000015490806001015490806002018054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156108b45780601f10610889576101008083540402835291602001916108b4565b820191906000526020600020905b81548152906001019060200180831161089757829003601f168201915b505050505090806003018054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156109525780601f1061092757610100808354040283529160200191610952565b820191906000526020600020905b81548152906001019060200180831161093557829003601f168201915b5050505050908060040160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905085565b6000600154905090565b60015481565b600080600083815260200190815260200160002060040160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff169050919050565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f10610a1257805160ff1916838001178555610a40565b82800160010185558215610a40579182015b82811115610a3f578251825591602001919060010190610a24565b5b509050610a4d9190610a51565b5090565b610a7391905b80821115610a6f576000816000905550600101610a57565b5090565b9056fea165627a7a72305820306aa3a458dcaba2e1a2ae7dbdf84f50e70aeb44f860636b678c886e341c51810029",
-  "deployedBytecode": "0x608060405260043610610083576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806382426e59146100885780639c74f6aa146101f15780639f6945a6146102a5578063bb674f2014610359578063bd65591d146104ba578063e45ace15146104e5578063ee8c60fb14610510575b600080fd5b34801561009457600080fd5b506101ef600480360360608110156100ab57600080fd5b8101908080359060200190929190803590602001906401000000008111156100d257600080fd5b8201836020820111156100e457600080fd5b8035906020019184600183028401116401000000008311171561010657600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505091929192908035906020019064010000000081111561016957600080fd5b82018360208201111561017b57600080fd5b8035906020019184600183028401116401000000008311171561019d57600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050919291929050505061058b565b005b3480156101fd57600080fd5b5061022a6004803603602081101561021457600080fd5b810190808035906020019092919050505061068e565b6040518080602001828103825283818151815260200191508051906020019080838360005b8381101561026a57808201518184015260208101905061024f565b50505050905090810190601f1680156102975780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b3480156102b157600080fd5b506102de600480360360208110156102c857600080fd5b8101908080359060200190929190505050610745565b6040518080602001828103825283818151815260200191508051906020019080838360005b8381101561031e578082015181840152602081019050610303565b50505050905090810190601f16801561034b5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34801561036557600080fd5b506103926004803603602081101561037c57600080fd5b81019080803590602001909291905050506107fc565b6040518086815260200185815260200180602001806020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001838103835286818151815260200191508051906020019080838360005b838110156104145780820151818401526020810190506103f9565b50505050905090810190601f1680156104415780820380516001836020036101000a031916815260200191505b50838103825285818151815260200191508051906020019080838360005b8381101561047a57808201518184015260208101905061045f565b50505050905090810190601f1680156104a75780820380516001836020036101000a031916815260200191505b5097505050505050505060405180910390f35b3480156104c657600080fd5b506104cf610982565b6040518082815260200191505060405180910390f35b3480156104f157600080fd5b506104fa61098c565b6040518082815260200191505060405180910390f35b34801561051c57600080fd5b506105496004803603602081101561053357600080fd5b8101908080359060200190929190505050610992565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60016000815480929190600101919050555060a06040519081016040528060015481526020018481526020018381526020018281526020013373ffffffffffffffffffffffffffffffffffffffff168152506000806001548152602001908152602001600020600082015181600001556020820151816001015560408201518160020190805190602001906106219291906109d1565b50606082015181600301908051906020019061063e9291906109d1565b5060808201518160040160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550905050505050565b60606000808381526020019081526020016000206003018054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156107395780601f1061070e57610100808354040283529160200191610739565b820191906000526020600020905b81548152906001019060200180831161071c57829003601f168201915b50505050509050919050565b60606000808381526020019081526020016000206002018054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156107f05780601f106107c5576101008083540402835291602001916107f0565b820191906000526020600020905b8154815290600101906020018083116107d357829003601f168201915b50505050509050919050565b6000602052806000526040600020600091509050806000015490806001015490806002018054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156108b45780601f10610889576101008083540402835291602001916108b4565b820191906000526020600020905b81548152906001019060200180831161089757829003601f168201915b505050505090806003018054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156109525780601f1061092757610100808354040283529160200191610952565b820191906000526020600020905b81548152906001019060200180831161093557829003601f168201915b5050505050908060040160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905085565b6000600154905090565b60015481565b600080600083815260200190815260200160002060040160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff169050919050565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f10610a1257805160ff1916838001178555610a40565b82800160010185558215610a40579182015b82811115610a3f578251825591602001919060010190610a24565b5b509050610a4d9190610a51565b5090565b610a7391905b80821115610a6f576000816000905550600101610a57565b5090565b9056fea165627a7a72305820306aa3a458dcaba2e1a2ae7dbdf84f50e70aeb44f860636b678c886e341c51810029",
-  "sourceMap": "34:1513:1:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;34:1513:1;;;;;;;",
-  "deployedSourceMap": "34:1513:1:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;626:222;;8:9:-1;5:2;;;30:1;27;20:12;5:2;626:222:1;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;626:222:1;;;;;;;;;;;;;;;;;;;21:11:-1;8;5:28;2:2;;;46:1;43;36:12;2:2;626:222:1;;35:9:-1;28:4;12:14;8:25;5:40;2:2;;;58:1;55;48:12;2:2;626:222:1;;;;;;100:9:-1;95:1;81:12;77:20;67:8;63:35;60:50;39:11;25:12;22:29;11:107;8:2;;;131:1;128;121:12;8:2;626:222:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;30:3:-1;22:6;14;1:33;99:1;93:3;85:6;81:16;74:27;137:4;133:9;126:4;121:3;117:14;113:30;106:37;;169:3;161:6;157:16;147:26;;626:222:1;;;;;;;;;;;;;;;;;21:11:-1;8;5:28;2:2;;;46:1;43;36:12;2:2;626:222:1;;35:9:-1;28:4;12:14;8:25;5:40;2:2;;;58:1;55;48:12;2:2;626:222:1;;;;;;100:9:-1;95:1;81:12;77:20;67:8;63:35;60:50;39:11;25:12;22:29;11:107;8:2;;;131:1;128;121:12;8:2;626:222:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;30:3:-1;22:6;14;1:33;99:1;93:3;85:6;81:16;74:27;137:4;133:9;126:4;121:3;117:14;113:30;106:37;;169:3;161:6;157:16;147:26;;626:222:1;;;;;;;;;;;;;;;;;;1335:110;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1335:110:1;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;1335:110:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;99:1;94:3;90:11;84:18;80:1;75:3;71:11;64:39;52:2;49:1;45:10;40:15;;8:100;;;12:14;1335:110:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1142:108;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1142:108:1;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;1142:108:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;99:1;94:3;90:11;84:18;80:1;75:3;71:11;64:39;52:2;49:1;45:10;40:15;;8:100;;;12:14;1142:108:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;291:44;;8:9:-1;5:2;;;30:1;27;20:12;5:2;291:44:1;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;291:44:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;99:1;94:3;90:11;84:18;80:1;75:3;71:11;64:39;52:2;49:1;45:10;40:15;;8:100;;;12:14;291:44:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;99:1;94:3;90:11;84:18;80:1;75:3;71:11;64:39;52:2;49:1;45:10;40:15;;8:100;;;12:14;291:44:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1253:79;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1253:79:1;;;;;;;;;;;;;;;;;;;;;;;431:26;;8:9:-1;5:2;;;30:1;27;20:12;5:2;431:26:1;;;;;;;;;;;;;;;;;;;;;;;1448:97;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1448:97:1;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;1448:97:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;626:222;722:14;;:17;;;;;;;;;;;;;774:69;;;;;;;;;784:14;;774:69;;;;800:9;774:69;;;;811:8;774:69;;;;821:9;774:69;;;;832:10;774:69;;;;;745:10;:26;756:14;;745:26;;;;;;;;;;;:98;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;626:222;;;:::o;1335:110::-;1388:13;1416:10;:14;1427:2;1416:14;;;;;;;;;;;:24;;1409:31;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1335:110;;;:::o;1142:108::-;1194:13;1222:10;:14;1233:2;1222:14;;;;;;;;;;;:23;;1215:30;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1142:108;;;:::o;291:44::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;1253:79::-;1294:4;1313:14;;1306:21;;1253:79;:::o;431:26::-;;;;:::o;1448:97::-;1498:7;1520:10;:14;1531:2;1520:14;;;;;;;;;;;:20;;;;;;;;;;;;1513:27;;1448:97;;;:::o;34:1513::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o",
-  "source": "pragma solidity >=0.4.21 <0.6.0;\n\ncontract MO {\n\n  // Definición del struct que define el armado de los documentos\n  struct Documento {\n    uint id;\n    uint timestamp;\n    string doc_hash;\n    string ipfs_hash;\n    address owner;\n  }\n\n  //El mapping del struct a una variable tipo array\n  mapping(uint => Documento) public documentos;\n\n  // La definición de una variable que lleva cuenta de la cantidad de documentos cargados\n  uint public documentoCount;\n\n  // Esta función toma los argumentos (hash de documento, hash de ubicación en ipfs y timestamp), y los agrega al storage, ademas aumenta el documentoCount mas 1\n  function addHash (uint timestamp, string memory doc_hash, string memory ipfs_hash) public {\n    documentoCount ++;\n    documentos[documentoCount] = Documento(documentoCount, timestamp, doc_hash, ipfs_hash, msg.sender);\n  }\n\n  /* Esta funcion debe tomar un string hash pasado por el front-end al contrato y chequearlo en un loop contra los hashes guardados en storage (en desarrollo, ayuda bienvenida)\n  function checkHash (string memory _hash) public {\n    for (uint i=1; i <= documentoCount; i++) {\n\n    }\n  }*/\n\n  function listdocHash (uint id) public view returns (string memory) {\n    return documentos[id].doc_hash;\n  }\n  function Cantdoc () public view returns (uint) {\n    return documentoCount;\n  }\n  function listipfsHash (uint id) public view returns (string memory) {\n    return documentos[id].ipfs_hash;\n  }\n  function listowner (uint id) public view returns (address) {\n    return documentos[id].owner;\n  }\n}\n",
-  "sourcePath": "P:/Sebastian Martinez/Workspace Github/pet-shop-tutorial/contracts/MO.sol",
+  "bytecode": "0x608060405234801561001057600080fd5b506101ad806100206000396000f3fe60806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063133a48f3146100515780634cf00d3f1461008c575b600080fd5b34801561005d57600080fd5b5061008a6004803603602081101561007457600080fd5b81019080803590602001909291905050506100e2565b005b34801561009857600080fd5b506100c5600480360360208110156100af57600080fd5b810190808035906020019092919050505061012f565b604051808381526020018281526020019250505060405180910390f35b6100ea610167565b60408051908101604052804281526020014381525090508060008084815260200190815260200160002060008201518160000155602082015181600101559050505050565b600080600080848152602001908152602001600020600001546000808581526020019081526020016000206001015491509150915091565b60408051908101604052806000815260200160008152509056fea165627a7a7230582086073c71126bc31f0a2a977289d2989c973e2e18d3708f5c5435601bc639116f0029",
+  "deployedBytecode": "0x60806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063133a48f3146100515780634cf00d3f1461008c575b600080fd5b34801561005d57600080fd5b5061008a6004803603602081101561007457600080fd5b81019080803590602001909291905050506100e2565b005b34801561009857600080fd5b506100c5600480360360208110156100af57600080fd5b810190808035906020019092919050505061012f565b604051808381526020018281526020019250505060405180910390f35b6100ea610167565b60408051908101604052804281526020014381525090508060008084815260200190815260200160002060008201518160000155602082015181600101559050505050565b600080600080848152602001908152602001600020600001546000808581526020019081526020016000206001015491509150915091565b60408051908101604052806000815260200160008152509056fea165627a7a7230582086073c71126bc31f0a2a977289d2989c973e2e18d3708f5c5435601bc639116f0029",
+  "sourceMap": "29:529:0:-;;;185:53;8:9:-1;5:2;;;30:1;27;20:12;5:2;185:53:0;29:529;;;;;;",
+  "deployedSourceMap": "29:529:0:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;246:150;;8:9:-1;5:2;;;30:1;27;20:12;5:2;246:150:0;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;246:150:0;;;;;;;;;;;;;;;;;;;;404:149;;8:9:-1;5:2;;;30:1;27;20:12;5:2;404:149:0;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;404:149:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;246:150;299:23;;:::i;:::-;325:25;;;;;;;;;332:3;325:25;;;;337:12;325:25;;;299:51;;379:9;361;:15;371:4;361:15;;;;;;;;;;;:27;;;;;;;;;;;;;;;;;;;246:150;;:::o;404:149::-;460:4;466;491:9;:15;501:4;491:15;;;;;;;;;;;:24;;;517:9;:15;527:4;517:15;;;;;;;;;;;:27;;;483:62;;;;404:149;;;:::o;29:529::-;;;;;;;;;;;;;;;;;;;;:::o",
+  "source": "pragma solidity ^0.5.0;\r\n\r\n\r\ncontract MO {\r\n\r\n    struct Record {\r\n        uint mineTime;\r\n        uint blockNumber;\r\n    }\r\n\r\n    mapping (bytes32 => Record) private docHashes;\r\n\r\n    constructor() public {\r\n        // constructor\r\n    }\r\n\r\n    function addDocHash (bytes32 hash) public {\r\n        Record memory newRecord = Record(now, block.number);\r\n        docHashes[hash] = newRecord;\r\n    }\r\n\r\n    function findDocHash (bytes32 hash) public view returns(uint, uint) {\r\n        return (docHashes[hash].mineTime, docHashes[hash].blockNumber);\r\n    }\r\n\r\n}\r\n",
+  "sourcePath": "C:/Users/smartinez.nuclearis/Documents/GitHub/NUCLEARIS-Material-Organization/contracts/MO.sol",
   "ast": {
-    "absolutePath": "/P/Sebastian Martinez/Workspace Github/pet-shop-tutorial/contracts/MO.sol",
+    "absolutePath": "/C/Users/smartinez.nuclearis/Documents/GitHub/NUCLEARIS-Material-Organization/contracts/MO.sol",
     "exportedSymbols": {
       "MO": [
-        137
+        55
       ]
     },
-    "id": 138,
+    "id": 56,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 46,
+        "id": 1,
         "literals": [
           "solidity",
-          ">=",
-          "0.4",
-          ".21",
-          "<",
-          "0.6",
+          "^",
+          "0.5",
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:32:1"
+        "src": "0:23:0"
       },
       {
         "baseContracts": [],
@@ -187,24 +81,24 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 137,
+        "id": 55,
         "linearizedBaseContracts": [
-          137
+          55
         ],
         "name": "MO",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "canonicalName": "MO.Documento",
-            "id": 57,
+            "canonicalName": "MO.Record",
+            "id": 6,
             "members": [
               {
                 "constant": false,
-                "id": 48,
-                "name": "id",
+                "id": 3,
+                "name": "mineTime",
                 "nodeType": "VariableDeclaration",
-                "scope": 57,
-                "src": "141:7:1",
+                "scope": 6,
+                "src": "75:13:0",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -212,10 +106,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 47,
+                  "id": 2,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "141:4:1",
+                  "src": "75:4:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -226,11 +120,11 @@
               },
               {
                 "constant": false,
-                "id": 50,
-                "name": "timestamp",
+                "id": 5,
+                "name": "blockNumber",
                 "nodeType": "VariableDeclaration",
-                "scope": 57,
-                "src": "154:14:1",
+                "scope": 6,
+                "src": "99:16:0",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -238,221 +132,234 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 49,
+                  "id": 4,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "154:4:1",
+                  "src": "99:4:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
-                  }
-                },
-                "value": null,
-                "visibility": "internal"
-              },
-              {
-                "constant": false,
-                "id": 52,
-                "name": "doc_hash",
-                "nodeType": "VariableDeclaration",
-                "scope": 57,
-                "src": "174:15:1",
-                "stateVariable": false,
-                "storageLocation": "default",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_string_storage_ptr",
-                  "typeString": "string"
-                },
-                "typeName": {
-                  "id": 51,
-                  "name": "string",
-                  "nodeType": "ElementaryTypeName",
-                  "src": "174:6:1",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_string_storage_ptr",
-                    "typeString": "string"
-                  }
-                },
-                "value": null,
-                "visibility": "internal"
-              },
-              {
-                "constant": false,
-                "id": 54,
-                "name": "ipfs_hash",
-                "nodeType": "VariableDeclaration",
-                "scope": 57,
-                "src": "195:16:1",
-                "stateVariable": false,
-                "storageLocation": "default",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_string_storage_ptr",
-                  "typeString": "string"
-                },
-                "typeName": {
-                  "id": 53,
-                  "name": "string",
-                  "nodeType": "ElementaryTypeName",
-                  "src": "195:6:1",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_string_storage_ptr",
-                    "typeString": "string"
-                  }
-                },
-                "value": null,
-                "visibility": "internal"
-              },
-              {
-                "constant": false,
-                "id": 56,
-                "name": "owner",
-                "nodeType": "VariableDeclaration",
-                "scope": 57,
-                "src": "217:13:1",
-                "stateVariable": false,
-                "storageLocation": "default",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_address",
-                  "typeString": "address"
-                },
-                "typeName": {
-                  "id": 55,
-                  "name": "address",
-                  "nodeType": "ElementaryTypeName",
-                  "src": "217:7:1",
-                  "stateMutability": "nonpayable",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
                   }
                 },
                 "value": null,
                 "visibility": "internal"
               }
             ],
-            "name": "Documento",
+            "name": "Record",
             "nodeType": "StructDefinition",
-            "scope": 137,
-            "src": "118:117:1",
+            "scope": 55,
+            "src": "50:73:0",
             "visibility": "public"
           },
           {
             "constant": false,
-            "id": 61,
-            "name": "documentos",
+            "id": 10,
+            "name": "docHashes",
             "nodeType": "VariableDeclaration",
-            "scope": 137,
-            "src": "291:44:1",
+            "scope": 55,
+            "src": "131:45:0",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Documento_$57_storage_$",
-              "typeString": "mapping(uint256 => struct MO.Documento)"
+              "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Record_$6_storage_$",
+              "typeString": "mapping(bytes32 => struct MO.Record)"
             },
             "typeName": {
-              "id": 60,
+              "id": 9,
               "keyType": {
-                "id": 58,
-                "name": "uint",
+                "id": 7,
+                "name": "bytes32",
                 "nodeType": "ElementaryTypeName",
-                "src": "299:4:1",
+                "src": "140:7:0",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_uint256",
-                  "typeString": "uint256"
+                  "typeIdentifier": "t_bytes32",
+                  "typeString": "bytes32"
                 }
               },
               "nodeType": "Mapping",
-              "src": "291:26:1",
+              "src": "131:27:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Documento_$57_storage_$",
-                "typeString": "mapping(uint256 => struct MO.Documento)"
+                "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Record_$6_storage_$",
+                "typeString": "mapping(bytes32 => struct MO.Record)"
               },
               "valueType": {
                 "contractScope": null,
-                "id": 59,
-                "name": "Documento",
+                "id": 8,
+                "name": "Record",
                 "nodeType": "UserDefinedTypeName",
-                "referencedDeclaration": 57,
-                "src": "307:9:1",
+                "referencedDeclaration": 6,
+                "src": "151:6:0",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_Documento_$57_storage_ptr",
-                  "typeString": "struct MO.Documento"
+                  "typeIdentifier": "t_struct$_Record_$6_storage_ptr",
+                  "typeString": "struct MO.Record"
                 }
               }
             },
             "value": null,
-            "visibility": "public"
+            "visibility": "private"
           },
           {
-            "constant": false,
-            "id": 63,
-            "name": "documentoCount",
-            "nodeType": "VariableDeclaration",
-            "scope": 137,
-            "src": "431:26:1",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_uint256",
-              "typeString": "uint256"
+            "body": {
+              "id": 13,
+              "nodeType": "Block",
+              "src": "206:32:0",
+              "statements": []
             },
-            "typeName": {
-              "id": 62,
-              "name": "uint",
-              "nodeType": "ElementaryTypeName",
-              "src": "431:4:1",
-              "typeDescriptions": {
-                "typeIdentifier": "t_uint256",
-                "typeString": "uint256"
-              }
+            "documentation": null,
+            "id": 14,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 11,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "196:2:0"
             },
-            "value": null,
+            "returnParameters": {
+              "id": 12,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "206:0:0"
+            },
+            "scope": 55,
+            "src": "185:53:0",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 88,
+              "id": 33,
               "nodeType": "Block",
-              "src": "716:132:1",
+              "src": "288:108:0",
               "statements": [
                 {
-                  "expression": {
+                  "assignments": [
+                    20
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 20,
+                      "name": "newRecord",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 33,
+                      "src": "299:23:0",
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Record_$6_memory_ptr",
+                        "typeString": "struct MO.Record"
+                      },
+                      "typeName": {
+                        "contractScope": null,
+                        "id": 19,
+                        "name": "Record",
+                        "nodeType": "UserDefinedTypeName",
+                        "referencedDeclaration": 6,
+                        "src": "299:6:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Record_$6_storage_ptr",
+                          "typeString": "struct MO.Record"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 26,
+                  "initialValue": {
                     "argumentTypes": null,
-                    "id": 73,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 22,
+                        "name": "now",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 129,
+                        "src": "332:3:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 23,
+                          "name": "block",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 117,
+                          "src": "337:5:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_block",
+                            "typeString": "block"
+                          }
+                        },
+                        "id": 24,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "number",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "337:12:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 21,
+                      "name": "Record",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 6,
+                      "src": "325:6:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_type$_t_struct$_Record_$6_storage_ptr_$",
+                        "typeString": "type(struct MO.Record storage pointer)"
+                      }
+                    },
+                    "id": 25,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
+                    "kind": "structConstructorCall",
                     "lValueRequested": false,
-                    "nodeType": "UnaryOperation",
-                    "operator": "++",
-                    "prefix": false,
-                    "src": "722:17:1",
-                    "subExpression": {
-                      "argumentTypes": null,
-                      "id": 72,
-                      "name": "documentoCount",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 63,
-                      "src": "722:14:1",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_uint256",
-                        "typeString": "uint256"
-                      }
-                    },
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "325:25:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
+                      "typeIdentifier": "t_struct$_Record_$6_memory",
+                      "typeString": "struct MO.Record memory"
                     }
                   },
-                  "id": 74,
-                  "nodeType": "ExpressionStatement",
-                  "src": "722:17:1"
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "299:51:0"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 86,
+                    "id": 31,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -461,29 +368,29 @@
                       "argumentTypes": null,
                       "baseExpression": {
                         "argumentTypes": null,
-                        "id": 75,
-                        "name": "documentos",
+                        "id": 27,
+                        "name": "docHashes",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 61,
-                        "src": "745:10:1",
+                        "referencedDeclaration": 10,
+                        "src": "361:9:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Documento_$57_storage_$",
-                          "typeString": "mapping(uint256 => struct MO.Documento storage ref)"
+                          "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Record_$6_storage_$",
+                          "typeString": "mapping(bytes32 => struct MO.Record storage ref)"
                         }
                       },
-                      "id": 77,
+                      "id": 29,
                       "indexExpression": {
                         "argumentTypes": null,
-                        "id": 76,
-                        "name": "documentoCount",
+                        "id": 28,
+                        "name": "hash",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 63,
-                        "src": "756:14:1",
+                        "referencedDeclaration": 16,
+                        "src": "371:4:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_uint256",
-                          "typeString": "uint256"
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
                         }
                       },
                       "isConstant": false,
@@ -491,579 +398,285 @@
                       "isPure": false,
                       "lValueRequested": true,
                       "nodeType": "IndexAccess",
-                      "src": "745:26:1",
+                      "src": "361:15:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Documento_$57_storage",
-                        "typeString": "struct MO.Documento storage ref"
+                        "typeIdentifier": "t_struct$_Record_$6_storage",
+                        "typeString": "struct MO.Record storage ref"
                       }
                     },
                     "nodeType": "Assignment",
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "arguments": [
-                        {
-                          "argumentTypes": null,
-                          "id": 79,
-                          "name": "documentoCount",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 63,
-                          "src": "784:14:1",
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_uint256",
-                            "typeString": "uint256"
-                          }
-                        },
-                        {
-                          "argumentTypes": null,
-                          "id": 80,
-                          "name": "timestamp",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 65,
-                          "src": "800:9:1",
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_uint256",
-                            "typeString": "uint256"
-                          }
-                        },
-                        {
-                          "argumentTypes": null,
-                          "id": 81,
-                          "name": "doc_hash",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 67,
-                          "src": "811:8:1",
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_string_memory_ptr",
-                            "typeString": "string memory"
-                          }
-                        },
-                        {
-                          "argumentTypes": null,
-                          "id": 82,
-                          "name": "ipfs_hash",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 69,
-                          "src": "821:9:1",
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_string_memory_ptr",
-                            "typeString": "string memory"
-                          }
-                        },
-                        {
-                          "argumentTypes": null,
-                          "expression": {
-                            "argumentTypes": null,
-                            "id": 83,
-                            "name": "msg",
-                            "nodeType": "Identifier",
-                            "overloadedDeclarations": [],
-                            "referencedDeclaration": 209,
-                            "src": "832:3:1",
-                            "typeDescriptions": {
-                              "typeIdentifier": "t_magic_message",
-                              "typeString": "msg"
-                            }
-                          },
-                          "id": 84,
-                          "isConstant": false,
-                          "isLValue": false,
-                          "isPure": false,
-                          "lValueRequested": false,
-                          "memberName": "sender",
-                          "nodeType": "MemberAccess",
-                          "referencedDeclaration": null,
-                          "src": "832:10:1",
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_address_payable",
-                            "typeString": "address payable"
-                          }
-                        }
-                      ],
-                      "expression": {
-                        "argumentTypes": [
-                          {
-                            "typeIdentifier": "t_uint256",
-                            "typeString": "uint256"
-                          },
-                          {
-                            "typeIdentifier": "t_uint256",
-                            "typeString": "uint256"
-                          },
-                          {
-                            "typeIdentifier": "t_string_memory_ptr",
-                            "typeString": "string memory"
-                          },
-                          {
-                            "typeIdentifier": "t_string_memory_ptr",
-                            "typeString": "string memory"
-                          },
-                          {
-                            "typeIdentifier": "t_address_payable",
-                            "typeString": "address payable"
-                          }
-                        ],
-                        "id": 78,
-                        "name": "Documento",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 57,
-                        "src": "774:9:1",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_struct$_Documento_$57_storage_ptr_$",
-                          "typeString": "type(struct MO.Documento storage pointer)"
-                        }
-                      },
-                      "id": 85,
-                      "isConstant": false,
-                      "isLValue": false,
-                      "isPure": false,
-                      "kind": "structConstructorCall",
-                      "lValueRequested": false,
-                      "names": [],
-                      "nodeType": "FunctionCall",
-                      "src": "774:69:1",
+                      "id": 30,
+                      "name": "newRecord",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 20,
+                      "src": "379:9:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Documento_$57_memory",
-                        "typeString": "struct MO.Documento memory"
+                        "typeIdentifier": "t_struct$_Record_$6_memory_ptr",
+                        "typeString": "struct MO.Record memory"
                       }
                     },
-                    "src": "745:98:1",
+                    "src": "361:27:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Documento_$57_storage",
-                      "typeString": "struct MO.Documento storage ref"
+                      "typeIdentifier": "t_struct$_Record_$6_storage",
+                      "typeString": "struct MO.Record storage ref"
                     }
                   },
-                  "id": 87,
+                  "id": 32,
                   "nodeType": "ExpressionStatement",
-                  "src": "745:98:1"
+                  "src": "361:27:0"
                 }
               ]
             },
             "documentation": null,
-            "id": 89,
+            "id": 34,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
-            "name": "addHash",
+            "name": "addDocHash",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 70,
+              "id": 17,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 65,
-                  "name": "timestamp",
+                  "id": 16,
+                  "name": "hash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 89,
-                  "src": "644:14:1",
+                  "scope": 34,
+                  "src": "267:12:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 64,
-                    "name": "uint",
+                    "id": 15,
+                    "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "644:4:1",
+                    "src": "267:7:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 67,
-                  "name": "doc_hash",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 89,
-                  "src": "660:22:1",
-                  "stateVariable": false,
-                  "storageLocation": "memory",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_string_memory_ptr",
-                    "typeString": "string"
-                  },
-                  "typeName": {
-                    "id": 66,
-                    "name": "string",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "660:6:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_string_storage_ptr",
-                      "typeString": "string"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 69,
-                  "name": "ipfs_hash",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 89,
-                  "src": "684:23:1",
-                  "stateVariable": false,
-                  "storageLocation": "memory",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_string_memory_ptr",
-                    "typeString": "string"
-                  },
-                  "typeName": {
-                    "id": 68,
-                    "name": "string",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "684:6:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_string_storage_ptr",
-                      "typeString": "string"
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
                 }
               ],
-              "src": "643:65:1"
+              "src": "266:14:0"
             },
             "returnParameters": {
-              "id": 71,
+              "id": 18,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "716:0:1"
+              "src": "288:0:0"
             },
-            "scope": 137,
-            "src": "626:222:1",
+            "scope": 55,
+            "src": "246:150:0",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 101,
+              "id": 53,
               "nodeType": "Block",
-              "src": "1209:41:1",
+              "src": "472:81:0",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "expression": {
-                      "argumentTypes": null,
-                      "baseExpression": {
+                    "components": [
+                      {
                         "argumentTypes": null,
-                        "id": 96,
-                        "name": "documentos",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 61,
-                        "src": "1222:10:1",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Documento_$57_storage_$",
-                          "typeString": "mapping(uint256 => struct MO.Documento storage ref)"
-                        }
-                      },
-                      "id": 98,
-                      "indexExpression": {
-                        "argumentTypes": null,
-                        "id": 97,
-                        "name": "id",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 91,
-                        "src": "1233:2:1",
+                        "expression": {
+                          "argumentTypes": null,
+                          "baseExpression": {
+                            "argumentTypes": null,
+                            "id": 43,
+                            "name": "docHashes",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 10,
+                            "src": "491:9:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Record_$6_storage_$",
+                              "typeString": "mapping(bytes32 => struct MO.Record storage ref)"
+                            }
+                          },
+                          "id": 45,
+                          "indexExpression": {
+                            "argumentTypes": null,
+                            "id": 44,
+                            "name": "hash",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 36,
+                            "src": "501:4:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bytes32",
+                              "typeString": "bytes32"
+                            }
+                          },
+                          "isConstant": false,
+                          "isLValue": true,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "nodeType": "IndexAccess",
+                          "src": "491:15:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Record_$6_storage",
+                            "typeString": "struct MO.Record storage ref"
+                          }
+                        },
+                        "id": 46,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "mineTime",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 3,
+                        "src": "491:24:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         }
                       },
-                      "isConstant": false,
-                      "isLValue": true,
-                      "isPure": false,
-                      "lValueRequested": false,
-                      "nodeType": "IndexAccess",
-                      "src": "1222:14:1",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Documento_$57_storage",
-                        "typeString": "struct MO.Documento storage ref"
-                      }
-                    },
-                    "id": 99,
-                    "isConstant": false,
-                    "isLValue": true,
-                    "isPure": false,
-                    "lValueRequested": false,
-                    "memberName": "doc_hash",
-                    "nodeType": "MemberAccess",
-                    "referencedDeclaration": 52,
-                    "src": "1222:23:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_string_storage",
-                      "typeString": "string storage ref"
-                    }
-                  },
-                  "functionReturnParameters": 95,
-                  "id": 100,
-                  "nodeType": "Return",
-                  "src": "1215:30:1"
-                }
-              ]
-            },
-            "documentation": null,
-            "id": 102,
-            "implemented": true,
-            "kind": "function",
-            "modifiers": [],
-            "name": "listdocHash",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 92,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 91,
-                  "name": "id",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 102,
-                  "src": "1164:7:1",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 90,
-                    "name": "uint",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "1164:4:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "1163:9:1"
-            },
-            "returnParameters": {
-              "id": 95,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 94,
-                  "name": "",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 102,
-                  "src": "1194:13:1",
-                  "stateVariable": false,
-                  "storageLocation": "memory",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_string_memory_ptr",
-                    "typeString": "string"
-                  },
-                  "typeName": {
-                    "id": 93,
-                    "name": "string",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "1194:6:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_string_storage_ptr",
-                      "typeString": "string"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "1193:15:1"
-            },
-            "scope": 137,
-            "src": "1142:108:1",
-            "stateMutability": "view",
-            "superFunction": null,
-            "visibility": "public"
-          },
-          {
-            "body": {
-              "id": 109,
-              "nodeType": "Block",
-              "src": "1300:32:1",
-              "statements": [
-                {
-                  "expression": {
-                    "argumentTypes": null,
-                    "id": 107,
-                    "name": "documentoCount",
-                    "nodeType": "Identifier",
-                    "overloadedDeclarations": [],
-                    "referencedDeclaration": 63,
-                    "src": "1313:14:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "functionReturnParameters": 106,
-                  "id": 108,
-                  "nodeType": "Return",
-                  "src": "1306:21:1"
-                }
-              ]
-            },
-            "documentation": null,
-            "id": 110,
-            "implemented": true,
-            "kind": "function",
-            "modifiers": [],
-            "name": "Cantdoc",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 103,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "1270:2:1"
-            },
-            "returnParameters": {
-              "id": 106,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 105,
-                  "name": "",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 110,
-                  "src": "1294:4:1",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 104,
-                    "name": "uint",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "1294:4:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "1293:6:1"
-            },
-            "scope": 137,
-            "src": "1253:79:1",
-            "stateMutability": "view",
-            "superFunction": null,
-            "visibility": "public"
-          },
-          {
-            "body": {
-              "id": 122,
-              "nodeType": "Block",
-              "src": "1403:42:1",
-              "statements": [
-                {
-                  "expression": {
-                    "argumentTypes": null,
-                    "expression": {
-                      "argumentTypes": null,
-                      "baseExpression": {
+                      {
                         "argumentTypes": null,
-                        "id": 117,
-                        "name": "documentos",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 61,
-                        "src": "1416:10:1",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Documento_$57_storage_$",
-                          "typeString": "mapping(uint256 => struct MO.Documento storage ref)"
-                        }
-                      },
-                      "id": 119,
-                      "indexExpression": {
-                        "argumentTypes": null,
-                        "id": 118,
-                        "name": "id",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 112,
-                        "src": "1427:2:1",
+                        "expression": {
+                          "argumentTypes": null,
+                          "baseExpression": {
+                            "argumentTypes": null,
+                            "id": 47,
+                            "name": "docHashes",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 10,
+                            "src": "517:9:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Record_$6_storage_$",
+                              "typeString": "mapping(bytes32 => struct MO.Record storage ref)"
+                            }
+                          },
+                          "id": 49,
+                          "indexExpression": {
+                            "argumentTypes": null,
+                            "id": 48,
+                            "name": "hash",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 36,
+                            "src": "527:4:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bytes32",
+                              "typeString": "bytes32"
+                            }
+                          },
+                          "isConstant": false,
+                          "isLValue": true,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "nodeType": "IndexAccess",
+                          "src": "517:15:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Record_$6_storage",
+                            "typeString": "struct MO.Record storage ref"
+                          }
+                        },
+                        "id": 50,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "blockNumber",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 5,
+                        "src": "517:27:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         }
-                      },
-                      "isConstant": false,
-                      "isLValue": true,
-                      "isPure": false,
-                      "lValueRequested": false,
-                      "nodeType": "IndexAccess",
-                      "src": "1416:14:1",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Documento_$57_storage",
-                        "typeString": "struct MO.Documento storage ref"
                       }
-                    },
-                    "id": 120,
+                    ],
+                    "id": 51,
                     "isConstant": false,
-                    "isLValue": true,
+                    "isInlineArray": false,
+                    "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
-                    "memberName": "ipfs_hash",
-                    "nodeType": "MemberAccess",
-                    "referencedDeclaration": 54,
-                    "src": "1416:24:1",
+                    "nodeType": "TupleExpression",
+                    "src": "490:55:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_string_storage",
-                      "typeString": "string storage ref"
+                      "typeIdentifier": "t_tuple$_t_uint256_$_t_uint256_$",
+                      "typeString": "tuple(uint256,uint256)"
                     }
                   },
-                  "functionReturnParameters": 116,
-                  "id": 121,
+                  "functionReturnParameters": 42,
+                  "id": 52,
                   "nodeType": "Return",
-                  "src": "1409:31:1"
+                  "src": "483:62:0"
                 }
               ]
             },
             "documentation": null,
-            "id": 123,
+            "id": 54,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
-            "name": "listipfsHash",
+            "name": "findDocHash",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 113,
+              "id": 37,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 112,
-                  "name": "id",
+                  "id": 36,
+                  "name": "hash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 123,
-                  "src": "1358:7:1",
+                  "scope": 54,
+                  "src": "426:12:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 35,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "426:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "425:14:0"
+            },
+            "returnParameters": {
+              "id": 42,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 39,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 54,
+                  "src": "460:4:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1071,10 +684,36 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 111,
+                    "id": 38,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1358:4:1",
+                    "src": "460:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 41,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 54,
+                  "src": "466:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 40,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "466:4:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1084,227 +723,41 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1357:9:1"
+              "src": "459:12:0"
             },
-            "returnParameters": {
-              "id": 116,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 115,
-                  "name": "",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 123,
-                  "src": "1388:13:1",
-                  "stateVariable": false,
-                  "storageLocation": "memory",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_string_memory_ptr",
-                    "typeString": "string"
-                  },
-                  "typeName": {
-                    "id": 114,
-                    "name": "string",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "1388:6:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_string_storage_ptr",
-                      "typeString": "string"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "1387:15:1"
-            },
-            "scope": 137,
-            "src": "1335:110:1",
-            "stateMutability": "view",
-            "superFunction": null,
-            "visibility": "public"
-          },
-          {
-            "body": {
-              "id": 135,
-              "nodeType": "Block",
-              "src": "1507:38:1",
-              "statements": [
-                {
-                  "expression": {
-                    "argumentTypes": null,
-                    "expression": {
-                      "argumentTypes": null,
-                      "baseExpression": {
-                        "argumentTypes": null,
-                        "id": 130,
-                        "name": "documentos",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 61,
-                        "src": "1520:10:1",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Documento_$57_storage_$",
-                          "typeString": "mapping(uint256 => struct MO.Documento storage ref)"
-                        }
-                      },
-                      "id": 132,
-                      "indexExpression": {
-                        "argumentTypes": null,
-                        "id": 131,
-                        "name": "id",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 125,
-                        "src": "1531:2:1",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_uint256",
-                          "typeString": "uint256"
-                        }
-                      },
-                      "isConstant": false,
-                      "isLValue": true,
-                      "isPure": false,
-                      "lValueRequested": false,
-                      "nodeType": "IndexAccess",
-                      "src": "1520:14:1",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Documento_$57_storage",
-                        "typeString": "struct MO.Documento storage ref"
-                      }
-                    },
-                    "id": 133,
-                    "isConstant": false,
-                    "isLValue": true,
-                    "isPure": false,
-                    "lValueRequested": false,
-                    "memberName": "owner",
-                    "nodeType": "MemberAccess",
-                    "referencedDeclaration": 56,
-                    "src": "1520:20:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "functionReturnParameters": 129,
-                  "id": 134,
-                  "nodeType": "Return",
-                  "src": "1513:27:1"
-                }
-              ]
-            },
-            "documentation": null,
-            "id": 136,
-            "implemented": true,
-            "kind": "function",
-            "modifiers": [],
-            "name": "listowner",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 126,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 125,
-                  "name": "id",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 136,
-                  "src": "1468:7:1",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 124,
-                    "name": "uint",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "1468:4:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "1467:9:1"
-            },
-            "returnParameters": {
-              "id": 129,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 128,
-                  "name": "",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 136,
-                  "src": "1498:7:1",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  },
-                  "typeName": {
-                    "id": 127,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "1498:7:1",
-                    "stateMutability": "nonpayable",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "1497:9:1"
-            },
-            "scope": 137,
-            "src": "1448:97:1",
+            "scope": 55,
+            "src": "404:149:0",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 138,
-        "src": "34:1513:1"
+        "scope": 56,
+        "src": "29:529:0"
       }
     ],
-    "src": "0:1548:1"
+    "src": "0:560:0"
   },
   "legacyAST": {
-    "absolutePath": "/P/Sebastian Martinez/Workspace Github/pet-shop-tutorial/contracts/MO.sol",
+    "absolutePath": "/C/Users/smartinez.nuclearis/Documents/GitHub/NUCLEARIS-Material-Organization/contracts/MO.sol",
     "exportedSymbols": {
       "MO": [
-        137
+        55
       ]
     },
-    "id": 138,
+    "id": 56,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 46,
+        "id": 1,
         "literals": [
           "solidity",
-          ">=",
-          "0.4",
-          ".21",
-          "<",
-          "0.6",
+          "^",
+          "0.5",
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:32:1"
+        "src": "0:23:0"
       },
       {
         "baseContracts": [],
@@ -1312,24 +765,24 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 137,
+        "id": 55,
         "linearizedBaseContracts": [
-          137
+          55
         ],
         "name": "MO",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "canonicalName": "MO.Documento",
-            "id": 57,
+            "canonicalName": "MO.Record",
+            "id": 6,
             "members": [
               {
                 "constant": false,
-                "id": 48,
-                "name": "id",
+                "id": 3,
+                "name": "mineTime",
                 "nodeType": "VariableDeclaration",
-                "scope": 57,
-                "src": "141:7:1",
+                "scope": 6,
+                "src": "75:13:0",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1337,10 +790,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 47,
+                  "id": 2,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "141:4:1",
+                  "src": "75:4:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -1351,11 +804,11 @@
               },
               {
                 "constant": false,
-                "id": 50,
-                "name": "timestamp",
+                "id": 5,
+                "name": "blockNumber",
                 "nodeType": "VariableDeclaration",
-                "scope": 57,
-                "src": "154:14:1",
+                "scope": 6,
+                "src": "99:16:0",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1363,221 +816,234 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 49,
+                  "id": 4,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "154:4:1",
+                  "src": "99:4:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
-                  }
-                },
-                "value": null,
-                "visibility": "internal"
-              },
-              {
-                "constant": false,
-                "id": 52,
-                "name": "doc_hash",
-                "nodeType": "VariableDeclaration",
-                "scope": 57,
-                "src": "174:15:1",
-                "stateVariable": false,
-                "storageLocation": "default",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_string_storage_ptr",
-                  "typeString": "string"
-                },
-                "typeName": {
-                  "id": 51,
-                  "name": "string",
-                  "nodeType": "ElementaryTypeName",
-                  "src": "174:6:1",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_string_storage_ptr",
-                    "typeString": "string"
-                  }
-                },
-                "value": null,
-                "visibility": "internal"
-              },
-              {
-                "constant": false,
-                "id": 54,
-                "name": "ipfs_hash",
-                "nodeType": "VariableDeclaration",
-                "scope": 57,
-                "src": "195:16:1",
-                "stateVariable": false,
-                "storageLocation": "default",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_string_storage_ptr",
-                  "typeString": "string"
-                },
-                "typeName": {
-                  "id": 53,
-                  "name": "string",
-                  "nodeType": "ElementaryTypeName",
-                  "src": "195:6:1",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_string_storage_ptr",
-                    "typeString": "string"
-                  }
-                },
-                "value": null,
-                "visibility": "internal"
-              },
-              {
-                "constant": false,
-                "id": 56,
-                "name": "owner",
-                "nodeType": "VariableDeclaration",
-                "scope": 57,
-                "src": "217:13:1",
-                "stateVariable": false,
-                "storageLocation": "default",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_address",
-                  "typeString": "address"
-                },
-                "typeName": {
-                  "id": 55,
-                  "name": "address",
-                  "nodeType": "ElementaryTypeName",
-                  "src": "217:7:1",
-                  "stateMutability": "nonpayable",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
                   }
                 },
                 "value": null,
                 "visibility": "internal"
               }
             ],
-            "name": "Documento",
+            "name": "Record",
             "nodeType": "StructDefinition",
-            "scope": 137,
-            "src": "118:117:1",
+            "scope": 55,
+            "src": "50:73:0",
             "visibility": "public"
           },
           {
             "constant": false,
-            "id": 61,
-            "name": "documentos",
+            "id": 10,
+            "name": "docHashes",
             "nodeType": "VariableDeclaration",
-            "scope": 137,
-            "src": "291:44:1",
+            "scope": 55,
+            "src": "131:45:0",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Documento_$57_storage_$",
-              "typeString": "mapping(uint256 => struct MO.Documento)"
+              "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Record_$6_storage_$",
+              "typeString": "mapping(bytes32 => struct MO.Record)"
             },
             "typeName": {
-              "id": 60,
+              "id": 9,
               "keyType": {
-                "id": 58,
-                "name": "uint",
+                "id": 7,
+                "name": "bytes32",
                 "nodeType": "ElementaryTypeName",
-                "src": "299:4:1",
+                "src": "140:7:0",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_uint256",
-                  "typeString": "uint256"
+                  "typeIdentifier": "t_bytes32",
+                  "typeString": "bytes32"
                 }
               },
               "nodeType": "Mapping",
-              "src": "291:26:1",
+              "src": "131:27:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Documento_$57_storage_$",
-                "typeString": "mapping(uint256 => struct MO.Documento)"
+                "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Record_$6_storage_$",
+                "typeString": "mapping(bytes32 => struct MO.Record)"
               },
               "valueType": {
                 "contractScope": null,
-                "id": 59,
-                "name": "Documento",
+                "id": 8,
+                "name": "Record",
                 "nodeType": "UserDefinedTypeName",
-                "referencedDeclaration": 57,
-                "src": "307:9:1",
+                "referencedDeclaration": 6,
+                "src": "151:6:0",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_Documento_$57_storage_ptr",
-                  "typeString": "struct MO.Documento"
+                  "typeIdentifier": "t_struct$_Record_$6_storage_ptr",
+                  "typeString": "struct MO.Record"
                 }
               }
             },
             "value": null,
-            "visibility": "public"
+            "visibility": "private"
           },
           {
-            "constant": false,
-            "id": 63,
-            "name": "documentoCount",
-            "nodeType": "VariableDeclaration",
-            "scope": 137,
-            "src": "431:26:1",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_uint256",
-              "typeString": "uint256"
+            "body": {
+              "id": 13,
+              "nodeType": "Block",
+              "src": "206:32:0",
+              "statements": []
             },
-            "typeName": {
-              "id": 62,
-              "name": "uint",
-              "nodeType": "ElementaryTypeName",
-              "src": "431:4:1",
-              "typeDescriptions": {
-                "typeIdentifier": "t_uint256",
-                "typeString": "uint256"
-              }
+            "documentation": null,
+            "id": 14,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 11,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "196:2:0"
             },
-            "value": null,
+            "returnParameters": {
+              "id": 12,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "206:0:0"
+            },
+            "scope": 55,
+            "src": "185:53:0",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 88,
+              "id": 33,
               "nodeType": "Block",
-              "src": "716:132:1",
+              "src": "288:108:0",
               "statements": [
                 {
-                  "expression": {
+                  "assignments": [
+                    20
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 20,
+                      "name": "newRecord",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 33,
+                      "src": "299:23:0",
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Record_$6_memory_ptr",
+                        "typeString": "struct MO.Record"
+                      },
+                      "typeName": {
+                        "contractScope": null,
+                        "id": 19,
+                        "name": "Record",
+                        "nodeType": "UserDefinedTypeName",
+                        "referencedDeclaration": 6,
+                        "src": "299:6:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Record_$6_storage_ptr",
+                          "typeString": "struct MO.Record"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 26,
+                  "initialValue": {
                     "argumentTypes": null,
-                    "id": 73,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 22,
+                        "name": "now",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 129,
+                        "src": "332:3:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 23,
+                          "name": "block",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 117,
+                          "src": "337:5:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_block",
+                            "typeString": "block"
+                          }
+                        },
+                        "id": 24,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "number",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "337:12:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 21,
+                      "name": "Record",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 6,
+                      "src": "325:6:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_type$_t_struct$_Record_$6_storage_ptr_$",
+                        "typeString": "type(struct MO.Record storage pointer)"
+                      }
+                    },
+                    "id": 25,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
+                    "kind": "structConstructorCall",
                     "lValueRequested": false,
-                    "nodeType": "UnaryOperation",
-                    "operator": "++",
-                    "prefix": false,
-                    "src": "722:17:1",
-                    "subExpression": {
-                      "argumentTypes": null,
-                      "id": 72,
-                      "name": "documentoCount",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 63,
-                      "src": "722:14:1",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_uint256",
-                        "typeString": "uint256"
-                      }
-                    },
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "325:25:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
+                      "typeIdentifier": "t_struct$_Record_$6_memory",
+                      "typeString": "struct MO.Record memory"
                     }
                   },
-                  "id": 74,
-                  "nodeType": "ExpressionStatement",
-                  "src": "722:17:1"
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "299:51:0"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 86,
+                    "id": 31,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1586,29 +1052,29 @@
                       "argumentTypes": null,
                       "baseExpression": {
                         "argumentTypes": null,
-                        "id": 75,
-                        "name": "documentos",
+                        "id": 27,
+                        "name": "docHashes",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 61,
-                        "src": "745:10:1",
+                        "referencedDeclaration": 10,
+                        "src": "361:9:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Documento_$57_storage_$",
-                          "typeString": "mapping(uint256 => struct MO.Documento storage ref)"
+                          "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Record_$6_storage_$",
+                          "typeString": "mapping(bytes32 => struct MO.Record storage ref)"
                         }
                       },
-                      "id": 77,
+                      "id": 29,
                       "indexExpression": {
                         "argumentTypes": null,
-                        "id": 76,
-                        "name": "documentoCount",
+                        "id": 28,
+                        "name": "hash",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 63,
-                        "src": "756:14:1",
+                        "referencedDeclaration": 16,
+                        "src": "371:4:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_uint256",
-                          "typeString": "uint256"
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
                         }
                       },
                       "isConstant": false,
@@ -1616,579 +1082,285 @@
                       "isPure": false,
                       "lValueRequested": true,
                       "nodeType": "IndexAccess",
-                      "src": "745:26:1",
+                      "src": "361:15:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Documento_$57_storage",
-                        "typeString": "struct MO.Documento storage ref"
+                        "typeIdentifier": "t_struct$_Record_$6_storage",
+                        "typeString": "struct MO.Record storage ref"
                       }
                     },
                     "nodeType": "Assignment",
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "arguments": [
-                        {
-                          "argumentTypes": null,
-                          "id": 79,
-                          "name": "documentoCount",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 63,
-                          "src": "784:14:1",
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_uint256",
-                            "typeString": "uint256"
-                          }
-                        },
-                        {
-                          "argumentTypes": null,
-                          "id": 80,
-                          "name": "timestamp",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 65,
-                          "src": "800:9:1",
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_uint256",
-                            "typeString": "uint256"
-                          }
-                        },
-                        {
-                          "argumentTypes": null,
-                          "id": 81,
-                          "name": "doc_hash",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 67,
-                          "src": "811:8:1",
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_string_memory_ptr",
-                            "typeString": "string memory"
-                          }
-                        },
-                        {
-                          "argumentTypes": null,
-                          "id": 82,
-                          "name": "ipfs_hash",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 69,
-                          "src": "821:9:1",
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_string_memory_ptr",
-                            "typeString": "string memory"
-                          }
-                        },
-                        {
-                          "argumentTypes": null,
-                          "expression": {
-                            "argumentTypes": null,
-                            "id": 83,
-                            "name": "msg",
-                            "nodeType": "Identifier",
-                            "overloadedDeclarations": [],
-                            "referencedDeclaration": 209,
-                            "src": "832:3:1",
-                            "typeDescriptions": {
-                              "typeIdentifier": "t_magic_message",
-                              "typeString": "msg"
-                            }
-                          },
-                          "id": 84,
-                          "isConstant": false,
-                          "isLValue": false,
-                          "isPure": false,
-                          "lValueRequested": false,
-                          "memberName": "sender",
-                          "nodeType": "MemberAccess",
-                          "referencedDeclaration": null,
-                          "src": "832:10:1",
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_address_payable",
-                            "typeString": "address payable"
-                          }
-                        }
-                      ],
-                      "expression": {
-                        "argumentTypes": [
-                          {
-                            "typeIdentifier": "t_uint256",
-                            "typeString": "uint256"
-                          },
-                          {
-                            "typeIdentifier": "t_uint256",
-                            "typeString": "uint256"
-                          },
-                          {
-                            "typeIdentifier": "t_string_memory_ptr",
-                            "typeString": "string memory"
-                          },
-                          {
-                            "typeIdentifier": "t_string_memory_ptr",
-                            "typeString": "string memory"
-                          },
-                          {
-                            "typeIdentifier": "t_address_payable",
-                            "typeString": "address payable"
-                          }
-                        ],
-                        "id": 78,
-                        "name": "Documento",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 57,
-                        "src": "774:9:1",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_struct$_Documento_$57_storage_ptr_$",
-                          "typeString": "type(struct MO.Documento storage pointer)"
-                        }
-                      },
-                      "id": 85,
-                      "isConstant": false,
-                      "isLValue": false,
-                      "isPure": false,
-                      "kind": "structConstructorCall",
-                      "lValueRequested": false,
-                      "names": [],
-                      "nodeType": "FunctionCall",
-                      "src": "774:69:1",
+                      "id": 30,
+                      "name": "newRecord",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 20,
+                      "src": "379:9:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Documento_$57_memory",
-                        "typeString": "struct MO.Documento memory"
+                        "typeIdentifier": "t_struct$_Record_$6_memory_ptr",
+                        "typeString": "struct MO.Record memory"
                       }
                     },
-                    "src": "745:98:1",
+                    "src": "361:27:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Documento_$57_storage",
-                      "typeString": "struct MO.Documento storage ref"
+                      "typeIdentifier": "t_struct$_Record_$6_storage",
+                      "typeString": "struct MO.Record storage ref"
                     }
                   },
-                  "id": 87,
+                  "id": 32,
                   "nodeType": "ExpressionStatement",
-                  "src": "745:98:1"
+                  "src": "361:27:0"
                 }
               ]
             },
             "documentation": null,
-            "id": 89,
+            "id": 34,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
-            "name": "addHash",
+            "name": "addDocHash",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 70,
+              "id": 17,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 65,
-                  "name": "timestamp",
+                  "id": 16,
+                  "name": "hash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 89,
-                  "src": "644:14:1",
+                  "scope": 34,
+                  "src": "267:12:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 64,
-                    "name": "uint",
+                    "id": 15,
+                    "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "644:4:1",
+                    "src": "267:7:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 67,
-                  "name": "doc_hash",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 89,
-                  "src": "660:22:1",
-                  "stateVariable": false,
-                  "storageLocation": "memory",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_string_memory_ptr",
-                    "typeString": "string"
-                  },
-                  "typeName": {
-                    "id": 66,
-                    "name": "string",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "660:6:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_string_storage_ptr",
-                      "typeString": "string"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 69,
-                  "name": "ipfs_hash",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 89,
-                  "src": "684:23:1",
-                  "stateVariable": false,
-                  "storageLocation": "memory",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_string_memory_ptr",
-                    "typeString": "string"
-                  },
-                  "typeName": {
-                    "id": 68,
-                    "name": "string",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "684:6:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_string_storage_ptr",
-                      "typeString": "string"
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
                     }
                   },
                   "value": null,
                   "visibility": "internal"
                 }
               ],
-              "src": "643:65:1"
+              "src": "266:14:0"
             },
             "returnParameters": {
-              "id": 71,
+              "id": 18,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "716:0:1"
+              "src": "288:0:0"
             },
-            "scope": 137,
-            "src": "626:222:1",
+            "scope": 55,
+            "src": "246:150:0",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 101,
+              "id": 53,
               "nodeType": "Block",
-              "src": "1209:41:1",
+              "src": "472:81:0",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "expression": {
-                      "argumentTypes": null,
-                      "baseExpression": {
+                    "components": [
+                      {
                         "argumentTypes": null,
-                        "id": 96,
-                        "name": "documentos",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 61,
-                        "src": "1222:10:1",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Documento_$57_storage_$",
-                          "typeString": "mapping(uint256 => struct MO.Documento storage ref)"
-                        }
-                      },
-                      "id": 98,
-                      "indexExpression": {
-                        "argumentTypes": null,
-                        "id": 97,
-                        "name": "id",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 91,
-                        "src": "1233:2:1",
+                        "expression": {
+                          "argumentTypes": null,
+                          "baseExpression": {
+                            "argumentTypes": null,
+                            "id": 43,
+                            "name": "docHashes",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 10,
+                            "src": "491:9:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Record_$6_storage_$",
+                              "typeString": "mapping(bytes32 => struct MO.Record storage ref)"
+                            }
+                          },
+                          "id": 45,
+                          "indexExpression": {
+                            "argumentTypes": null,
+                            "id": 44,
+                            "name": "hash",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 36,
+                            "src": "501:4:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bytes32",
+                              "typeString": "bytes32"
+                            }
+                          },
+                          "isConstant": false,
+                          "isLValue": true,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "nodeType": "IndexAccess",
+                          "src": "491:15:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Record_$6_storage",
+                            "typeString": "struct MO.Record storage ref"
+                          }
+                        },
+                        "id": 46,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "mineTime",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 3,
+                        "src": "491:24:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         }
                       },
-                      "isConstant": false,
-                      "isLValue": true,
-                      "isPure": false,
-                      "lValueRequested": false,
-                      "nodeType": "IndexAccess",
-                      "src": "1222:14:1",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Documento_$57_storage",
-                        "typeString": "struct MO.Documento storage ref"
-                      }
-                    },
-                    "id": 99,
-                    "isConstant": false,
-                    "isLValue": true,
-                    "isPure": false,
-                    "lValueRequested": false,
-                    "memberName": "doc_hash",
-                    "nodeType": "MemberAccess",
-                    "referencedDeclaration": 52,
-                    "src": "1222:23:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_string_storage",
-                      "typeString": "string storage ref"
-                    }
-                  },
-                  "functionReturnParameters": 95,
-                  "id": 100,
-                  "nodeType": "Return",
-                  "src": "1215:30:1"
-                }
-              ]
-            },
-            "documentation": null,
-            "id": 102,
-            "implemented": true,
-            "kind": "function",
-            "modifiers": [],
-            "name": "listdocHash",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 92,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 91,
-                  "name": "id",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 102,
-                  "src": "1164:7:1",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 90,
-                    "name": "uint",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "1164:4:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "1163:9:1"
-            },
-            "returnParameters": {
-              "id": 95,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 94,
-                  "name": "",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 102,
-                  "src": "1194:13:1",
-                  "stateVariable": false,
-                  "storageLocation": "memory",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_string_memory_ptr",
-                    "typeString": "string"
-                  },
-                  "typeName": {
-                    "id": 93,
-                    "name": "string",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "1194:6:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_string_storage_ptr",
-                      "typeString": "string"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "1193:15:1"
-            },
-            "scope": 137,
-            "src": "1142:108:1",
-            "stateMutability": "view",
-            "superFunction": null,
-            "visibility": "public"
-          },
-          {
-            "body": {
-              "id": 109,
-              "nodeType": "Block",
-              "src": "1300:32:1",
-              "statements": [
-                {
-                  "expression": {
-                    "argumentTypes": null,
-                    "id": 107,
-                    "name": "documentoCount",
-                    "nodeType": "Identifier",
-                    "overloadedDeclarations": [],
-                    "referencedDeclaration": 63,
-                    "src": "1313:14:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "functionReturnParameters": 106,
-                  "id": 108,
-                  "nodeType": "Return",
-                  "src": "1306:21:1"
-                }
-              ]
-            },
-            "documentation": null,
-            "id": 110,
-            "implemented": true,
-            "kind": "function",
-            "modifiers": [],
-            "name": "Cantdoc",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 103,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "1270:2:1"
-            },
-            "returnParameters": {
-              "id": 106,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 105,
-                  "name": "",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 110,
-                  "src": "1294:4:1",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 104,
-                    "name": "uint",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "1294:4:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "1293:6:1"
-            },
-            "scope": 137,
-            "src": "1253:79:1",
-            "stateMutability": "view",
-            "superFunction": null,
-            "visibility": "public"
-          },
-          {
-            "body": {
-              "id": 122,
-              "nodeType": "Block",
-              "src": "1403:42:1",
-              "statements": [
-                {
-                  "expression": {
-                    "argumentTypes": null,
-                    "expression": {
-                      "argumentTypes": null,
-                      "baseExpression": {
+                      {
                         "argumentTypes": null,
-                        "id": 117,
-                        "name": "documentos",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 61,
-                        "src": "1416:10:1",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Documento_$57_storage_$",
-                          "typeString": "mapping(uint256 => struct MO.Documento storage ref)"
-                        }
-                      },
-                      "id": 119,
-                      "indexExpression": {
-                        "argumentTypes": null,
-                        "id": 118,
-                        "name": "id",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 112,
-                        "src": "1427:2:1",
+                        "expression": {
+                          "argumentTypes": null,
+                          "baseExpression": {
+                            "argumentTypes": null,
+                            "id": 47,
+                            "name": "docHashes",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 10,
+                            "src": "517:9:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Record_$6_storage_$",
+                              "typeString": "mapping(bytes32 => struct MO.Record storage ref)"
+                            }
+                          },
+                          "id": 49,
+                          "indexExpression": {
+                            "argumentTypes": null,
+                            "id": 48,
+                            "name": "hash",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 36,
+                            "src": "527:4:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bytes32",
+                              "typeString": "bytes32"
+                            }
+                          },
+                          "isConstant": false,
+                          "isLValue": true,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "nodeType": "IndexAccess",
+                          "src": "517:15:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Record_$6_storage",
+                            "typeString": "struct MO.Record storage ref"
+                          }
+                        },
+                        "id": 50,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "blockNumber",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 5,
+                        "src": "517:27:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         }
-                      },
-                      "isConstant": false,
-                      "isLValue": true,
-                      "isPure": false,
-                      "lValueRequested": false,
-                      "nodeType": "IndexAccess",
-                      "src": "1416:14:1",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Documento_$57_storage",
-                        "typeString": "struct MO.Documento storage ref"
                       }
-                    },
-                    "id": 120,
+                    ],
+                    "id": 51,
                     "isConstant": false,
-                    "isLValue": true,
+                    "isInlineArray": false,
+                    "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
-                    "memberName": "ipfs_hash",
-                    "nodeType": "MemberAccess",
-                    "referencedDeclaration": 54,
-                    "src": "1416:24:1",
+                    "nodeType": "TupleExpression",
+                    "src": "490:55:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_string_storage",
-                      "typeString": "string storage ref"
+                      "typeIdentifier": "t_tuple$_t_uint256_$_t_uint256_$",
+                      "typeString": "tuple(uint256,uint256)"
                     }
                   },
-                  "functionReturnParameters": 116,
-                  "id": 121,
+                  "functionReturnParameters": 42,
+                  "id": 52,
                   "nodeType": "Return",
-                  "src": "1409:31:1"
+                  "src": "483:62:0"
                 }
               ]
             },
             "documentation": null,
-            "id": 123,
+            "id": 54,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
-            "name": "listipfsHash",
+            "name": "findDocHash",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 113,
+              "id": 37,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 112,
-                  "name": "id",
+                  "id": 36,
+                  "name": "hash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 123,
-                  "src": "1358:7:1",
+                  "scope": 54,
+                  "src": "426:12:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 35,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "426:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "425:14:0"
+            },
+            "returnParameters": {
+              "id": 42,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 39,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 54,
+                  "src": "460:4:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2196,10 +1368,36 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 111,
+                    "id": 38,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1358:4:1",
+                    "src": "460:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 41,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 54,
+                  "src": "466:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 40,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "466:4:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2209,218 +1407,47 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1357:9:1"
+              "src": "459:12:0"
             },
-            "returnParameters": {
-              "id": 116,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 115,
-                  "name": "",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 123,
-                  "src": "1388:13:1",
-                  "stateVariable": false,
-                  "storageLocation": "memory",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_string_memory_ptr",
-                    "typeString": "string"
-                  },
-                  "typeName": {
-                    "id": 114,
-                    "name": "string",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "1388:6:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_string_storage_ptr",
-                      "typeString": "string"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "1387:15:1"
-            },
-            "scope": 137,
-            "src": "1335:110:1",
-            "stateMutability": "view",
-            "superFunction": null,
-            "visibility": "public"
-          },
-          {
-            "body": {
-              "id": 135,
-              "nodeType": "Block",
-              "src": "1507:38:1",
-              "statements": [
-                {
-                  "expression": {
-                    "argumentTypes": null,
-                    "expression": {
-                      "argumentTypes": null,
-                      "baseExpression": {
-                        "argumentTypes": null,
-                        "id": 130,
-                        "name": "documentos",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 61,
-                        "src": "1520:10:1",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Documento_$57_storage_$",
-                          "typeString": "mapping(uint256 => struct MO.Documento storage ref)"
-                        }
-                      },
-                      "id": 132,
-                      "indexExpression": {
-                        "argumentTypes": null,
-                        "id": 131,
-                        "name": "id",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 125,
-                        "src": "1531:2:1",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_uint256",
-                          "typeString": "uint256"
-                        }
-                      },
-                      "isConstant": false,
-                      "isLValue": true,
-                      "isPure": false,
-                      "lValueRequested": false,
-                      "nodeType": "IndexAccess",
-                      "src": "1520:14:1",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Documento_$57_storage",
-                        "typeString": "struct MO.Documento storage ref"
-                      }
-                    },
-                    "id": 133,
-                    "isConstant": false,
-                    "isLValue": true,
-                    "isPure": false,
-                    "lValueRequested": false,
-                    "memberName": "owner",
-                    "nodeType": "MemberAccess",
-                    "referencedDeclaration": 56,
-                    "src": "1520:20:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "functionReturnParameters": 129,
-                  "id": 134,
-                  "nodeType": "Return",
-                  "src": "1513:27:1"
-                }
-              ]
-            },
-            "documentation": null,
-            "id": 136,
-            "implemented": true,
-            "kind": "function",
-            "modifiers": [],
-            "name": "listowner",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 126,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 125,
-                  "name": "id",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 136,
-                  "src": "1468:7:1",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 124,
-                    "name": "uint",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "1468:4:1",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "1467:9:1"
-            },
-            "returnParameters": {
-              "id": 129,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 128,
-                  "name": "",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 136,
-                  "src": "1498:7:1",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  },
-                  "typeName": {
-                    "id": 127,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "1498:7:1",
-                    "stateMutability": "nonpayable",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "1497:9:1"
-            },
-            "scope": 137,
-            "src": "1448:97:1",
+            "scope": 55,
+            "src": "404:149:0",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 138,
-        "src": "34:1513:1"
+        "scope": 56,
+        "src": "29:529:0"
       }
     ],
-    "src": "0:1548:1"
+    "src": "0:560:0"
   },
   "compiler": {
     "name": "solc",
     "version": "0.5.0+commit.1d4f565a.Emscripten.clang"
   },
   "networks": {
-    "1547230099956": {
+    "1548768512960": {
       "events": {},
       "links": {},
-      "address": "0x3b4bFbC50597464b3Ee840c8360Ea8Cafe46C20E",
-      "transactionHash": "0xe97f25011acc4103314466e36186e1018747840727e5ec7f65c9db1e9fe4072b"
+      "address": "0x4bC0909246fa116dC4E3Eb485bBAaB71B5Eb944D",
+      "transactionHash": "0xb65318ad3689a1c1b71f784ee6f89a149ec0fb83070b569e52b87a6355b5ab60"
+    },
+    "1548859708580": {
+      "events": {},
+      "links": {},
+      "address": "0xa7F588BCB480B3D13Ca8CB08C662715542F86057",
+      "transactionHash": "0x68788bda9bec9fd8f3a3096614620de697362dc13f491268033a101c97eda2f3"
+    },
+    "1548876371368": {
+      "events": {},
+      "links": {},
+      "address": "0xC601b76A8452803BA5eb695Db1f0cDDdC3b01801",
+      "transactionHash": "0x418f06dd4ee742325787dbb8208a1cee4c38664298fd50c690dfc723debf555f"
     }
   },
   "schemaVersion": "3.0.1",
-  "updatedAt": "2019-01-11T18:58:53.838Z",
+  "updatedAt": "2019-01-30T19:27:05.125Z",
   "devdoc": {
     "methods": {}
   },
