@@ -25,12 +25,24 @@
           <br/>
       </div>
 
-      <div id="docRow" class="row">
-
+      <div id="content" class="row">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">id</th>
+              <th scope="col">timestamp</th>
+              <th scope="col">Doc Hash</th>
+              <th scope="col">IPFS Hash</th>
+              <th scope="col">Owner</th>
+            </tr>
+          </thead>
+          <tbody id="docRow">
+          </tbody>
+        </table>
       </div>
     </div>
 
-    
+    <!--
       <div id="docTemplate" style="display: none;">
       <div class="panel panel-default panel-pet">
         <div class="panel-body">
@@ -40,7 +52,7 @@
         </div>
       </div>
     </div>
-    
+    -->
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

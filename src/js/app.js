@@ -40,6 +40,8 @@ App = {
       // Set the provider for our contract
       App.contracts.MO.setProvider(App.web3Provider);
     
+      //App.listenForEvents();
+
       // Use our contract to retrieve and mark the adopted pets
       return App.render();
     });
@@ -49,25 +51,48 @@ App = {
   render: function() {
 
     var docRow = $('#docRow');
-    var docTemplate = $('#docTemplate');
 
     var MOInstance;
 
     App.contracts.MO.deployed().then(function(instance) {
       MOInstance = instance;
 
-      return MOInstance.listipfsHash(1);
-    }).then(function(ipfs_hash) {
-      docTemplate.find('.ipfs_hash').text(ipfs_hash);
-      docRow.append(docTemplate.html());
-      return MOInstance.listowner(1);
-    }).then(function(owner) {
-      docTemplate.find('.owner').text(owner);
-      docRow.append(docTemplate.html());
+      return MOInstance.Cantdoc();
+    }).then(function(cantidadesDoc) {
+
+    for (var i=1;i<=cantidadesDoc;i++) {
+      MOInstance.documentos(i).then(function(documento) {
+      var id = documento[0];
+      var timestamp = documento[1]
+      var doc_hash = documento[2];
+      var ipfs_hash = documento[3];
+      var owner = documento[4];
+
+      var doc = "<tr><th>" + id + "</th><td>" + timestamp + "</td><td>" + doc_hash + "</td><td>" + ipfs_hash + "</td><td>"+owner+"</td></tr>";
+      docRow.append(doc);
+
+      })
+    }
+
     })
   },
 
+  /*listenForEvents: function() {
+    App.contracts.MO.deployed().then(function(instance) {
+      instance.votedEvent({}, {
+        fromBlock: 0,
+        toBlock: 'latest'
+      }).watch(function(error, event) {
+        console.log("event triggered", event)
+        // Reload when a new vote is recorded
+        App.render();
+      });
+    });
+  }
+*/
 };
+
+
 
 $(function() {
   $(window).load(function() {
