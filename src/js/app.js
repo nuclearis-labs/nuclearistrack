@@ -1,12 +1,15 @@
+
 App = {
   web3Provider: null,
   contracts: {},
-  
+
   init: function() {
     return App.initWeb3();
   },
 
   initWeb3: async function() {
+    App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
+
     // Modern dapp browsers...
   if (window.ethereum) {
   App.web3Provider = window.ethereum;
@@ -31,15 +34,16 @@ App = {
     return App.initContract();
   },
 
+
   initContract: function() {
     $.getJSON('MO.json', function(data) {
       // Get the necessary contract artifact file and instantiate it with truffle-contract
       var MOArtifact = data;
       App.contracts.MO = TruffleContract(MOArtifact);
-    
+
       // Set the provider for our contract
       App.contracts.MO.setProvider(App.web3Provider);
-    
+
       //App.listenForEvents();
 
       // Use our contract to retrieve and mark the adopted pets
@@ -77,20 +81,81 @@ App = {
     })
   },
 
-  /*listenForEvents: function() {
-    App.contracts.MO.deployed().then(function(instance) {
-      instance.votedEvent({}, {
-        fromBlock: 0,
-        toBlock: 'latest'
-      }).watch(function(error, event) {
-        console.log("event triggered", event)
-        // Reload when a new vote is recorded
-        App.render();
-      });
-    });
-  }
-*/
 };
+
+function getHash (evt) {
+
+  // Check for the various File API support.
+  /*if (window.File && window.FileReader && window.FileList && window.Blob) {
+    console.log("Great success! All the File APIs are supported.");
+  } else {
+    console.log("The File APIs are not fully supported in this browser.");
+  }*/
+
+    var files = evt.target.files;
+    doc_hash = '';
+    
+    for (var i = 0, f; f = files[i]; i++) {
+      var reader = new FileReader();
+
+    reader.onload = (function(theFile) {
+        return function(e) {
+          var sha256 = CryptoJS.SHA256(e.target.result);
+          doc_hash = sha256.toString();
+        }
+    })(f);
+
+    reader.readAsBinaryString(f);
+  }
+    App.contracts.MO.deployed().then(function(instance) { 
+      MOInstance = instance;
+  
+      return MOInstance.Cantdoc();
+    }).then(function(cantidadesDoc) {
+
+    for (var i=1;i<=cantidadesDoc;i++) {
+      MOInstance.documentos(i).then(function(documento) {
+
+    if (doc_hash == documento[2]) {
+      $("#hashresult").html("Hash found: " + doc_hash);
+    } else {
+    }
+    })
+  }
+    }).catch(function(err) {
+      console.error(err);
+    });
+
+}
+
+
+
+function addHash(evt1) {
+
+  var files = evt1.target.files;
+  doc_hash2 = '';
+  
+  for (var i = 0, f; f = files[i]; i++) {
+    var reader = new FileReader();
+
+  reader.onload = (function(theFile) {
+      return function(e) {
+        var sha256 = CryptoJS.SHA256(e.target.result);
+        doc_hash2 = sha256.toString();
+      }
+  })(f);
+
+  reader.readAsBinaryString(f);
+}
+  var date = Date.now()
+  console.log(doc_hash2);
+  App.contracts.MO.deployed().then(function(instance) { 
+    MOInstance = instance; 
+    console.log(doc_hash2);
+    MOInstance.addHash(date,doc_hash2,"ipfsHash4");
+  })
+doc_hash2 = '';
+}
 
 
 
