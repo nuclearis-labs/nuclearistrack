@@ -25,21 +25,10 @@ contract MO {
     function addHash (uint timestamp, string memory doc_hash, string memory ipfs_hash) public {
         documentoCount ++;
         documentos[documentoCount] = Documento(documentoCount, timestamp, doc_hash, ipfs_hash, msg.sender);
-
-        emit votedEvent(documentoCount);
-
     }
 
-    function listdocHash (uint id) public view returns (string memory) {
-        return documentos[id].doc_hash;
-    }
     function Cantdoc () public view returns (uint) {
         return documentoCount;
     }
-    function listipfsHash (uint id) public view returns (string memory) {
-        return documentos[id].ipfs_hash;
-    }
-    function listowner (uint id) public view returns (address) {
-        return documentos[id].owner;
-    }
+
 }

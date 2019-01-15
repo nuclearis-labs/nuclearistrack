@@ -1,12 +1,15 @@
-
+//Definición de objeto App, donde se genera el front-end
 App = {
+  //Definición inicial de contrato y web3provider
   web3Provider: null,
   contracts: {},
 
+  //Función de inicio de JS que inicia el web3
   init: function() {
     return App.initWeb3();
   },
-
+  
+  //Inicio de web3
   initWeb3: async function() {
     App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
 
@@ -91,10 +94,8 @@ function getHash (evt) {
   } else {
     console.log("The File APIs are not fully supported in this browser.");
   }*/
-
     var files = evt.target.files;
-    doc_hash = '';
-    
+    doc_hash = null;
     for (var i = 0, f; f = files[i]; i++) {
       var reader = new FileReader();
 
@@ -116,9 +117,11 @@ function getHash (evt) {
     for (var i=1;i<=cantidadesDoc;i++) {
       MOInstance.documentos(i).then(function(documento) {
 
-    if (doc_hash == documento[2]) {
+    if (doc_hash == documento[2] && exit != 1) {
       $("#hashresult").html("Hash found: " + doc_hash);
+      var exit = '1';
     } else {
+      $("#hashresult").html("Hash not found");
     }
     })
   }
@@ -128,37 +131,35 @@ function getHash (evt) {
 
 }
 
+function addHash(evt) {
 
+  var files = evt.target.files;
+  doc_hash = null;
+  console.log(doc_hash);
 
-function addHash(evt1) {
-
-  var files = evt1.target.files;
-  doc_hash2 = '';
-  
   for (var i = 0, f; f = files[i]; i++) {
     var reader = new FileReader();
 
   reader.onload = (function(theFile) {
       return function(e) {
         var sha256 = CryptoJS.SHA256(e.target.result);
-        doc_hash2 = sha256.toString();
+        doc_hash = sha256.toString();
+        var date = Date.now()
+        App.contracts.MO.deployed().then(function(instance) { 
+          MOInstance = instance; 
+          
+          MOInstance.addHash(date,doc_hash,"ipfsHash4");
+        })
       }
   })(f);
 
   reader.readAsBinaryString(f);
 }
-  var date = Date.now()
-  console.log(doc_hash2);
-  App.contracts.MO.deployed().then(function(instance) { 
-    MOInstance = instance; 
-    console.log(doc_hash2);
-    MOInstance.addHash(date,doc_hash2,"ipfsHash4");
-  })
-doc_hash2 = '';
+
+doc_hash = '';
 }
 
-
-
+//Función que se ejecuta al cargar la ventana, manda a función init en primeras filas
 $(function() {
   $(window).load(function() {
     App.init();
