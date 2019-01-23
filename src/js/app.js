@@ -75,7 +75,17 @@ App = {
       var ipfs_hash = documento[3];
       var owner = documento[4];
 
-      var doc = "<tr><th>" + id + "</th><td>" + timestamp + "</td><td>" + doc_hash + "</td><td>" + ipfs_hash + "</td><td>"+owner+"</td></tr>";
+      date = new Date(timestamp * 1000),
+      datevalues = [
+      date.getFullYear(),
+      date.getMonth()+1,
+      date.getDate(),
+      date.getHours(),
+      date.getMinutes(),
+      date.getSeconds(),
+];
+      var dateformat = datevalues[2] + "/" + datevalues[1] + "/" + datevalues[0] + " " + datevalues[3] + ":" + datevalues[4] + ":" + datevalues[5]; 
+      var doc = "<tr><th>" + id + "</th><td>" + dateformat + "</td><td>" + doc_hash + "</td><td>" + ipfs_hash + "</td><td>"+owner+"</td></tr>";
       docRow.append(doc);
 
       })
@@ -117,11 +127,11 @@ function getHash (evt) {
     for (var i=1;i<=cantidadesDoc;i++) {
       MOInstance.documentos(i).then(function(documento) {
 
-    if (doc_hash == documento[2] && exit != 1) {
+    if (doc_hash == documento[2] && exit !== 1) {
       $("#hashresult").html("Hash found: " + doc_hash);
       var exit = '1';
     } else {
-      $("#hashresult").html("Hash not found");
+      $("#hashresult").html("Hash not found: " + doc_hash);
     }
     })
   }
@@ -148,7 +158,7 @@ function addHash(evt) {
         App.contracts.MO.deployed().then(function(instance) { 
           MOInstance = instance; 
           
-          MOInstance.addHash(date,doc_hash,"ipfsHash4");
+          MOInstance.addHash(date/1000,doc_hash,"ipfsHash4");
         })
       }
   })(f);
