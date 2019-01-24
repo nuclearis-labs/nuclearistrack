@@ -10,44 +10,28 @@ App = {
   },
   
   //Inicio de web3
-  initWeb3: async function() {
-    App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
-
-    // Modern dapp browsers...
-  if (window.ethereum) {
-  App.web3Provider = window.ethereum;
-  try {
-    // Request account access
-    await window.ethereum.enable();
-  } catch (error) {
-    // User denied account access...
-    console.error("User denied account access")
-  }
-  }
-  // Legacy dapp browsers...
-  else if (window.web3) {
-    App.web3Provider = window.web3.currentProvider;
-  }
-  // If no injected web3 instance is detected, fall back to Ganache
-  else {
-    App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
-  }
-  web3 = new Web3(App.web3Provider);
-
+  initWeb3: function() {
+    if (typeof web3 !== 'undefined') {
+      // If a web3 instance is already provided by Meta Mask.
+      App.web3Provider = web3.currentProvider;
+      web3 = new Web3(web3.currentProvider);
+    } else {
+      // Specify default instance if no web3 instance provided
+      App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
+      web3 = new Web3(App.web3Provider);
+    }
     return App.initContract();
   },
 
 
   initContract: function() {
-    $.getJSON('MO.json', function(data) {
+    $.getJSON("MO.json", function(data) {
       // Get the necessary contract artifact file and instantiate it with truffle-contract
       var MOArtifact = data;
       App.contracts.MO = TruffleContract(MOArtifact);
 
       // Set the provider for our contract
       App.contracts.MO.setProvider(App.web3Provider);
-
-      //App.listenForEvents();
 
       // Use our contract to retrieve and mark the adopted pets
       return App.render();
@@ -85,7 +69,7 @@ App = {
       date.getSeconds(),
 ];
       var dateformat = datevalues[2] + "/" + datevalues[1] + "/" + datevalues[0] + " " + datevalues[3] + ":" + datevalues[4] + ":" + datevalues[5]; 
-      var doc = "<tr><th>" + id + "</th><td>" + dateformat + "</td><td>" + doc_hash + "</td><td>" + ipfs_hash + "</td><td>"+owner+"</td></tr>";
+      var doc = "<tr><th>" + id + "</th><td>" + dateformat + "</td><td>" + doc_hash + "</td><td><a href='http://ec2-18-216-156-252.us-east-2.compute.amazonaws.com:8080/ipfs/" + ipfs_hash + "' target='_blank'>IPFS File</a></td><td>"+owner+"</td></tr>";
       docRow.append(doc);
 
       })
@@ -128,10 +112,10 @@ function getHash (evt) {
       MOInstance.documentos(i).then(function(documento) {
 
     if (doc_hash == documento[2] && exit !== 1) {
-      $("#hashresult").html("Hash found: " + doc_hash);
+      $("#hashresult").html("Hash found: <br>" + doc_hash);
       var exit = '1';
     } else {
-      $("#hashresult").html("Hash not found: " + doc_hash);
+      $("#hashresult").html("Hash not found");
     }
     })
   }
@@ -155,10 +139,11 @@ function addHash(evt) {
         var sha256 = CryptoJS.SHA256(e.target.result);
         doc_hash = sha256.toString();
         var date = Date.now()
+        var ipfshash = "Qmdm4j3NRrbNe66mHnyKzJPrhAo4mdTK1KkHutmUajMi5v";
         App.contracts.MO.deployed().then(function(instance) { 
           MOInstance = instance; 
           
-          MOInstance.addHash(date/1000,doc_hash,"ipfsHash4");
+          MOInstance.addHash(date/1000,doc_hash,ipfshash);
         })
       }
   })(f);
@@ -168,6 +153,8 @@ function addHash(evt) {
 
 doc_hash = '';
 }
+
+
 
 //Función que se ejecuta al cargar la ventana, manda a función init en primeras filas
 $(function() {
