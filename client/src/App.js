@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
+import MO from "./contracts/MO.json";
 import getWeb3 from "./utils/getWeb3";
 
 import "./App.css";
@@ -17,9 +17,9 @@ class App extends Component {
 
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
+      const deployedNetwork = MO.networks[networkId];
       const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
+        MO.abi,
         deployedNetwork && deployedNetwork.address,
       );
 
@@ -39,10 +39,10 @@ class App extends Component {
     const { accounts, contract } = this.state;
 
     // Stores a given value, 5 by default.
-    await contract.methods.set(10).send({ from: accounts[0] });
+    //await contract.methods.set(10).send({ from: accounts[0] });
 
     // Get the value from the contract to prove it worked.
-    const response = await contract.methods.get().call();
+    const response = await contract.methods.Cantdoc().call();
 
     // Update state with the result.
     this.setState({ storageValue: response });
@@ -54,20 +54,18 @@ class App extends Component {
     }
     return (
       <div className="App">
-        <h1>Good to Go!</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 40</strong> of App.js.
-        </p>
+      <h1>Nuclearis Material Organization</h1>
+          <ul>
+              <li><a href="index.html?page=list">List document</a></li>
+              <li><a href="index.html?page=add">Add document</a></li>
+              <li><a href="index.html?page=verify">Verify document</a></li>
+              <li><a href="index.html?page=contact">Contact</a></li>
+            </ul>
         <div>The stored value is: {this.state.storageValue}</div>
       </div>
     );
   }
 }
+
 
 export default App;
