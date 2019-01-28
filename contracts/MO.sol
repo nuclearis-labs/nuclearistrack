@@ -1,4 +1,4 @@
-pragma solidity >=0.4.21 <0.6.0;
+pragma solidity >=0.5.0 <0.6.0;
 
 contract MO {
 
@@ -10,10 +10,6 @@ contract MO {
         string ipfs_hash;
         address owner;
     }
-
-    event votedEvent (
-            uint indexed documentoCount
-    );
 
     //El mapping del struct a una variable tipo array
     mapping(uint => Documento) public documentos;
