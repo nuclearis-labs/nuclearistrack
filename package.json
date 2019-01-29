@@ -1,0 +1,23 @@
+{
+  "name": "doccerttutorial",
+  "version": "1.0.0",
+  "description": "This repository holds the source code for the tutorials at:",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sebastinez/docCertTutorial.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sebastinez/docCertTutorial/issues"
+  },
+  "homepage": "https://github.com/Sebastinez/docCertTutorial#readme",
+  "dependencies": {
+    "jssha": "^2.3.1",
+    "web3": "^1.0.0-beta.41"
+  }
+}
