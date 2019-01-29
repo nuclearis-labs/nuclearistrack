@@ -1,7 +1,7 @@
 # NUCLEARIS Material Organization
 Desarrollo MVP (minimum viable product) de una aplicación decentralizada (dApp) para verificar la autenticidad de documentos a traves de la Blockchain de [RSK](https://github.com/rsksmart/rskj).
 
-# Concepto
+# Concepto MVP
 A continuacion un primer desarrollo del concepto que se quiere lograr.
 
 ## Carga de documentos
