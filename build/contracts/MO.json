@@ -1432,10 +1432,16 @@
       "links": {},
       "address": "0x4bC0909246fa116dC4E3Eb485bBAaB71B5Eb944D",
       "transactionHash": "0xb65318ad3689a1c1b71f784ee6f89a149ec0fb83070b569e52b87a6355b5ab60"
+    },
+    "1548859708580": {
+      "events": {},
+      "links": {},
+      "address": "0xb428C218306DCa08ab56584b892dbbE7cE77E1F8",
+      "transactionHash": "0x8ee4bbf007ec262daa0462f3985a8ebf3c562cb0f1f82c5c3066fb9131cc473e"
     }
   },
   "schemaVersion": "3.0.1",
-  "updatedAt": "2019-01-29T13:30:38.261Z",
+  "updatedAt": "2019-01-30T14:49:20.170Z",
   "devdoc": {
     "methods": {}
   },

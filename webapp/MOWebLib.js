@@ -1,6 +1,6 @@
 var contract = undefined;
 var customProvider = undefined;
-var address = "0x4bC0909246fa116dC4E3Eb485bBAaB71B5Eb944D";
+var address = "0xb428C218306DCa08ab56584b892dbbE7cE77E1F8";
 var abi = undefined;
 
 function mo_init () {
@@ -64,7 +64,7 @@ function mo_init () {
   ];
 
   contract = new web3.eth.Contract(abi, address);
-  web3.eth.personal.unlockAccount("0x5197bc569ccfc86153b9186c2736343410b81966","0x6b8c10402ef67bf081ee73d3e2b0dce10d27453567bed5c88f7a6a5db8c51f7a",100).then(function(log){console.log("Account unlocked")});
+  web3.eth.personal.unlockAccount("0xf86c0968ef297d672380e0780f18f91f46847b10","0xe8285f1ac3d6aae2040cac1efcbe022c51fc47c863ad0c9f7de3fc0b916db3fb",100).then(function(log){console.log("Account unlocked")});
 };
 
 //sends a hash to the blockchain

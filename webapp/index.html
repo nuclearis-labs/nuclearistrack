@@ -1,43 +1,90 @@
 <!doctype html>
 <html lang="en">
-<head>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v3.8.5">
   <title>NUCLEARIS Material Organization</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-  <body>
-    <div class="container" style="width: 650px;">
+  <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="starter-template.css" rel="stylesheet">
+</head>
+<body>
+  <main role="main" class="container">
+    <div class="container" style="width: 100%;">
       <div class="row">
-        <div class="col-lg-12"><h1 class="text-center">NUCLEARIS Material Organization</h1>
+        <div class="col align-self-start">
+          <h1>NUCLEARIS Material Organization</h1>
           <hr/>
-    </div>
-    </div>
-  <div class="container" style="width: 650px;">
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="form-group">
-            <label for="exampleFormControlFile1"><b>Archivo a subir a la Blockchain</b></label>
-            <input type="file" id="hashFile" class="form-control-file">
+          <h2 style="padding-top: 1rem;">Documentación en la Blockchain</h2>
+          <p>A continuación se muestra un formulario donde se puede cargar un documento:</p>
+          <p>
+            <ul>
+              <li>Guardar su huella digital (hash) en la Blockchain.</li>
+              <li>Chequear que la huella digital del documento coincide con un documento anteriormente subido</li>
+            </ul>
+          </p>
         </div>
-        <div class="form-group">
-          <button type='button' id="sendHashButton" onclick="send()" class="btn btn-primary"/>
+      </div>
+    <div class="container" style="padding-top: 2rem;">
+      <form class="was-validated">
+        <div class="mb-3">
+          <div class="custom-file">
+            <input type="file" id="hashFile" class="custom-file-input" id="customFile">
+            <label class="custom-file-label" for="customFile">
+              Choose file...
+            </label>
+            <div class="invalid-feedback">
+              Se requiere cargar un archivo
+            </div>
+          </div>
+          <div class="form-group" style="padding-top: 1rem;">
+          <button type='button' id="sendHashButton" onclick="send()" class="btn btn-outline-primary"/>
             Subir hash a la Blockchain
           </button>
-          <button type='button' id= "findHashButton" onclick="find()" class="btn btn-primary"/>
+          <button type='button' id= "findHashButton" onclick="find()" class="btn btn-outline-primary"/>
             Chequear autenticidad
           </button>
         </div>
+      </form>
         <hr/>
-          <div id=responseText></div>
-        </div>
+        <div id=responseText></div>
       </div>
     </div>
-  </div>
-
+  
+    
+</main>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      bsCustomFileInput.init()
+      //var btn = document.getElementById('hashFile')
+      var form = document.querySelector('form')
+      btn.addEventListener('click', function () {
+        form.reset()
+      })
+    });
+  </script>
 
 <script src="sha256.js"></script>
 <script src="web3.min.js"></script>

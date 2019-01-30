@@ -37,7 +37,7 @@ function send () {
             + "<p><b>Hash del archivo:</b><br/> " + hash +"</p>"
             + "<p><b>Identificación de transacción:</b><br/> " + tx +"</p>"
             + "<p><b>Dirección del contrato:</b><br/> " + address +"</p>"
-            + "<p><b>Por favor permita un rato para que sea minada la transacción.</b></p></div>"
+            //+ "<p><b>Por favor permita un rato para que sea minada la transacción.</b></p></div>"
           );
         });
       }
