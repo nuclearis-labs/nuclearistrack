@@ -1,6 +1,8 @@
 var contract = undefined;
 var customProvider = undefined;
-var address = "0xb428C218306DCa08ab56584b892dbbE7cE77E1F8";
+var address = "0xC601b76A8452803BA5eb695Db1f0cDDdC3b01801";
+var account = "0x5dde8d19d19e634272242208da803ec2ae0dd28e";
+var privatekey = "0x3711ff5d1724ca9559d532e5a28aa42143dd2dd5a44a382211b209ad693a4762";
 var abi = undefined;
 
 function mo_init () {
@@ -11,10 +13,8 @@ function mo_init () {
 
     let provider = new Web3.providers.HttpProvider("http://localhost:8545");
     web3 = new Web3(provider);
-
-    console.log("Web3 connected");
   } else {
-   //alert("No Ethereum interface injected into browser. Read-only access");
+   alert("No Ethereum interface injected into browser. Read-only access");
   }
 
   abi = [
@@ -64,7 +64,22 @@ function mo_init () {
   ];
 
   contract = new web3.eth.Contract(abi, address);
-  web3.eth.personal.unlockAccount("0xf86c0968ef297d672380e0780f18f91f46847b10","0xe8285f1ac3d6aae2040cac1efcbe022c51fc47c863ad0c9f7de3fc0b916db3fb",100).then(function(log){console.log("Account unlocked")});
+  web3.eth.personal.unlockAccount(account,privatekey,100).then(function(log){console.log("Account unlocked")});
+  web3.eth.getAccounts(function (error, accounts) {
+  $("#account").html(accounts[0]);
+    web3.eth.getBalance(accounts[0]).then(
+      function(ether){
+        let url = "https://api.coinmarketcap.com/v1/ticker/ethereum/";
+        fetch(url)
+        .then(function(response) {
+        return response.json();
+        })
+        .then(function(data) {
+        let eth1 = JSON.stringify(data[0]);
+        let eth2 = JSON.parse(eth1);
+        $("#ether").html(" con " + Math.round((ether/10**18)*100)/100 + " ETH / " + Math.round((ether/10**18 * eth2.price_usd)*100)/100 + " USD")})
+        })
+  })
 };
 
 //sends a hash to the blockchain
@@ -76,6 +91,20 @@ function MO_send(hash, callback) {
         if (error) callback(error, null);
         else callback(null, tx);
       });
+
+      web3.eth.getAccounts(function (error, accounts) {
+
+      let url = "https://api.coinmarketcap.com/v1/ticker/ethereum/";
+      fetch(url)
+      .then(function(response) {
+      return response.json();
+      })
+      .then(function(data) {
+      let eth1 = JSON.stringify(data[0]);
+      let eth2 = JSON.parse(eth1);
+      web3.eth.getBalance(accounts[0]).then(function(ether){$("#ether").html(" con " + Math.round((ether/10**18)*100)/100 + " ETH / " + Math.round((ether/10**18 * eth2.price_usd)*100)/100 + " USD")});
+      })
+      })
     });
 };
 

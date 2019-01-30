@@ -30,15 +30,31 @@ function send () {
           + "<p><b>Nº de bloque minado: </b><br/>" + resultObj.blockNumber + "</p>"
           + "<p><b>Fecha y hora de bloque minado: </b><br/>" + resultObj.mineTime + "</p></div>"
         );
-        console.log("Ya fue guardado");
       } else {
         MO_send(hash, function(err, tx) {
-          $("#responseText").html("<div class='alert alert-info' role='alert'><p><b>Hash de archivo fue guardado en la Blockchain.</b></p>"
-            + "<p><b>Hash del archivo:</b><br/> " + hash +"</p>"
-            + "<p><b>Identificación de transacción:</b><br/> " + tx +"</p>"
-            + "<p><b>Dirección del contrato:</b><br/> " + address +"</p>"
-            //+ "<p><b>Por favor permita un rato para que sea minada la transacción.</b></p></div>"
-          );
+          var _gas_tx = undefined;
+          web3.eth.getTransaction(tx).then(function(gas_tx){
+            let tx1 = JSON.stringify(gas_tx);
+            _gas_tx = JSON.parse(tx1);
+            console.log (gas_tx)
+
+              let url = "https://api.coinmarketcap.com/v1/ticker/ethereum/";
+              fetch(url)
+                .then(function(response) {
+                  return response.json();
+                })
+                .then(function(data) {
+                  let eth1 = JSON.stringify(data[0]);
+                  let eth2 = JSON.parse(eth1);
+                  $("#responseText").html("<div class='alert alert-info' role='alert'><p><b>Hash de archivo fue guardado en la Blockchain.</b></p>"
+                  + "<p><b>Hash del archivo:</b><br/> " + hash +"</p>"
+                  + "<p><b>Identificación de transacción:</b><br/> " + tx + "</p>"
+                  + "<p><b>Costo de la transacción:</b><br/>" + (_gas_tx.gas*_gas_tx.gasPrice)/10**18 + " ETH / " + Math.round(((_gas_tx.gas*_gas_tx.gasPrice)/10**18 * eth2.price_usd)*100)/100 + " USD</p>"
+                  + "<p><b>Dirección del contrato:</b><br/> " + address +"</p>"
+                  //+ "<p><b>Por favor permita un rato para que sea minada la transacción.</b></p></div>"
+                );
+              });
+          });
         });
       }
     });
