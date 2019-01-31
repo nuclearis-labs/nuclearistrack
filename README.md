@@ -24,6 +24,5 @@ A continuacion un primer desarrollo del concepto que se quiere lograr.
  Se puede ver el diseño en la siguiente pagina, tener en cuenta que es un prototipo y va a cambiar:
  https://www.figma.com/file/ZykheGkC5A2vREUEjXQzmXkN/Pagina-principal?node-id=0%3A1
 
-<a name="ft1">1</a>: JavaScript library of crypto standards. (https://www.npmjs.com/package/crypto-js)
-
-<a name="ft2">2</a>: InterPlanetary File System - IPFS (https://ipfs.io/)
+## Credito
+- [docCertTutorial by stbeyer](https://link.medium.com/V4nLyzqJUT)
