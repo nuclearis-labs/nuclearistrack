@@ -1,8 +1,8 @@
 var contract = undefined;
 var customProvider = undefined;
-var address = "0xC601b76A8452803BA5eb695Db1f0cDDdC3b01801";
-var account = "0x5dde8d19d19e634272242208da803ec2ae0dd28e";
-var privatekey = "0x3711ff5d1724ca9559d532e5a28aa42143dd2dd5a44a382211b209ad693a4762";
+var address = "0x5C83dd6941A707E460f3887a8D1fca880ffE4E29";
+var account = "0xccfde609e29d6a8d5a1ce5b518d131d5e2254cb4";
+var privatekey = "0x066407055f594cfc05938e8edcf6930362c39b0bd3900e40b2df76c18fdf4178";
 var abi = undefined;
 
 function mo_init () {
@@ -11,7 +11,7 @@ function mo_init () {
     // Use existing gateway
     //window.web3 = new Web3(web3.currentProvider);
 
-    let provider = new Web3.providers.HttpProvider("http://localhost:8545");
+    let provider = new Web3.providers.HttpProvider("http://3.17.167.226:8545");
     web3 = new Web3(provider);
   } else {
    alert("No Ethereum interface injected into browser. Read-only access");
