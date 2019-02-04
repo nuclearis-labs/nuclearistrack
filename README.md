@@ -4,8 +4,6 @@ Desarrollo MVP (minimum viable product) de una aplicación decentralizada (dApp)
 # Concepto MVP
 A continuacion un primer desarrollo del concepto que se quiere lograr.
 
----
-
 # Funcionamiento
 Se detalla el funcionamiento de la herramienta.
 
@@ -27,9 +25,7 @@ El smart contract guardado en la blockchain bajo una dirección especifica, guar
     - Timestamp del momento de minado de dicho bloque.
     - Hash del archivo.
     - La address de la persona que subio el documento. (En el futuro)
- 
- ---
- 
+  
  # Front-End
  Se inicio un primer desarrollo de un prototypo a traves de la herramienta Figma.
  Se puede ver el diseño en la siguiente pagina, tener en cuenta que es un prototipo y va a cambiar:
