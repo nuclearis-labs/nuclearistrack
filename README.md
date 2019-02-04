@@ -4,25 +4,36 @@ Desarrollo MVP (minimum viable product) de una aplicación decentralizada (dApp)
 # Concepto MVP
 A continuacion un primer desarrollo del concepto que se quiere lograr.
 
-## Carga de documentos
- 1. A traves de un front-end se permite al usuario cargar un documento y a continuación se deben realizar las siguientes operaciones:
-    - Se genera el hash de ese documento con crypto-JS<sup>[1](#ft1)</sup>.
-    - Se carga el documento a la red IPFS<sup>[2](#ft2)</sup> a traves de un nodo de la misma red, lo cual genera un hash de IPFS.
- 2. El smart contract que fue guardado en la blockchain, debe guardar (si la address esta en la whitelist del contrato) los siguientes datos anteriormente generados en su storage:
-    - Numero de ID que identifica cada documento y cuenta cantidad de documentos
-    - Timestamp del momento de carga del documento
-    - Hash del documento.
-    - IPFS Storage Hash del documento.
-    - La address de la persona que subio el documento
+---
 
- ## Verificación de documentos
- 1. El Front-End debe permitir cargar un documento para su verificación, en la cual se genera nuevamente el hash.
- 2. El smart contract debe tomar el hash generado y con un loop chequear si el documento cargado se encuentra en su storage y en el caso que si, emitir un aviso de autenticidad. En el caso contrario avisar que no se encuentra el documento o que no es autentico.
+# Funcionamiento
+Se detalla el funcionamiento de la herramienta.
+
+## Carga de documentos
+A traves de un front-end se permite al usuario cargar la huella digital (hash) de un documento:
+  - A traves de un programa de Javascript, se lee el archivo seleccionado y se genera el hash hexadecimal del archivo.
+  - Se pasa el hash hexadecimal al smart contract que realiza un nuevo registro en el almacenamiento (del smart contract).
+
+## Autentificación del archivo
+La autentificación de los archivos se realiza de la siguiente manera:
+  - El front-end recibe el archivo seleccionado por el usuario.
+  - Vuelve a generar el hash del archivo.
+  - Lo manda al smart contract para que chequee si se encuentra en su storage.
+  - En el caso afirmativo, devuelve la hora de minado de la transacción y el numero de bloque donde se encuentra dicho hash.
+
+## Logica
+El smart contract guardado en la blockchain bajo una dirección especifica, guarda los siguientes datos:
+    - Bloque en el cual fue minado la transferencia.
+    - Timestamp del momento de minado de dicho bloque.
+    - Hash del archivo.
+    - La address de la persona que subio el documento. (En el futuro)
  
- ## Front-End
+ ---
+ 
+ # Front-End
  Se inicio un primer desarrollo de un prototypo a traves de la herramienta Figma.
  Se puede ver el diseño en la siguiente pagina, tener en cuenta que es un prototipo y va a cambiar:
  https://www.figma.com/file/ZykheGkC5A2vREUEjXQzmXkN/Pagina-principal?node-id=0%3A1
 
-## Credito
+# Credito
 - [docCertTutorial by stbeyer](https://link.medium.com/V4nLyzqJUT)
