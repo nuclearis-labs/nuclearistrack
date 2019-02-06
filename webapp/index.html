@@ -6,6 +6,8 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.5">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon"> 
   <title>NUCLEARIS Material Organization</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <style>
@@ -32,7 +34,7 @@
           <hr/>
           <h2 style="padding-top: 1rem;">Documentación en la Blockchain</h2>
           <p>A continuación se muestra un formulario donde se puede cargar un documento:</p>
-          <p>
+                    <p>
             <ul>
               <li>Guardar su huella digital (hash) en la Blockchain.</li>
               <li>Chequear que la huella digital del documento coincide con un documento anteriormente subido</li>
@@ -64,6 +66,7 @@ Se usa en una blockchain local <a href="https://truffleframework.com/ganache">Ga
         </div>
       </form>
         <hr/>
+        <div class="lds-ellipsis" style="display: none" id="loader"><div></div><div></div><div></div><div></div></div>
         <div id=responseText></div>
       </div>
     </div>
@@ -73,12 +76,6 @@ Se usa en una blockchain local <a href="https://truffleframework.com/ganache">Ga
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
-
-<script src="sha256.js"></script>
-<script src="web3.min.js"></script>
-<script src="MOWebLib.js"></script>
-<script src="app.js"></script>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
       bsCustomFileInput.init()
@@ -101,6 +98,12 @@ Se usa en una blockchain local <a href="https://truffleframework.com/ganache">Ga
       })
     });
   </script>
+
+<script src="sha256.js"></script>
+<script src="web3.min.js"></script>
+<script src="MOWebLib.js"></script>
+<script src="app.js"></script>
+
 
 </body>
 </html>
