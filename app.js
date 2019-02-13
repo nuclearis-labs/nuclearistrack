@@ -1,23 +1,13 @@
 var express = require('express');
 var app = express();
-
 const Web3 = require('web3');
-
 var multer = require('multer');
 var upload = multer({ dest: 'uploads/' });
-
 const fs = require('fs');
 const crypto = require('crypto');
-
 var contract = undefined;
 var address = '0x7af24F98a3Ad5c651eA7925482dE8e0f910c965f';
-var abi = undefined;
 
-var hashed = undefined;
-// if (typeof web3 !== 'undefined') {
-// } else {
-// console.log('No Ethereum interface injected into browser. Read-only access');
-// }
 const web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
 
 app.use(express.static('public'));
@@ -89,10 +79,16 @@ app.post('/hash', upload.single('newhash'), function(req, res, next) {
 
 		console.log('0x' + hashed);
 
-		//Call MO_send function with the hex hash and await the result for rendering the hash page
-		MO_send('0x' + hashed, function(error, result) {
-			if (result) {
-				res.render('hash', { hashed: hashed, result: result });
+		MO_find('0x' + hashed, function(error, resultObj) {
+			if (resultObj.blockNumber != 0) {
+				res.render('check_duplicate', { hashed: hashed, result: resultObj });
+			} else {
+				//Call MO_send function with the hex hash and await the result for rendering the hash page
+				MO_send('0x' + hashed, function(error, result) {
+					if (result) {
+						res.render('hash', { hashed: hashed, result: result });
+					}
+				});
 			}
 		});
 	});
@@ -128,7 +124,7 @@ app.post('/check', upload.single('newhash'), function(req, res, next) {
 			if (resultObj.blockNumber != 0) {
 				res.render('check', { hashed: hashed, result: resultObj });
 			} else {
-				console.log('No fue encontrado');
+				res.render('check_notfound', { hashed: hashed });
 			}
 		});
 	});
@@ -143,26 +139,13 @@ app.post('/check', upload.single('newhash'), function(req, res, next) {
 	});
 });
 
+app.get('*', function(req, res) {
+	res.render('lost');
+});
+
 app.listen(3000, 'localhost', function() {
 	console.log('Server working');
 });
-
-// function visibility(param) {
-// 	switch (param) {
-// 		case 'loading':
-// 			document.getElementById('loader').style = 'display: block';
-// 			document.getElementById('hashFile').setAttribute('disabled', '');
-// 			document.getElementById('sendHashButton').setAttribute('disabled', '');
-// 			document.getElementById('findHashButton').setAttribute('disabled', '');
-// 			break;
-// 		case 'done':
-// 			document.getElementById('hashFile').removeAttribute('disabled', '');
-// 			document.getElementById('sendHashButton').removeAttribute('disabled', '');
-// 			document.getElementById('findHashButton').removeAttribute('disabled', '');
-// 			document.getElementById('loader').style = 'display: none';
-// 			break;
-// 	}
-// }
 
 // function send() {
 // 		MO_find(hash, function(err, resultObj) {

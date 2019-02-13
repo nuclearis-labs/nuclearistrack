@@ -9,7 +9,7 @@
         </div>
       </div>
     <div class="container" style="padding-top: 2rem;">
-      <form method="POST" enctype="multipart/form-data">
+      <form method="POST" id="hashform" enctype="multipart/form-data">
         <div class="mb-3">
           <div class="custom-file">
             <input type="file" id="hashFile" name="newhash" class="custom-file-input" required>
@@ -21,10 +21,10 @@
             </div>
           </div>
           <div class="form-group" style="padding-top: 1rem;">
-          <button type='submit' formaction="/hash" class="btn btn-outline-primary">
+          <button type='submit' formaction="/hash" id="sendHashButton" class="btn btn-outline-primary" disabled>
             Subir hash a la Blockchain
           </button>
-          <button type='submit' formaction="/check" class="btn btn-outline-primary">
+          <button type='submit' formaction="/check" id="findHashButton" class="btn btn-outline-primary" disabled>
           Chequear autenticidad
           </button>
 

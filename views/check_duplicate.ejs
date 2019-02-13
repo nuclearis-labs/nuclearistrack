@@ -1,0 +1,18 @@
+<% include partials/header %>
+
+<% include partials/intro_header %>
+
+<div class='alert alert-warning' role='alert'><p><b>Hash de archivo ya fue guardado en la Blockchain.</b></p>
+<p><b>Hash del archivo: </b><br/>
+<%= hashed %>
+</p>
+<p><b>Nº de bloque minado: </b><br/>
+<%= result.blockNumber %>
+</p>
+<p><b>Fecha y hora de bloque minado: </b><br/>
+<%= result.mineTime %>
+</p></div>
+
+<% include partials/intro_footer %>
+
+<% include partials/footer %>

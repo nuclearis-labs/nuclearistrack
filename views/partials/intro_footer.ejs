@@ -7,16 +7,36 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      bsCustomFileInput.init()
-      var file = document.getElementById('hashFile');
-      var sendbtn = document.getElementById('sendHashButton');
-      var findbtn = document.getElementById('findHashButton');
-      file.addEventListener('change', function() {
+document.addEventListener('DOMContentLoaded', function() {
+    bsCustomFileInput.init()
+    var file = document.getElementById('hashFile');
+    var sendbtn = document.getElementById('sendHashButton');
+    var findbtn = document.getElementById('findHashButton');
+    $("#hashform").submit(function (e) {
+
+        sendbtn.setAttribute("disabled", "");
+        findbtn.setAttribute("disabled", "");
+        document.getElementById('loader').style="display: block";
+
+    });
+    $("button").click(function() {
+});
+    file.addEventListener('change', function() {
         $("#responseText").html("");
         document.querySelector('form').className = "was-validated";
         var imgVal = $('#hashFile').val(); 
-  })
+        if(imgVal=='') { 
+            sendbtn.setAttribute("disabled", "");
+            findbtn.setAttribute("disabled", "");
+        } 
+        else
+        {
+            sendbtn.removeAttribute("disabled", "");
+            findbtn.removeAttribute("disabled", "");
+        }
+    });
+
 });
+
 
   </script>
