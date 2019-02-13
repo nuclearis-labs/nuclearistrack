@@ -1,0 +1,22 @@
+<% include partials/header %>
+
+<% include partials/intro_header %>
+      
+        <div class='alert alert-warning' role='alert'><p><b>Hash de archivo fue guardado en la Blockchain.</b></p>
+        <p><b>Hash del archivo: </b><br/>
+        <%= hashed %>
+        </p>
+        <p><b>Identificación de transacción:</b><br/>
+        <%= result.transactionHash %>
+        </p>
+        <p><b>Dirección del contrato:</b><br/>
+        <%= result.to %>
+        </p>
+        <p><b>Numero de bloque minado:</b><br/>
+        <%= result.blockNumber %>
+        </p>
+        </div>
+
+<% include partials/intro_footer %>
+
+<% include partials/footer %>

@@ -1,0 +1,35 @@
+<main role="main" class="container">
+    <div class="container" style="width: 100%;">
+      <div class="row">
+        <div class="col align-self-start">
+          <h1>NUCLEARIS Material Organization</h1>
+          <hr/>
+          <h2 style="padding-top: 1rem;">Documentación en la Blockchain</h2>
+
+        </div>
+      </div>
+    <div class="container" style="padding-top: 2rem;">
+      <form method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+          <div class="custom-file">
+            <input type="file" id="hashFile" name="newhash" class="custom-file-input" required>
+            <label class="custom-file-label" for="customFileLang" data-browse="Elegir">
+              Seleccionar un archivo...
+            </label>
+            <div class="invalid-feedback">
+              Se requiere cargar un archivo
+            </div>
+          </div>
+          <div class="form-group" style="padding-top: 1rem;">
+          <button type='submit' formaction="/hash" class="btn btn-outline-primary">
+            Subir hash a la Blockchain
+          </button>
+          <button type='submit' formaction="/check" class="btn btn-outline-primary">
+          Chequear autenticidad
+          </button>
+
+        </div>
+      </form>
+        <hr/>
+        <div class="lds-ellipsis" style="display: none" id="loader"><div></div><div></div><div></div><div></div></div>
+        <div id=responseText>
