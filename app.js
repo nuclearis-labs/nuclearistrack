@@ -1,12 +1,34 @@
+// Require and define expressjs
 var express = require('express');
 var app = express();
+
+// Require web3
 const Web3 = require('web3');
+
+// Require and define multer middleware
 var multer = require('multer');
 var upload = multer({ dest: 'uploads/' });
+
+// Require fs and crypto and defines SHA256 method
 const fs = require('fs');
 const crypto = require('crypto');
+var hash = crypto.createHash('sha256');
+
+// Require and connect to mongoose database
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/mo_nrs');
+
+var docSchema = new mongoose.Schema({
+	id: String,
+	hash: String,
+	tx: String,
+	mined: Boolean
+});
+
+var Document = mongoose.model('Document', docSchema);
+
 var contract = undefined;
-var address = '0x7af24F98a3Ad5c651eA7925482dE8e0f910c965f';
+var address = '0x79fD21c186f60d6425834a002Ca44377A568E229';
 
 const web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
 
@@ -37,11 +59,31 @@ function MO_send(hash, callback) {
 		contract.methods
 			.addDocHash(hash)
 			.send({ from: accounts[0] })
-			.on('transactionHash', (tx) => {})
-			.on('receipt', (receipt) => {
-				callback(null, receipt);
+			.on('transactionHash', (tx) => {
+				Document.create({ id: 'Test', hash: hash, tx: tx, mined: false }, function(err, doc) {
+					if (err) {
+						console.log('Something went wrong');
+					} else {
+						console.log(tx);
+						console.log(doc);
+					}
+				});
+				callback(null, tx);
 			})
-			.on('confirmation', (confirmationNumber, receipt) => {})
+			.on('receipt', (receipt) => {})
+			.on('confirmation', (confirmationNumber, receipt) => {
+				if (confirmationNumber > 20) {
+					Document.update({ tx: receipt.transactionHash }, { $set: { mined: true } }, function(err, doc) {
+						if (err) {
+							console.log('Something went wrong');
+						} else {
+							console.log(receipt);
+							console.log(doc);
+							console.log(confirmationNumber);
+						}
+					});
+				}
+			})
 			.on('error', console.error);
 	});
 }
@@ -67,8 +109,6 @@ app.post('/hash', upload.single('newhash'), function(req, res, next) {
 	console.log('File uploaded');
 	// creates a read stream of the uploaded file through multer
 	var fd = fs.createReadStream(req.file.path);
-	// initiates the sha256 object
-	var hash = crypto.createHash('sha256');
 	// Defines the encoding as Hex
 	hash.setEncoding('hex');
 
@@ -97,10 +137,10 @@ app.post('/hash', upload.single('newhash'), function(req, res, next) {
 	fd.pipe(hash);
 
 	// Once obtained the hash, delete the file from the server and console.log the deletion.
-	fs.unlink(req.file.path, (err) => {
-		if (err) throw err;
-		console.log(req.file.path + ' was deleted');
-	});
+	// fs.unlink(req.file.path, (err) => {
+	// 	if (err) throw err;
+	// 	console.log(req.file.path + ' was deleted');
+	// });
 });
 
 app.post('/check', upload.single('newhash'), function(req, res, next) {
@@ -146,86 +186,3 @@ app.get('*', function(req, res) {
 app.listen(3000, 'localhost', function() {
 	console.log('Server working');
 });
-
-// function send() {
-// 		MO_find(hash, function(err, resultObj) {
-// 			if (resultObj.blockNumber != 0) {
-// 				visibility('done');
-// 				$('#responseText').html(
-// 					"<div class='alert alert-warning' role='alert'><p><b>Hash de archivo ya fue guardado en la Blockchain.</b></p>" +
-// 						'<p><b>Hash del archivo: </b><br/>' +
-// 						hash +
-// 						'</p>' +
-// 						'<p><b>Nº de bloque minado: </b><br/>' +
-// 						resultObj.blockNumber +
-// 						'</p>' +
-// 						'<p><b>Fecha y hora de bloque minado: </b><br/>' +
-// 						resultObj.mineTime +
-// 						'</p></div>'
-// 				);
-// 			} else {
-// 				MO_send(hash, function(err, receipt) {
-// 					visibility('done');
-
-// 					let url = 'https://api.coinmarketcap.com/v1/ticker/ethereum/';
-// 					fetch(url)
-// 						.then(function(response) {
-// 							return response.json();
-// 						})
-// 						.then(function(data) {
-// 							let eth1 = JSON.stringify(data[0]);
-// 							let eth2 = JSON.parse(eth1);
-// 							$('#responseText').html(
-// 								"<div class='alert alert-info' role='alert'><p><b>Hash de archivo fue guardado en la Blockchain.</b></p>" +
-// 									'<p><b>Hash del archivo:</b><br/> ' +
-// 									hash +
-// 									'</p>' +
-// 									'<p><b>Identificación de transacción:</b><br/> ' +
-// 									receipt.transactionHash +
-// 									'</p>' +
-// 									'<p><b>Costo de la transacción:</b><br/>' +
-// 									receipt.gasUsed * 20000000000 / 10 ** 18 +
-// 									' ETH / ' +
-// 									Math.round(receipt.gasUsed * 20000000000 / 10 ** 18 * eth2.price_usd * 100) / 100 +
-// 									' USD</p>' +
-// 									'<p><b>Dirección del contrato:</b><br/> ' +
-// 									receipt.to +
-// 									'</p>' +
-// 									'<p><b>Numero de bloque minado:</b><br/> ' +
-// 									receipt.blockNumber +
-// 									'</p>'
-// 							);
-// 						});
-// 				});
-// 			}
-// 		});
-// 	});
-// }
-
-// function find() {
-// 	hashForFile(function(err, hash) {
-// 		MO_find(hash, function(err, resultObj) {
-// 			if (resultObj.blockNumber != 0) {
-// 				$('#responseText').html(
-// 					"<div class='alert alert-success' role='alert'><p><b>Hash de archivo encontrado en la Blockchain.</b></p>" +
-// 						'<p><b>Hash del archivo: </b><br/>' +
-// 						hash +
-// 						'</p>' +
-// 						'<p><b>Nº de bloque minado: </b><br/>' +
-// 						resultObj.blockNumber +
-// 						'</p>' +
-// 						'<p><b>Fecha y hora de bloque minado: </b><br/>' +
-// 						resultObj.mineTime +
-// 						'</p></div>'
-// 				);
-// 			} else {
-// 				$('#responseText').html(
-// 					"<div class='alert alert-warning' role='alert'><p><b>Hash de archivo no encontrado en la Blockchain.</b></p>" +
-// 						'<p><b>Hash del archivo: </b><br/>' +
-// 						hash +
-// 						'</p></div>'
-// 				);
-// 			}
-// 		});
-// 	});
-// }
