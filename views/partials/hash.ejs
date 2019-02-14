@@ -1,0 +1,22 @@
+<% include header %>
+
+<% include navbar_logged %>
+
+<% include form %>
+      
+        <div class='alert alert-warning' role='alert'><p><b>Hash de archivo fue guardado en la Blockchain.</b></p>
+        <p><b>Identificación de archivo:</b><br/>
+        <%= docid %>
+        </p>
+        <p><b>Hash del archivo: </b><br/>
+        <%= hashed %>
+        </p>
+        <p><b>Identificación de transacción:</b><br/>
+        <%= result %>
+        </p>
+        <p>
+        <strong>Darle tiempo a la transacción de ser minada</strong>
+        </p>
+        </div>
+
+<% include footer %>

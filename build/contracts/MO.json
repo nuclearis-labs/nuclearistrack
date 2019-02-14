@@ -1425,15 +1425,15 @@
     "version": "0.5.0+commit.1d4f565a.Emscripten.clang"
   },
   "networks": {
-    "1550060287559": {
+    "31": {
       "events": {},
       "links": {},
-      "address": "0x79fD21c186f60d6425834a002Ca44377A568E229",
-      "transactionHash": "0x821231f02134f59ce9323d1ac042df9d0a1829b2af922702623b9cf7642555c9"
+      "address": "0xae303F8fAb4b2A2C82583a7e998C96393Ec23059",
+      "transactionHash": "0x73557290ca1553219e07174ec784af66f2fe61eecbfa07b3a74fd4099b0d7505"
     }
   },
   "schemaVersion": "3.0.1",
-  "updatedAt": "2019-02-13T20:01:58.014Z",
+  "updatedAt": "2019-02-18T20:12:43.755Z",
   "devdoc": {
     "methods": {}
   },

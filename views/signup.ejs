@@ -1,0 +1,20 @@
+<% include partials/header %>
+
+<% include partials/navbar %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="content_table">
+            <h1>Signup</h1>
+                <form action="/signup" method="POST" enctype="multipart/form-data">
+                <input type="text" name="username">
+                <input type="password" name="password">
+                <input type="submit">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include partials/footer %>

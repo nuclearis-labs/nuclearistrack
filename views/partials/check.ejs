@@ -1,7 +1,10 @@
-<% include partials/header %>
+<% include header %>
 
-<% include partials/intro_header %>
+<% include navbar_logged %>
       
+<% include form %>
+
+
 <div class='alert alert-success' role='alert'><p><b>Hash de archivo encontrado en la Blockchain.</b></p>
 <p><b>Hash del archivo: </b><br/>
 <%= hashed %>
@@ -13,6 +16,5 @@
 <%= result.mineTime %>
 </p></div>
 
-<% include partials/intro_footer %>
 
-<% include partials/footer %>
+<% include footer %>
