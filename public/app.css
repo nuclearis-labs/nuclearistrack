@@ -1,0 +1,49 @@
+body {
+	background: url(http://www.stahlseite.de/freital1672g.jpg);
+	background-size: cover;
+	background-position: center;
+	font-family: 'Maven Pro', sans-serif;
+}
+html {
+	height: 100%;
+}
+li {
+	color: white;
+}
+#content {
+	color: white;
+	text-align: center;
+	padding-top: 25%;
+}
+#intro {
+	color: black;
+	background-color: azure;
+	border: 1px solid black;
+	border-radius: 10px;
+	padding: 10px 10px 10px 10px;
+}
+#content_table {
+	color: white;
+	text-align: center;
+	padding-top: 10%;
+}
+h1 {
+	font-weight: 700;
+	font-size: 3em;
+	text-shadow: 3px 2px 4px black;
+}
+hr {
+	width: 400px;
+	border: 1px solid white;
+}
+td {
+	color: black;
+}
+th {
+	color: black;
+}
+.table {
+	width: 90%;
+	margin: auto;
+	margin-bottom: 30px;
+}

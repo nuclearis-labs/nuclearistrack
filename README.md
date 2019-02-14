@@ -44,3 +44,5 @@ Se puede ver el diseño en la siguiente pagina, tener en cuenta que es un protot
 ## Credito
 
 - [docCertTutorial by stbeyer](https://link.medium.com/V4nLyzqJUT)
+- [PassPort Local](https://github.com/jaredhanson/passport-local)
+- [PassPort Local Mongoose](https://github.com/saintedlama/passport-local-mongoose)
