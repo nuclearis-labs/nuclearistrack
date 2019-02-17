@@ -1,6 +1,6 @@
 <% include partials/header %>
 
-<% include partials/navbar %>
+<% include partials/navbar_logged %>
 
 <div id="content_table"><h1>Listado de todos los documentos</h1>
 </div>
@@ -36,9 +36,9 @@
                             <i class="far fa-times-circle"></i>
                         <% } %>
                     </td>
-                    <td><%= element.user %></td>
+                    <td><%= element.username %></td>
                 </tr>
-            <% }) %>
+            <% })%>
             </tbody>
         </table>
             </div>

@@ -1,11 +1,14 @@
 <% include header %>
 
-<% include navbar %>
+<% include navbar_logged %>
 
 <% include form %>
 
 
 <div class='alert alert-warning' role='alert'><p><b>Hash de archivo ya fue guardado en la Blockchain.</b></p>
+<p><b>Identificación de archivo:</b><br/>
+<%= docid %>
+</p>
 <p><b>Hash del archivo: </b><br/>
 <%= hashed %>
 </p>
