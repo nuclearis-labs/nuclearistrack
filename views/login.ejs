@@ -1,20 +1,26 @@
 <% include partials/header %>
 
-<% include partials/navbar %>
-
-<div class="container">
-    <div class="row">
-        <div class="col-lg-12">
-            <div id="content_table">
-            <h1>Login</h1>
-                <form action="/login" method="POST" enctype="multipart/form-data">
-                <input type="text" name="username">
-                <input type="password" name="password">
-                <input type="submit">
-                </form>
+<main>
+    <div class="container" style="width:60%">
+        <h1 class="titulo"><%= texts.login %></h1>
+        <form action="/login" method="POST" enctype="multipart/form-data">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="<%= texts.user %>" aria-label="Username"
+                    name="username" aria-describedby="basic-addon1" required>
             </div>
-        </div>
-    </div>
-</div>
+            <div class="input-group mb-3">
+                <input type="password" class="form-control" placeholder="<%= texts.pwd %>" aria-label="password"
+                    name="password" aria-describedby="basic-addon1" required>
+            </div>
 
+            <button type='submit' formaction="/login" class="btn btn-lg btn-secondary">
+                <%= texts.submit %>
+            </button>
+        </form>
+        <% if (typeof message !== 'undefined') { %>
+        <h3 class="faillogin"><%= message %></h3>
+        <% } %>
+    </div>
+
+</main>
 <% include partials/footer %>

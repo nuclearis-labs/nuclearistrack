@@ -1,47 +1,49 @@
 <% include partials/header %>
 
-<% include partials/navbar %>
-
-<div id="content_table"><h1>Listado de todos los documentos</h1>
-</div>
-
-            <div id="table">
-            <hr>
-            <table class="table">
-            <thead class="thead-dark">
+<main>
+    <h1 class="titulo"><%= texts.list %></h1>
+    <form method="GET" action="/list">
+        <div class="input-group mb-3">
+            <select class="custom-select" id="inputGroupSelect02" name="cc" onchange="this.form.submit()">
+                    <option>Elegir proyectos</option>
+                <option value='all'>Todos los proyectos</option>
+              <option value="2130">2130</option>
+              <option value="2320">2320</option>
+            </select>
+          </div>
+    </form>
+    <table class="table table-light">
+        <thead class="thead-light">
             <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Hash</th>
-            <th scope="col">Tx </th>
-            <th scope="col">Minado?</th>
-            <th scope="col">Usuario</th>
+                <th scope="col">Identificación de archivo</th>
+                <th scope="col">Archivo</th>
+                <th scope="col">Autenticidad</th>
+                <th scope="col">Anular</th>
             </tr>
         </thead>
+
         <tbody>
             <% list.forEach(function(element){ %>
-                <tr class="table-light">    
-                    <th scope="row"><%= element.id %></th>
-                    <td>
-                        <a href="#" title=<%= element.hash %>><%= element.hash.slice(0,6) %> ... <%= element.hash.slice(-6) %>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="#" title=<%= element.tx %>><%= element.tx.slice(0,6) %> ... <%= element.tx.slice(-6) %>
-                        </a>
-                    </td>
-                    <td style="text-align: center">
-                        <% if (element.mined === true) { %>
-                            <i class="far fa-check-square"></i>
-                        <% } else { %>
-                            <i class="far fa-times-circle"></i>
-                        <% } %>
-                    </td>
-                    <td><%= element.user %></td>
-                </tr>
+            <% if (element.visible === true) { %>
+            <tr>
+                <th scope="row"><%= element.username +'-'+element.proyecto +'-'+element.id %></th>
+                    <td><a href="<%= element.filename %>" download="<%= element.username %>-2320-<%= element.id %>"><i class="fas fa-file"></i></a></td>
+                    <td><a href="/check?hash=<%= element.hash %>"><i class="fas fa-question-circle"></i></a></td>
+                    <td><a href="#" tabindex="0" data-container="body" data-toggle="popover" data-trigger="focus" data-html=true data-placement="right" html="true" data-content="<strong>Confirmar por favor<br><a href='/delete?hash=<%=element.hash%>'>Borrar documento</a></strong>"><i class="fas fa-trash"></a></i>
+            </tr>
+            <% }%>
             <% }) %>
-            </tbody>
-        </table>
-            </div>
+        </tbody>
+    </table>
+    <ul class="pagination">
 
-      
+        <% let pages = Math.ceil(countDoc / perpage); %>
+          <li class="page-item"><a class="page-link" href="list?page=<% if (page==1) { %><%=pages%><% } %>">Previous</a></li>
+          <% for (i=1; i <= pages;i++)  {%>
+          <li class="page-item"><a class="page-link" href="/list?page=<%= i %>"><%= i %></a></li>
+          <% } %>
+          <li class="page-item"><a class="page-link" href="/list?page=<% if (page == pages) { %><%=page%><% } %>">Next</a></li>
+        </ul>
+</main>
+
 <% include partials/footer %>

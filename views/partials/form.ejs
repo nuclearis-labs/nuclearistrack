@@ -1,36 +1,47 @@
-<div class="container">
-    <div class="row">
-        <div class="col-lg-12">
-            <div id="content">
-                <form method="POST" id="hashform" enctype="multipart/form-data">
-                  <div class="mb-3">
-                    <div class="custom-file">
-                      <input type="file" id="hashFile" name="newhash" class="custom-file-input" required>
-                      <label class="custom-file-label" for="customFileLang" data-browse="Elegir">
-                        Seleccionar un archivo...
-                      </label>
-                      <div class="invalid-feedback">
-                        Se requiere cargar un archivo
-                      </div>
-                    </div>
-                    <div class="form-group" style="padding-top: 1rem;">
-                    <input type="text" name="id" placeholder="Identificiación de certificado">
-                    </div>
-                    <div class="form-group" style="padding-top: 1rem;">
-                    <button type='submit' formaction="/hash" id="sendHashButton" class="btn btn-light">
-                      Subir hash a la Blockchain
-                    </button>
-                    <button type='submit' formaction="/check" id="findHashButton" class="btn btn-light">
-                    Chequear autenticidad
-                    </button>
-          
-                  </div>
-                </form>
-      
-              <div class="lds-ellipsis" style="display: none" id="loader"><div></div><div></div><div></div><div></div></div>
-              <div id=responseText></div>
+<main>
+  <h1 class="titulo"><%= texts.titulohash %></h1>
+  <form method="POST" id="hashform" enctype="multipart/form-data">
+    <div class="custom-file">
+      <input type="file" id="hashFile" name="newhash" class="custom-file-input" required>
+      <label class="custom-file-label" for="customFileLang" data-browse="Elegir">
+        <%= texts.filehash  %>
+      </label>
+      <div class="invalid-feedback">
+        Se requiere cargar un archivo
+      </div>
+      <div class="input-group mb-3"></div>
 
-            </div>
+      <div class="input-group mb-3">
+        <select class="custom-select" id="inputGroupSelect02" name="cc">
+          <option value="2130">2130</option>
+          <option value="2320">2320</option>
+        </select>
+        <div class="input-group-append">
+          <label class="input-group-text" for="inputGroupSelect02"><%= texts.cc %></label>
         </div>
-    </div>
-</div>
+      </div>
+
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="<%= texts.fileid %>" aria-label="Username" name="id"
+          aria-describedby="basic-addon1" required>
+      </div>
+
+      <div class="input-group mb-3"> <button type='submit' formaction="/hash" id="sendHashButton"
+          class="btn btn-md btn-light">
+          <%= texts.uploadhash %>
+        </button>
+      </div>
+      <div class="input-group mb-3">
+        <button type='submit' formaction="/check" id="findHashButton" class="btn btn-md btn-light"">
+          <%= texts.checkhash %>
+        </button>
+        </div>
+
+  </form>
+  <div class=" loader">
+          <div class="inner one"></div>
+          <div class="inner two"></div>
+          <div class="inner three"></div>
+          <div class="nucleus"></div>
+      </div>
+</main>

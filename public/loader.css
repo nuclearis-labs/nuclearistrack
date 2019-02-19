@@ -1,55 +1,76 @@
-.lds-ellipsis {
-	margin: auto;
-	position: relative;
-	width: 64px;
-	height: 64px;
-}
-.lds-ellipsis div {
+.loader {
+	display: none;
 	position: absolute;
-	top: 27px;
-	width: 11px;
-	height: 11px;
+	top: calc(50% - 100px);
+	left: calc(50% - 100px);
+	width: 200px;
+	height: 200px;
 	border-radius: 50%;
-	background: #000000;
-	animation-timing-function: cubic-bezier(0, 1, 1, 0);
+	perspective: 800px;
 }
-.lds-ellipsis div:nth-child(1) {
-	left: 6px;
-	animation: lds-ellipsis1 0.6s infinite;
+
+.inner {
+	position: absolute;
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
 }
-.lds-ellipsis div:nth-child(2) {
-	left: 6px;
-	animation: lds-ellipsis2 0.6s infinite;
+
+.inner.one {
+	left: 0%;
+	top: 0%;
+	animation: rotate-one 1s linear infinite;
+	border-bottom: 3px solid #efeffa;
 }
-.lds-ellipsis div:nth-child(3) {
-	left: 26px;
-	animation: lds-ellipsis2 0.6s infinite;
+
+.inner.two {
+	right: 0%;
+	top: 0%;
+	animation: rotate-two 1s linear infinite;
+	border-right: 3px solid #efeffa;
 }
-.lds-ellipsis div:nth-child(4) {
-	left: 45px;
-	animation: lds-ellipsis3 0.6s infinite;
+
+.inner.three {
+	right: 0%;
+	bottom: 0%;
+	animation: rotate-three 1s linear infinite;
+	border-top: 3px solid #efeffa;
 }
-@keyframes lds-ellipsis1 {
+
+.nucleus {
+	border-radius: 50%;
+	width: 15px;
+	height: 15px;
+	background: white;
+	top: calc(100% - 38px);
+	left: calc(100% - 38px);
+	position: absolute;
+}
+
+@keyframes rotate-one {
 	0% {
-		transform: scale(0);
+		transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);
 	}
 	100% {
-		transform: scale(1);
+		transform: rotateX(35deg) rotateY(-45deg) rotateZ(360deg);
 	}
 }
-@keyframes lds-ellipsis3 {
+
+@keyframes rotate-two {
 	0% {
-		transform: scale(1);
+		transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg);
 	}
 	100% {
-		transform: scale(0);
+		transform: rotateX(50deg) rotateY(10deg) rotateZ(360deg);
 	}
 }
-@keyframes lds-ellipsis2 {
+
+@keyframes rotate-three {
 	0% {
-		transform: translate(0, 0);
+		transform: rotateX(35deg) rotateY(55deg) rotateZ(0deg);
 	}
 	100% {
-		transform: translate(19px, 0);
+		transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
 	}
 }
