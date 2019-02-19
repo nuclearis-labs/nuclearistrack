@@ -56,62 +56,67 @@ app.set('view engine', 'ejs');
 //=======================
 //FUNCTIONS
 //=======================
+function estimateGasLimit(account, hash) {
+	return new Promise((resolve) => {
+		contract.methods.addDocHash(hash).estimateGas({ from: account }, function(err, result) {
+			if (err) {
+				console.log('Error: ' + err);
+			} else {
+				resolve(result);
+			}
+		});
+	});
+}
 
-function send_test(hash) {
+function estimateGasPrice() {
+	return new Promise((resolve) => {
+		resolve(web3.eth.getGasPrice());
+	});
+}
+
+async function MO_send(hash, docid, user, callback) {
 	let data = contract.methods.addDocHash(hash).encodeABI();
-	web3.eth.getTransactionCount(address, function(err, nonce) {
+	try {
+		var gaslimit = await estimateGasLimit(account, hash);
+	} catch (err) {
+		console.log(err);
+	}
+	try {
+		var gasprice = await estimateGasPrice();
+	} catch (err) {
+		console.log(err);
+	}
+
+	web3.eth.getTransactionCount(account, function(err, nonce) {
 		const rawTx = {
 			nonce: web3.utils.toHex(nonce),
-			gasPrice: '0x09184e72a000',
-			gasLimit: '0x2710',
+			gasPrice: web3.utils.toHex(gasprice),
+			gasLimit: web3.utils.toHex(gaslimit),
 			to: address,
 			value: '0x00',
 			data: data
 		};
-		//console.log(rawTx);
 
 		const tx = new ethereumjs(rawTx);
 		tx.sign(privkey);
 		const serializedTx = tx.serialize();
-		//console.log(serializedTx);
-		web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex')).on('transactionHash', (hash) => {
-			console.log('Got Hash: ' + hash);
-		});
-	});
-}
-send_test('0x955484113606b4041c0e32a2a94152923e6ea55c1cb61a67fbf14b1aa899ac80');
 
-//MO_send('0x955484113606b4041c0e32a2a94152923e6ea55c1cb61a67fbf14b1aa899ac80', 'hello', 'NRS');
-
-function MO_send(hash, docid, user, callback) {
-	contract.methods
-		.addDocHash(hash)
-		.send({ from: account })
-		.on('transactionHash', (tx) => {
-			Document.create({ id: docid, hash: hash, tx: tx, mined: false, username: user }, function(err, doc) {
-				if (err) {
-					console.log('Something went wrong');
-				} else {
-					console.log(tx);
-					console.log(doc);
-				}
-			});
-			callback(null, tx);
-		})
-		.on('receipt', (receipt) => {})
-		.on('confirmation', (confirmationNumber, receipt) => {
-			if (confirmationNumber > 20) {
-				Document.update({ tx: receipt.transactionHash }, { $set: { mined: true } }, function(err, doc) {
-					if (err) {
-						console.log('Something went wrong');
-					} else {
-						console.log(receipt);
-						console.log(doc);
-					}
+		web3.eth
+			.sendSignedTransaction('0x' + serializedTx.toString('hex'))
+			.on('transactionHash', (hash) => {
+				Document.create({ id: docid, hash: hash, tx: tx, mined: false, username: user }, function(err, doc) {
+					callback(null, hash);
 				});
-			}
-		})
-		.on('error', console.error);
+			})
+			.on('receipt', (receipt) => {
+				Document.update({ tx: receipt.transactionHash }, { $set: { mined: true } }, function(err, doc) {
+					console.log('Got receipt: ' + receipt);
+				});
+			})
+			.on('error', (error) => {
+				console.log(error);
+			});
+	});
 }
 
 //looks up a hash on the blockchain
