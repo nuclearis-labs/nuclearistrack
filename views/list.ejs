@@ -1,6 +1,6 @@
 <% include partials/header %>
 
-<% include partials/navbar %>
+<% include partials/navbar_logged %>
 
 <div id="content_table"><h1>Listado de todos los documentos</h1>
 </div>
@@ -25,7 +25,7 @@
                         </a>
                     </td>
                     <td>
-                        <a href="https://explorer.testnet.rsk.co/tx/<%= element.tx %>" title=<%= element.tx %>><%= element.tx.slice(0,6) %> ... <%= element.tx.slice(-6) %>
+                        <a href="https://explorer.testnet.rsk.co/tx/<%= element.tx %>" target="_blank" title=<%= element.tx %>><%= element.tx.slice(0,6) %> ... <%= element.tx.slice(-6) %>
                         </a>
                     </td>
                     <td><%= element.user %></td>

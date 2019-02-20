@@ -193,7 +193,7 @@ app.get('/', function(req, res) {
 });
 
 app.get('/hash', isLoggedIn, function(req, res) {
-	res.render('hash_logged', { username: req.session.user });
+	res.render('hash', { username: req.session.user });
 });
 
 app.get('/list', isLoggedIn, function(req, res) {
@@ -202,7 +202,7 @@ app.get('/list', isLoggedIn, function(req, res) {
 		if (err) {
 			console.log('Something went wrong');
 		} else {
-			res.render('list_logged', { list: doc, username: req.session.user });
+			res.render('list', { list: doc, username: req.session.user });
 		}
 	});
 });
