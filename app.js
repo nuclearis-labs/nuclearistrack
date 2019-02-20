@@ -16,6 +16,8 @@ var express = require('express'),
 
 var app = express();
 
+const PORT = process.env.PORT || 5000;
+
 app.use(
 	require('express-session')({
 		secret: 'oomph quant brake linseed vitrics deicide abandon piping playboy yataghan',
@@ -59,7 +61,7 @@ var abi = parsed.abi;
 
 contract = new web3.eth.Contract(abi, address);
 
-//app.use(express.static('public'));
+app.use(express.static('public'));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -356,6 +358,4 @@ app.get('*', function(req, res) {
 	res.render('lost');
 });
 
-app.listen(PORT || 3000, 'localhost', function() {
-	console.log('Server working');
-});
+app.listen(PORT, () => console.log('Server working on ' + PORT));
