@@ -4,7 +4,6 @@
 	"description": "This repository holds the source code for the tutorials at:",
 	"main": "app.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "node app.js"
 	},
 	"repository": {
@@ -24,7 +23,6 @@
 		"express-brute": "^1.0.1",
 		"express-brute-mongoose": "^1.1.0",
 		"express-session": "^1.15.6",
-		"jssha": "^2.3.1",
 		"mongoose": "^5.4.11",
 		"multer": "^1.4.1",
 		"passport": "^0.4.0",

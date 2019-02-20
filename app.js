@@ -27,8 +27,17 @@ app.use(
 
 var upload = multer({ dest: 'uploads/' });
 
+var pwd = encodeURI('XhD*,CWng9=*s>,8wXvX');
+
 // Require and connect to mongoose database
-mongoose.connect('mongodb://localhost/mo_nrs', { useNewUrlParser: true });
+mongoose.connect(
+	'mongodb://smartinez:' +
+		pwd +
+		'@nrsblockchain-shard-00-00-kzg9l.mongodb.net:27017,nrsblockchain-shard-00-01-kzg9l.mongodb.net:27017,nrsblockchain-shard-00-02-kzg9l.mongodb.net:27017/test?ssl=true&replicaSet=NRSBlockchain-shard-0&authSource=admin&retryWrites=true',
+	{
+		useNewUrlParser: true
+	}
+);
 mongoose.set('useCreateIndex', true);
 
 const BruteForceSchema = require('express-brute-mongoose/dist/schema');
@@ -50,7 +59,7 @@ var abi = parsed.abi;
 
 contract = new web3.eth.Contract(abi, address);
 
-app.use(express.static('public'));
+//app.use(express.static('public'));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -131,14 +140,14 @@ function MO_send(hash, docid, user, callback) {
 						console.log('Error: ' + err);
 					}
 					console.log(doc);
-					callback(null, hash);
+					callback(null, tx);
 				});
 			})
 			.on('receipt', (receipt) => {
-				Document.update({ tx: receipt.transactionHash }, { $set: { mined: true } }, function(err, doc) {
+				Document.updateOne({ tx: receipt.transactionHash }, { $set: { mined: true } }, function(err, doc) {
 					if (err) console.log(err);
-					console.log('Got receipt: ' + receipt);
-					console.log('Database updated: ' + doc);
+					console.log(receipt);
+					console.log(doc);
 				});
 			})
 			.catch((error) => {
@@ -197,7 +206,7 @@ app.get('/signup', function(req, res) {
 });
 
 app.get('/login', function(req, res) {
-	if (err) res.render('login');
+	res.render('login');
 });
 
 app.get('/logout', function(req, res) {
