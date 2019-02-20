@@ -54,7 +54,7 @@ app.use(
 
 var contract = undefined;
 var account = '0x307EAa91FA219463Ac521f9A549dBDc7fF82C06c';
-var address = '0xD0de256c1C531b77D66e86C0E39E87dee6572195';
+var address = '0x494213D95AfCa5bcd4113e6d35f5A18fA6Fc445f';
 var privkey = new Buffer.from('7a0824e86e5c362c523d7f4991de30b56a9c04f653c33573b0a1e3b8850b23c6', 'hex');
 
 const web3 = new Web3(Web3.givenProvider || 'https://public-node.testnet.rsk.co:443');
