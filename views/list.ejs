@@ -12,7 +12,7 @@
             <tr>
             <th scope="col">ID</th>
             <th scope="col">Hash</th>
-            <th scope="col">Tx </th>
+            <th scope="col">Tx</th>
             <th scope="col">Usuario</th>
             </tr>
         </thead>
@@ -28,7 +28,7 @@
                         <a href="https://explorer.testnet.rsk.co/tx/<%= element.tx %>" target="_blank" title=<%= element.tx %>><%= element.tx.slice(0,6) %> ... <%= element.tx.slice(-6) %>
                         </a>
                     </td>
-                    <td><%= element.user %></td>
+                    <td><%= element.username %></td>
                 </tr>
             <% }) %>
             </tbody>
