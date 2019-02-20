@@ -12,20 +12,13 @@ var express = require('express'),
 	User = require('./models/user'),
 	ethereumjs = require('ethereumjs-tx'),
 	ExpressBrute = require('express-brute'),
-	MongooseStore = require('express-brute-mongoose');
+	MongooseStore = require('express-brute-mongoose'),
+	BruteForceSchema = require('express-brute-mongoose/dist/schema'),
+	session = require('express-session');
 
 var app = express();
 
 const PORT = process.env.PORT || 5000;
-
-app.use(
-	require('express-session')({
-		secret: 'oomph quant brake linseed vitrics deicide abandon piping playboy yataghan',
-		resave: false,
-		saveUninitialized: false,
-		cookie: { secure: false }
-	})
-);
 
 var upload = multer({ dest: 'uploads/' });
 
@@ -42,11 +35,22 @@ mongoose.connect(
 );
 mongoose.set('useCreateIndex', true);
 
-const BruteForceSchema = require('express-brute-mongoose/dist/schema');
-const model = mongoose.model('bruteforce', new mongoose.Schema(BruteForceSchema));
-const store = new MongooseStore(model);
+const brutemodel = mongoose.model('bruteforce', new mongoose.Schema(BruteForceSchema));
+const brutestore = new MongooseStore(brutemodel);
 
-var bruteforce = new ExpressBrute(store);
+var bruteforce = new ExpressBrute(brutestore);
+
+const MS = require('express-mongoose-store')(session, mongoose);
+
+app.use(
+	session({
+		secret: 'oomph quant brake linseed vitrics deicide abandon piping playboy yataghan',
+		resave: false,
+		store: new MS({ ttl: 600000 }),
+		saveUninitialized: false,
+		cookie: { secure: false }
+	})
+);
 
 var contract = undefined;
 var account = '0x307EAa91FA219463Ac521f9A549dBDc7fF82C06c';
