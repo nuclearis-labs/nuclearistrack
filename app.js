@@ -356,6 +356,6 @@ app.get('*', function(req, res) {
 	res.render('lost');
 });
 
-app.listen(process.env.PORT || 3000, 'localhost', function() {
+app.listen(PORT || 3000, 'localhost', function() {
 	console.log('Server working');
 });
