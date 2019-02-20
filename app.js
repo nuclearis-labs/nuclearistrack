@@ -10,7 +10,9 @@ var express = require('express'),
 	mongoose = require('mongoose'),
 	Document = require('./models/document'),
 	User = require('./models/user'),
-	ethereumjs = require('ethereumjs-tx');
+	ethereumjs = require('ethereumjs-tx'),
+	ExpressBrute = require('express-brute'),
+	MongooseStore = require('express-brute-mongoose');
 
 var app = express();
 
@@ -27,10 +29,17 @@ var upload = multer({ dest: 'uploads/' });
 
 // Require and connect to mongoose database
 mongoose.connect('mongodb://localhost/mo_nrs', { useNewUrlParser: true });
+mongoose.set('useCreateIndex', true);
+
+const BruteForceSchema = require('express-brute-mongoose/dist/schema');
+const model = mongoose.model('bruteforce', new mongoose.Schema(BruteForceSchema));
+const store = new MongooseStore(model);
+
+var bruteforce = new ExpressBrute(store);
 
 var contract = undefined;
-var account = '0x307eaa91fa219463ac521f9a549dbdc7ff82c06c';
-var address = '0xae303F8fAb4b2A2C82583a7e998C96393Ec23059';
+var account = '0x307EAa91FA219463Ac521f9A549dBDc7fF82C06c';
+var address = '0xD0de256c1C531b77D66e86C0E39E87dee6572195';
 var privkey = new Buffer.from('7a0824e86e5c362c523d7f4991de30b56a9c04f653c33573b0a1e3b8850b23c6', 'hex');
 
 const web3 = new Web3(Web3.givenProvider || 'https://public-node.testnet.rsk.co:443');
@@ -57,10 +66,10 @@ app.set('view engine', 'ejs');
 //FUNCTIONS
 //=======================
 function estimateGasLimit(account, hash) {
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
 		contract.methods.addDocHash(hash).estimateGas({ from: account }, function(err, result) {
 			if (err) {
-				console.log('Error: ' + err);
+				reject(new Error('Error: ' + err));
 			} else {
 				resolve(result);
 			}
@@ -69,23 +78,36 @@ function estimateGasLimit(account, hash) {
 }
 
 function estimateGasPrice() {
-	return new Promise((resolve) => {
-		resolve(web3.eth.getGasPrice());
+	return new Promise((resolve, reject) => {
+		web3.eth.getGasPrice(function(err, result) {
+			if (err) {
+				reject(new Error('Error: ' + err));
+			} else {
+				resolve(result);
+			}
+		});
 	});
 }
 
-async function MO_send(hash, docid, user, callback) {
+function MO_send(hash, docid, user, callback) {
 	let data = contract.methods.addDocHash(hash).encodeABI();
-	try {
-		var gaslimit = await estimateGasLimit(account, hash);
-	} catch (err) {
-		console.log(err);
-	}
-	try {
-		var gasprice = await estimateGasPrice();
-	} catch (err) {
-		console.log(err);
-	}
+	let gasprice;
+	let gaslimit;
+	estimateGasLimit(account, hash)
+		.then((result) => {
+			gaslimit = result;
+			gaslimit += 1000;
+			console.log(gaslimit);
+		})
+		.catch((error) => console.log(error));
+	estimateGasPrice()
+		.then((result) => {
+			gasprice = result;
+			console.log(gasprice);
+		})
+		.catch((error) => {
+			console.log(error);
+		});
 
 	web3.eth.getTransactionCount(account, function(err, nonce) {
 		const rawTx = {
@@ -97,23 +119,29 @@ async function MO_send(hash, docid, user, callback) {
 			data: data
 		};
 
-		const tx = new ethereumjs(rawTx);
-		tx.sign(privkey);
-		const serializedTx = tx.serialize();
+		const ethtx = new ethereumjs(rawTx);
+		ethtx.sign(privkey);
+		const serializedTx = ethtx.serialize();
 
 		web3.eth
 			.sendSignedTransaction('0x' + serializedTx.toString('hex'))
-			.on('transactionHash', (hash) => {
+			.on('transactionHash', (tx) => {
 				Document.create({ id: docid, hash: hash, tx: tx, mined: false, username: user }, function(err, doc) {
+					if (err) {
+						console.log('Error: ' + err);
+					}
+					console.log(doc);
 					callback(null, hash);
 				});
 			})
 			.on('receipt', (receipt) => {
 				Document.update({ tx: receipt.transactionHash }, { $set: { mined: true } }, function(err, doc) {
+					if (err) console.log(err);
 					console.log('Got receipt: ' + receipt);
+					console.log('Database updated: ' + doc);
 				});
 			})
-			.on('error', (error) => {
+			.catch((error) => {
 				console.log(error);
 			});
 	});
@@ -177,7 +205,7 @@ app.get('/logout', function(req, res) {
 	res.redirect('/');
 });
 
-app.post('/login', upload.none(), function(req, res, next) {
+app.post('/login', bruteforce.prevent, upload.none(), function(req, res, next) {
 	passport.authenticate('local', function(err, user) {
 		if (!user) {
 			return res.redirect('/login');
@@ -197,7 +225,7 @@ app.post('/login', upload.none(), function(req, res, next) {
 	})(req, res, next);
 });
 
-app.post('/signup', upload.none(), function(req, res) {
+app.post('/signup', bruteforce.prevent, upload.none(), function(req, res) {
 	User.register(new User({ username: req.body.username }), req.body.password, function(err, user) {
 		if (err) {
 			console.log(err);
@@ -220,28 +248,35 @@ app.post('/hash', upload.single('newhash'), function(req, res, next) {
 	// Defines the encoding as Hex
 	hash.setEncoding('hex');
 
-	fd.on('data', (chunk) => {
-		console.log(`Received ${chunk.length} bytes of data.`);
-	});
-
 	fd.once('end', function() {
 		// When the Read Stream ends, end the hash object and read the obtained hash
 		hash.end();
 		var hashed = hash.read();
+		hashed = '0x' + hashed;
 
-		console.log('0x' + hashed);
+		fs.unlink(req.file.path, (err) => {
+			if (err) throw err;
+			console.log(req.file.path + ' was deleted');
+		});
 
-		MO_find('0x' + hashed, function(error, resultObj) {
+		MO_find(hashed, function(error, resultObj) {
 			if (resultObj.blockNumber != 0) {
-				res.render('partials/check_duplicate', {
-					hashed: hashed,
-					docid: docid,
-					result: resultObj,
-					username: req.session.user
+				Document.findOne({ hash: hashed }, function(err, doc) {
+					if (err) {
+						console.log('Got: ' + err);
+					} else {
+						console.log(doc);
+						res.render('partials/check_duplicate', {
+							hashed: hashed,
+							result: resultObj,
+							doc: doc,
+							username: req.session.user
+						});
+					}
 				});
 			} else {
 				//Call MO_send function with the hex hash and await the result for rendering the hash page
-				MO_send('0x' + hashed, docid, req.session.user, function(error, result) {
+				MO_send(hashed, docid, req.session.user, function(error, result) {
 					if (result) {
 						res.render('partials/hash', {
 							hashed: hashed,
@@ -259,10 +294,6 @@ app.post('/hash', upload.single('newhash'), function(req, res, next) {
 	fd.pipe(hash);
 
 	// Once obtained the hash, delete the file from the server and console.log the deletion.
-	// fs.unlink(req.file.path, (err) => {
-	// 	if (err) throw err;
-	// 	console.log(req.file.path + ' was deleted');
-	// });
 });
 
 app.post('/check', upload.single('newhash'), function(req, res, next) {
@@ -274,21 +305,32 @@ app.post('/check', upload.single('newhash'), function(req, res, next) {
 	// Defines the encoding as Hex
 	hash.setEncoding('hex');
 
-	fd.on('data', (chunk) => {
-		console.log(`Received ${chunk.length} bytes of data.`);
-	});
-
 	fd.once('end', function() {
 		// When the Read Stream ends, end the hash object and read the obtained hash
 		hash.end();
 		var hashed = hash.read();
+		hashed = '0x' + hashed;
 
-		console.log('0x' + hashed);
+		fs.unlink(req.file.path, (err) => {
+			if (err) throw err;
+			console.log(req.file.path + ' was deleted');
+		});
 
 		//Call MO_find function with the hex hash and await the result for rendering the check hash page
-		MO_find('0x' + hashed, function(error, resultObj) {
+		MO_find(hashed, function(error, resultObj) {
 			if (resultObj.blockNumber != 0) {
-				res.render('partials/check', { hashed: hashed, result: resultObj, username: req.session.user });
+				Document.findOne({ hash: hashed }, function(err, doc) {
+					if (err) {
+						console.log('Got: ' + err);
+					} else {
+						res.render('partials/check', {
+							hashed: hashed,
+							result: resultObj,
+							doc: doc,
+							username: req.session.user
+						});
+					}
+				});
 			} else {
 				res.render('partials/check_notfound', { hashed: hashed, username: req.session.user });
 			}
@@ -299,10 +341,6 @@ app.post('/check', upload.single('newhash'), function(req, res, next) {
 	fd.pipe(hash);
 
 	// Once obtained the hash, delete the file from the server and console.log the deletion.
-	// fs.unlink(req.file.path, (err) => {
-	// 	if (err) throw err;
-	// 	console.log(req.file.path + ' was deleted');
-	// });
 });
 
 app.get('*', function(req, res) {

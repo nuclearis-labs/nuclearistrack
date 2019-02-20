@@ -1,33 +1,36 @@
 {
-  "name": "NUCLEARIS-Material-Organization",
-  "version": "0.1.0",
-  "description": "This repository holds the source code for the tutorials at:",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Sebastinez/NUCLEARIS-Material-Organization.git"
-  },
-  "author": "Sebastian Martinez",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Sebastinez/NUCLEARIS-Material-Organization/issues"
-  },
-  "homepage": "https://github.com/Sebastinez/NUCLEARIS-Material-Organization#readme",
-  "dependencies": {
-    "ejs": "^2.6.1",
-    "ethereumjs-tx": "^1.3.7",
-    "express": "^4.16.4",
-    "express-session": "^1.15.6",
-    "jssha": "^2.3.1",
-    "mongoose": "^5.4.11",
-    "multer": "^1.4.1",
-    "passport": "^0.4.0",
-    "passport-local": "^1.0.0",
-    "passport-local-mongoose": "^5.0.1",
-    "truffle-hdwallet-provider": "^1.0.3",
-    "web3": "^1.0.0-beta.46"
-  }
+	"name": "NUCLEARIS-Material-Organization",
+	"version": "0.1.0",
+	"description": "This repository holds the source code for the tutorials at:",
+	"main": "app.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "start StartMongo.bat && node app.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Sebastinez/NUCLEARIS-Material-Organization.git"
+	},
+	"author": "Sebastian Martinez",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/Sebastinez/NUCLEARIS-Material-Organization/issues"
+	},
+	"homepage": "https://github.com/Sebastinez/NUCLEARIS-Material-Organization#readme",
+	"dependencies": {
+		"ejs": "^2.6.1",
+		"ethereumjs-tx": "^1.3.7",
+		"express": "^4.16.4",
+		"express-brute": "^1.0.1",
+		"express-brute-mongoose": "^1.1.0",
+		"express-session": "^1.15.6",
+		"jssha": "^2.3.1",
+		"mongoose": "^5.4.11",
+		"multer": "^1.4.1",
+		"passport": "^0.4.0",
+		"passport-local": "^1.0.0",
+		"passport-local-mongoose": "^5.0.1",
+		"truffle-hdwallet-provider": "^1.0.3",
+		"web3": "^1.0.0-beta.46"
+	}
 }

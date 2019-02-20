@@ -4,16 +4,23 @@
       
 <% include form %>
 
+<% var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }; %>
 
 <div class='alert alert-success' role='alert'><p><b>Hash de archivo encontrado en la Blockchain.</b></p>
+<p><b>Identificación del archivo: </b><br/>
+<%= doc.id %>
+</p>
 <p><b>Hash del archivo: </b><br/>
 <%= hashed %>
 </p>
+<p><b>Hash de Transacción: </b><br/>
+<a href="https://explorer.testnet.rsk.co/tx/<%= doc.tx %>" target="_blank"><%= doc.tx %></a>
+</p>
 <p><b>Nº de bloque minado: </b><br/>
-<%= result.blockNumber %>
+<a href="https://explorer.testnet.rsk.co/block/<%= result.blockNumber %>" target="_blank"><%= result.blockNumber %></a>
 </p>
 <p><b>Fecha y hora de bloque minado: </b><br/>
-<%= result.mineTime %>
+<%= result.mineTime.toLocaleDateString('es-US',options) %>
 </p></div>
 
 

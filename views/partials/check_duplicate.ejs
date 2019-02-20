@@ -7,13 +7,16 @@
 
 <div class='alert alert-warning' role='alert'><p><b>Hash de archivo ya fue guardado en la Blockchain.</b></p>
 <p><b>Identificación de archivo:</b><br/>
-<%= docid %>
+<%= doc.id %>
 </p>
 <p><b>Hash del archivo: </b><br/>
 <%= hashed %>
 </p>
+<p><b>Hash de Transacción: </b><br/>
+<a href="https://explorer.testnet.rsk.co/tx/<%= doc.tx %>" target="_blank"><%= doc.tx %></a>
+</p>
 <p><b>Nº de bloque minado: </b><br/>
-<%= result.blockNumber %>
+<a href="https://explorer.testnet.rsk.co/block/<%= result.blockNumber %>" target="_blank"><%= result.blockNumber %></a>
 </p>
 <p><b>Fecha y hora de bloque minado: </b><br/>
 <%= result.mineTime %>
