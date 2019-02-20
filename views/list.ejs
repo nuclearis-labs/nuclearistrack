@@ -13,7 +13,6 @@
             <th scope="col">ID</th>
             <th scope="col">Hash</th>
             <th scope="col">Tx </th>
-            <th scope="col">Minado?</th>
             <th scope="col">Usuario</th>
             </tr>
         </thead>
@@ -26,15 +25,8 @@
                         </a>
                     </td>
                     <td>
-                        <a href="#" title=<%= element.tx %>><%= element.tx.slice(0,6) %> ... <%= element.tx.slice(-6) %>
+                        <a href="https://explorer.testnet.rsk.co/tx/<%= element.tx %>" title=<%= element.tx %>><%= element.tx.slice(0,6) %> ... <%= element.tx.slice(-6) %>
                         </a>
-                    </td>
-                    <td style="text-align: center">
-                        <% if (element.mined === true) { %>
-                            <i class="far fa-check-square"></i>
-                        <% } else { %>
-                            <i class="far fa-times-circle"></i>
-                        <% } %>
                     </td>
                     <td><%= element.user %></td>
                 </tr>
