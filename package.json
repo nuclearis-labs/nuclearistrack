@@ -29,6 +29,7 @@
 		"passport": "^0.4.0",
 		"passport-local": "^1.0.0",
 		"passport-local-mongoose": "^5.0.1",
+		"translate": "^1.0.4",
 		"truffle-hdwallet-provider": "^1.0.3",
 		"web3": "^1.0.0-beta.46"
 	}
