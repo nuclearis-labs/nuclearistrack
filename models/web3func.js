@@ -1,6 +1,6 @@
 const Web3 = require('web3'),
 	fs = require('fs'),
-	Document = require('../models/document'),
+	Document = require('./document'),
 	ethereumjs = require('ethereumjs-tx');
 
 var contract = undefined;

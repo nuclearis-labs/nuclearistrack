@@ -7,7 +7,6 @@ const express = require('express'),
 	bruteforce = require('../models/bruteforce');
 
 router.get('/', function(req, res) {
-	console.log(req.session);
 	res.render('home');
 });
 
