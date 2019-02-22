@@ -1,0 +1,15 @@
+{
+	"inicio": "Übersicht",
+	"titulo": "Autentizität mit Hilfe der Blockchain",
+	"login": "Anmelden",
+	"signup": "Registration",
+	"user": "Benutzername",
+	"pwd": "Kennwort",
+	"submit": "Abschicken",
+	"titulohash": "Hochladen oder verifizieren von Dateien",
+	"filehash": "Datei auswählen...",
+	"fileid": "Identifikation der Datei",
+	"uploadhash": "Datei hochladen",
+	"checkhash": "Integrität der Datei",
+	"list": "Liste von allen geladenen Dateien"
+}

@@ -1,0 +1,15 @@
+{
+	"inicio": "Home",
+	"titulo": "Autentification through the blockchain",
+	"login": "Login",
+	"signup": "Signup",
+	"user": "User",
+	"pwd": "Password",
+	"submit": "Submit",
+	"titulohash": "Upload or check file",
+	"filehash": "Select a file...",
+	"fileid": "File identification",
+	"uploadhash": "Upload file",
+	"checkhash": "Check integrity of file",
+	"list": "List of all the files uploaded"
+}

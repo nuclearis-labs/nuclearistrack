@@ -1,20 +1,13 @@
 const express = require('express'),
-	router = express.Router(),
+	router = express.Router({ mergeParams: true }),
 	User = require('../models/user'),
 	multer = require('multer'),
 	upload = multer({ dest: 'uploads/' }),
 	passport = require('passport'),
-	translate = require('translate'),
 	bruteforce = require('../models/bruteforce');
 
-function isLoggedIn(req, res, next) {
-	if (req.isAuthenticated()) {
-		return next();
-	}
-	res.redirect('/login');
-}
-
 router.get('/', function(req, res) {
+	console.log(req.session);
 	res.render('home');
 });
 
@@ -60,6 +53,7 @@ router.post('/login', bruteforce.prevent, upload.none(), function(req, res, next
 router.get('/logout', function(req, res) {
 	req.logout();
 	req.session = null;
+	res.clearCookie('session');
 	res.redirect('/');
 });
 

@@ -4,14 +4,16 @@ const express = require('express'),
 	PORT = process.env.PORT || 3000,
 	passport = require('passport'),
 	mongoose = require('mongoose'),
+	flash = require('connect-flash'),
 	User = require('./models/user'),
 	LocalStrategy = require('passport-local'),
-	session = require('express-session');
+	session = require('express-session'),
+	i18nexpress = require('i18n-express');
 
-app.use(function(req, res, next) {
-	res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-	next();
-});
+// app.use(function(req, res, next) {
+// 	res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+// 	next();
+// });
 
 // Define router Routes
 var indexroutes = require('./routes/index'),
@@ -26,7 +28,7 @@ mongoose.set('useFindAndModify', false);
 
 // Set extensions to ejs format
 app.set('view engine', 'ejs');
-app.use(express.static('public'));
+app.use(flash());
 
 // Connect to Express Mongoose Session Store
 const MS = require('express-mongoose-store')(session, mongoose);
@@ -37,7 +39,18 @@ app.use(
 		resave: false,
 		unset: 'destroy',
 		store: new MS({ ttl: 60000 }),
-		saveUninitialized: false
+		saveUninitialized: false,
+		cookie: { secure: false }
+	})
+);
+
+app.use(express.static(__dirname + '/public'));
+
+app.use(
+	i18nexpress({
+		translationsPath: __dirname + '/locales', // <--- use here. Specify translations files path.
+		siteLangs: [ 'en', 'es', 'de' ],
+		browserEnable: true
 	})
 );
 
@@ -51,6 +64,7 @@ passport.deserializeUser(User.deserializeUser());
 // Define user as local request object named currentUser
 app.use(function(req, res, next) {
 	res.locals.currentUser = req.user;
+	res.locals.texts = req.i18n_texts;
 	next();
 });
 

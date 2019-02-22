@@ -1,5 +1,5 @@
 body {
-	background-color: gainsboro;
+	background-color: rgb(30, 154, 183);
 	font-family: 'Maven Pro', sans-serif;
 }
 html {
@@ -25,10 +25,11 @@ li {
 	text-align: center;
 	padding-top: 10%;
 }
-h1 {
-	font-weight: 700;
-	font-size: 3em;
-	text-shadow: 3px 2px 4px black;
+#loader {
+	display: none;
+	margin-top: 20px;
+	width: 3rem;
+	height: 3rem;
 }
 hr {
 	width: 400px;

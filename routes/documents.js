@@ -1,5 +1,5 @@
 const express = require('express'),
-	router = express.Router(),
+	router = express.Router({ mergeParams: true }),
 	Document = require('../models/document'),
 	multer = require('multer'),
 	fs = require('fs'),
@@ -7,17 +7,12 @@ const express = require('express'),
 	web3functions = require('../models/web3'),
 	MO_find = web3functions.MO_find,
 	MO_send = web3functions.MO_send,
-	crypto = require('crypto');
-
-function isLoggedIn(req, res, next) {
-	if (req.isAuthenticated()) {
-		return next();
-	}
-	res.redirect('/login');
-}
+	crypto = require('crypto'),
+	middleware = require('../middleware/index'),
+	isLoggedIn = middleware.isLoggedIn;
 
 router.get('/hash', isLoggedIn, function(req, res) {
-	res.render('hash', { username: req.session.user });
+	res.render('hash');
 });
 
 router.get('/list', isLoggedIn, function(req, res) {
@@ -27,7 +22,7 @@ router.get('/list', isLoggedIn, function(req, res) {
 		if (err) {
 			console.log('Something went wrong');
 		} else {
-			res.render('list', { list: doc, username: req.session.user });
+			res.render('list', { list: doc });
 		}
 	});
 });
@@ -47,6 +42,7 @@ router.post('/hash', isLoggedIn, upload.single('newhash'), function(req, res, ne
 		hash.end();
 		var hashed = hash.read();
 		hashed = '0x' + hashed;
+		console.log(hashed);
 
 		fs.unlink(req.file.path, (err) => {
 			if (err) throw err;
@@ -58,6 +54,7 @@ router.post('/hash', isLoggedIn, upload.single('newhash'), function(req, res, ne
 				Document.findOne({ hash: hashed }, function(err, doc) {
 					if (err) {
 						console.log('Got: ' + err);
+					} else if (!doc) {
 					} else {
 						console.log(doc);
 						res.render('partials/check_duplicate', {
@@ -123,7 +120,7 @@ router.post('/check', isLoggedIn, upload.single('newhash'), function(req, res, n
 					}
 				});
 			} else {
-				res.render('partials/check_notfound', { hashed: hashed, username: req.session.user });
+				res.render('partials/check_notfound', { hashed: hashed });
 			}
 		});
 	});
