@@ -1,56 +1,100 @@
+
 <!doctype html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Blockchain Certification by NUCLEARIS">
-    <meta name="author" content="Sebastian Martinez">
-    <title>NUCLEARIS Blockchain</title>
-    <link href="/app.css" type="text/css" rel="stylesheet">
-    <link href="/loader.css" type="text/css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Maven+Pro" rel="stylesheet">
-</head>
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v3.8.5">
+    <title>Cover Template · Bootstrap</title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/cover/">
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="app.css" rel="stylesheet">
+  </head>
+  <body class="text-center">
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+  <header class="masthead mb-auto">
+    <div class="inner">
+      <div class="masthead-brand"><img src="logo.svg" height="30">
+      </div>
+      
+      <nav class="nav navbar-expand-lg nav-masthead justify-content-center">
+          
+        <a class="nav-link" id="home" href="/">Home</a>
+        <% if (currentUser) { %>
 
-<body>
-    <header>
-        <div class="logo"><img src="logo.svg"></div>
-        <nav>
-            <div class="flex-left">
-                <div class="nav-item"><a href="/"><%= texts.inicio %></a></div>
-            </div>
-            <% if (currentUser) { %>
-            <div class="nav-item">
-                <a class="nav-link" href="/list">List</a>
-            </div>
-            <div class="nav-item">
-                <a class="nav-link" href="/hash">Hash/Verify</a>
-            </div>
-            <% } %>
+        <a class="nav-link" id="list" href="/list">List</a>
+        <a class="nav-link" id="hash" href="/hash">Hash/Verify</a>
+        <a class="nav-link"><%= currentUser.username %></a>
+        <a class="nav-link" href="/logout">Logout</a>
 
-            <div class="flex-right">
-                <div class="lang"><a href="/?clang=es"><img src="flag_arg.svg"></a></div>
-                <div class="lang"><a href="/?clang=en"><img src="flag_eeuu.svg"></a></div>
-                <div class="lang"><a href="/?clang=de"><img src="flag_ger.svg"></a></div>
+        <% } else { %>
+
+
+        <a class="nav-link" id="signup" href="/signup"><%= texts.signup %></a>
+        <a class="nav-link" id="login" href="/login"><%= texts.login %></a>
+        <% } %>
+        <a href="/?clang=es" class="nav-link"><img src="flag_arg.svg" style="height:30px; vertical-align:middle;"></a>
+                    <a href="/?clang=en" class="nav-link"><img src="flag_eeuu.svg"style="height:30px; vertical-align:middle;"></a>
+                    <a href="/?clang=de" class="nav-link"><img src="flag_ger.svg"style="height:30px; vertical-align:middle;"></a>
+          </nav>
+    </div>
+  </header>
+
+
+
+
+
+              
+
+
+    
+                <!--    
+                
+                <a class="navbar-item">
+                    List
+                </a>
+                <hr>
+
+                <a class="navbar-item" href="/signup"><strong></strong></a>
+            </div>
+        </div>
+        <div id="navbarBasicExample" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="/">
+                    <%= texts.inicio %>
+                </a>
                 <% if (currentUser) { %>
-                <div class="nav-item">
-                    <a class="nav-link"><%= currentUser.username %></a>
+                <a class="navbar-item">
+                    List
+                </a>
+                <a class="navbar-item" href="/hash">Hash/Verify</a>
+                <% } %>
+            </div>
+
+            <div class="navbar-end">
+
+                <% if (currentUser) { %>
+                <div class="navbar-item">
+                    <a class="nav-item"><%= currentUser.username %></a>
                 </div>
-                <div class="nav-item">
-                    <a class="nav-link" href="/logout">Logout</a>
+                <div class="buttons">
+                    <a class="button is-primary" href="/logout">Logout</a>
                 </div>
                 <% } else { %>
-                <div class="nav-item">
-                    <a class="nav-link" href="/login"><%= texts.login %></a>
+                <div class="buttons">
                 </div>
-                <div class="nav-item">
-                    <a class="nav-link" href="/signup"><%= texts.signup %></a>
+                <div class="buttons">
+                        <div class="lang"><a href="/?clang=es"><img src="flag_arg.svg"></a></div>
+                        <div class="lang"><a href="/?clang=en"><img src="flag_eeuu.svg"></a></div>
+                        <div class="lang"><a href="/?clang=de"><img src="flag_ger.svg"></a></div>
+                    <a class="button is-primary" href="/signup"><strong><%= texts.signup %></strong></a>
+                    <a class="button is-primary" href="/login"><%= texts.login %></a>
                 </div>
                 <% } %>
-                <!-- <div class="logo"><img src="logo.svg"></div>
-            <div class="nav-item">
-            <a class="nav-link" href="/"></a>
             </div>
-             -->
-        </nav>
-    </header>
+        </div>
+    </nav>
+</div> -->

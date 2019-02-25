@@ -1,19 +1,38 @@
+<script src='https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-	bsCustomFileInput.init();
-	var file = document.getElementById('hashFile');
-	var sendbtn = document.getElementById('sendHashButton');
-	var findbtn = document.getElementById('findHashButton');
-	$('#hashform').submit(function(e) {
-		sendbtn.setAttribute('disabled', '');
-		findbtn.setAttribute('disabled', '');
-		document.getElementById('loader').style = 'display: block';
+	function toggleLinks() {
+		let parsedUrl = new URL(window.location.href);
+		let link = parsedUrl.pathname.slice(1);
+		console.log(link)
+			$("#"+link).toggleClass('active');
+	}
+
+	$(document).ready(function () {
+
+		toggleLinks();
+
+		bsCustomFileInput.init();
+		var file = document.getElementById('hashFile');
+		var sendbtn = document.getElementById('sendHashButton');
+		var findbtn = document.getElementById('findHashButton');
+		$('#hashform').submit(function (e) {
+			sendbtn.setAttribute('disabled', '');
+			findbtn.setAttribute('disabled', '');
+			document.getElementsByClassName('loader').style = 'display: block';
+		});
+		file.addEventListener('change', function () {
+			$('#responseText').html('');
+			document.querySelector('form').className = 'was-validated';
+		});
 	});
-	file.addEventListener('change', function() {
-		$('#responseText').html('');
-		document.querySelector('form').className = 'was-validated';
-	});
-});
 </script>
+<footer class="mastfoot mt-auto">
+	<%#     <div class="inner">
+      <p>NUCLEARIS gives credit for Front-End to <a href="https://getbootstrap.com/">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+    </div>
+ %> </footer>
+</div>
 </body>
+
 </html>

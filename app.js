@@ -4,7 +4,6 @@ const express = require('express'),
 	PORT = process.env.PORT || 3000,
 	passport = require('passport'),
 	mongoose = require('mongoose'),
-	flash = require('connect-flash'),
 	User = require('./models/user'),
 	LocalStrategy = require('passport-local'),
 	session = require('express-session'),
@@ -28,7 +27,6 @@ mongoose.set('useFindAndModify', false);
 
 // Set extensions to ejs format
 app.set('view engine', 'ejs');
-app.use(flash());
 
 // Connect to Express Mongoose Session Store
 const MS = require('express-mongoose-store')(session, mongoose);

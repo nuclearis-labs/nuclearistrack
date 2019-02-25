@@ -1,11 +1,8 @@
 <% include partials/header %>
 
-<div id="content_table">
-    <h1><%= texts.list %></h1>
-</div>
+<main>
+    <h1 class="titulo"><%= texts.list %></h1>
 
-<div id="table">
-    <hr>
     <table class="table">
         <thead class="thead-dark">
             <tr>
@@ -15,28 +12,24 @@
                 <th scope="col">Usuario</th>
             </tr>
         </thead>
+
         <tbody>
             <% list.forEach(function(element){ %>
             <% if (element.username === currentUser.username) { %>
-            <tr class="table-light">
+            <tr>
                 <th scope="row"><%= element.id %></th>
-                <td>
-                    <a href="#" title=<%= element.hash %>><%= element.hash.slice(0,6) %> ...
+                <td><a href="#" title=<%= element.hash %>><%= element.hash.slice(0,6) %> ...
                         <%= element.hash.slice(-6) %>
-                    </a>
-                </td>
-                <td>
-                    <a href="https://explorer.testnet.rsk.co/tx/<%= element.tx %>" target="_blank"
+                    </a></td>
+                <td><a href="https://explorer.testnet.rsk.co/tx/<%= element.tx %>" target="_blank"
                         title=<%= element.tx %>><%= element.tx.slice(0,6) %> ... <%= element.tx.slice(-6) %>
-                    </a>
-                </td>
+                    </a></td>
                 <td><%= element.username %></td>
             </tr>
             <% }%>
             <% }) %>
         </tbody>
     </table>
-</div>
-
+</main>
 
 <% include partials/footer %>

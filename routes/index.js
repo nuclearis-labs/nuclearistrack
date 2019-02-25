@@ -7,11 +7,19 @@ const express = require('express'),
 	bruteforce = require('../models/bruteforce');
 
 router.get('/', function(req, res) {
+	res.redirect('/home');
+});
+
+router.get('/home', function(req, res) {
 	res.render('home');
 });
 
 router.get('/signup', function(req, res) {
 	res.render('signup');
+});
+
+router.get('/index', function(req, res) {
+	res.render('index');
 });
 
 router.post('/signup', bruteforce.prevent, upload.none(), function(req, res) {
@@ -44,7 +52,9 @@ router.post('/login', bruteforce.prevent, upload.none(), function(req, res, next
 		}
 		req.logIn(user, function(err) {
 			if (err) return next(err);
-			return res.redirect('/');
+			req.brute.reset(function() {
+				return res.redirect('/');
+			});
 		});
 	})(req, res, next);
 });
