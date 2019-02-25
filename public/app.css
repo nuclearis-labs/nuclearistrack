@@ -123,7 +123,7 @@ a:hover {
 	font-weight: bold;
 	color: black;
 	border-bottom: .25rem solid transparent;
-	transition: all 0.2s linear;
+	transition: border-bottom 0.2s linear;
 }
 
 .nav-masthead .nav-link:active,
