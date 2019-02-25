@@ -1,48 +1,45 @@
 body {
-	background-color: rgb(30, 154, 183);
-	font-family: 'Maven Pro', sans-serif;
+	margin: 0;
+	padding: 0;
 }
 html {
-	height: 100%;
 }
-li {
-	color: white;
-}
-#content {
-	color: white;
-	text-align: center;
-	padding-top: 25%;
-}
-#intro {
-	color: black;
-	background-color: azure;
-	border: 1px solid black;
-	border-radius: 10px;
-	padding: 10px 10px 10px 10px;
-}
-#content_table {
-	color: white;
-	text-align: center;
-	padding-top: 10%;
-}
-#loader {
-	display: none;
-	margin-top: 20px;
-	width: 3rem;
-	height: 3rem;
-}
-hr {
-	width: 400px;
-	border: 1px solid white;
-}
-td {
-	color: black;
-}
-th {
-	color: black;
-}
-.table {
-	width: 60%;
+header {
+	display: flex;
+	width: 80%;
 	margin: auto;
-	margin-bottom: 30px;
+	height: auto;
+	padding: 0;
+	background-color: white;
+	border-bottom: 1px solid black;
+}
+nav {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	width: 100%;
+	justify-content: space-between;
+}
+.flex-left {
+	display: flex;
+}
+.lang img {
+	transform: translateY(3px);
+}
+.flex-right {
+	display: flex;
+	flex-wrap: wrap;
+}
+.nav-item {
+	padding: 10px;
+}
+.logo img {
+	height: 30px;
+	padding: 15px;
+}
+.lang img {
+	height: 30px;
+}
+.titulo {
+	text-align: center;
 }
