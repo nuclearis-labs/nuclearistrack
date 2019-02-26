@@ -33,7 +33,7 @@ const MS = require('express-mongoose-store')(session, mongoose);
 
 app.use(
 	require('express-session')({
-		secret: 'oomph quant brake linseed vitrics deicide abandon piping playboy yataghan',
+		secret: process.env.session_secret || 'not so secret',
 		resave: false,
 		unset: 'destroy',
 		store: new MS({ ttl: 3600000 }),

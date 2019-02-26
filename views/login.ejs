@@ -1,24 +1,26 @@
 <% include partials/header %>
 
 <main>
-        <div class="container" style="width:60%">
-                <h1 class="titulo"><%= texts.login %></h1>
-    <form action="/login" method="POST" enctype="multipart/form-data">
-        <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="<%= texts.user %>" aria-label="Username" name="username" aria-describedby="basic-addon1" required>
-              </div>
-              <div class="input-group mb-3">
-                    <input type="password" class="form-control" placeholder="<%= texts.pwd %>" aria-label="password" name="password" aria-describedby="basic-addon1" required>
-                  </div>
-                  
-        <button type='submit' formaction="/login" class="btn btn-lg btn-secondary">
-            <%= texts.submit %>
-        </button>
-    </form>
-    <% if (typeof message !== 'undefined') { %>
-    <div class="faillogin"><%= message %></div>
-    <% } %>
-</div>
+    <div class="container" style="width:60%">
+        <h1 class="titulo"><%= texts.login %></h1>
+        <form action="/login" method="POST" enctype="multipart/form-data">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="<%= texts.user %>" aria-label="Username"
+                    name="username" aria-describedby="basic-addon1" required>
+            </div>
+            <div class="input-group mb-3">
+                <input type="password" class="form-control" placeholder="<%= texts.pwd %>" aria-label="password"
+                    name="password" aria-describedby="basic-addon1" required>
+            </div>
+
+            <button type='submit' formaction="/login" class="btn btn-lg btn-secondary">
+                <%= texts.submit %>
+            </button>
+        </form>
+        <% if (typeof message !== 'undefined') { %>
+        <div class="faillogin"><%= message %></div>
+        <% } %>
+    </div>
 
 </main>
 <% include partials/footer %>

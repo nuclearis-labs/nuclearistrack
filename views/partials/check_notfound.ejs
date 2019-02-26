@@ -1,11 +1,24 @@
 <% include header %>
 
-<% include form %>
-
-<div class='alert alert-warning' role='alert'><p><b>Hash de archivo no encontrado en la Blockchain.</b></p>
-<p><b>Hash del archivo: </b><br/>
-<%= hashed %>
-</p></div>
+<div class='alert alert-warning' role='alert'>
+    <i class="fas fa-times-circle"></i>
+    <div style="margin-top:70px;">
+        <p><b>El archivo no es valido.</b></p>
+        <p>
+            <a class="btn btn-info" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                aria-controls="collapseExample">
+                Detalles
+            </a>
+        </p>
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+                <p><b>Hash del archivo: </b><br />
+                    <%= hashed %>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <% include footer %>

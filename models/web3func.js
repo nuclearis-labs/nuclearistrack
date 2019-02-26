@@ -3,14 +3,15 @@ const Web3 = require('web3'),
 	Document = require('./document'),
 	ethereumjs = require('ethereumjs-tx');
 
+//Declare Truffle Ganache Variables for test purposes and env variables for RSK.
 var contract = undefined;
-var account = '0x307EAa91FA219463Ac521f9A549dBDc7fF82C06c' || process.env.RSKadress;
-var address = '0x494213D95AfCa5bcd4113e6d35f5A18fA6Fc445f' || process.env.SCadress;
+var account = '0x211d5c2fb17ee2b9c412aec36f4a4ca274bb131f' || process.env.RSKadress;
+var address = '' || process.env.SCadress;
 var privkey = new Buffer.from(
-	'7a0824e86e5c362c523d7f4991de30b56a9c04f653c33573b0a1e3b8850b23c6' || process.env.RSKprivkey,
+	'c90cd5b4d4505251df8f9af943708ced3ec9d1a9cd79dfe29219830c49682b97' || process.env.RSKprivkey,
 	'hex'
 );
-
+//https://public-node.testnet.rsk.co:443
 const web3 = new Web3(Web3.givenProvider || 'https://public-node.testnet.rsk.co:443');
 
 var jsonFile = 'build/contracts/MO.json';
@@ -43,7 +44,7 @@ function estimateGasPrice() {
 	});
 }
 
-function MO_send(hash, docid, filename, user, callback) {
+function MO_send(hash, docid, filename, cc, user, callback) {
 	let data = contract.methods.addDocHash(hash).encodeABI();
 	let gasprice;
 	let gaslimit;
@@ -79,7 +80,16 @@ function MO_send(hash, docid, filename, user, callback) {
 			.sendSignedTransaction('0x' + serializedTx.toString('hex'))
 			.on('transactionHash', (tx) => {
 				Document.create(
-					{ id: docid, hash: hash, tx: tx, filename: filename, mined: false, username: user },
+					{
+						id: docid,
+						hash: hash,
+						tx: tx,
+						filename: filename,
+						proyecto: cc,
+						mined: false,
+						visible: true,
+						username: user
+					},
 					function(err, doc) {
 						if (err) {
 							console.log('Error: ' + err);

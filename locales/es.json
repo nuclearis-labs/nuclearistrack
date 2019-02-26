@@ -1,6 +1,6 @@
 {
 	"inicio": "Inicio",
-	"titulo": "Autenticidad a traves de la Blockchain",
+	"titulo": "Primer plataforma descentralizada de trazabilidad con tecnologia Blockchain",
 	"login": "Acceder",
 	"signup": "Registrarse",
 	"user": "Usuario",
@@ -12,5 +12,6 @@
 	"uploadhash": "Subir documento",
 	"checkhash": "Chequear autenticidad",
 	"list": "Listado de todos los documentos",
+	"cc": "Proyecto",
 	"titulotext": "El servicio numero 1 en autentificación de certificados y documentos a traves de la tecnologia Blockchain. Que gran MVP!"
 }

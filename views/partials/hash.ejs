@@ -1,20 +1,31 @@
 <% include header %>
 
-<% include form %>
-      
-        <div class='responseText'><p><b>Hash de archivo fue guardado en la Blockchain.</b></p>
-        <p><b>Identificación de archivo:</b><br/>
-        <%= docid %>
-        </p>
-        <p><b>Hash del archivo: </b><br/>
-        <%= hashed %>
-        </p>
-        <p><b>Identificación de transacción:</b><br/>
-        <a href="https://explorer.testnet.rsk.co/tx/<%= result %>" target="_blank"><%= result %></a>
-        </p>
-        <p>
-        <strong>Darle tiempo a la transacción de ser minada</strong>
-        </p>
-        </div>
+<div class="alert alert-success" role="alert">
+	<i class="fas fa-file-upload"></i>
+	<div style="margin-top:70px;">
+		<p><b>El archivo fue guardado con exito.</b><br>
+			<strong>En aprox. 10 minutos el archivo se encontrará validado.</strong>
+		</p>
+		<p>
+			<a class="btn btn-info" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+				aria-controls="collapseExample">
+				Detalles
+			</a>
+		</p>
+		<div class="collapse" id="collapseExample">
+			<div class="card card-body">
+				<p><b>Identificación de archivo:</b><br />
+					<%= docid %>
+				</p>
+				<p><b>Hash del archivo: </b><br />
+					<%= hashed %>
+				</p>
+				<p><b>Identificación de transacción:</b><br />
+					<a href="https://explorer.testnet.rsk.co/tx/<%= result %>" target="_blank"><%= result %></a>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
 
 <% include footer %>

@@ -1,7 +1,7 @@
-
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -10,92 +10,45 @@
     <title>NUCLEARIS Blockchain Tecnology</title>
     <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/cover/">
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="app.css" rel="stylesheet">
-  </head>
-  <body class="text-center">
-    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-  <header class="masthead mb-auto">
-    <div class="inner">
-      <div class="masthead-brand"><img src="logo.svg" height="30">
-      </div>
-      
-      <nav class="nav navbar-expand-lg nav-masthead justify-content-center">
-          
-        <a class="nav-link" id="home" href="/">Home</a>
-        <% if (currentUser) { %>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src='https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js'></script>
 
-        <a class="nav-link" id="list" href="/list">List</a>
-        <a class="nav-link" id="hash" href="/hash">Hash/Verify</a>
-        <a class="nav-link"><%= currentUser.username %></a>
-        <a class="nav-link" href="/logout">Logout</a>
+</head>
 
-        <% } else { %>
-
-
-        <a class="nav-link" id="signup" href="/signup"><%= texts.signup %></a>
-        <a class="nav-link" id="login" href="/login"><%= texts.login %></a>
-        <% } %>
-        <a href="/?clang=es" class="nav-link"><img src="flag_arg.svg" style="height:30px; vertical-align:middle;"></a>
-                    <a href="/?clang=en" class="nav-link"><img src="flag_eeuu.svg"style="height:30px; vertical-align:middle;"></a>
-                    <a href="/?clang=de" class="nav-link"><img src="flag_ger.svg"style="height:30px; vertical-align:middle;"></a>
-          </nav>
-    </div>
-  </header>
-
-
-
-
-
-              
-
-
-    
-                <!--    
-                
-                <a class="navbar-item">
-                    List
-                </a>
-                <hr>
-
-                <a class="navbar-item" href="/signup"><strong></strong></a>
+<body>
+    <div class="cover-container">
+        <header class="header">
+            <div class="masthead-brand"><img src="logo.svg" height="30">
             </div>
-        </div>
-        <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-start">
-                <a class="navbar-item" href="/">
-                    <%= texts.inicio %>
-                </a>
+            <nav class="nav">
+                <a class="nav-link" id="home" href="/">Home</a>
                 <% if (currentUser) { %>
-                <a class="navbar-item">
-                    List
-                </a>
-                <a class="navbar-item" href="/hash">Hash/Verify</a>
-                <% } %>
-            </div>
-
-            <div class="navbar-end">
-
-                <% if (currentUser) { %>
-                <div class="navbar-item">
-                    <a class="nav-item"><%= currentUser.username %></a>
-                </div>
-                <div class="buttons">
-                    <a class="button is-primary" href="/logout">Logout</a>
-                </div>
+                <a class="nav-link" id="list" href="/list">List</a>
+                <a class="nav-link" id="hash" href="/hash">Hash/Verify</a>
+                <a class="nav-link"><%= currentUser.username %></a>
+                <a class="nav-link" href="/logout">Logout</a>
                 <% } else { %>
-                <div class="buttons">
-                </div>
-                <div class="buttons">
-                        <div class="lang"><a href="/?clang=es"><img src="flag_arg.svg"></a></div>
-                        <div class="lang"><a href="/?clang=en"><img src="flag_eeuu.svg"></a></div>
-                        <div class="lang"><a href="/?clang=de"><img src="flag_ger.svg"></a></div>
-                    <a class="button is-primary" href="/signup"><strong><%= texts.signup %></strong></a>
-                    <a class="button is-primary" href="/login"><%= texts.login %></a>
-                </div>
+                <a class="nav-link" id="signup" href="/signup"><%= texts.signup %></a>
+                <a class="nav-link" id="login" href="/login"><%= texts.login %></a>
                 <% } %>
-            </div>
-        </div>
-    </nav>
-</div> -->
+                <a href="/?clang=es" class="nav-link"><img src="flag_arg.svg"
+                        style="height:30px; vertical-align:middle;"></a>
+                <a href="/?clang=en" class="nav-link"><img src="flag_eeuu.svg"
+                        style="height:30px; vertical-align:middle;"></a>
+                <a href="/?clang=de" class="nav-link"><img src="flag_ger.svg"
+                        style="height:30px; vertical-align:middle;"></a>
+            </nav>
+        </header>

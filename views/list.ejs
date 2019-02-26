@@ -2,36 +2,30 @@
 
 <main>
     <h1 class="titulo"><%= texts.list %></h1>
-
-    <table class="table">
+    <table class="table table-dark">
         <thead class="thead-dark">
             <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Hash</th>
-                <th scope="col">Tx</th>
+                <th scope="col">Identificación de archivo</th>
                 <th scope="col">Archivo</th>
-                <th scope="col">Usuario</th>
+                <th scope="col">Autenticidad</th>
+                <th scope="col">Anular</th>
             </tr>
         </thead>
 
         <tbody>
             <% list.forEach(function(element){ %>
-            <% if (element.username === currentUser.username) { %>
+            <% if (element.username === currentUser.username && element.visible === true) { %>
             <tr>
-                <th scope="row"><%= element.id %></th>
-                <td><a href="#" title=<%= element.hash %>><%= element.hash.slice(0,6) %> ...
-                        <%= element.hash.slice(-6) %>
-                    </a></td>
-                <td><a href="https://explorer.testnet.rsk.co/tx/<%= element.tx %>" target="_blank"
-                        title=<%= element.tx %>><%= element.tx.slice(0,6) %> ... <%= element.tx.slice(-6) %>
-                    </a></td>
-                    <td><a href="<%= element.filename %>" download="<%= element.id %>"><i class="fas fa-file"></i></a></td>
-                <td><%= element.username %></td>
+                <th scope="row"><%= element.username +'-'+element.proyecto +'-'+element.id %></th>
+                    <td><a href="<%= element.filename %>" download="<%= element.username %>-2320-<%= element.id %>"><i class="fas fa-file"></i></a></td>
+                    <td><a href="/check?hash=<%= element.hash %>"><i class="fas fa-question-circle"></i></a></td>
+                    <td><a href="#" tabindex="0" data-container="body" data-toggle="popover" data-trigger="focus" data-html=true data-placement="right" html="true" data-content="<strong>Confirmar por favor<br><a href='/delete?hash=<%=element.hash%>'>Borrar documento</a></strong>"><i class="fas fa-trash"></a></i>
             </tr>
             <% }%>
             <% }) %>
         </tbody>
     </table>
+
 </main>
 
 <% include partials/footer %>

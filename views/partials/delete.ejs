@@ -1,0 +1,24 @@
+<% include header %>
+
+<div class='alert alert-success' role='alert'>
+    <i class="fas fa-check-circle"></i>
+    <div style="margin-top:70px;">
+        <p><b>La entrada en la base de datos fue eliminada.</b></p>
+        <p>
+            <a class="btn btn-info" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                aria-controls="collapseExample">
+                Detalles
+            </a>
+        </p>
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+                <p><b>Hash del archivo: </b><br />
+                    <%= hashed %>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<% include footer %>
