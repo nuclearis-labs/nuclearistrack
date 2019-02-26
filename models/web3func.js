@@ -43,7 +43,7 @@ function estimateGasPrice() {
 	});
 }
 
-function MO_send(hash, docid, user, callback) {
+function MO_send(hash, docid, filename, user, callback) {
 	let data = contract.methods.addDocHash(hash).encodeABI();
 	let gasprice;
 	let gaslimit;
@@ -78,13 +78,16 @@ function MO_send(hash, docid, user, callback) {
 		web3.eth
 			.sendSignedTransaction('0x' + serializedTx.toString('hex'))
 			.on('transactionHash', (tx) => {
-				Document.create({ id: docid, hash: hash, tx: tx, mined: false, username: user }, function(err, doc) {
-					if (err) {
-						console.log('Error: ' + err);
+				Document.create(
+					{ id: docid, hash: hash, tx: tx, filename: filename, mined: false, username: user },
+					function(err, doc) {
+						if (err) {
+							console.log('Error: ' + err);
+						}
+						console.log(doc);
+						callback(null, tx);
 					}
-					console.log(doc);
-					callback(null, tx);
-				});
+				);
 			})
 			.on('receipt', (receipt) => {
 				Document.updateOne({ tx: receipt.transactionHash }, { $set: { mined: true } }, function(err, doc) {

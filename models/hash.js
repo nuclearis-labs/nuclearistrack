@@ -17,11 +17,11 @@ function hash(path, callback) {
 		hashed = '0x' + hashed;
 		console.log(hashed);
 
-		// Once obtained the hash, delete the file from the server and console.log the deletion.
+		/* Once obtained the hash, delete the file from the server and console.log the deletion.
 		fs.unlink(path, (err) => {
 			if (err) throw err;
 			console.log(path + ' was deleted');
-		});
+		}); */
 		callback(null, hashed);
 	});
 	// read all file and pipe it (write it) to the hash object

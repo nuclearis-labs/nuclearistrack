@@ -18,10 +18,6 @@ router.get('/signup', function(req, res) {
 	res.render('signup');
 });
 
-router.get('/index', function(req, res) {
-	res.render('index');
-});
-
 router.post('/signup', bruteforce.prevent, upload.none(), function(req, res) {
 	User.register(new User({ username: req.body.username }), req.body.password, function(err, user) {
 		if (err) {

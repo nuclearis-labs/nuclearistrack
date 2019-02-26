@@ -4,6 +4,7 @@ var docSchema = new mongoose.Schema({
 	id: String,
 	hash: String,
 	tx: String,
+	filename: String,
 	mined: Boolean,
 	username: String
 });

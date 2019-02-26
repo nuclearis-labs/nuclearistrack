@@ -36,13 +36,14 @@ app.use(
 		secret: 'oomph quant brake linseed vitrics deicide abandon piping playboy yataghan',
 		resave: false,
 		unset: 'destroy',
-		store: new MS({ ttl: 60000 }),
+		store: new MS({ ttl: 3600000 }),
 		saveUninitialized: false,
 		cookie: { secure: false }
 	})
 );
 
 app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/uploads'));
 
 app.use(
 	i18nexpress({

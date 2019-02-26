@@ -28,7 +28,6 @@ router.get('/list', isLoggedIn, function(req, res) {
 });
 
 router.post('/hash', isLoggedIn, upload.single('newhash'), function(req, res, next) {
-	var docid = req.body.id;
 	hash(req.file.path, function(err, hashed) {
 		MO_find(hashed, function(error, resultObj) {
 			if (resultObj.blockNumber != 0) {
@@ -47,15 +46,21 @@ router.post('/hash', isLoggedIn, upload.single('newhash'), function(req, res, ne
 				});
 			} else {
 				//Call MO_send function with the hex hash and await the result for rendering the hash page
-				MO_send(hashed, docid, req.user.username, function(error, result) {
-					if (result) {
-						res.render('partials/hash', {
-							hashed: hashed,
-							docid: docid,
-							result: result
-						});
+				MO_send(
+					hashed,
+					req.body.id,
+					req.file.filename + req.file.originalname.slice(-4),
+					req.user.username,
+					function(error, result) {
+						if (result) {
+							res.render('partials/hash', {
+								hashed: hashed,
+								docid: req.body.id,
+								result: result
+							});
+						}
 					}
-				});
+				);
 			}
 		});
 	});

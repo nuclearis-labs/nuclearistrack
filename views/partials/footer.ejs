@@ -4,7 +4,6 @@
 	function toggleLinks() {
 		let parsedUrl = new URL(window.location.href);
 		let link = parsedUrl.pathname.slice(1);
-		console.log(link)
 			$("#"+link).toggleClass('active');
 	}
 
