@@ -5,10 +5,10 @@ const Web3 = require('web3'),
 
 //Declare Truffle Ganache Variables for test purposes and env variables for RSK.
 var contract = undefined;
-var account = '0x211d5c2fb17ee2b9c412aec36f4a4ca274bb131f' || process.env.RSKadress;
-var address = '' || process.env.SCadress;
+var account = '0x307EAa91FA219463Ac521f9A549dBDc7fF82C06c' || process.env.RSKadress;
+var address = '0x567B01fafc8637257F6F964d88D2d931d74543d7' || process.env.SCadress;
 var privkey = new Buffer.from(
-	'c90cd5b4d4505251df8f9af943708ced3ec9d1a9cd79dfe29219830c49682b97' || process.env.RSKprivkey,
+	'7a0824e86e5c362c523d7f4991de30b56a9c04f653c33573b0a1e3b8850b23c6' || process.env.RSKprivkey,
 	'hex'
 );
 //https://public-node.testnet.rsk.co:443

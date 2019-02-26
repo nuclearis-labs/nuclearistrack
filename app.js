@@ -9,19 +9,18 @@ const express = require('express'),
 	session = require('express-session'),
 	i18nexpress = require('i18n-express');
 
-app.use(function(req, res, next) {
-	res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-	next();
-});
-
 // Define router Routes
 var indexroutes = require('./routes/index'),
 	documentroutes = require('./routes/documents');
 
 // Connect to mongoose database
-mongoose.connect(process.env.database_url || 'mongodb://localhost/mo_nrs', {
-	useNewUrlParser: true
-});
+mongoose.connect(
+	process.env.database_url ||
+		'mongodb+srv://smartinez:XhD%2A%2CCWng9%3D%2As%3E%2C8wXvX@nrsblockchain-kzg9l.mongodb.net/test?retryWrites=true',
+	{
+		useNewUrlParser: true
+	}
+);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
 
