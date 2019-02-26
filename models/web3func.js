@@ -57,7 +57,6 @@ function MO_send(hash, docid, filename, cc, user, callback) {
 	estimateGasPrice()
 		.then((result) => {
 			gasprice = result;
-			console.log(gasprice);
 		})
 		.catch((error) => {
 			console.log(error);
