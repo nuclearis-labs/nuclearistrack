@@ -113,7 +113,16 @@ router.post('/check', isLoggedIn, upload.single('newhash'), function(req, res, n
 					}
 				});
 			} else {
-				res.render('partials/check_notfound', { hashed: hashed });
+				Document.findOne({ hash: hashed }, function(err, doc) {
+					if (err) {
+						console.log('Got: ' + err);
+					}
+					if (doc) {
+						res.render('partials/check_notmined', { hashed: hashed, doc: doc });
+					} else {
+						res.render('partials/check_notfound', { hashed: hashed });
+					}
+				});
 			}
 		});
 	});
@@ -135,7 +144,16 @@ router.get('/check', isLoggedIn, function(req, res, next) {
 				}
 			});
 		} else {
-			res.render('partials/check_notfound', { hashed: req.query.hash });
+			Document.findOne({ hash: hashed }, function(err, doc) {
+				if (err) {
+					console.log('Got: ' + err);
+				}
+				if (doc) {
+					res.render('partials/check_notmined', { hashed: hashed, doc: doc });
+				} else {
+					res.render('partials/check_notfound', { hashed: hashed });
+				}
+			});
 		}
 	});
 });
