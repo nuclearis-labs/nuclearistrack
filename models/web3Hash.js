@@ -106,7 +106,9 @@ function send(hash, docid, filename, cc, user, callback) {
 				});
 			})
 			.catch((error) => {
-				console.log(error);
+				if (error) {
+					res.render('partials/error', { error: error });
+				}
 			});
 	});
 }

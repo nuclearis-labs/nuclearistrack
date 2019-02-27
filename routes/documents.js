@@ -37,6 +37,9 @@ router.get('/list/', isLoggedIn, function(req, res) {
 	}
 
 	Document.countDocuments({}, function(err, countDoc) {
+		if (err) {
+			res.render('partials/error', { error: err });
+		}
 		Document.find(query, function(err, doc) {
 			if (err) {
 				console.log(err);
@@ -52,7 +55,13 @@ router.get('/list/', isLoggedIn, function(req, res) {
 
 router.post('/hash', isLoggedIn, upload.single('newhash'), function(req, res, next) {
 	hash.create(req.file.path, function(err, hashed) {
+		if (err) {
+			res.render('partials/error', { error: err });
+		}
 		web3Hash.find(hashed, function(error, resultObj) {
+			if (error) {
+				res.render('partials/error', { error: error });
+			}
 			if (resultObj.blockNumber != 0) {
 				Document.findOne({ hash: hashed }, function(err, doc) {
 					if (err) {
@@ -78,16 +87,31 @@ router.post('/hash', isLoggedIn, upload.single('newhash'), function(req, res, ne
 					}
 				});
 			} else {
-				//Call sendHash function with the hex hash and await the result for rendering the hash page
-				web3Hash.send(hashed, req.body.id, req.file.filename, req.body.cc, req.user.username, function(
-					error,
-					result
-				) {
-					if (result) {
-						res.render('partials/hash', {
+				Document.findOne({ hash: hashed }, function(err, doc) {
+					if (err) {
+						res.render('partials/error', { error: err });
+					}
+					if (doc) {
+						res.render('partials/check_notmined', {
 							hashed: hashed,
-							docid: req.body.id,
-							result: result
+							result: resultObj,
+							doc: doc
+						});
+					} else {
+						web3Hash.send(hashed, req.body.id, req.file.filename, req.body.cc, req.user.username, function(
+							error,
+							result
+						) {
+							if (error) {
+								res.render('partials/error', { error: error });
+							}
+							if (result) {
+								res.render('partials/hash', {
+									hashed: hashed,
+									docid: req.body.id,
+									result: result
+								});
+							}
 						});
 					}
 				});
@@ -98,8 +122,14 @@ router.post('/hash', isLoggedIn, upload.single('newhash'), function(req, res, ne
 
 router.post('/check', isLoggedIn, upload.single('newhash'), function(req, res, next) {
 	hash.create(req.file.path, function(err, hashed) {
+		if (err) {
+			res.render('partials/error', { error: err });
+		}
 		//Call findHash function with the hex hash and await the result for rendering the check hash page
 		web3Hash.find(hashed, function(error, resultObj) {
+			if (error) {
+				res.render('partials/error', { error: error });
+			}
 			if (resultObj.blockNumber != 0) {
 				Document.findOne({ hash: hashed }, function(err, doc) {
 					if (err) {
@@ -131,6 +161,9 @@ router.post('/check', isLoggedIn, upload.single('newhash'), function(req, res, n
 router.get('/check', isLoggedIn, function(req, res, next) {
 	//Call findHash function with the hex hash and await the result for rendering the check hash page
 	web3Hash.find(req.query.hash, function(error, resultObj) {
+		if (error) {
+			res.render('partials/error', { error: error });
+		}
 		if (resultObj.blockNumber != 0) {
 			Document.findOne({ hash: req.query.hash }, function(err, doc) {
 				if (err) {
@@ -144,7 +177,7 @@ router.get('/check', isLoggedIn, function(req, res, next) {
 				}
 			});
 		} else {
-			Document.findOne({ hash: hashed }, function(err, doc) {
+			Document.findOne({ hash: req.query.hash }, function(err, doc) {
 				if (err) {
 					console.log('Got: ' + err);
 				}
