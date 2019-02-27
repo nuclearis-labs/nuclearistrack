@@ -2,7 +2,7 @@ const fs = require('fs'),
 	crypto = require('crypto');
 
 // creates a read stream of the uploaded file through multer
-function hash(path, callback) {
+function create(path, callback) {
 	var fd = fs.createReadStream(path);
 
 	var hash = crypto.createHash('sha256');
@@ -28,4 +28,4 @@ function hash(path, callback) {
 	fd.pipe(hash);
 }
 
-module.exports = { hash };
+module.exports = { create };

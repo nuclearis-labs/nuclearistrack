@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="utf-8">
@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="app.css" rel="stylesheet">
+    <link href="loader.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
@@ -34,7 +35,7 @@
             <div class="masthead-brand"><img src="logo.svg" height="30">
             </div>
             <nav class="nav">
-                <a class="nav-link" id="home" href="/">Home</a>
+                <a class="nav-link" id="home" href="/home">Home</a>
                 <% if (currentUser) { %>
                 <a class="nav-link" id="list" href="/list">List</a>
                 <a class="nav-link" id="hash" href="/hash">Hash/Verify</a>
@@ -43,12 +44,10 @@
                 <% } else { %>
                 <a class="nav-link" id="signup" href="/signup"><%= texts.signup %></a>
                 <a class="nav-link" id="login" href="/login"><%= texts.login %></a>
+<!--                 <a href="/es"><img src="flag_arg.svg" class="flags"></a>
+                <a href="/en"><img src="flag_eeuu.svg" class="flags"></a>
+                <a href="/de"><img src="flag_ger.svg" class="flags"></a> -->
                 <% } %>
-                <a href="/?clang=es" class="nav-link"><img src="flag_arg.svg"
-                        style="height:30px; vertical-align:middle;"></a>
-                <a href="/?clang=en" class="nav-link"><img src="flag_eeuu.svg"
-                        style="height:30px; vertical-align:middle;"></a>
-                <a href="/?clang=de" class="nav-link"><img src="flag_ger.svg"
-                        style="height:30px; vertical-align:middle;"></a>
+
             </nav>
         </header>

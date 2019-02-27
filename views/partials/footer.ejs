@@ -1,35 +1,23 @@
 <script>
-	function toggleLinks() {
+	$(document).ready(function () {
 		let parsedUrl = new URL(window.location.href);
 		let link = parsedUrl.pathname.slice(1);
-			$("#"+link).toggleClass('active');
-	}
-
-	$(document).ready(function () {
-
-		toggleLinks();
+		console.log(link);
+		$("#" + link).css('border-bottom', '.25rem solid white');
 
 		bsCustomFileInput.init();
-		var file = document.getElementById('hashFile');
-		var sendbtn = document.getElementById('sendHashButton');
-		var findbtn = document.getElementById('findHashButton');
 		$('#hashform').submit(function (e) {
-			sendbtn.setAttribute('disabled', '');
-			findbtn.setAttribute('disabled', '');
-			document.getElementsByClassName('loader').style = 'display: block';
+			document.getElementsByTagName('main').setAttribute("hidden");
+			document.getElementsByClassName('loader').style.display = 'block';
 		});
-		file.addEventListener('change', function () {
-			$('#responseText').html('');
-			document.querySelector('form').className = 'was-validated';
-		});
-
 	});
+
 	$(function () {
 		$('[data-toggle="popover"]').popover()
-	  })
-	  $('.popover-dismiss').popover({
-  trigger: 'focus'
-})
+	})
+	$('.popover-dismiss').popover({
+		trigger: 'focus'
+	})
 </script>
 </div>
 </body>

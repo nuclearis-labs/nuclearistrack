@@ -2,6 +2,16 @@
 
 <main>
     <h1 class="titulo"><%= texts.list %></h1>
+    <form method="GET" action="/list">
+        <div class="input-group mb-3">
+            <select class="custom-select" id="inputGroupSelect02" name="cc" onchange="this.form.submit()">
+                    <option>Elegir proyectos</option>
+                <option value='all'>Todos los proyectos</option>
+              <option value="2130">2130</option>
+              <option value="2320">2320</option>
+            </select>
+          </div>
+    </form>
     <table class="table table-dark">
         <thead class="thead-dark">
             <tr>
@@ -14,7 +24,7 @@
 
         <tbody>
             <% list.forEach(function(element){ %>
-            <% if (element.username === currentUser.username && element.visible === true) { %>
+            <% if (element.visible === true) { %>
             <tr>
                 <th scope="row"><%= element.username +'-'+element.proyecto +'-'+element.id %></th>
                     <td><a href="<%= element.filename %>" download="<%= element.username %>-2320-<%= element.id %>"><i class="fas fa-file"></i></a></td>

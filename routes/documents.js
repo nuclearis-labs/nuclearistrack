@@ -2,11 +2,8 @@ const express = require('express'),
 	router = express.Router({ mergeParams: true }),
 	Document = require('../models/document'),
 	multer = require('multer'),
-	web3functions = require('../models/web3func'),
-	MO_find = web3functions.MO_find,
-	MO_send = web3functions.MO_send,
-	hashfunctions = require('../models/hash'),
-	hash = hashfunctions.hash,
+	web3Hash = require('../models/web3Hash'),
+	hash = require('../models/hash'),
 	middleware = require('../middleware/index'),
 	isLoggedIn = middleware.isLoggedIn;
 
@@ -28,19 +25,37 @@ router.get('/hash', isLoggedIn, function(req, res) {
 
 router.get('/list', isLoggedIn, function(req, res) {
 	var list = undefined;
-
-	Document.find({ username: req.user.username }, function(err, doc) {
-		if (err) {
-			console.log('Something went wrong');
-		} else {
-			res.render('list', { list: doc });
-		}
-	});
+	let proyecto = req.query.cc;
+	if (proyecto !== undefined && proyecto !== 'all') {
+		Document.find({ proyecto: proyecto }, function(err, doc) {
+			if (err) {
+				console.log(err);
+			} else {
+				res.render('list', { list: doc });
+			}
+		});
+	} else if (proyecto == 'all') {
+		Document.find({}, function(err, doc) {
+			if (err) {
+				console.log(err);
+			} else {
+				res.render('list', { list: doc });
+			}
+		});
+	} else {
+		Document.find({}, function(err, doc) {
+			if (err) {
+				console.log(err);
+			} else {
+				res.render('list', { list: doc });
+			}
+		});
+	}
 });
 
 router.post('/hash', isLoggedIn, upload.single('newhash'), function(req, res, next) {
-	hash(req.file.path, function(err, hashed) {
-		MO_find(hashed, function(error, resultObj) {
+	hash.create(req.file.path, function(err, hashed) {
+		web3Hash.find(hashed, function(error, resultObj) {
 			if (resultObj.blockNumber != 0) {
 				Document.findOne({ hash: hashed }, function(err, doc) {
 					if (err) {
@@ -66,8 +81,8 @@ router.post('/hash', isLoggedIn, upload.single('newhash'), function(req, res, ne
 					}
 				});
 			} else {
-				//Call MO_send function with the hex hash and await the result for rendering the hash page
-				MO_send(hashed, req.body.id, req.file.filename, req.body.cc, req.user.username, function(
+				//Call sendHash function with the hex hash and await the result for rendering the hash page
+				web3Hash.send(hashed, req.body.id, req.file.filename, req.body.cc, req.user.username, function(
 					error,
 					result
 				) {
@@ -85,9 +100,9 @@ router.post('/hash', isLoggedIn, upload.single('newhash'), function(req, res, ne
 });
 
 router.post('/check', isLoggedIn, upload.single('newhash'), function(req, res, next) {
-	hash(req.file.path, function(err, hashed) {
-		//Call MO_find function with the hex hash and await the result for rendering the check hash page
-		MO_find(hashed, function(error, resultObj) {
+	hash.create(req.file.path, function(err, hashed) {
+		//Call findHash function with the hex hash and await the result for rendering the check hash page
+		web3Hash.find(hashed, function(error, resultObj) {
 			if (resultObj.blockNumber != 0) {
 				Document.findOne({ hash: hashed }, function(err, doc) {
 					if (err) {
@@ -108,8 +123,8 @@ router.post('/check', isLoggedIn, upload.single('newhash'), function(req, res, n
 });
 
 router.get('/check', isLoggedIn, function(req, res, next) {
-	//Call MO_find function with the hex hash and await the result for rendering the check hash page
-	MO_find(req.query.hash, function(error, resultObj) {
+	//Call findHash function with the hex hash and await the result for rendering the check hash page
+	web3Hash.find(req.query.hash, function(error, resultObj) {
 		if (resultObj.blockNumber != 0) {
 			Document.findOne({ hash: req.query.hash }, function(err, doc) {
 				if (err) {

@@ -17,6 +17,7 @@
 	},
 	"homepage": "https://github.com/Sebastinez/NUCLEARIS-Material-Organization#readme",
 	"dependencies": {
+		"cookie-parser": "^1.4.4",
 		"ejs": "^2.6.1",
 		"ethereumjs-tx": "^1.3.7",
 		"express": "^4.16.4",

@@ -7,6 +7,7 @@ const express = require('express'),
 	User = require('./models/user'),
 	LocalStrategy = require('passport-local'),
 	session = require('express-session'),
+	cookieParser = require('cookie-parser'),
 	i18nexpress = require('i18n-express');
 
 // Define router Routes
@@ -51,6 +52,8 @@ app.use(
 		browserEnable: true
 	})
 );
+
+app.use(cookieParser());
 
 // Define passport.JS and initiate objects
 app.use(passport.initialize());

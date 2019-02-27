@@ -44,7 +44,7 @@ function estimateGasPrice() {
 	});
 }
 
-function MO_send(hash, docid, filename, cc, user, callback) {
+function send(hash, docid, filename, cc, user, callback) {
 	let data = contract.methods.addDocHash(hash).encodeABI();
 	let gasprice;
 	let gaslimit;
@@ -112,7 +112,7 @@ function MO_send(hash, docid, filename, cc, user, callback) {
 }
 
 //looks up a hash on the blockchain
-function MO_find(hash, callback) {
+function find(hash, callback) {
 	contract.methods.findDocHash(hash).call({ from: account }).then((result) => {
 		let resultObj = {
 			mineTime: new Date(result[0] * 1000),
@@ -122,4 +122,4 @@ function MO_find(hash, callback) {
 	});
 }
 
-module.exports = { MO_find, MO_send };
+module.exports = { find, send };
