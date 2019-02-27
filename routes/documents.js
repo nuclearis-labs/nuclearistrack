@@ -45,7 +45,8 @@ router.get('/list/', isLoggedIn, function(req, res) {
 			}
 		})
 			.skip(req.query.page > 0 ? (req.query.page - 1) * perpage : 0)
-			.limit(perpage);
+			.limit(perpage)
+			.sort('-proyecto');
 	});
 });
 
