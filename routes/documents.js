@@ -23,34 +23,30 @@ router.get('/hash', isLoggedIn, function(req, res) {
 	res.render('hash');
 });
 
-router.get('/list', isLoggedIn, function(req, res) {
-	var list = undefined;
-	let proyecto = req.query.cc;
-	if (proyecto !== undefined && proyecto !== 'all') {
-		Document.find({ proyecto: proyecto }, function(err, doc) {
-			if (err) {
-				console.log(err);
-			} else {
-				res.render('list', { list: doc });
-			}
-		});
-	} else if (proyecto == 'all') {
-		Document.find({}, function(err, doc) {
-			if (err) {
-				console.log(err);
-			} else {
-				res.render('list', { list: doc });
-			}
-		});
+router.get('/list/', isLoggedIn, function(req, res) {
+	let perpage = 10;
+	let page;
+	if (req.query.cc && req.query.cc !== 'all') query = { $and: [ { proyecto: req.query.cc }, { visible: true } ] };
+	else if (req.query.cc == 'all') query = { visible: true };
+	else query = { visible: true };
+
+	if (req.query.page == undefined) {
+		page = 1;
 	} else {
-		Document.find({}, function(err, doc) {
+		page = req.query.page;
+	}
+
+	Document.countDocuments({}, function(err, countDoc) {
+		Document.find(query, function(err, doc) {
 			if (err) {
 				console.log(err);
 			} else {
-				res.render('list', { list: doc });
+				res.render('list', { list: doc, countDoc: countDoc, perpage: perpage, page: page });
 			}
-		});
-	}
+		})
+			.skip(req.query.page > 0 ? (req.query.page - 1) * perpage : 0)
+			.limit(perpage);
+	});
 });
 
 router.post('/hash', isLoggedIn, upload.single('newhash'), function(req, res, next) {

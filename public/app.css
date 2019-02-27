@@ -29,7 +29,7 @@ body {
 /* First page content container */
 main {
 	position: absolute;
-	top: 20em;
+	top: 10em;
 	width: 50em;
 	opacity: 0;
 	text-align: center;
@@ -39,6 +39,10 @@ main {
 
 .cover-heading {
 	text-shadow: 0 .05rem .5rem rgba(0, 0, 0);
+}
+
+.pagination {
+	justify-content: center;
 }
 
 /* Introduction divs 

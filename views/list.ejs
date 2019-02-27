@@ -12,8 +12,8 @@
             </select>
           </div>
     </form>
-    <table class="table table-dark">
-        <thead class="thead-dark">
+    <table class="table table-light">
+        <thead class="thead-light">
             <tr>
                 <th scope="col">Identificación de archivo</th>
                 <th scope="col">Archivo</th>
@@ -35,7 +35,15 @@
             <% }) %>
         </tbody>
     </table>
+    <ul class="pagination">
 
+        <% let pages = Math.ceil(countDoc / perpage); %>
+          <li class="page-item"><a class="page-link" href="list?page=<% if (page==1) { %><%=pages%><% } %>">Previous</a></li>
+          <% for (i=1; i <= pages;i++)  {%>
+          <li class="page-item"><a class="page-link" href="/list?page=<%= i %>"><%= i %></a></li>
+          <% } %>
+          <li class="page-item"><a class="page-link" href="/list?page=<% if (page == pages) { %><%=page%><% } %>">Next</a></li>
+        </ul>
 </main>
 
 <% include partials/footer %>
