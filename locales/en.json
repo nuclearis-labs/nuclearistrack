@@ -1,7 +1,9 @@
 {
 	"inicio": "Home",
+	"list_menu": "List",
 	"titulo": "Autentification through the blockchain",
-	"login": "Login?",
+	"login": "Login",
+	"logout": "Logout",
 	"signup": "Signup",
 	"user": "User",
 	"pwd": "Password",

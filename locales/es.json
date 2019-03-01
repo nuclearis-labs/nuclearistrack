@@ -1,7 +1,10 @@
 {
 	"inicio": "Inicio",
+	"list_menu": "Lista",
+	"hash_menu": "Verificación",
 	"titulo": "Primer plataforma descentralizada de trazabilidad con tecnologia Blockchain",
 	"login": "Acceder",
+	"logout": "Salir",
 	"signup": "Registrarse",
 	"user": "Usuario",
 	"pwd": "Contraseña",

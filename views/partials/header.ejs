@@ -35,18 +35,15 @@
             <div class="masthead-brand"><img src="logo.svg" height="30">
             </div>
             <nav class="nav">
-                <a class="nav-link" id="home" href="/home">Home</a>
+                <a class="nav-link" id="home" href="/home"><%= texts.inicio %></a>
                 <% if (currentUser) { %>
-                <a class="nav-link" id="list" href="/list">List</a>
-                <a class="nav-link" id="hash" href="/hash">Hash/Verify</a>
+                <a class="nav-link" id="list" href="/list"><%= texts.list_menu %></a>
+                <a class="nav-link" id="hash" href="/hash"><%= texts.hash_menu %></a>
                 <a class="nav-link"><%= currentUser.username %></a>
-                <a class="nav-link" href="/logout">Logout</a>
+                <a class="nav-link" href="/logout"><%= texts.logout %></a>
                 <% } else { %>
                 <a class="nav-link" id="signup" href="/signup"><%= texts.signup %></a>
                 <a class="nav-link" id="login" href="/login"><%= texts.login %></a>
-<!--                 <a href="/es"><img src="flag_arg.svg" class="flags"></a>
-                <a href="/en"><img src="flag_eeuu.svg" class="flags"></a>
-                <a href="/de"><img src="flag_ger.svg" class="flags"></a> -->
                 <% } %>
 
             </nav>

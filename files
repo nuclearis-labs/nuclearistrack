@@ -1,0 +1,28 @@
+ El volumen de la unidad C no tiene etiqueta.
+ El n£mero de serie del volumen es: 6E31-CB36
+
+ Directorio de C:\Users\smartinez.nuclearis\Documents\GitHub\NUCLEARIS-Material-Organization
+
+06/03/2019  14:34    <DIR>          .
+06/03/2019  14:34    <DIR>          ..
+26/02/2019  09:38                33 .gitignore
+27/02/2019  15:41             2.235 app.js
+26/02/2019  16:38    <DIR>          build
+25/02/2019  08:39    <DIR>          contracts
+06/03/2019  14:35                 0 files
+25/02/2019  08:39    <DIR>          locales
+25/02/2019  08:39    <DIR>          middleware
+25/02/2019  08:39    <DIR>          migrations
+06/03/2019  13:06    <DIR>          models
+27/02/2019  09:48    <DIR>          node_modules
+06/03/2019  13:08         6.524.566 NUCLEARIS-Material-Organization.zip
+27/02/2019  09:48           134.572 package-lock.json
+01/03/2019  17:27             1.189 package.json
+06/03/2019  13:07    <DIR>          public
+25/02/2019  08:39             2.047 README.md
+01/03/2019  08:23    <DIR>          routes
+25/02/2019  08:39               708 truffle-config.js
+06/03/2019  13:06    <DIR>          uploads
+26/02/2019  08:39    <DIR>          views
+               8 archivos      6.665.350 bytes
+              13 dirs  1.720.872.833.024 bytes libres

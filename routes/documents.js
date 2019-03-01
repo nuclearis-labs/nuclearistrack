@@ -6,17 +6,7 @@ const express = require('express'),
 	hash = require('../models/hash'),
 	middleware = require('../middleware/index');
 
-const storage = multer.diskStorage({
-	destination: (req, file, cb) => {
-		cb(null, 'uploads/');
-	},
-	filename: (req, file, cb) => {
-		let ext = file.originalname.slice(-3);
-		cb(null, req.user.username + '-' + '2320' + '-' + Date.now() + '.' + ext);
-	}
-});
-
-const upload = multer({ storage: storage });
+var upload = multer({ dest: 'uploads/' });
 
 router.get('/hash', (req, res) => {
 	res.render('hash');
@@ -57,7 +47,7 @@ router.post(
 	middleware.isLoggedIn,
 	upload.single('newhash'),
 	middleware.asyncMiddleware(async (req, res, next) => {
-		let hashed = await hash.create(req.file.path);
+		let hashed = await hash.create(req.file, req.user.username);
 		let resultObj = await web3Hash.find(hashed, web3Hash.account);
 
 		console.log(resultObj);
@@ -188,7 +178,7 @@ router.get(
 					console.log('Got: ' + err);
 				}
 				if (doc) {
-					res.render('partials/check_notmined', { hashed: hashed, doc: doc });
+					res.render('partials/check_notmined', { hashed: req.query.hash, doc: doc });
 				} else {
 					res.render('partials/check_notfound', { hashed: hashed });
 				}
