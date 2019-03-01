@@ -5,4 +5,8 @@ function isLoggedIn(req, res, next) {
 	res.redirect('/login');
 }
 
-module.exports = { isLoggedIn };
+const asyncMiddleware = (fn) => (req, res, next) => {
+	Promise.resolve(fn(req, res, next)).catch(next);
+};
+
+module.exports = { isLoggedIn, asyncMiddleware };

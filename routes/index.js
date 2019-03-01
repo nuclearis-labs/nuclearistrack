@@ -6,20 +6,20 @@ const express = require('express'),
 	passport = require('passport'),
 	bruteforce = require('../models/bruteforce');
 
-router.get('/', function(req, res) {
+router.get('/', (req, res) => {
 	res.redirect('/home');
 });
 
-router.get('/home', function(req, res) {
+router.get('/home', (req, res) => {
 	res.render('home');
 });
 
-router.get('/signup', function(req, res) {
+router.get('/signup', (req, res) => {
 	res.render('signup');
 });
 
-router.post('/signup', bruteforce.prevent, upload.none(), function(req, res) {
-	User.register(new User({ username: req.body.username }), req.body.password, function(err, user) {
+router.post('/signup', bruteforce.prevent, upload.none(), (req, res) => {
+	User.register(new User({ username: req.body.username }), req.body.password, (err, user) => {
 		if (err) {
 			let data = 'Usuario ya existente, por favor usar otro nombre de usuario';
 			if (err.message === 'A user with the given username is already registered') {
@@ -27,18 +27,18 @@ router.post('/signup', bruteforce.prevent, upload.none(), function(req, res) {
 			}
 		}
 		if (!user) return res.render('signup', { message: err.message });
-		passport.authenticate('local')(req, res, function() {
+		passport.authenticate('local')(req, res, () => {
 			res.redirect('/');
 		});
 	});
 });
 
-router.get('/login', function(req, res) {
+router.get('/login', (req, res) => {
 	res.render('login');
 });
 
-router.post('/login', bruteforce.prevent, upload.none(), function(req, res, next) {
-	passport.authenticate('local', function(err, user, info) {
+router.post('/login', bruteforce.prevent, upload.none(), (req, res, next) => {
+	passport.authenticate('local', (err, user, info) => {
 		if (err) return next(err);
 		if (!user) {
 			let data = 'Incorrecto usuario o contraseña';
@@ -46,16 +46,16 @@ router.post('/login', bruteforce.prevent, upload.none(), function(req, res, next
 				return res.render('login', { message: data });
 			}
 		}
-		req.logIn(user, function(err) {
+		req.logIn(user, (err) => {
 			if (err) return next(err);
-			req.brute.reset(function() {
+			req.brute.reset(() => {
 				return res.redirect('/');
 			});
 		});
 	})(req, res, next);
 });
 
-router.get('/logout', function(req, res) {
+router.get('/logout', (req, res) => {
 	req.logout();
 	req.session = null;
 	res.clearCookie('session');

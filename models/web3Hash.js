@@ -20,108 +20,99 @@ var abi = parsed.abi;
 
 contract = new web3.eth.Contract(abi, address);
 
-function estimateGasLimit(account, hash) {
+async function estimateGasLimit(account, hash) {
 	return new Promise((resolve, reject) => {
-		contract.methods.addDocHash(hash).estimateGas({ from: account }, function(err, result) {
-			if (err) {
-				reject(new Error('Error: ' + err));
-			} else {
-				resolve(result);
-			}
-		});
-	});
-}
-
-function estimateGasPrice() {
-	return new Promise((resolve, reject) => {
-		web3.eth.getGasPrice(function(err, result) {
-			if (err) {
-				reject(new Error('Error: ' + err));
-			} else {
-				resolve(result);
-			}
-		});
-	});
-}
-
-function send(hash, docid, filename, cc, user, callback) {
-	let data = contract.methods.addDocHash(hash).encodeABI();
-	let gasprice;
-	let gaslimit;
-	estimateGasLimit(account, hash)
-		.then((result) => {
-			gaslimit = result;
-		})
-		.catch((error) => console.log(error));
-
-	estimateGasPrice()
-		.then((result) => {
-			gasprice = result;
-		})
-		.catch((error) => {
-			console.log(error);
-		});
-
-	web3.eth.getTransactionCount(account, function(err, nonce) {
-		const rawTx = {
-			nonce: web3.utils.toHex(nonce),
-			gasPrice: web3.utils.toHex(gasprice),
-			gasLimit: web3.utils.toHex(gaslimit),
-			to: address,
-			value: '0x00',
-			data: data
-		};
-
-		const ethtx = new ethereumjs(rawTx);
-		ethtx.sign(privkey);
-		const serializedTx = ethtx.serialize();
-		web3.eth
-			.sendSignedTransaction('0x' + serializedTx.toString('hex'))
-			.on('transactionHash', (tx) => {
-				Document.create(
-					{
-						id: docid,
-						hash: hash,
-						tx: tx,
-						filename: filename,
-						proyecto: cc,
-						mined: false,
-						visible: true,
-						username: user
-					},
-					function(err, doc) {
-						if (err) {
-							console.log('Error: ' + err);
-						}
-						console.log(doc);
-						callback(null, tx);
-					}
-				);
-			})
-			.on('receipt', (receipt) => {
-				Document.updateOne({ tx: receipt.transactionHash }, { $set: { mined: true } }, function(err, doc) {
-					if (err) console.log(err);
-					console.log(receipt);
-					console.log(doc);
-				});
-			})
-			.catch((error) => {
-				if (error) {
-					res.render('partials/error', { error: error });
-				}
+		contract.methods
+			.addDocHash(hash)
+			.estimateGas({ from: account })
+			.then((result) => resolve(result))
+			.catch(function(e) {
+				reject(e);
 			});
 	});
 }
 
-//looks up a hash on the blockchain
-function find(hash, callback) {
-	contract.methods.findDocHash(hash).call({ from: account }).then((result) => {
-		let resultObj = {
-			mineTime: new Date(result[0] * 1000),
-			blockNumber: result[1]
-		};
-		callback(null, resultObj);
+async function estimateGasPrice() {
+	return new Promise((resolve, reject) => {
+		web3.eth.getGasPrice().then((result) => resolve(result)).catch((e) => {
+			reject(e);
+		});
 	});
 }
 
-module.exports = { find, send };
+async function send(hash, docid, filename, cc, user, gasprice, gaslimit) {
+	return new Promise((resolve, reject) => {
+		console.log('entered async function send');
+		let data = contract.methods.addDocHash(hash).encodeABI();
+
+		web3.eth.getTransactionCount(account, function(err, nonce) {
+			const rawTx = {
+				nonce: web3.utils.toHex(nonce),
+				gasPrice: web3.utils.toHex(gasprice),
+				gasLimit: web3.utils.toHex(gaslimit),
+				to: address,
+				value: '0x00',
+				data: data
+			};
+
+			console.log(rawTx);
+
+			const ethtx = new ethereumjs(rawTx);
+			ethtx.sign(privkey);
+			const serializedTx = ethtx.serialize();
+			web3.eth
+				.sendSignedTransaction('0x' + serializedTx.toString('hex'))
+				.on('transactionHash', (tx) => {
+					Document.create(
+						{
+							id: docid,
+							hash: hash,
+							tx: tx,
+							filename: filename,
+							proyecto: cc,
+							mined: false,
+							visible: true,
+							username: user
+						},
+						function(err, doc) {
+							if (err) reject(err);
+							console.log(doc);
+							resolve(tx);
+						}
+					);
+				})
+				.on('receipt', (receipt) => {
+					Document.updateOne({ tx: receipt.transactionHash }, { $set: { mined: true } }, function(err, doc) {
+						if (err) reject(err);
+						console.log(receipt);
+						console.log(doc);
+					});
+					console.log(receipt);
+				})
+				.catch((error) => {
+					if (error) reject(err);
+				});
+		});
+	});
+}
+
+//looks up a hash on the blockchain
+async function find(hash, account) {
+	return new Promise((resolve, reject) => {
+		contract.methods
+			.findDocHash(hash)
+			.call({ from: account })
+			.then((result) => {
+				let resultObj = {
+					mineTime: new Date(result[0] * 1000),
+					blockNumber: result[1]
+				};
+				resolve(resultObj);
+			})
+			.catch((e) => {
+				reject(e);
+			});
+	});
+}
+
+module.exports = { find, send, estimateGasPrice, estimateGasLimit, account };
