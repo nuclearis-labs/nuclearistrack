@@ -188,7 +188,7 @@ router.get(
 					console.log('Got: ' + err);
 				}
 				if (doc) {
-					res.render('partials/check_notmined', { hashed: hashed, doc: doc });
+					res.render('partials/check_notmined', { hashed: req.query.hash, doc: doc });
 				} else {
 					res.render('partials/check_notfound', { hashed: hashed });
 				}

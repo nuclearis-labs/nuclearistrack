@@ -1,7 +1,9 @@
 {
 	"inicio": "Übersicht",
+	"list_menu": "Liste",
 	"titulo": "Autentizität mit Hilfe der Blockchain",
 	"login": "Anmelden",
+	"logout": "Abmelden",
 	"signup": "Registration",
 	"user": "Benutzername",
 	"pwd": "Kennwort",
