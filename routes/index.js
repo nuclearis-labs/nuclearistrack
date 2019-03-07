@@ -1,9 +1,8 @@
 const express = require('express'),
 	router = express.Router({ mergeParams: true }),
 	User = require('../models/user'),
-	multer = require('multer'),
-	upload = multer({ dest: 'uploads/' }),
 	passport = require('passport'),
+	middleware = require('../middleware/index'),
 	bruteforce = require('../models/bruteforce');
 
 router.get('/', (req, res) => {
@@ -18,14 +17,10 @@ router.get('/signup', (req, res) => {
 	res.render('signup');
 });
 
-router.post('/signup', bruteforce.prevent, upload.none(), (req, res) => {
-	User.register(new User({ username: req.body.username }), req.body.password, (err, user) => {
-		if (err) {
-			let data = 'Usuario ya existente, por favor usar otro nombre de usuario';
-			if (err.message === 'A user with the given username is already registered') {
-				return res.render('signup', { message: data });
-			}
-		}
+router.post('/signup', bruteforce.prevent, (req, res) => {
+	User.register(new User({ username: req.body.username, role: req.body.role }), req.body.password, (err, user) => {
+		if (err) return res.render('signup', { message: err.message });
+
 		if (!user) return res.render('signup', { message: err.message });
 		passport.authenticate('local')(req, res, () => {
 			res.redirect('/');
@@ -33,18 +28,32 @@ router.post('/signup', bruteforce.prevent, upload.none(), (req, res) => {
 	});
 });
 
+router.get('/account', middleware.isLoggedIn, (req, res) => {
+	User.findOne({ username: req.user.username }, (err, user) => {
+		res.render('partials/account', { username: user.username });
+	});
+});
+
+router.post('/account', middleware.isLoggedIn, (req, res, next) => {
+	User.findByUsername(req.user.username).then((sanuser) => {
+		if (sanuser) {
+			sanuser.setPassword(req.body.newpwd, () => {
+				sanuser.save();
+				res.render('partials/pwdconfirm');
+			});
+		}
+	});
+});
+
 router.get('/login', (req, res) => {
 	res.render('login');
 });
 
-router.post('/login', bruteforce.prevent, upload.none(), (req, res, next) => {
+router.post('/login', bruteforce.prevent, (req, res, next) => {
 	passport.authenticate('local', (err, user, info) => {
 		if (err) return next(err);
 		if (!user) {
-			let data = 'Incorrecto usuario o contraseña';
-			if (info.message === 'Password or username is incorrect') {
-				return res.render('login', { message: data });
-			}
+			return res.render('login', { message: info.message });
 		}
 		req.logIn(user, (err) => {
 			if (err) return next(err);

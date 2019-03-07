@@ -10,6 +10,7 @@
         Se requiere cargar un archivo
       </div>
       <div class="input-group mb-3"></div>
+      <% if (currentUser.role !== 'client') { %>
 
       <div class="input-group mb-3">
         <select class="custom-select" id="inputGroupSelect02" name="cc">
@@ -31,6 +32,7 @@
           <%= texts.uploadhash %>
         </button>
       </div>
+      <% } %>
       <div class="input-group mb-3">
         <button type='submit' formaction="/check" id="findHashButton" class="btn btn-md btn-light"">
           <%= texts.checkhash %>

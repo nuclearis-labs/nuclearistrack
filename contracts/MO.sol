@@ -3,7 +3,6 @@ pragma solidity 0.5.0;
 
 contract MO {
 
-
     struct Record {
         uint mineTime;
         uint blockNumber;
@@ -16,7 +15,7 @@ contract MO {
     function addDocHash (bytes32 hash) public {
         require(
             msg.sender == nrs,
-            "Only NRS can modify contract."
+            "Only NRS can add documents to contract."
         );
         Record memory newRecord = Record(now, block.number);
         docHashes[hash] = newRecord;
