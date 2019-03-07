@@ -1,12 +1,11 @@
 const express = require('express'),
 	router = express.Router({ mergeParams: true }),
 	Document = require('../models/document'),
-	multer = require('multer'),
-	web3Hash = require('../models/web3Hash'),
-	hash = require('../models/hash'),
+	web3Hash = require('../functions/web3Hash'),
+	hash = require('../functions/hash'),
 	middleware = require('../middleware/index');
 
-var upload = multer({ dest: 'uploads/' });
+// var upload = multer({ dest: 'uploads/' });
 
 router.get('/hash', (req, res) => {
 	res.render('hash');
@@ -15,9 +14,26 @@ router.get('/hash', (req, res) => {
 router.get('/list/', middleware.isLoggedIn, (req, res) => {
 	let perpage = 10;
 	let page;
-	if (req.query.cc && req.query.cc !== 'all') query = { $and: [ { proyecto: req.query.cc }, { visible: true } ] };
-	else if (req.query.cc == 'all') query = { visible: true };
-	else query = { visible: true };
+	switch (req.user.role) {
+		case 'prov':
+			if (req.query.cc && req.query.cc !== 'all')
+				query = { $and: [ { proyecto: req.query.cc }, { visible: true }, { username: req.user.username } ] };
+			else if (req.query.cc == 'all') query = { $and: [ { visible: true }, { username: req.user.username } ] };
+			else query = { $and: [ { visible: true }, { username: req.user.username } ] };
+			break;
+		case 'client':
+			if (req.query.cc && req.query.cc !== 'all')
+				query = { $and: [ { proyecto: req.query.cc }, { visible: true } ] };
+			else if (req.query.cc == 'all') query = { visible: true };
+			else query = { visible: true };
+			break;
+		case 'nrs':
+			if (req.query.cc && req.query.cc !== 'all')
+				query = { $and: [ { proyecto: req.query.cc }, { visible: true } ] };
+			else if (req.query.cc == 'all') query = { visible: true };
+			else query = { visible: true };
+			break;
+	}
 
 	if (req.query.page == undefined) {
 		page = 1;
@@ -31,7 +47,7 @@ router.get('/list/', middleware.isLoggedIn, (req, res) => {
 		}
 		Document.find(query, (err, doc) => {
 			if (err) {
-				console.log(err);
+				throw new Error(err);
 			} else {
 				res.render('list', { list: doc, countDoc: countDoc, perpage: perpage, page: page });
 			}
@@ -45,12 +61,19 @@ router.get('/list/', middleware.isLoggedIn, (req, res) => {
 router.post(
 	'/hash',
 	middleware.isLoggedIn,
-	upload.single('newhash'),
 	middleware.asyncMiddleware(async (req, res, next) => {
-		let hashed = await hash.create(req.file, req.user.username);
-		let resultObj = await web3Hash.find(hashed, web3Hash.account);
+		await hash.bus(req);
+		let hashed = await hash.create(req.files.newhash);
 
-		console.log(resultObj);
+		let ext = req.files.newhash.name.split('.');
+		let fileName = req.user.username + '-' + req.body.cc + '-' + Date.now() + '.' + ext[ext.length - 1];
+
+		await hash
+			.uploadToS3(req.files.newhash, req.user.username, req.body, fileName)
+			.then()
+			.catch((error) => console.error(error));
+
+		let resultObj = await web3Hash.find(hashed, web3Hash.account);
 
 		if (resultObj.blockNumber != 0) {
 			Document.findOne({ hash: hashed }, (err, doc) => {
@@ -68,7 +91,6 @@ router.post(
 						});
 					});
 				} else if (doc && doc.visible === true) {
-					console.log(doc);
 					res.render('partials/check_duplicate', {
 						hashed: hashed,
 						result: resultObj,
@@ -96,9 +118,8 @@ router.post(
 						let gaslimit = await web3Hash.estimateGasLimit(web3Hash.account, hashed);
 						let result = await web3Hash.send(
 							hashed,
-							req.body.id,
-							req.file.filename,
-							req.body.cc,
+							req.body,
+							fileName,
 							req.user.username,
 							gasprice,
 							gaslimit
@@ -120,13 +141,12 @@ router.post(
 router.post(
 	'/check',
 	middleware.isLoggedIn,
-	upload.single('newhash'),
 	middleware.asyncMiddleware(async (req, res, next) => {
-		let hashed = await hash.create(req.file.path);
+		await hash.bus(req);
 
-		//Call findHash function with the hex hash and await the result for rendering the check hash page
+		let hashed = await hash.create(req.files.newhash);
+
 		let resultObj = await web3Hash.find(hashed, web3Hash.account);
-		console.log(resultObj);
 		if (resultObj.blockNumber != 0) {
 			Document.findOne({ hash: hashed }, (err, doc) => {
 				if (err) {
@@ -163,7 +183,7 @@ router.get(
 		if (resultObj.blockNumber != 0) {
 			Document.findOne({ hash: req.query.hash }, (err, doc) => {
 				if (err) {
-					console.log('Got: ' + err);
+					throw new Error(err);
 				} else {
 					res.render('partials/check', {
 						hashed: req.query.hash,
@@ -175,7 +195,7 @@ router.get(
 		} else {
 			Document.findOne({ hash: req.query.hash }, (err, doc) => {
 				if (err) {
-					console.log('Got: ' + err);
+					throw new Error(err);
 				}
 				if (doc) {
 					res.render('partials/check_notmined', { hashed: req.query.hash, doc: doc });
@@ -190,7 +210,7 @@ router.get(
 router.get('/delete', middleware.isLoggedIn, (req, res, next) => {
 	Document.updateOne({ hash: req.query.hash }, { $set: { visible: false } }, (err, doc) => {
 		if (err) {
-			console.log('Got: ' + err);
+			throw new Error(err);
 		} else {
 			res.render('partials/delete', {
 				hashed: req.query.hash,

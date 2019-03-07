@@ -24,14 +24,12 @@
 
         <tbody>
             <% list.forEach(function(element){ %>
-            <% if (element.visible === true) { %>
             <tr>
                 <th scope="row"><%= element.username +'-'+element.proyecto +'-'+element.id %></th>
-                    <td><a href="<%= element.filename %>" download="<%= element.username %>-2320-<%= element.id %>"><i class="fas fa-file"></i></a></td>
+                    <td><a href="https://s3-sa-east-1.amazonaws.com/nrs-blockchain/<%= element.filename %>"><i class="fas fa-file"></i></a></td>
                     <td><a href="/check?hash=<%= element.hash %>"><i class="fas fa-question-circle"></i></a></td>
                     <td><a href="#" tabindex="0" data-container="body" data-toggle="popover" data-trigger="focus" data-html=true data-placement="right" html="true" data-content="<strong>Confirmar por favor<br><a href='/delete?hash=<%=element.hash%>'>Borrar documento</a></strong>"><i class="fas fa-trash"></a></i>
             </tr>
-            <% }%>
             <% }) %>
         </tbody>
     </table>

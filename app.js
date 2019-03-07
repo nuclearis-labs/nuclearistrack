@@ -7,8 +7,9 @@ const express = require('express'),
 	User = require('./models/user'),
 	LocalStrategy = require('passport-local'),
 	session = require('express-session'),
-	cookieParser = require('cookie-parser'),
-	i18nexpress = require('i18n-express');
+	i18nexpress = require('i18n-express'),
+	busboy = require('connect-busboy'),
+	busboyBodyParser = require('busboy-body-parser');
 
 // Define router Routes
 var indexroutes = require('./routes/index'),
@@ -42,6 +43,9 @@ app.use(
 	})
 );
 
+app.use(busboy());
+app.use(busboyBodyParser());
+
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/uploads'));
 
@@ -52,8 +56,6 @@ app.use(
 		browserEnable: true
 	})
 );
-
-app.use(cookieParser());
 
 // Define passport.JS and initiate objects
 app.use(passport.initialize());

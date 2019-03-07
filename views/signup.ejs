@@ -19,9 +19,17 @@
                   </div>
             <div class="input-group mb-3">
                     <input type="password" class="form-control" placeholder="<%= texts.pwd %>" aria-label="password" name="password" aria-describedby="basic-addon1" required>
+                </div>
+            <div class="input-group mb-3">
+                  <select class="custom-select" id="inputGroupSelect02" name="role">
+                    <option value="nrs">NUCLEARIS</option>
+                    <option value="prov">Proveedor</option>
+                    <option value="client">Cliente</option>
+
+                  </select>
                   </div>
 
-            <button type='submit' style="margin: 10px" formaction="/check" id="findHashButton" class="btn btn-md btn-light">
+            <button type='submit' style="margin: 10px" formaction="/signup" id="findHashButton" class="btn btn-md btn-light">
                 <%= texts.submit %>
             </button>
         </form>
