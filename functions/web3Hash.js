@@ -73,18 +73,19 @@ async function send(hash, body, filename, user, gasprice, gaslimit) {
 							username: user
 						},
 						(err, doc) => {
-							if (err) reject(err);
+							if (err) console.log(err);
+							console.log(doc);
 							resolve(tx);
 						}
 					);
 				})
 				.on('receipt', (receipt) => {
 					Document.updateOne({ tx: receipt.transactionHash }, { $set: { mined: true } }, (err, doc) => {
-						if (err) reject(err);
+						console.log(doc);
 					});
 				})
 				.on('error', (error) => {
-					reject(error);
+					console.error(error);
 				});
 		});
 	});
@@ -92,21 +93,12 @@ async function send(hash, body, filename, user, gasprice, gaslimit) {
 
 //looks up a hash on the blockchain
 async function find(hash, account) {
-	return new Promise((resolve, reject) => {
-		contract.methods
-			.findDocHash(hash)
-			.call({ from: account })
-			.then((result) => {
-				let resultObj = {
-					mineTime: new Date(result[0] * 1000),
-					blockNumber: result[1]
-				};
-				resolve(resultObj);
-			})
-			.catch((e) => {
-				reject(e);
-			});
-	});
+	let result = await contract.methods.findDocHash(hash).call({ from: account });
+	let resultObj = {
+		mineTime: new Date(result[0] * 1000),
+		blockNumber: result[1]
+	};
+	return resultObj;
 }
 
 module.exports = { find, send, estimateGasPrice, estimateGasLimit, account };
