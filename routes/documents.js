@@ -2,138 +2,35 @@ const express = require('express'),
 	router = express.Router({ mergeParams: true }),
 	Document = require('../models/document'),
 	web3Hash = require('../functions/web3Hash'),
+	web3Send = require('../functions/web3Send'),
+	list = require('../functions/list'),
+	web3Check = require('../functions/web3Check'),
 	hash = require('../functions/hash'),
 	middleware = require('../middleware/index');
 
-// var upload = multer({ dest: 'uploads/' });
-
-router.get('/hash', (req, res) => {
+router.get('/hash', middleware.isLoggedIn, (req, res) => {
 	res.render('hash');
 });
 
 router.get('/list/', middleware.isLoggedIn, (req, res) => {
 	let perpage = 10;
-	let page;
-	switch (req.user.role) {
-		case 'prov':
-			if (req.query.cc && req.query.cc !== 'all')
-				query = { $and: [ { proyecto: req.query.cc }, { visible: true }, { username: req.user.username } ] };
-			else if (req.query.cc == 'all') query = { $and: [ { visible: true }, { username: req.user.username } ] };
-			else query = { $and: [ { visible: true }, { username: req.user.username } ] };
-			break;
-		case 'client':
-			if (req.query.cc && req.query.cc !== 'all')
-				query = { $and: [ { proyecto: req.query.cc }, { visible: true } ] };
-			else if (req.query.cc == 'all') query = { visible: true };
-			else query = { visible: true };
-			break;
-		case 'nrs':
-			if (req.query.cc && req.query.cc !== 'all')
-				query = { $and: [ { proyecto: req.query.cc }, { visible: true } ] };
-			else if (req.query.cc == 'all') query = { visible: true };
-			else query = { visible: true };
-			break;
-	}
+	let page = list.getPage(req.query.page);
 
-	if (req.query.page == undefined) {
-		page = 1;
-	} else {
-		page = req.query.page;
-	}
+	let query = list.queryRole(req.user.role, req.query.cc, req.user.username);
 
-	Document.countDocuments({}, (err, countDoc) => {
-		if (err) {
-			res.render('partials/error', { error: err });
-		}
-		Document.find(query, (err, doc) => {
-			if (err) {
-				throw new Error(err);
-			} else {
-				res.render('list', { list: doc, countDoc: countDoc, perpage: perpage, page: page });
-			}
-		})
-			.skip(req.query.page > 0 ? (req.query.page - 1) * perpage : 0)
-			.limit(perpage)
-			.sort('-proyecto');
-	});
+	list.renderlist(req, res, query, perpage, page);
 });
 
 router.post(
 	'/hash',
 	middleware.isLoggedIn,
 	middleware.asyncMiddleware(async (req, res, next) => {
-		await hash.bus(req);
-		let hashed = await hash.create(req.files.newhash);
+		let hashObj = await web3Send.hashandupload(req);
 
-		let ext = req.files.newhash.name.split('.');
-		let fileName = req.user.username + '-' + req.body.cc + '-' + Date.now() + '.' + ext[ext.length - 1];
-
-		await hash
-			.uploadToS3(req.files.newhash, req.user.username, req.body, fileName)
-			.then()
-			.catch((error) => console.error(error));
-
-		let resultObj = await web3Hash.find(hashed, web3Hash.account);
-
-		if (resultObj.blockNumber != 0) {
-			Document.findOne({ hash: hashed }, (err, doc) => {
-				if (err) {
-					throw new Error(err);
-				} else if (doc && doc.visible === false) {
-					Document.updateOne({ hash: hashed }, { $set: { visible: true } }, (err, update) => {
-						if (err) {
-							throw new Error(err);
-						}
-						res.render('partials/add_db', {
-							doc: doc,
-							hashed: hashed,
-							result: resultObj
-						});
-					});
-				} else if (doc && doc.visible === true) {
-					res.render('partials/check_duplicate', {
-						hashed: hashed,
-						result: resultObj,
-						doc: doc
-					});
-				} else {
-					res.render('partials/check_notfound', { hashed: hashed });
-				}
-			});
+		if (hashObj.resultObj.blockNumber != 0) {
+			web3Send.blockfound(req, res, hashObj.hashed, hashObj.resultObj);
 		} else {
-			Document.findOne(
-				{ hash: hashed },
-				middleware.asyncMiddleware(async (err, doc) => {
-					if (err) {
-						throw new Error(err);
-					}
-					if (doc) {
-						res.render('partials/check_notmined', {
-							hashed: hashed,
-							result: resultObj,
-							doc: doc
-						});
-					} else {
-						let gasprice = await web3Hash.estimateGasPrice();
-						let gaslimit = await web3Hash.estimateGasLimit(web3Hash.account, hashed);
-						let result = await web3Hash.send(
-							hashed,
-							req.body,
-							fileName,
-							req.user.username,
-							gasprice,
-							gaslimit
-						);
-						if (result) {
-							res.render('partials/hash', {
-								hashed: hashed,
-								docid: req.body.id,
-								result: result
-							});
-						}
-					}
-				})
-			);
+			web3Send.blocknotfound(req, res, hashObj.hashed, hashObj.resultObj, hashObj.fileName);
 		}
 	})
 );
@@ -148,28 +45,9 @@ router.post(
 
 		let resultObj = await web3Hash.find(hashed, web3Hash.account);
 		if (resultObj.blockNumber != 0) {
-			Document.findOne({ hash: hashed }, (err, doc) => {
-				if (err) {
-					throw new Error(err);
-				} else {
-					res.render('partials/check', {
-						hashed: hashed,
-						result: resultObj,
-						doc: doc
-					});
-				}
-			});
+			web3Check.checkfound(req, res, resultObj);
 		} else {
-			Document.findOne({ hash: hashed }, (err, doc) => {
-				if (err) {
-					throw new Error(err);
-				}
-				if (doc) {
-					res.render('partials/check_notmined', { hashed: hashed, doc: doc });
-				} else {
-					res.render('partials/check_notfound', { hashed: hashed });
-				}
-			});
+			web3Check.checknotfound(req, res, hashed);
 		}
 	})
 );
@@ -178,31 +56,12 @@ router.get(
 	'/check',
 	middleware.isLoggedIn,
 	middleware.asyncMiddleware(async (req, res, next) => {
-		//Call findHash function with the hex hash and await the result for rendering the check hash page
 		let resultObj = await web3Hash.find(req.query.hash, web3Hash.account);
+
 		if (resultObj.blockNumber != 0) {
-			Document.findOne({ hash: req.query.hash }, (err, doc) => {
-				if (err) {
-					throw new Error(err);
-				} else {
-					res.render('partials/check', {
-						hashed: req.query.hash,
-						result: resultObj,
-						doc: doc
-					});
-				}
-			});
+			web3Check.checkfound(req, res, resultObj);
 		} else {
-			Document.findOne({ hash: req.query.hash }, (err, doc) => {
-				if (err) {
-					throw new Error(err);
-				}
-				if (doc) {
-					res.render('partials/check_notmined', { hashed: req.query.hash, doc: doc });
-				} else {
-					res.render('partials/check_notfound', { hashed: hashed });
-				}
-			});
+			web3Check.checknotfound(req, res, req.query.hash);
 		}
 	})
 );
