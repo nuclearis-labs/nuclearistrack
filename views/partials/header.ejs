@@ -32,7 +32,7 @@
 <body>
     <div class="cover-container">
         <nav class="navbar">
-            <div class="logo"><a href="#" class="logo"><img src="logo.svg" height="30"></a></div>
+            <div class="logo"><a href="#" class="logo"><img src="logo.svg" class="imglogo" height="30"></a></div>
             <div class="main-nav">
                 <a class="nav-links" id="home" href="/home"><%= texts.inicio %></a>
                 <% if (currentUser) { %>
@@ -46,6 +46,5 @@
                 <% } else { %>
                 <a class="nav-links" id="login" href="/login"><%= texts.login %></a>
                 <% } %>
-
             </ul>
         </nav>
