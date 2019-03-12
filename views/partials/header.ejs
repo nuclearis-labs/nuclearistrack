@@ -4,11 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Jekyll v3.8.5">
+    <meta name="description" content="NUCLEARIS Blockchain Platform">
+    <meta name="author" content="NUCLEARIS">
     <title>NUCLEARIS Blockchain Tecnology</title>
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/cover/">
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
         integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -31,22 +29,20 @@
 
 <body>
     <div class="cover-container">
-        <header class="header">
-            <div class="masthead-brand"><img src="logo.svg" height="30">
-            </div>
-            <nav class="nav">
-                <a class="nav-link" id="home" href="/home"><%= texts.inicio %></a>
+        <nav class="navbar">
+            <div class="logo"><a href="#" class="logo"><img src="logo.svg" class="imglogo" height="30"></a></div>
+            <div class="main-nav">
+                <a class="nav-links" id="home" href="/home"><%= texts.inicio %></a>
                 <% if (currentUser) { %>
-                <a class="nav-link" id="list" href="/list"><%= texts.list_menu %></a>
-                <a class="nav-link" id="hash" href="/hash"><%= texts.hash_menu %></a>
+                <a class="nav-links" id="list" href="/list"><%= texts.list_menu %></a>
+                <a class="nav-links" id="hash" href="/hash"><%= texts.hash_menu %></a>
                 <% if (currentUser.role === "nrs") { %>
-                <a class="nav-link" id="signup" href="/signup"><%= texts.signup %></a>
+                <a class="nav-links" id="signup" href="/signup"><%= texts.signup %></a>
                 <% } %>
-                <a class="nav-link" href="/account"><%= currentUser.username %></a>
-                <a class="nav-link" href="/logout"><%= texts.logout %></a>
+                <a class="nav-links" href="/account"><%= currentUser.username %></a>
+                <a class="nav-links" href="/logout"><%= texts.logout %></a></li>
                 <% } else { %>
-                <a class="nav-link" id="login" href="/login"><%= texts.login %></a>
+                <a class="nav-links" id="login" href="/login"><%= texts.login %></a>
                 <% } %>
-
-            </nav>
-        </header>
+            </ul>
+        </nav>

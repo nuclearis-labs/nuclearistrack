@@ -1,8 +1,8 @@
 <% include partials/header %>
 
 <main>
-    <h1 class="titulo"><%= texts.list %></h1>
-    <form method="GET" action="/list">
+    <h1 class="titulo tablelist"><%= texts.list %></h1>
+    <form method="GET" class="tablelist" action="/list">
         <div class="input-group mb-3">
             <select class="custom-select" id="inputGroupSelect02" name="cc" onchange="this.form.submit()">
                     <option>Elegir proyectos</option>
@@ -12,7 +12,7 @@
             </select>
           </div>
     </form>
-    <table class="table table-light">
+    <table class="table table-light tablelist">
         <thead class="thead-light">
             <tr>
                 <th scope="col">Identificación de archivo</th>
