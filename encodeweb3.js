@@ -1,6 +1,6 @@
 const Web3 = require('web3');
 
-const web3 = new Web3(Web3.givenProvider || 'https://public-node.testnet.rsk.co:443');
+const web3 = new Web3(Web3.givenProvider || 'https://public-node.rsk.co:443');
 
 const address = '0xe8b627eda9ce1551d117efc94564fa1450af4a7a';
 
