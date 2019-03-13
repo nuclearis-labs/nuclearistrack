@@ -44,6 +44,7 @@ router.post(
 		let hashed = await hash.create(req.files.newhash);
 
 		let resultObj = await web3Hash.find(hashed, web3Hash.account);
+		console.log(resultObj);
 		if (resultObj.blockNumber !== 0) {
 			web3Check.checkfound(req, res, resultObj, hashed);
 		} else {
