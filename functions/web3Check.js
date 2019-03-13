@@ -1,12 +1,12 @@
 const Document = require('../models/document');
 
-function checkfound(req, res, resultObj) {
-	Document.findOne({ hash: req.query.hash }, (err, doc) => {
+function checkfound(req, res, resultObj, hashed) {
+	Document.findOne({ hash: hashed }, (err, doc) => {
 		if (err) {
 			throw new Error(err);
 		} else {
 			res.render('partials/check', {
-				hashed: req.query.hash,
+				hashed: hashed,
 				result: resultObj,
 				doc: doc
 			});
