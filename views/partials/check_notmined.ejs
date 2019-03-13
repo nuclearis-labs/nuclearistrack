@@ -1,26 +1,26 @@
 <% include header %>
 
-<div class='alert alert-info' role='alert'>
+<div class='alert alert-info container' role='alert'>
     <i class="fas fa-copy"></i>
     <div style="margin-top:70px;">
-        <p><b>El archivo fue registrado, pero todavia no fue validado por la Blockchain.</b></p>
+        <p><b><%= texts.check.not_mined %></b></p>
         <p>
             <a class="btn btn-info" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
                 aria-controls="collapseExample">
-                Detalles
+                <%= texts.check.detalles %>
             </a>
-            <a class="btn btn-info" href="javascript:history.back()">Volver a lista</a>
+            <a class="btn btn-info" href="javascript:history.back()"><%= texts.check.back %></a>
 
         </p>
         <div class="collapse" id="collapseExample">
             <div class="card card-body">
-                <p><b>Identificación de archivo:</b><br />
+                <p><b><%= texts.check.fileid %></b><br />
                     <%= doc.id %>
                 </p>
-                <p><b>Hash del archivo: </b><br />
+                <p><b><%= texts.check.hash %></b><br />
                     <%= hashed %>
                 </p>
-                <p><b>Hash de Transacción: </b><br />
+                <p><b><%= texts.check.txhash %></b><br />
                     <%= doc.tx %>
                 </p>
             </div>

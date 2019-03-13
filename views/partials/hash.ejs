@@ -3,26 +3,26 @@
 <div class="alert alert-success" role="alert">
 	<i class="fas fa-file-upload"></i>
 	<div style="margin-top:70px;">
-		<p><b>El archivo fue guardado con exito.</b><br>
-			<strong>En aprox. 10 minutos el archivo se encontrará validado.</strong>
+		<p><b><%= texts.check.saved %></b><br>
+			<strong><%= texts.check.saved_info %></strong>
 		</p>
 		<p>
 			<a class="btn btn-info" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
 				aria-controls="collapseExample">
-				Detalles
+				<%= texts.check.detalles %>
 			</a>
 			<a class="btn btn-info" href="javascript:history.back()">Volver</a>
 
 		</p>
 		<div class="collapse" id="collapseExample">
 			<div class="card card-body">
-				<p><b>Identificación de archivo:</b><br />
+				<p><b><%= texts.check.fileid %></b><br />
 					<%= docid %>
 				</p>
-				<p><b>Hash del archivo: </b><br />
+				<p><b><%= texts.check.hash %></b><br />
 					<%= hashed %>
 				</p>
-				<p><b>Identificación de transacción:</b><br />
+				<p><b><%= texts.check.txhash %></b><br />
 					<%= result %>
 				</p>
 			</div>

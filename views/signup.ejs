@@ -12,13 +12,13 @@
         </div>
 
         <% } %>
-        <h1 class="titulo"><%= texts.signup %></h1>
+        <h1 class="titulo"><%= texts.signup.titulo %></h1>
         <form action="/signup" method="POST" enctype="multipart/form-data">
             <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="<%= texts.user %>" aria-label="Username" name="username" aria-describedby="basic-addon1" required>
+                    <input type="text" class="form-control" placeholder="<%= texts.signup.user %>" aria-label="Username" name="username" aria-describedby="basic-addon1" required>
                   </div>
             <div class="input-group mb-3">
-                    <input type="password" class="form-control" placeholder="<%= texts.pwd %>" aria-label="password" name="password" aria-describedby="basic-addon1" required>
+                    <input type="password" class="form-control" placeholder="<%= texts.signup.pwd %>" aria-label="password" name="password" aria-describedby="basic-addon1" required>
                 </div>
             <div class="input-group mb-3">
                   <select class="custom-select" id="inputGroupSelect02" name="role">
@@ -30,7 +30,7 @@
                   </div>
 
             <button type='submit' style="margin: 10px" formaction="/signup" id="findHashButton" class="btn btn-md btn-light">
-                <%= texts.submit %>
+                <%= texts.signup.submit %>
             </button>
         </form>
     </div>

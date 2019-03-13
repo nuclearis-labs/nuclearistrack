@@ -1,22 +1,79 @@
 {
-	"inicio": "Inicio",
-	"list_menu": "Lista",
-	"hash_menu": "Verificación",
-	"titulo": "Primer plataforma descentralizada de trazabilidad con tecnologia Blockchain",
-	"login": "Acceder",
-	"logout": "Salir",
-	"signup": "Registrar Usuario",
-	"user": "Usuario",
-	"pwd": "Contraseña",
-	"role": "Función",
-	"submit": "Enviar",
-	"titulohash": "Cargar o verificar archivos",
-	"tituloacc": "Datos de cuenta",
-	"filehash": "Seleccionar un archivo...",
-	"fileid": "Identificiación de certificado",
-	"uploadhash": "Subir documento",
-	"checkhash": "Chequear autenticidad",
-	"list": "Listado de todos los documentos",
-	"cc": "Proyecto",
-	"titulotext": "El servicio numero 1 en autentificación de certificados y documentos a traves de la tecnologia Blockchain. Que gran MVP!"
+	"main": {
+		"titulo": "Primer plataforma descentralizada de trazabilidad con tecnologia Blockchain"
+	},
+	"upload": {
+		"titulo": "Cargar documento",
+		"filehash": "Elegir archivo...",
+		"fileid": "Identificación del archivo",
+		"invalidfile": "Se requiere elegir un archivo!",
+		"uploadhash": "Subir documento",
+		"select": "Elegir",
+		"checkhash": "Integrität der Datei",
+		"cc": "Centro de costos"
+	},
+	"verify": {
+		"titulo": "Verificar documento",
+		"filehash": "Elegir archivo...",
+		"invalidfile": "Se requiere elegir un archivo!",
+		"select": "Elegir",
+		"checkhash": "Chequear archivo"
+	},
+	"auth": {
+		"user": "Usuario",
+		"pwd": "Contraseña",
+		"submit": "Enviar",
+		"role": "Función",
+		"titulo": "Cuenta de usuario",
+		"update_pwd": "Actualizar contraseña",
+		"login": "Enviar",
+		"updated": "Se modifico su contraseña."
+	},
+	"signup": {
+		"titulo": "Registrar usuario",
+		"user": "Usuario",
+		"pwd": "Contraseña",
+		"submit": "Enviar"
+	},
+	"header": {
+		"inicio": "Inicio",
+		"list": "Lista",
+		"upload": "Cargar",
+		"verify": "Verificar",
+		"login": "Acceder",
+		"logout": "Salir",
+		"signup": "Registrar"
+	},
+	"list": {
+		"titulo": "Lista de documentos cargados",
+		"dropdown1": "Projekt auswählen",
+		"dropdown2": "Alle Projekte",
+		"listtabla1": "Identifikation",
+		"listtabla2": "Datei",
+		"listtabla3": "Autentizität",
+		"listtabla4": "Löschen",
+		"pagination1": "Vorherige",
+		"pagination2": "Nächste"
+	},
+	"check": {
+		"detalles": "Detalles",
+		"fileid": "Identificación del archivo: ",
+		"hash": "Hash del archivo: ",
+		"txhash": "Hash de Transacción:",
+		"blockhash": "Nº de bloque minado: ",
+		"datetimeblock": "Fecha y hora de bloque minado: ",
+		"back": "Volver",
+		"mining_state": "Estado de Transacción: ",
+		"mining_success": "Exitosa",
+		"mining_pendant": "Pendant",
+		"saved": "El archivo fue guardado con exito.",
+		"saved_info": "En aprox. 10 minutos el archivo se encontrará validado.",
+		"ok": "El archivo es autentico.",
+		"not_ok": "El archivo no es valido.",
+		"add_db": "El archivo ya se encontraba en la Blockchain, se volvio a agregar a la base de datos.",
+		"duplicate": "El archivo ya se encuentra registrado.",
+		"not_mined": "El archivo fue registrado, pero todavia no fue validado por la Blockchain.",
+		"delete": "La entrada en la base de datos fue eliminada.",
+		"error": "Les pedimos disculpas por la interrupción. Nos encontramos con un error."
+	}
 }

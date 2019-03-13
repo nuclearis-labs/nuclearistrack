@@ -8,8 +8,12 @@ const express = require('express'),
 	hash = require('../functions/hash'),
 	middleware = require('../middleware/index');
 
-router.get('/hash', middleware.isLoggedIn, (req, res) => {
-	res.render('hash');
+router.get('/upload', middleware.isLoggedIn, (req, res) => {
+	res.render('upload');
+});
+
+router.get('/verify', middleware.isLoggedIn, (req, res) => {
+	res.render('verify');
 });
 
 router.get('/list/', middleware.isLoggedIn, (req, res) => {
@@ -44,8 +48,9 @@ router.post(
 		let hashed = await hash.create(req.files.newhash);
 
 		let resultObj = await web3Hash.find(hashed, web3Hash.account);
-		if (resultObj.blockNumber != 0) {
-			web3Check.checkfound(req, res, resultObj);
+		console.log(resultObj);
+		if (resultObj.blockNumber !== '0') {
+			web3Check.checkfound(req, res, resultObj, hashed);
 		} else {
 			web3Check.checknotfound(req, res, hashed);
 		}
@@ -58,8 +63,8 @@ router.get(
 	middleware.asyncMiddleware(async (req, res, next) => {
 		let resultObj = await web3Hash.find(req.query.hash, web3Hash.account);
 
-		if (resultObj.blockNumber != 0) {
-			web3Check.checkfound(req, res, resultObj);
+		if (resultObj.blockNumber !== '0') {
+			web3Check.checkfound(req, res, resultObj, req.query.hash);
 		} else {
 			web3Check.checknotfound(req, res, req.query.hash);
 		}

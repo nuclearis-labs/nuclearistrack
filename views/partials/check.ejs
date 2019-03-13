@@ -28,11 +28,12 @@
                 <% } %>
             </p>
                 <p><b>Hash de Transacción: </b><br />
-                    <a href="https://explorer.testnet.rsk.co/tx/<%= doc.tx %>" target="_blank"><%= doc.tx %></a>
+                <% if(doc.mined) { %>
+                    <a href="https://explorer.rsk.co/tx/<%= doc.tx %>" target="_blank"><% } %><%= doc.tx %></a>
                 </p>
                 <p><b>Nº de bloque minado: </b><br />
-                    <a href="https://explorer.testnet.rsk.co/block/<%= result.blockNumber %>"
-                        target="_blank"><%= result.blockNumber %></a>
+                <% if(doc.mined) { %><a href="https://explorer.rsk.co/block/<%= result.blockNumber %>"
+                        target="_blank"><% } %><%= result.blockNumber %></a>
                 </p>
                 <p><b>Fecha y hora de bloque minado: </b><br />
                     <%= result.mineTime %>

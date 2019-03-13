@@ -3,13 +3,11 @@
 		"titulo": "Autentizität mit Hilfe der Blockchain"
 	},
 	"upload": {
-		"titulo": "Hochladen oder verifizieren von Dateien",
+		"titulohash": "Hochladen oder verifizieren von Dateien",
 		"filehash": "Datei auswählen...",
 		"fileid": "Identifikation der Datei",
-		"upload": "Datei hochladen",
-		"check": "Integrität der Datei",
-		"select": "Seleccionar archivo..",
-		"missing_file": "Se requiere cargar un archivo"
+		"uploadhash": "Datei hochladen",
+		"checkhash": "Integrität der Datei"
 	},
 	"auth": {
 		"user": "Benutzername",
@@ -17,14 +15,12 @@
 		"submit": "Abschicken",
 		"role": "Funktion",
 		"titulo": "Benutzerkonto",
-		"update_pwd": "Kennwort aktualisieren",
-		"updated": "Se modifico su contraseña."
+		"update_pwd": "Kennwort aktualisieren"
 	},
 	"header": {
 		"inicio": "Übersicht",
 		"list": "Liste",
 		"upload": "Hochladen",
-		"verify": "Verifizieren",
 		"login": "Anmelden",
 		"logout": "Abmelden",
 		"signup": "Registration"
@@ -43,22 +39,18 @@
 	"check": {
 		"detalles": "Details",
 		"fileid": "Identifikation der Datei: ",
-		"hash": "Hash der Datei: ",
+		"hash": "Hash del archivo: ",
 		"txhash": "Hash de Transacción:",
-		"blockhash": "Nº des Blocks: ",
-		"datetimeblock": "Datum und Uhrzeit des Blocks: ",
-		"back": "Zurück",
-		"mining_state": "Status der Transaktion: ",
+		"blockhash": "Nº de bloque minado: ",
+		"datetimeblock": "Fecha y hora de bloque minado: ",
+		"back": "Volver",
+		"mining_state": "Estado de Transacción: ",
 		"mining_success": "Exitosa",
 		"mining_pendant": "Pendant",
-		"saved": "El archivo fue guardado con exito.",
-		"saved_info": "En aprox. 10 minutos el archivo se encontrará validado.",
-		"ok": "Die Datei ist autentisch.",
+		"ok": "El archivo es autentico.",
 		"not_ok": "El archivo no es valido.",
 		"add_db": "El archivo ya se encontraba en la Blockchain, se volvio a agregar a la base de datos.",
 		"duplicate": "El archivo ya se encuentra registrado.",
-		"not_mined": "Die Datei wurde registriert, aber zurzeit noch nicht in der Blockchain validiert.",
-		"delete": "La entrada en la base de datos fue eliminada.",
-		"error": "Les pedimos disculpas por la interrupción. Nos encontramos con un error."
+		"not_mined": "El archivo fue registrado, pero todavia no fue validado por la Blockchain."
 	}
 }

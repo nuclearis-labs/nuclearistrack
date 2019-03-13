@@ -10,7 +10,7 @@ async function hashandupload(req) {
 	let fileName = req.user.username + '-' + req.body.cc + '-' + Date.now() + '.' + ext[ext.length - 1];
 	let resultObj = await web3Hash.find(hashed, web3Hash.account);
 
-	if ((resultObj.blockNumber = 0)) {
+	if (resultObj.blockNumber == 0) {
 		await hash
 			.uploadToS3(req.files.newhash, req.user.username, req.body, fileName)
 			.then()

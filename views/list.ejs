@@ -1,7 +1,7 @@
 <% include partials/header %>
 
 <main>
-    <h1 class="titulo tablelist"><%= texts.list %></h1>
+    <h1 class="titulo tablelist"><%= texts.list.titulo %></h1>
     <form method="GET" class="tablelist" action="/list">
         <div class="input-group mb-3">
             <select class="custom-select" id="inputGroupSelect02" name="cc" onchange="this.form.submit()">
