@@ -95,8 +95,9 @@ div .alert i {
 
 div .alert {
 	text-shadow: none;
-	position: absolute;
+	margin: auto;
 	top: 10em;
+	max-width: 50vw;
 	animation: fadein 2s forwards;
 	text-align: center;
 }
