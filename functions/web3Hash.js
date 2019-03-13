@@ -5,14 +5,11 @@ const Web3 = require('web3'),
 
 //Declare Truffle Ganache Variables for test purposes and env variables for RSK.
 var contract = undefined;
-var account = '0x307EAa91FA219463Ac521f9A549dBDc7fF82C06c' || process.env.RSKadress;
-var address = '0xe8b627EdA9CE1551d117efc94564FA1450af4a7A' || process.env.SCadress;
-var privkey = new Buffer.from(
-	'7a0824e86e5c362c523d7f4991de30b56a9c04f653c33573b0a1e3b8850b23c6' || process.env.RSKprivkey,
-	'hex'
-);
+var account = process.env.RSKadress;
+var address = process.env.SCadress;
+var privkey = new Buffer.from(process.env.RSKprivkey, 'hex');
 //https://public-node.testnet.rsk.co:443
-const web3 = new Web3(Web3.givenProvider || 'https://public-node.testnet.rsk.co:443');
+const web3 = new Web3(Web3.givenProvider || 'https://public-node.rsk.co:443');
 
 var jsonFile = 'build/contracts/MO.json';
 var parsed = JSON.parse(fs.readFileSync(jsonFile));

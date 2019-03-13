@@ -8,7 +8,7 @@ contract MO {
         uint blockNumber;
     }
 
-    address public nrs = 0x307EAa91FA219463Ac521f9A549dBDc7fF82C06c;
+    address public nrs = 0xb33fDD8b5648D8AE838a91672446499ddF1191e7;
 
     mapping (bytes32 => Record) private docHashes;
 

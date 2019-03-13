@@ -18,13 +18,9 @@ var indexroutes = require('./routes/index'),
 	documentroutes = require('./routes/documents');
 
 // Connect to mongoose database
-mongoose.connect(
-	process.env.database_url ||
-		'mongodb+srv://smartinez:XhD%2A%2CCWng9%3D%2As%3E%2C8wXvX@nrsblockchain-kzg9l.mongodb.net/test?retryWrites=true',
-	{
-		useNewUrlParser: true
-	}
-);
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/nrs', {
+	useNewUrlParser: true
+});
 mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
 
