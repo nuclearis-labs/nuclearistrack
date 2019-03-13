@@ -15,7 +15,7 @@ function checkfound(req, res, resultObj, hashed) {
 }
 
 function checknotfound(req, res, hashed) {
-	Document.findOne({ hash: req.query.hash }, (err, doc) => {
+	Document.findOne({ hash: hashed }, (err, doc) => {
 		if (err) {
 			throw new Error(err);
 		}
