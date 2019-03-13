@@ -45,7 +45,7 @@ router.post(
 
 		let resultObj = await web3Hash.find(hashed, web3Hash.account);
 		console.log(resultObj);
-		if (resultObj.blockNumber !== 0) {
+		if (resultObj.blockNumber !== '0') {
 			web3Check.checkfound(req, res, resultObj, hashed);
 		} else {
 			web3Check.checknotfound(req, res, hashed);
@@ -59,7 +59,7 @@ router.get(
 	middleware.asyncMiddleware(async (req, res, next) => {
 		let resultObj = await web3Hash.find(req.query.hash, web3Hash.account);
 
-		if (resultObj.blockNumber !== 0) {
+		if (resultObj.blockNumber !== '0') {
 			web3Check.checkfound(req, res, resultObj, req.query.hash);
 		} else {
 			web3Check.checknotfound(req, res, req.query.hash);
