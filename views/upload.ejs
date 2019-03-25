@@ -1,13 +1,15 @@
+<% include partials/header %>
+
 <main>
-  <h1 class="titulo"><%= texts.titulohash %></h1>
+  <h1 class="titulo"><%= texts.upload.titulo %></h1>
   <form method="POST" id="hashform" enctype="multipart/form-data">
     <div class="custom-file">
       <input type="file" id="hashFile" name="newhash" class="custom-file-input" required>
-      <label class="custom-file-label" for="customFileLang" data-browse="Elegir">
-        <%= texts.filehash  %>
+      <label class="custom-file-label" for="customFileLang" data-browse="<%= texts.upload.select %>">
+        <%= texts.upload.filehash  %>
       </label>
       <div class="invalid-feedback">
-        Se requiere cargar un archivo
+      <%= texts.upload.filehash  %>
       </div>
       <div class="input-group mb-3"></div>
       <% if (currentUser.role !== 'client') { %>
@@ -18,32 +20,24 @@
           <option value="2320">2320</option>
         </select>
         <div class="input-group-append">
-          <label class="input-group-text" for="inputGroupSelect02"><%= texts.cc %></label>
+          <label class="input-group-text" for="inputGroupSelect02"><%= texts.upload.cc %></label>
         </div>
       </div>
 
       <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="<%= texts.fileid %>" aria-label="Username" name="id"
+        <input type="text" class="form-control" placeholder="<%= texts.upload.fileid %>" aria-label="Username" name="id"
           aria-describedby="basic-addon1" required>
       </div>
 
       <div class="input-group mb-3"> <button type='submit' formaction="/hash" id="sendHashButton"
           class="btn btn-md btn-light">
-          <%= texts.uploadhash %>
+          <%= texts.upload.uploadhash %>
         </button>
       </div>
       <% } %>
-      <div class="input-group mb-3">
-        <button type='submit' formaction="/check" id="findHashButton" class="btn btn-md btn-light"">
-          <%= texts.checkhash %>
-        </button>
-        </div>
+
 
   </form>
-  <div class=" loader">
-          <div class="inner one"></div>
-          <div class="inner two"></div>
-          <div class="inner three"></div>
-          <div class="nucleus"></div>
-      </div>
+
 </main>
+<% include partials/footer %>

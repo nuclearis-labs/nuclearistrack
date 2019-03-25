@@ -1,18 +1,63 @@
 {
-	"inicio": "Home",
-	"list_menu": "List",
-	"titulo": "Autentification through the blockchain",
-	"login": "Login",
-	"logout": "Logout",
-	"signup": "Signup",
-	"user": "User",
-	"pwd": "Password",
-	"submit": "Submit",
-	"titulohash": "Upload or check file",
-	"filehash": "Select a file...",
-	"fileid": "File identification",
-	"uploadhash": "Upload file",
-	"checkhash": "Check integrity of file",
-	"list": "List of all the files uploaded",
-	"titulotext": "The number one servico for integrity of certificates and documents through Blockchain tecnology! What a great MVP!"
+	"main": {
+		"titulo": "Autentizität mit Hilfe der Blockchain"
+	},
+	"upload": {
+		"titulo": "Hochladen oder verifizieren von Dateien",
+		"filehash": "Datei auswählen...",
+		"fileid": "Identifikation der Datei",
+		"upload": "Datei hochladen",
+		"check": "Integrität der Datei",
+		"select": "Seleccionar archivo..",
+		"missing_file": "Se requiere cargar un archivo"
+	},
+	"auth": {
+		"user": "Benutzername",
+		"pwd": "Kennwort",
+		"submit": "Abschicken",
+		"role": "Funktion",
+		"titulo": "Benutzerkonto",
+		"update_pwd": "Kennwort aktualisieren",
+		"updated": "Se modifico su contraseña."
+	},
+	"header": {
+		"inicio": "Übersicht",
+		"list": "Liste",
+		"upload": "Hochladen",
+		"login": "Anmelden",
+		"logout": "Abmelden",
+		"signup": "Registration"
+	},
+	"list": {
+		"titulo": "Liste von allen geladenen Dateien",
+		"dropdown1": "Projekt auswählen",
+		"dropdown2": "Alle Projekte",
+		"listtabla1": "Identifikation",
+		"listtabla2": "Datei",
+		"listtabla3": "Autentizität",
+		"listtabla4": "Löschen",
+		"pagination1": "Vorherige",
+		"pagination2": "Nächste"
+	},
+	"check": {
+		"detalles": "Details",
+		"fileid": "Identifikation der Datei: ",
+		"hash": "Hash der Datei: ",
+		"txhash": "Hash de Transacción:",
+		"blockhash": "Nº des Blocks: ",
+		"datetimeblock": "Datum und Uhrzeit des Blocks: ",
+		"back": "Zurück",
+		"mining_state": "Status der Transaktion: ",
+		"mining_success": "Exitosa",
+		"mining_pendant": "Pendant",
+		"saved": "El archivo fue guardado con exito.",
+		"saved_info": "En aprox. 10 minutos el archivo se encontrará validado.",
+		"ok": "Die Datei ist autentisch.",
+		"not_ok": "El archivo no es valido.",
+		"add_db": "El archivo ya se encontraba en la Blockchain, se volvio a agregar a la base de datos.",
+		"duplicate": "El archivo ya se encuentra registrado.",
+		"not_mined": "Die Datei wurde registriert, aber zurzeit noch nicht in der Blockchain validiert.",
+		"delete": "La entrada en la base de datos fue eliminada.",
+		"error": "Les pedimos disculpas por la interrupción. Nos encontramos con un error."
+	}
 }

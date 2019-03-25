@@ -5,9 +5,12 @@ const Web3 = require('web3'),
 
 //Declare Truffle Ganache Variables for test purposes and env variables for RSK.
 var contract = undefined;
-var account = process.env.RSKadress;
-var address = process.env.SCadress;
-var privkey = new Buffer.from(process.env.RSKprivkey, 'hex');
+var account = process.env.RSKadress || '0x307EAa91FA219463Ac521f9A549dBDc7fF82C06c';
+var address = process.env.SCadress || '0x4A802fAB08C789b9eAAfcE58e79A40EBd83f7Cbe';
+var privkey = new Buffer.from(
+	process.env.RSKprivkey || '7a0824e86e5c362c523d7f4991de30b56a9c04f653c33573b0a1e3b8850b23c6',
+	'hex'
+);
 //https://public-node.testnet.rsk.co:443
 const web3 = new Web3(Web3.givenProvider || 'https://public-node.rsk.co:443');
 
@@ -23,7 +26,7 @@ async function estimateGasLimit(account, hash) {
 			.addDocHash(hash)
 			.estimateGas({ from: account })
 			.then((result) => resolve(result))
-			.catch(function(e) {
+			.catch(function (e) {
 				reject(e);
 			});
 	});

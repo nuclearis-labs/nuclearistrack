@@ -8,8 +8,12 @@ const express = require('express'),
 	hash = require('../functions/hash'),
 	middleware = require('../middleware/index');
 
-router.get('/hash', middleware.isLoggedIn, (req, res) => {
-	res.render('hash');
+router.get('/upload', middleware.isLoggedIn, (req, res) => {
+	res.render('upload');
+});
+
+router.get('/verify', middleware.isLoggedIn, (req, res) => {
+	res.render('verify');
 });
 
 router.get('/list/', middleware.isLoggedIn, (req, res) => {
