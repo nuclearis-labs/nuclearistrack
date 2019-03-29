@@ -2,8 +2,12 @@ const express = require('express'),
 	router = express.Router({ mergeParams: true }),
 	User = require('../models/user'),
 	passport = require('passport'),
+	multer = require('multer'),
 	middleware = require('../middleware/index'),
 	bruteforce = require('../models/bruteforce');
+
+var storage = multer.memoryStorage();
+var upload = multer({ storage: storage });
 
 router.get('/', (req, res) => {
 	res.redirect('/home');
@@ -17,7 +21,7 @@ router.get('/signup', (req, res) => {
 	res.render('signup');
 });
 
-router.post('/signup', bruteforce.prevent, (req, res) => {
+router.post('/signup', upload.none(), bruteforce.prevent, (req, res) => {
 	User.register(new User({ username: req.body.username, role: req.body.role }), req.body.password, (err, user) => {
 		if (err) return res.render('signup', { message: err.message });
 
@@ -34,7 +38,7 @@ router.get('/account', middleware.isLoggedIn, (req, res) => {
 	});
 });
 
-router.post('/account', middleware.isLoggedIn, (req, res, next) => {
+router.post('/account', upload.none(), middleware.isLoggedIn, (req, res, next) => {
 	User.findByUsername(req.user.username).then((sanuser) => {
 		if (sanuser) {
 			sanuser.setPassword(req.body.newpwd, () => {
@@ -49,7 +53,7 @@ router.get('/login', (req, res) => {
 	res.render('login');
 });
 
-router.post('/login', bruteforce.prevent, (req, res, next) => {
+router.post('/login', upload.none(), bruteforce.prevent, (req, res, next) => {
 	passport.authenticate('local', (err, user, info) => {
 		if (err) return next(err);
 		if (!user) {
