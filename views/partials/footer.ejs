@@ -1,24 +1,4 @@
-<script>
-	$(document).ready(function () {
-		let parsedUrl = new URL(window.location.href);
-		let link = parsedUrl.pathname.slice(1);
-		console.log(link);
-		$("#" + link).css('border-bottom', '.25rem solid white');
-
-		bsCustomFileInput.init();
-		$('#hashform').submit(function (e) {
-			document.getElementsByTagName('main').setAttribute("hidden");
-			document.getElementsByClassName('loader').style.display = 'block';
-		});
-	});
-
-	$(function () {
-		$('[data-toggle="popover"]').popover()
-	})
-	$('.popover-dismiss').popover({
-		trigger: 'focus'
-	})
-</script>
+<script src="client.js"></script>
 </div>
 </body>
 

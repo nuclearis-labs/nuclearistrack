@@ -22,14 +22,18 @@ router.get('/signup', (req, res) => {
 });
 
 router.post('/signup', upload.none(), bruteforce.prevent, (req, res) => {
-	User.register(new User({ username: req.body.username, role: req.body.role }), req.body.password, (err, user) => {
-		if (err) return res.render('signup', { message: err.message });
+	User.register(
+		new User({ username: req.body.username, role: req.body.role, mail: req.body.mail }),
+		req.body.password,
+		(err, user) => {
+			if (err) return res.render('signup', { message: err.message });
 
-		if (!user) return res.render('signup', { message: err.message });
-		passport.authenticate('local')(req, res, () => {
-			res.redirect('/');
-		});
-	});
+			if (!user) return res.render('signup', { message: err.message });
+			passport.authenticate('local')(req, res, () => {
+				res.redirect('/');
+			});
+		}
+	);
 });
 
 router.get('/account', middleware.isLoggedIn, (req, res) => {

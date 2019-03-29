@@ -15,11 +15,15 @@
         <h1 class="titulo"><%= texts.signup.titulo %></h1>
         <form action="/signup" method="POST" enctype="multipart/form-data">
             <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="<%= texts.signup.user %>" aria-label="Username" name="username" aria-describedby="basic-addon1" required>
+                    <input type="text" class="form-control" autocomplete="username" placeholder="<%= texts.signup.user %>" aria-label="Username" name="username" aria-describedby="basic-addon1" required>
                   </div>
+                  <div class="input-group mb-3">
+                  <input type="text" class="form-control" autocomplete="mail" placeholder="<%= texts.signup.mail %>" aria-label="Mail" name="mail" aria-describedby="basic-addon1" required>
+              </div>
             <div class="input-group mb-3">
-                    <input type="password" class="form-control" placeholder="<%= texts.signup.pwd %>" aria-label="password" name="password" aria-describedby="basic-addon1" required>
+                    <input type="password" class="form-control" autocomplete="new-password" placeholder="<%= texts.signup.pwd %>" aria-label="password" name="password" aria-describedby="basic-addon1" required>
                 </div>
+
             <div class="input-group mb-3">
                   <select class="custom-select" id="inputGroupSelect02" name="role">
                     <option value="nrs">NUCLEARIS</option>
