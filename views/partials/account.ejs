@@ -5,12 +5,12 @@
   <form method="POST" id="accountform" enctype="multipart/form-data">
   
       <div class="input-group mb-3">
-        <input type="text" class="form-control" value="<%= username %>" aria-label="Username" name="username"
+        <input type="text" class="form-control" autocomplete="username" value="<%= username %>" aria-label="Username" name="username"
           aria-describedby="basic-addon1" readonly required>
       </div>
 
       <div class="input-group mb-3">
-      <input type="password" class="form-control" value="Password" aria-label="Username" name="newpwd"
+      <input type="password" class="form-control" autocomplete="new-password" value="Password" aria-label="Username" name="newpwd"
         aria-describedby="basic-addon1" required>
     </div>
 

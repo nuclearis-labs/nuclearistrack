@@ -44,7 +44,7 @@ router.post(
 		}
 		let block = await web3.block(hashed, resultObj, req.body.id);
 		if (block.page == 'partials/hash') {
-			mail.sendMail('smartinez@nuclearis.com', req.body.id, req.body.cc, req.user.username);
+			mail.sendMail(req.user.mail, req.body.id, req.body.cc, req.user.username);
 			await Document.create({
 				id: req.user.username + '-' + req.body.cc + '-' + req.body.id,
 				hash: hashed,
