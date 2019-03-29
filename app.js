@@ -9,9 +9,7 @@ const express = require('express'),
 	User = require('./models/user'),
 	LocalStrategy = require('passport-local'),
 	session = require('express-session'),
-	i18nexpress = require('i18n-express'),
-	busboy = require('connect-busboy'),
-	busboyBodyParser = require('busboy-body-parser');
+	i18nexpress = require('i18n-express');
 
 // Define router Routes
 var indexroutes = require('./routes/index'),
@@ -41,11 +39,7 @@ app.use(
 	})
 );
 
-app.use(busboy());
-app.use(busboyBodyParser());
-
 app.use(express.static(__dirname + '/public'));
-app.use(express.static(__dirname + '/uploads'));
 
 app.use(
 	i18nexpress({
