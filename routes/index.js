@@ -38,13 +38,14 @@ router.post('/signup', upload.none(), bruteforce.prevent, (req, res) => {
 
 router.get('/account', middleware.isLoggedIn, (req, res) => {
 	User.findOne({ username: req.user.username }, (err, user) => {
-		res.render('partials/account', { username: user.username });
+		res.render('partials/account', { username: user.username, mail: user.mail });
 	});
 });
 
 router.post('/account', upload.none(), middleware.isLoggedIn, (req, res, next) => {
 	User.findByUsername(req.user.username).then((sanuser) => {
 		if (sanuser) {
+			User.updateOne({ _id: sanuser._id }, { $set: { mail: req.body.newmail } }).then((e) => console.log(e));
 			sanuser.setPassword(req.body.newpwd, () => {
 				sanuser.save();
 				res.render('partials/pwdconfirm');
