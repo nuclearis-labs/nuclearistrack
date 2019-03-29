@@ -15,7 +15,7 @@ var privkey = new Buffer.from(
 
 // ***************************** ARMAR ENVIROMENT *********************************
 
-const web3 = new Web3(Web3.givenProvider || 'https://public-node.testnet.rsk.co:443');
+const web3 = new Web3(Web3.givenProvider || process.env.blockchain || 'http://localhost:8545');
 
 var jsonFile = 'build/contracts/MO.json';
 var parsed = JSON.parse(fs.readFileSync(jsonFile));
