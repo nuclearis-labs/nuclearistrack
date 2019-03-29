@@ -46,7 +46,7 @@ router.post(
 		if (block.page == 'partials/hash') {
 			mail.sendMail('smartinez@nuclearis.com', req.body.id, req.body.cc, req.user.username);
 			await Document.create({
-				id: req.body.id,
+				id: req.user.username + '-' + req.body.cc + '-' + req.body.id,
 				hash: hashed,
 				tx: block.result,
 				filename: fileName,
@@ -57,6 +57,17 @@ router.post(
 			});
 		}
 		res.render(block.page, block.data);
+	})
+);
+
+router.post(
+	'/updateList',
+	middleware.isLoggedIn,
+	middleware.asyncMiddleware(async (req, res, next) => {
+		let doc = await Document.updateOne({ _id: req.body.id }, { $set: { id: req.body.text } });
+		console.log(doc);
+
+		res.json({ status: 'Name changed', text: req.body.text, id: req.body.id });
 	})
 );
 

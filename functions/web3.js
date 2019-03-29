@@ -6,7 +6,7 @@ const Web3 = require('web3'),
 // ***************************** DECLARAR VARIABLES *********************************
 var contract = undefined;
 var account = process.env.RSKadress || '0x307EAa91FA219463Ac521f9A549dBDc7fF82C06c';
-var address = process.env.SCadress || '0x1907514259303EAd1E4dFA47a49C3f2D6747aE4A';
+var address = process.env.SCadress || '0xc5166C643C4c2E67345A2464535D88A9FD0CA32f';
 var privkey = new Buffer.from(
 	process.env.RSKprivkey || '7a0824e86e5c362c523d7f4991de30b56a9c04f653c33573b0a1e3b8850b23c6',
 	'hex'

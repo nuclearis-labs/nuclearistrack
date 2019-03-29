@@ -7,6 +7,7 @@ const express = require('express'),
 	passport = require('passport'),
 	mongoose = require('mongoose'),
 	User = require('./models/user'),
+	bodyParser = require('body-parser'),
 	LocalStrategy = require('passport-local'),
 	session = require('express-session'),
 	i18nexpress = require('i18n-express');
@@ -14,6 +15,8 @@ const express = require('express'),
 // Define router Routes
 var indexroutes = require('./routes/index'),
 	documentroutes = require('./routes/documents');
+
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Connect to mongoose database
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/nrs', {
@@ -27,6 +30,8 @@ app.set('view engine', 'ejs');
 
 // Connect to Express Mongoose Session Store
 const MS = require('express-mongoose-store')(session, mongoose);
+
+app.use(bodyParser.json());
 
 app.use(
 	require('express-session')({
