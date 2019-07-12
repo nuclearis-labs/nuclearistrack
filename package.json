@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "client": "npm start --prefix client"
+    "client": "npm start --prefix client",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -41,5 +42,9 @@
     "truffle-hdwallet-provider": "^1.0.5",
     "web3": "^1.0.0-beta.47",
     "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4"
   }
 }

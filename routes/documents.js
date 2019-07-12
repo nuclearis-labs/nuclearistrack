@@ -1,11 +1,12 @@
 const express = require("express"),
   router = express.Router({ mergeParams: true }),
-  Document = require("../models/document"),
+  documentModel = require("../models/document"),
   { sendMail } = require("../functions/mail"),
-  { find, send, check } = require("../functions/web3"),
+  { find, send } = require("../functions/web3"),
   { getExtension } = require("../functions/file"),
   { create, uploadToS3 } = require("../functions/hash"),
   { asyncMiddleware } = require("../middleware/index"),
+  DocumentClass = require("../classes/Document"),
   storage = require("multer").memoryStorage(),
   upload = require("multer")({ storage: storage });
 
@@ -25,7 +26,9 @@ router.post(
   "/hash",
   upload.single("file"),
   asyncMiddleware(async (req, res, next) => {
-    let fileHash = await create(req.file.buffer);
+    let hash = new DocumentClass(req.file);
+
+    res.send(hash.hash().getHash);
     let result = await find(fileHash);
 
     if (result) {
@@ -38,7 +41,7 @@ router.post(
 
       let tx = await send(fileHash);
 
-      await Document.create({
+      await documentModel.create({
         hash: fileHash,
         tx: tx,
         filename: `${fileHash}.${getExtension(req.file)}`,
@@ -48,18 +51,6 @@ router.post(
 
       res.json({ message: { archivoGuardado: tx } });
     }
-  })
-);
-
-router.post(
-  "/check",
-  upload.single("file"),
-  asyncMiddleware(async (req, res, next) => {
-    let fileHash = await create(req.file.buffer);
-
-    let resultObj = await find(fileHash);
-    let result = await check(resultObj, fileHash);
-    res.json(result);
   })
 );
 

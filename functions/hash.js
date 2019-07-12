@@ -1,17 +1,4 @@
-const S3 = require("aws-sdk").S3,
-  { createHash } = require("crypto");
-
-// creates a read stream of the uploaded file through multer
-module.exports.create = async function create(buffer) {
-  return new Promise((resolve, reject) => {
-    resolve(
-      "0x" +
-        createHash("sha256")
-          .update(buffer)
-          .digest("hex")
-    );
-  });
-};
+const S3 = require("aws-sdk").S3;
 
 module.exports.uploadToS3 = function uploadToS3(buffer, fileName) {
   return new Promise((resolve, reject) => {
@@ -30,7 +17,6 @@ module.exports.uploadToS3 = function uploadToS3(buffer, fileName) {
       };
       s3bucket.upload(params, function(err, data) {
         if (err) reject(err);
-        console.log("Upload to S3: ", data);
         resolve(data);
       });
     });

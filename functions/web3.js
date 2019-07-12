@@ -96,31 +96,22 @@ async function preparetx(hash) {
 // ***************************** BUSCAR HASH *********************************
 
 module.exports.find = async function find(hash) {
-  let result = await contract.methods.findDocHash(hash).call({ from: account });
+  let result = await contract.methods
+    .findDocHash(hash)
+    .call({ from: walletaddress });
   let blockNumber = result[1];
 
-  return blockNumber === "0"
-    ? false
-    : {
+  if (blockNumber === "0") {
+    return { foundBlock: false };
+  } else {
+    let doc = await Document.findOne({ hash: hash });
+    return {
+      fileHash: hash,
+      foundBlock: {
         mineTime: new Date(result[0] * 1000),
         blockNumber: result[1]
-      };
-};
-
-// ***************************** CHEQUEAR DB CONTRA HASH Y BLOCKCHAIN *********************************
-
-module.exports.check = async function check(resultObj, fileHash) {
-  let doc = await Document.findOne({ hash: fileHash });
-  logger.log({
-    level: "info",
-    message: `Se chequeo el estado de un documento
-     FileHash: ${fileHash}
-     Resultado Blockchain: ${resultObj ? true : false}
-     Resultado DB: ${doc}`
-  });
-  return {
-    fileHash: fileHash,
-    result: resultObj,
-    doc: doc
-  };
+      },
+      doc: doc
+    };
+  }
 };
