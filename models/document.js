@@ -2,13 +2,14 @@ var mongoose = require("mongoose");
 
 var docSchema = new mongoose.Schema({
   id: String,
-  hash: String,
-  tx: String,
   proyecto: Number,
-  filename: String,
-  mined: { type: Boolean, default: false },
-  visible: { type: Boolean, default: true },
-  username: String
+  username: String,
+  fileName: String,
+  fileHash: String,
+  transactionHash: String,
+  blockHash: String,
+  blockNumber: Number,
+  visible: { type: Boolean, default: true }
 });
 
 module.exports = mongoose.model("Document", docSchema);

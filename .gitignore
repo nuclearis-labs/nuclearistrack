@@ -4,3 +4,5 @@ uploads/
 newrelic_agent.log
 newrelic_agent.log
 newrelic_agent.log
+.env
+.env.default

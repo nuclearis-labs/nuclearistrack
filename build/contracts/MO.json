@@ -41,11 +41,11 @@
       "signature": "0x4cf00d3f"
     }
   ],
-  "bytecode": "0x608060405234801561001057600080fd5b506101ad806100206000396000f3fe60806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063133a48f3146100515780634cf00d3f1461008c575b600080fd5b34801561005d57600080fd5b5061008a6004803603602081101561007457600080fd5b81019080803590602001909291905050506100e2565b005b34801561009857600080fd5b506100c5600480360360208110156100af57600080fd5b810190808035906020019092919050505061012f565b604051808381526020018281526020019250505060405180910390f35b6100ea610167565b60408051908101604052804281526020014381525090508060008084815260200190815260200160002060008201518160000155602082015181600101559050505050565b600080600080848152602001908152602001600020600001546000808581526020019081526020016000206001015491509150915091565b60408051908101604052806000815260200160008152509056fea165627a7a7230582018045198f7dfb5c6a8bd3ce43d0a21e3af4378dfb1c27105acef208ea2f4c6e60029",
-  "deployedBytecode": "0x60806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063133a48f3146100515780634cf00d3f1461008c575b600080fd5b34801561005d57600080fd5b5061008a6004803603602081101561007457600080fd5b81019080803590602001909291905050506100e2565b005b34801561009857600080fd5b506100c5600480360360208110156100af57600080fd5b810190808035906020019092919050505061012f565b604051808381526020018281526020019250505060405180910390f35b6100ea610167565b60408051908101604052804281526020014381525090508060008084815260200190815260200160002060008201518160000155602082015181600101559050505050565b600080600080848152602001908152602001600020600001546000808581526020019081526020016000206001015491509150915091565b60408051908101604052806000815260200160008152509056fea165627a7a7230582018045198f7dfb5c6a8bd3ce43d0a21e3af4378dfb1c27105acef208ea2f4c6e60029",
-  "sourceMap": "29:468:0:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;29:468:0;;;;;;;",
-  "deployedSourceMap": "29:468:0:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;185:150;;8:9:-1;5:2;;;30:1;27;20:12;5:2;185:150:0;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;185:150:0;;;;;;;;;;;;;;;;;;;;343:149;;8:9:-1;5:2;;;30:1;27;20:12;5:2;343:149:0;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;343:149:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;185:150;238:23;;:::i;:::-;264:25;;;;;;;;;271:3;264:25;;;;276:12;264:25;;;238:51;;318:9;300;:15;310:4;300:15;;;;;;;;;;;:27;;;;;;;;;;;;;;;;;;;185:150;;:::o;343:149::-;399:4;405;430:9;:15;440:4;430:15;;;;;;;;;;;:24;;;456:9;:15;466:4;456:15;;;;;;;;;;;:27;;;422:62;;;;343:149;;;:::o;29:468::-;;;;;;;;;;;;;;;;;;;;:::o",
-  "source": "pragma solidity ^0.5.0;\r\n\r\n\r\ncontract MO {\r\n\r\n    struct Record {\r\n        uint mineTime;\r\n        uint blockNumber;\r\n    }\r\n\r\n    mapping (bytes32 => Record) private docHashes;\r\n\r\n    function addDocHash (bytes32 hash) public {\r\n        Record memory newRecord = Record(now, block.number);\r\n        docHashes[hash] = newRecord;\r\n    }\r\n\r\n    function findDocHash (bytes32 hash) public view returns(uint, uint) {\r\n        return (docHashes[hash].mineTime, docHashes[hash].blockNumber);\r\n    }\r\n\r\n}\r\n",
+  "bytecode": "0x608060405234801561001057600080fd5b506101ad806100206000396000f3fe60806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063133a48f3146100515780634cf00d3f1461008c575b600080fd5b34801561005d57600080fd5b5061008a6004803603602081101561007457600080fd5b81019080803590602001909291905050506100e2565b005b34801561009857600080fd5b506100c5600480360360208110156100af57600080fd5b810190808035906020019092919050505061012f565b604051808381526020018281526020019250505060405180910390f35b6100ea610167565b60408051908101604052804281526020014381525090508060008084815260200190815260200160002060008201518160000155602082015181600101559050505050565b600080600080848152602001908152602001600020600001546000808581526020019081526020016000206001015491509150915091565b60408051908101604052806000815260200160008152509056fea165627a7a7230582049c94512e7631c8765fafd5d202c0ca49d1e39f4bfa8ac4ac39150309207dcf60029",
+  "deployedBytecode": "0x60806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063133a48f3146100515780634cf00d3f1461008c575b600080fd5b34801561005d57600080fd5b5061008a6004803603602081101561007457600080fd5b81019080803590602001909291905050506100e2565b005b34801561009857600080fd5b506100c5600480360360208110156100af57600080fd5b810190808035906020019092919050505061012f565b604051808381526020018281526020019250505060405180910390f35b6100ea610167565b60408051908101604052804281526020014381525090508060008084815260200190815260200160002060008201518160000155602082015181600101559050505050565b600080600080848152602001908152602001600020600001546000808581526020019081526020016000206001015491509150915091565b60408051908101604052806000815260200160008152509056fea165627a7a7230582049c94512e7631c8765fafd5d202c0ca49d1e39f4bfa8ac4ac39150309207dcf60029",
+  "sourceMap": "35:468:0:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;35:468:0;;;;;;;",
+  "deployedSourceMap": "35:468:0:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;191:150;;8:9:-1;5:2;;;30:1;27;20:12;5:2;191:150:0;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;191:150:0;;;;;;;;;;;;;;;;;;;;349:149;;8:9:-1;5:2;;;30:1;27;20:12;5:2;349:149:0;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;349:149:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;191:150;244:23;;:::i;:::-;270:25;;;;;;;;;277:3;270:25;;;;282:12;270:25;;;244:51;;324:9;306;:15;316:4;306:15;;;;;;;;;;;:27;;;;;;;;;;;;;;;;;;;191:150;;:::o;349:149::-;405:4;411;436:9;:15;446:4;436:15;;;;;;;;;;;:24;;;462:9;:15;472:4;462:15;;;;;;;;;;;:27;;;428:62;;;;349:149;;;:::o;35:468::-;;;;;;;;;;;;;;;;;;;;:::o",
+  "source": "pragma solidity >=0.5.0 <0.7.0;\r\n\r\ncontract MO {\r\n\r\n    struct Record {\r\n        uint mineTime;\r\n        uint blockNumber;\r\n    }\r\n\r\n    mapping (bytes32 => Record) private docHashes;\r\n\r\n    function addDocHash (bytes32 hash) public {\r\n        Record memory newRecord = Record(now, block.number);\r\n        docHashes[hash] = newRecord;\r\n    }\r\n\r\n    function findDocHash (bytes32 hash) public view returns(uint, uint) {\r\n        return (docHashes[hash].mineTime, docHashes[hash].blockNumber);\r\n    }\r\n\r\n}\r\n",
   "sourcePath": "C:/Users/smartinez.nuclearis/Documents/GitHub/NUCLEARIS-Material-Organization/contracts/MO.sol",
   "ast": {
     "absolutePath": "/C/Users/smartinez.nuclearis/Documents/GitHub/NUCLEARIS-Material-Organization/contracts/MO.sol",
@@ -61,12 +61,15 @@
         "id": 1,
         "literals": [
           "solidity",
-          "^",
+          ">=",
           "0.5",
+          ".0",
+          "<",
+          "0.7",
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:0"
+        "src": "0:31:0"
       },
       {
         "baseContracts": [],
@@ -91,7 +94,7 @@
                 "name": "mineTime",
                 "nodeType": "VariableDeclaration",
                 "scope": 6,
-                "src": "75:13:0",
+                "src": "81:13:0",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -102,7 +105,7 @@
                   "id": 2,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "75:4:0",
+                  "src": "81:4:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -117,7 +120,7 @@
                 "name": "blockNumber",
                 "nodeType": "VariableDeclaration",
                 "scope": 6,
-                "src": "99:16:0",
+                "src": "105:16:0",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -128,7 +131,7 @@
                   "id": 4,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "99:4:0",
+                  "src": "105:4:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -141,7 +144,7 @@
             "name": "Record",
             "nodeType": "StructDefinition",
             "scope": 51,
-            "src": "50:73:0",
+            "src": "56:73:0",
             "visibility": "public"
           },
           {
@@ -150,7 +153,7 @@
             "name": "docHashes",
             "nodeType": "VariableDeclaration",
             "scope": 51,
-            "src": "131:45:0",
+            "src": "137:45:0",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -163,14 +166,14 @@
                 "id": 7,
                 "name": "bytes32",
                 "nodeType": "ElementaryTypeName",
-                "src": "140:7:0",
+                "src": "146:7:0",
                 "typeDescriptions": {
                   "typeIdentifier": "t_bytes32",
                   "typeString": "bytes32"
                 }
               },
               "nodeType": "Mapping",
-              "src": "131:27:0",
+              "src": "137:27:0",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Record_$6_storage_$",
                 "typeString": "mapping(bytes32 => struct MO.Record)"
@@ -181,7 +184,7 @@
                 "name": "Record",
                 "nodeType": "UserDefinedTypeName",
                 "referencedDeclaration": 6,
-                "src": "151:6:0",
+                "src": "157:6:0",
                 "typeDescriptions": {
                   "typeIdentifier": "t_struct$_Record_$6_storage_ptr",
                   "typeString": "struct MO.Record"
@@ -195,7 +198,7 @@
             "body": {
               "id": 29,
               "nodeType": "Block",
-              "src": "227:108:0",
+              "src": "233:108:0",
               "statements": [
                 {
                   "assignments": [
@@ -208,7 +211,7 @@
                       "name": "newRecord",
                       "nodeType": "VariableDeclaration",
                       "scope": 29,
-                      "src": "238:23:0",
+                      "src": "244:23:0",
                       "stateVariable": false,
                       "storageLocation": "memory",
                       "typeDescriptions": {
@@ -221,7 +224,7 @@
                         "name": "Record",
                         "nodeType": "UserDefinedTypeName",
                         "referencedDeclaration": 6,
-                        "src": "238:6:0",
+                        "src": "244:6:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Record_$6_storage_ptr",
                           "typeString": "struct MO.Record"
@@ -242,7 +245,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 125,
-                        "src": "271:3:0",
+                        "src": "277:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -257,7 +260,7 @@
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 113,
-                          "src": "276:5:0",
+                          "src": "282:5:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_block",
                             "typeString": "block"
@@ -271,7 +274,7 @@
                         "memberName": "number",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": null,
-                        "src": "276:12:0",
+                        "src": "282:12:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -294,7 +297,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 6,
-                      "src": "264:6:0",
+                      "src": "270:6:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_type$_t_struct$_Record_$6_storage_ptr_$",
                         "typeString": "type(struct MO.Record storage pointer)"
@@ -308,14 +311,14 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "264:25:0",
+                    "src": "270:25:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_struct$_Record_$6_memory",
                       "typeString": "struct MO.Record memory"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "238:51:0"
+                  "src": "244:51:0"
                 },
                 {
                   "expression": {
@@ -334,7 +337,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 10,
-                        "src": "300:9:0",
+                        "src": "306:9:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Record_$6_storage_$",
                           "typeString": "mapping(bytes32 => struct MO.Record storage ref)"
@@ -348,7 +351,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 12,
-                        "src": "310:4:0",
+                        "src": "316:4:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes32",
                           "typeString": "bytes32"
@@ -359,7 +362,7 @@
                       "isPure": false,
                       "lValueRequested": true,
                       "nodeType": "IndexAccess",
-                      "src": "300:15:0",
+                      "src": "306:15:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_struct$_Record_$6_storage",
                         "typeString": "struct MO.Record storage ref"
@@ -374,13 +377,13 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 16,
-                      "src": "318:9:0",
+                      "src": "324:9:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_struct$_Record_$6_memory_ptr",
                         "typeString": "struct MO.Record memory"
                       }
                     },
-                    "src": "300:27:0",
+                    "src": "306:27:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_struct$_Record_$6_storage",
                       "typeString": "struct MO.Record storage ref"
@@ -388,7 +391,7 @@
                   },
                   "id": 28,
                   "nodeType": "ExpressionStatement",
-                  "src": "300:27:0"
+                  "src": "306:27:0"
                 }
               ]
             },
@@ -409,7 +412,7 @@
                   "name": "hash",
                   "nodeType": "VariableDeclaration",
                   "scope": 30,
-                  "src": "206:12:0",
+                  "src": "212:12:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -420,7 +423,7 @@
                     "id": 11,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "206:7:0",
+                    "src": "212:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -430,16 +433,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "205:14:0"
+              "src": "211:14:0"
             },
             "returnParameters": {
               "id": 14,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "227:0:0"
+              "src": "233:0:0"
             },
             "scope": 51,
-            "src": "185:150:0",
+            "src": "191:150:0",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
@@ -448,7 +451,7 @@
             "body": {
               "id": 49,
               "nodeType": "Block",
-              "src": "411:81:0",
+              "src": "417:81:0",
               "statements": [
                 {
                   "expression": {
@@ -465,7 +468,7 @@
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 10,
-                            "src": "430:9:0",
+                            "src": "436:9:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Record_$6_storage_$",
                               "typeString": "mapping(bytes32 => struct MO.Record storage ref)"
@@ -479,7 +482,7 @@
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 32,
-                            "src": "440:4:0",
+                            "src": "446:4:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_bytes32",
                               "typeString": "bytes32"
@@ -490,7 +493,7 @@
                           "isPure": false,
                           "lValueRequested": false,
                           "nodeType": "IndexAccess",
-                          "src": "430:15:0",
+                          "src": "436:15:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_struct$_Record_$6_storage",
                             "typeString": "struct MO.Record storage ref"
@@ -504,7 +507,7 @@
                         "memberName": "mineTime",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": 3,
-                        "src": "430:24:0",
+                        "src": "436:24:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -521,7 +524,7 @@
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 10,
-                            "src": "456:9:0",
+                            "src": "462:9:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Record_$6_storage_$",
                               "typeString": "mapping(bytes32 => struct MO.Record storage ref)"
@@ -535,7 +538,7 @@
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 32,
-                            "src": "466:4:0",
+                            "src": "472:4:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_bytes32",
                               "typeString": "bytes32"
@@ -546,7 +549,7 @@
                           "isPure": false,
                           "lValueRequested": false,
                           "nodeType": "IndexAccess",
-                          "src": "456:15:0",
+                          "src": "462:15:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_struct$_Record_$6_storage",
                             "typeString": "struct MO.Record storage ref"
@@ -560,7 +563,7 @@
                         "memberName": "blockNumber",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": 5,
-                        "src": "456:27:0",
+                        "src": "462:27:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -574,7 +577,7 @@
                     "isPure": false,
                     "lValueRequested": false,
                     "nodeType": "TupleExpression",
-                    "src": "429:55:0",
+                    "src": "435:55:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$_t_uint256_$_t_uint256_$",
                       "typeString": "tuple(uint256,uint256)"
@@ -583,7 +586,7 @@
                   "functionReturnParameters": 38,
                   "id": 48,
                   "nodeType": "Return",
-                  "src": "422:62:0"
+                  "src": "428:62:0"
                 }
               ]
             },
@@ -604,7 +607,7 @@
                   "name": "hash",
                   "nodeType": "VariableDeclaration",
                   "scope": 50,
-                  "src": "365:12:0",
+                  "src": "371:12:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -615,7 +618,7 @@
                     "id": 31,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "365:7:0",
+                    "src": "371:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -625,7 +628,7 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "364:14:0"
+              "src": "370:14:0"
             },
             "returnParameters": {
               "id": 38,
@@ -637,7 +640,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 50,
-                  "src": "399:4:0",
+                  "src": "405:4:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -648,7 +651,7 @@
                     "id": 34,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "399:4:0",
+                    "src": "405:4:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -663,7 +666,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 50,
-                  "src": "405:4:0",
+                  "src": "411:4:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -674,7 +677,7 @@
                     "id": 36,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "405:4:0",
+                    "src": "411:4:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -684,20 +687,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "398:12:0"
+              "src": "404:12:0"
             },
             "scope": 51,
-            "src": "343:149:0",
+            "src": "349:149:0",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           }
         ],
         "scope": 52,
-        "src": "29:468:0"
+        "src": "35:468:0"
       }
     ],
-    "src": "0:499:0"
+    "src": "0:505:0"
   },
   "legacyAST": {
     "absolutePath": "/C/Users/smartinez.nuclearis/Documents/GitHub/NUCLEARIS-Material-Organization/contracts/MO.sol",
@@ -713,12 +716,15 @@
         "id": 1,
         "literals": [
           "solidity",
-          "^",
+          ">=",
           "0.5",
+          ".0",
+          "<",
+          "0.7",
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:0"
+        "src": "0:31:0"
       },
       {
         "baseContracts": [],
@@ -743,7 +749,7 @@
                 "name": "mineTime",
                 "nodeType": "VariableDeclaration",
                 "scope": 6,
-                "src": "75:13:0",
+                "src": "81:13:0",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -754,7 +760,7 @@
                   "id": 2,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "75:4:0",
+                  "src": "81:4:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -769,7 +775,7 @@
                 "name": "blockNumber",
                 "nodeType": "VariableDeclaration",
                 "scope": 6,
-                "src": "99:16:0",
+                "src": "105:16:0",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -780,7 +786,7 @@
                   "id": 4,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
-                  "src": "99:4:0",
+                  "src": "105:4:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -793,7 +799,7 @@
             "name": "Record",
             "nodeType": "StructDefinition",
             "scope": 51,
-            "src": "50:73:0",
+            "src": "56:73:0",
             "visibility": "public"
           },
           {
@@ -802,7 +808,7 @@
             "name": "docHashes",
             "nodeType": "VariableDeclaration",
             "scope": 51,
-            "src": "131:45:0",
+            "src": "137:45:0",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -815,14 +821,14 @@
                 "id": 7,
                 "name": "bytes32",
                 "nodeType": "ElementaryTypeName",
-                "src": "140:7:0",
+                "src": "146:7:0",
                 "typeDescriptions": {
                   "typeIdentifier": "t_bytes32",
                   "typeString": "bytes32"
                 }
               },
               "nodeType": "Mapping",
-              "src": "131:27:0",
+              "src": "137:27:0",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Record_$6_storage_$",
                 "typeString": "mapping(bytes32 => struct MO.Record)"
@@ -833,7 +839,7 @@
                 "name": "Record",
                 "nodeType": "UserDefinedTypeName",
                 "referencedDeclaration": 6,
-                "src": "151:6:0",
+                "src": "157:6:0",
                 "typeDescriptions": {
                   "typeIdentifier": "t_struct$_Record_$6_storage_ptr",
                   "typeString": "struct MO.Record"
@@ -847,7 +853,7 @@
             "body": {
               "id": 29,
               "nodeType": "Block",
-              "src": "227:108:0",
+              "src": "233:108:0",
               "statements": [
                 {
                   "assignments": [
@@ -860,7 +866,7 @@
                       "name": "newRecord",
                       "nodeType": "VariableDeclaration",
                       "scope": 29,
-                      "src": "238:23:0",
+                      "src": "244:23:0",
                       "stateVariable": false,
                       "storageLocation": "memory",
                       "typeDescriptions": {
@@ -873,7 +879,7 @@
                         "name": "Record",
                         "nodeType": "UserDefinedTypeName",
                         "referencedDeclaration": 6,
-                        "src": "238:6:0",
+                        "src": "244:6:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Record_$6_storage_ptr",
                           "typeString": "struct MO.Record"
@@ -894,7 +900,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 125,
-                        "src": "271:3:0",
+                        "src": "277:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -909,7 +915,7 @@
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 113,
-                          "src": "276:5:0",
+                          "src": "282:5:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_block",
                             "typeString": "block"
@@ -923,7 +929,7 @@
                         "memberName": "number",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": null,
-                        "src": "276:12:0",
+                        "src": "282:12:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -946,7 +952,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 6,
-                      "src": "264:6:0",
+                      "src": "270:6:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_type$_t_struct$_Record_$6_storage_ptr_$",
                         "typeString": "type(struct MO.Record storage pointer)"
@@ -960,14 +966,14 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "264:25:0",
+                    "src": "270:25:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_struct$_Record_$6_memory",
                       "typeString": "struct MO.Record memory"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "238:51:0"
+                  "src": "244:51:0"
                 },
                 {
                   "expression": {
@@ -986,7 +992,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 10,
-                        "src": "300:9:0",
+                        "src": "306:9:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Record_$6_storage_$",
                           "typeString": "mapping(bytes32 => struct MO.Record storage ref)"
@@ -1000,7 +1006,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 12,
-                        "src": "310:4:0",
+                        "src": "316:4:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes32",
                           "typeString": "bytes32"
@@ -1011,7 +1017,7 @@
                       "isPure": false,
                       "lValueRequested": true,
                       "nodeType": "IndexAccess",
-                      "src": "300:15:0",
+                      "src": "306:15:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_struct$_Record_$6_storage",
                         "typeString": "struct MO.Record storage ref"
@@ -1026,13 +1032,13 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 16,
-                      "src": "318:9:0",
+                      "src": "324:9:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_struct$_Record_$6_memory_ptr",
                         "typeString": "struct MO.Record memory"
                       }
                     },
-                    "src": "300:27:0",
+                    "src": "306:27:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_struct$_Record_$6_storage",
                       "typeString": "struct MO.Record storage ref"
@@ -1040,7 +1046,7 @@
                   },
                   "id": 28,
                   "nodeType": "ExpressionStatement",
-                  "src": "300:27:0"
+                  "src": "306:27:0"
                 }
               ]
             },
@@ -1061,7 +1067,7 @@
                   "name": "hash",
                   "nodeType": "VariableDeclaration",
                   "scope": 30,
-                  "src": "206:12:0",
+                  "src": "212:12:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1072,7 +1078,7 @@
                     "id": 11,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "206:7:0",
+                    "src": "212:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -1082,16 +1088,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "205:14:0"
+              "src": "211:14:0"
             },
             "returnParameters": {
               "id": 14,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "227:0:0"
+              "src": "233:0:0"
             },
             "scope": 51,
-            "src": "185:150:0",
+            "src": "191:150:0",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
@@ -1100,7 +1106,7 @@
             "body": {
               "id": 49,
               "nodeType": "Block",
-              "src": "411:81:0",
+              "src": "417:81:0",
               "statements": [
                 {
                   "expression": {
@@ -1117,7 +1123,7 @@
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 10,
-                            "src": "430:9:0",
+                            "src": "436:9:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Record_$6_storage_$",
                               "typeString": "mapping(bytes32 => struct MO.Record storage ref)"
@@ -1131,7 +1137,7 @@
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 32,
-                            "src": "440:4:0",
+                            "src": "446:4:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_bytes32",
                               "typeString": "bytes32"
@@ -1142,7 +1148,7 @@
                           "isPure": false,
                           "lValueRequested": false,
                           "nodeType": "IndexAccess",
-                          "src": "430:15:0",
+                          "src": "436:15:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_struct$_Record_$6_storage",
                             "typeString": "struct MO.Record storage ref"
@@ -1156,7 +1162,7 @@
                         "memberName": "mineTime",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": 3,
-                        "src": "430:24:0",
+                        "src": "436:24:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -1173,7 +1179,7 @@
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 10,
-                            "src": "456:9:0",
+                            "src": "462:9:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Record_$6_storage_$",
                               "typeString": "mapping(bytes32 => struct MO.Record storage ref)"
@@ -1187,7 +1193,7 @@
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 32,
-                            "src": "466:4:0",
+                            "src": "472:4:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_bytes32",
                               "typeString": "bytes32"
@@ -1198,7 +1204,7 @@
                           "isPure": false,
                           "lValueRequested": false,
                           "nodeType": "IndexAccess",
-                          "src": "456:15:0",
+                          "src": "462:15:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_struct$_Record_$6_storage",
                             "typeString": "struct MO.Record storage ref"
@@ -1212,7 +1218,7 @@
                         "memberName": "blockNumber",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": 5,
-                        "src": "456:27:0",
+                        "src": "462:27:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -1226,7 +1232,7 @@
                     "isPure": false,
                     "lValueRequested": false,
                     "nodeType": "TupleExpression",
-                    "src": "429:55:0",
+                    "src": "435:55:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$_t_uint256_$_t_uint256_$",
                       "typeString": "tuple(uint256,uint256)"
@@ -1235,7 +1241,7 @@
                   "functionReturnParameters": 38,
                   "id": 48,
                   "nodeType": "Return",
-                  "src": "422:62:0"
+                  "src": "428:62:0"
                 }
               ]
             },
@@ -1256,7 +1262,7 @@
                   "name": "hash",
                   "nodeType": "VariableDeclaration",
                   "scope": 50,
-                  "src": "365:12:0",
+                  "src": "371:12:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1267,7 +1273,7 @@
                     "id": 31,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "365:7:0",
+                    "src": "371:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -1277,7 +1283,7 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "364:14:0"
+              "src": "370:14:0"
             },
             "returnParameters": {
               "id": 38,
@@ -1289,7 +1295,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 50,
-                  "src": "399:4:0",
+                  "src": "405:4:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1300,7 +1306,7 @@
                     "id": 34,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "399:4:0",
+                    "src": "405:4:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1315,7 +1321,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 50,
-                  "src": "405:4:0",
+                  "src": "411:4:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1326,7 +1332,7 @@
                     "id": 36,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "405:4:0",
+                    "src": "411:4:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1336,20 +1342,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "398:12:0"
+              "src": "404:12:0"
             },
             "scope": 51,
-            "src": "343:149:0",
+            "src": "349:149:0",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           }
         ],
         "scope": 52,
-        "src": "29:468:0"
+        "src": "35:468:0"
       }
     ],
-    "src": "0:499:0"
+    "src": "0:505:0"
   },
   "compiler": {
     "name": "solc",
@@ -1360,11 +1366,11 @@
       "events": {},
       "links": {},
       "address": "0x2214c4A7c9f0A603Bd13AF2eA37089E456F0Caa4",
-      "transactionHash": "0xb14fa8bfc4121b0c531a8b11db1d0a32d6fa827b8bfe90d191dcddd7e3efbcfd"
+      "transactionHash": "0xbae82efccaf86c70fafb2a13d8ec5246e2e623205bf436627d231c91301a58d2"
     }
   },
   "schemaVersion": "3.0.5",
-  "updatedAt": "2019-07-10T14:12:37.281Z",
+  "updatedAt": "2019-07-19T15:41:47.473Z",
   "devdoc": {
     "methods": {}
   },

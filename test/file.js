@@ -1,11 +1,9 @@
 const { expect } = require("chai"),
-  { getExtension } = require("../functions/file");
+  Documento = require("../classes/Documento");
 
 describe("functions in ../functions/file.js", function() {
-  it("getExtension() should obtain the file extension", async function() {
-    let originalname = "README.md";
-
-    let extension = await getExtension({ originalname });
+  it("getExtension getter should obtain the file extension", function() {
+    let extension = new Documento({ originalname: "README.MD" }).getExtension;
 
     expect(extension).to.be.a("string");
     expect(extension).to.have.lengthOf.within(2, 4);

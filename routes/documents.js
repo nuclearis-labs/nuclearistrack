@@ -1,12 +1,8 @@
-const express = require("express"),
+let express = require("express"),
   router = express.Router({ mergeParams: true }),
-  documentModel = require("../models/document"),
   { sendMail } = require("../functions/mail"),
-  { find, send } = require("../functions/web3"),
-  { getExtension } = require("../functions/file"),
-  { create, uploadToS3 } = require("../functions/hash"),
   { asyncMiddleware } = require("../middleware/index"),
-  DocumentClass = require("../classes/Document"),
+  Documento = require("../classes/Documento"),
   storage = require("multer").memoryStorage(),
   upload = require("multer")({ storage: storage });
 
@@ -23,33 +19,34 @@ router.get("/list/", (req, res) => {
 });
 
 router.post(
-  "/hash",
+  "/upload",
   upload.single("file"),
-  asyncMiddleware(async (req, res, next) => {
-    let hash = new DocumentClass(req.file);
+  asyncMiddleware(async (req, res) => {
+    let file = new Documento(req.file);
+    let { foundBlock } = await file.createHash().findBlock();
 
-    res.send(hash.hash().getHash);
-    let result = await find(fileHash);
+    if (foundBlock.blockNumber === "0") {
+      await file.sendTx();
+      await file.createRecord();
+      await file.uploadToS3();
 
-    if (result) {
-      res.json({ message: { bloqueExistente: result } });
+      res.json({ message: "Transaction successful", data: file });
     } else {
-      await uploadToS3(
-        req.file.buffer,
-        `${fileHash}.${getExtension(req.file)}`
-      );
+      res.json({ message: "Duplicate", data: file });
+    }
+  })
+);
 
-      let tx = await send(fileHash);
+router.post(
+  "/verify",
+  upload.single("file"),
+  asyncMiddleware(async (req, res) => {
+    let file = await new Documento(req.file).createHash().findBlock();
 
-      await documentModel.create({
-        hash: fileHash,
-        tx: tx,
-        filename: `${fileHash}.${getExtension(req.file)}`,
-        mined: false,
-        visible: true
-      });
-
-      res.json({ message: { archivoGuardado: tx } });
+    if (file.foundBlock.blockNumber === "0") {
+      res.json({ message: "Not found", data: file });
+    } else {
+      res.json({ message: "Hash found", data: file });
     }
   })
 );
