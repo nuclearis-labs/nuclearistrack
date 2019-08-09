@@ -1,5 +1,7 @@
 # NUCLEARIS Material Organization
 
+On a first note, this project is build in Spanish and all the documentation for now is in Spanish, eventually it'll be translated to English.
+
 Desarrollo MVP (minimum viable product) de una aplicación decentralizada (dApp) para verificar la autenticidad de documentos a traves de la Blockchain de [RSK](https://github.com/rsksmart/rskj).
 
 ## Concepto MVP
