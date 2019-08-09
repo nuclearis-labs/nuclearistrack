@@ -1,8 +1,5 @@
 node_modules
 .DS_Store
-uploads/
-newrelic_agent.log
-newrelic_agent.log
-newrelic_agent.log
+*.log
 .env
 .env.default
