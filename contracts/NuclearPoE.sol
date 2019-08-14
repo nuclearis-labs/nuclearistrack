@@ -71,6 +71,7 @@ contract NuclearPoE {
     /// @param storageHash Hash of Storage
     /// @param storageFunction Function of Storage Hash
     /// @param storageSize Size of Storage Hash
+    function addDocument (bytes32 hash, uint expediente, uint32 mineTime, bytes32 titulo, bytes32 storageHash, uint8 storageFunction, uint8 storageSize) public onlySupplier {
         require(document[hash].created == false,"Document already created");
         require(project[expediente].created == true,"Project does not exist");
         require(project[expediente].approved == true,"Project is not approved by client");
@@ -95,13 +96,28 @@ contract NuclearPoE {
     /// @return blockNumber Block Number of TX
     /// @return title Title of document
     /// @return note Note from supplier
+    function findDocument (bytes32 hash) public view returns(address,uint32, uint256, bytes32, string[] memory) {
         require(document[hash].blockNumber != 0,"Document does not exist");
+        return (document[hash].user,
+        document[hash].mineTime,
+        document[hash].blockNumber,
+        document[hash].title,
+        document[hash].note
+      );
+    }
+
     /// @notice Checks for existing Document
     /// @param hash Hash of requested document
     /// @return storageHash Hash of Storage
     /// @return storageFunction Function of Storage Hash
     /// @return storageSize Size of Storage Hash
+    function findDocumentStorage (bytes32 hash) public view returns(bytes32,uint8,uint8) {
         require(document[hash].blockNumber != 0,"Document does not exist");
+        return (document[hash].storageHash,
+        document[hash].storageFunction,
+        document[hash].storageSize);
+    }
+
     /// @notice Get an array of all documents saved inside the contract
     /// @return A bytes32 array with all documents
     function getDocuments() public view onlyOwner returns (bytes32[] memory) {
