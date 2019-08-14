@@ -64,18 +64,39 @@ contract NuclearPoE {
     }
 
     /// @notice Creates a new entry in the documents
-    /// @param hash of document, timestamp of operation, title of document, hash of document storage, function of document storage, size of storage
     function addDocHash (bytes32 hash, uint32 mineTime, bytes32 titulo, bytes32 storageHash, uint8 storageFunction, uint8 storageSize) public onlySupplier {
         document[hash] = Document(msg.sender, mineTime, block.number, titulo, storageHash, storageFunction, storageSize);
+    /// @param hash Hash of document
+    /// @param expediente Expediente del proyecto
+    /// @param mineTime Timestamp of operation
+    /// @param titulo Title of document
+    /// @param storageHash Hash of Storage
+    /// @param storageFunction Function of Storage Hash
+    /// @param storageSize Size of Storage Hash
         require(document[hash].created == false,"Document already created");
         require(project[expediente].created == true,"Project does not exist");
         require(project[expediente].approved == true,"Project is not approved by client");
         documents.push(hash);
     }
 
+    /// @notice Lets the supplier add a note to the uploaded document
+    /// @param hash Hash of document
+    /// @param note Note from the supplier
       require(document[hash].user == msg.sender, "User does not match");
       require(document[hash].created == true, "Document does not exist");
+    /// @notice Checks for existing Document
+    /// @param hash Hash of requested document
+    /// @return user Address who saved document
+    /// @return mineTime Timestamp of operation
+    /// @return blockNumber Block Number of TX
+    /// @return title Title of document
+    /// @return note Note from supplier
         require(document[hash].blockNumber != 0,"Document does not exist");
+    /// @notice Checks for existing Document
+    /// @param hash Hash of requested document
+    /// @return storageHash Hash of Storage
+    /// @return storageFunction Function of Storage Hash
+    /// @return storageSize Size of Storage Hash
         require(document[hash].blockNumber != 0,"Document does not exist");
     /// @notice Get an array of all documents saved inside the contract
     /// @return A bytes32 array with all documents
@@ -84,18 +105,20 @@ contract NuclearPoE {
     }
 
     /// @notice Adds a new allowed supplier to the contract
-    /// @param Address of the new supplier, Name of new supplier
     function addSupplier(address direction, bytes32 name) public {
       suppliers[direction] = Supplier(direction, name);
+    /// @param direction Address of suppliers
+    /// @param name Name of supplier
       require(suppliers[direction].created == false,"Supplier already created");
       require(clients[direction].created == false,"Is already a client");
       require(owner != direction,"Is owner");
     }
 
     /// @notice Adds a new client to the contract
-    /// @param Address of the new client, Name of new client
     function addClient(address direction, bytes32 name) public {
       clients[direction] = Client(direction, name);
+    /// @param direction Address of client
+    /// @param name Name of client
       require(clients[direction].created == false,"Client already created");
       require(suppliers[direction].created == false,"Is already a supplier");
       require(owner != direction,"Is owner");
