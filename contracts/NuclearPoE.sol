@@ -23,6 +23,14 @@ contract NuclearPoE {
         string[] note;
     }
 
+    struct Process {
+       address supplier;
+       bytes32 title;
+       uint expediente;
+       Document documents;
+       bool created;
+    }
+
     struct Project {
         address client;
         bytes32 title;
@@ -42,8 +50,8 @@ contract NuclearPoE {
         bool created;
     }
 
-    mapping (bytes32 => Document) private document;
-    mapping (uint => Project) private project;
+    mapping(bytes32 => Document) private document;
+    mapping(uint => Project) private project;
     mapping(address => Supplier) private suppliers;
     mapping(address => Client) private clients;
 
@@ -88,6 +96,8 @@ contract NuclearPoE {
       require(document[hash].created == true, "Document does not exist");
       document[hash].note.push(note);
     }
+
+    function addProcess ()
 
     /// @notice Checks for existing Document
     /// @param hash Hash of requested document
