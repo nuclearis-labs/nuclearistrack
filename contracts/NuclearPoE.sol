@@ -7,8 +7,6 @@ pragma experimental ABIEncoderV2;
 /// @dev All function calls are currently implemented without side effects
 contract NuclearPoE {
 
-    bytes32[] public documents;
-    address public owner;
     bytes32[] private documents;
     address private owner;
 
@@ -22,6 +20,8 @@ contract NuclearPoE {
         uint8 storageFunction;
         uint8 storageSize;
         bool created;
+        string[] note;
+    }
 
     struct Project {
         address client;
@@ -64,8 +64,6 @@ contract NuclearPoE {
     }
 
     /// @notice Creates a new entry in the documents
-    function addDocHash (bytes32 hash, uint32 mineTime, bytes32 titulo, bytes32 storageHash, uint8 storageFunction, uint8 storageSize) public onlySupplier {
-        document[hash] = Document(msg.sender, mineTime, block.number, titulo, storageHash, storageFunction, storageSize);
     /// @param hash Hash of document
     /// @param expediente Expediente del proyecto
     /// @param mineTime Timestamp of operation
@@ -76,14 +74,20 @@ contract NuclearPoE {
         require(document[hash].created == false,"Document already created");
         require(project[expediente].created == true,"Project does not exist");
         require(project[expediente].approved == true,"Project is not approved by client");
+        string[] memory emptyStringArray;
+        document[hash] = Document(msg.sender, expediente, mineTime, block.number, titulo, storageHash, storageFunction, storageSize, true, emptyStringArray);
         documents.push(hash);
     }
 
     /// @notice Lets the supplier add a note to the uploaded document
     /// @param hash Hash of document
     /// @param note Note from the supplier
+    function addNote (bytes32 hash, string memory note) public onlySupplier {
       require(document[hash].user == msg.sender, "User does not match");
       require(document[hash].created == true, "Document does not exist");
+      document[hash].note.push(note);
+    }
+
     /// @notice Checks for existing Document
     /// @param hash Hash of requested document
     /// @return user Address who saved document
