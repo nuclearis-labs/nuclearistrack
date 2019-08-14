@@ -43,9 +43,9 @@ contract NuclearPoE {
     }
 
     mapping (bytes32 => Document) private document;
-    mapping(address => Supplier) public suppliers;
-    mapping(address => Client) public clients;
     mapping (uint => Project) private project;
+    mapping(address => Supplier) private suppliers;
+    mapping(address => Client) private clients;
 
     constructor() public {
       owner = msg.sender;
@@ -125,33 +125,25 @@ contract NuclearPoE {
     }
 
     /// @notice Adds a new allowed supplier to the contract
-    function addSupplier(address direction, bytes32 name) public {
-      suppliers[direction] = Supplier(direction, name);
     /// @param direction Address of suppliers
     /// @param name Name of supplier
+    function addSupplier(address direction, bytes32 name) public onlyOwner {
       require(suppliers[direction].created == false,"Supplier already created");
       require(clients[direction].created == false,"Is already a client");
       require(owner != direction,"Is owner");
+      suppliers[direction] = Supplier(direction, name, true);
     }
 
     /// @notice Adds a new client to the contract
-    function addClient(address direction, bytes32 name) public {
-      clients[direction] = Client(direction, name);
     /// @param direction Address of client
     /// @param name Name of client
+    function addClient(address direction, bytes32 name) public onlyOwner {
       require(clients[direction].created == false,"Client already created");
       require(suppliers[direction].created == false,"Is already a supplier");
       require(owner != direction,"Is owner");
+      clients[direction] = Client(direction, name, true);
     }
 
-    function findDocHash (bytes32 hash) public view returns(address,uint32, uint256, bytes32, bytes32, uint8, uint8) {
-        return (document[hash].user,
-        document[hash].mineTime,
-        document[hash].blockNumber,
-        document[hash].title,
-        document[hash].storageHash,
-        document[hash].storageFunction,
-        document[hash].storageSize);
     /// @notice Adds a new client to the contract
     /// @param expediente Number of expediente
     /// @param client Name of client
