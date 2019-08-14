@@ -39,7 +39,7 @@ contract NuclearPoE {
 
     modifier onlySupplier() {
     require(
-        msg.sender == owner,
+        msg.sender == suppliers[msg.sender].direction,
         "Only supplier can upload documentation"
     );
     _;
@@ -60,12 +60,22 @@ contract NuclearPoE {
         documents.push(hash);
     }
 
+    /// @notice Get an array of all documents saved inside the contract
+    /// @return A bytes32 array with all documents
     function getDocuments() public view onlyOwner returns (bytes32[] memory) {
         return documents;
     }
 
+    /// @notice Adds a new allowed supplier to the contract
+    /// @param Address of the new supplier, Name of new supplier
     function addSupplier(address direction, bytes32 name) public {
       suppliers[direction] = Supplier(direction, name);
+    }
+
+    /// @notice Adds a new client to the contract
+    /// @param Address of the new client, Name of new client
+    function addClient(address direction, bytes32 name) public {
+      clients[direction] = Client(direction, name);
     }
 
     function findDocHash (bytes32 hash) public view returns(address,uint32, uint256, bytes32, bytes32, uint8, uint8) {
