@@ -23,8 +23,3 @@ La autentificación de los archivos se realiza de la siguiente manera:
 ### Logica
 
 El smart contract guardado en la blockchain bajo una dirección especifica, guarda los siguientes datos:
-
-- Bloque en el cual fue minado la transferencia.
-- Timestamp del momento de minado de dicho bloque.
-- Hash del archivo.
-- La address de la persona que subio el documento. (En el futuro)
