@@ -216,6 +216,4 @@ contract NuclearPoE {
       require(owner != supplierAddress, "Is owner");
       project[expediente].process[supplierAddress].supplier[supplierAddress] = Supplier(supplierAddress, name, true);
     }
-
-
 }
