@@ -22,13 +22,12 @@ router.post(
   "/upload",
   upload.single("file"),
   asyncMiddleware(async (req, res) => {
-    let file = new Documento(req.file);
-    let { foundBlock } = await file.createHash().findBlock();
+    let file = new Documento()
+    let { foundBlock } = await file.createHash(req.file).findBlock()
 
-    if (foundBlock.blockNumber === "0") {
-      await file.sendTx();
-      await file.createRecord();
-      await file.uploadToS3();
+    if (foundBlock.blockNumber === '0') {
+      await file.addDocHash()
+      await file.sendTx()
 
       res.json({ message: "Transaction successful", data: file });
     } else {
