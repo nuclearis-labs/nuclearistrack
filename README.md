@@ -1,25 +1,37 @@
-# NUCLEARIS Material Organization
+<p align="center"><img src="https://nrs-diversos.s3.us-east-2.amazonaws.com/logo.png" width="400"></p>
 
-On a first note, this project is build in Spanish and all the documentation for now is in Spanish, eventually it'll be translated to English.
+<p align="center">
+<img alt="GitHub release (latest SemVer)" src="https://img.shields.io/github/v/release/sebastinez/NUCLEARIS-Material-Organization?sort=semver">
+<img alt="GitHub" src="https://img.shields.io/github/license/sebastinez/NUCLEARIS-Material-Organization">
+</p>
 
-Desarrollo MVP (minimum viable product) de una aplicación decentralizada (dApp) para verificar la autenticidad de documentos a traves de la Blockchain de [RSK](https://github.com/rsksmart/rskj).
+## Table of Contents
 
-## Concepto MVP
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Options](#options)
+  - [Examples](#examples)
+- [Roadmap](#roadmap)
+- [Known bugs](#known-bugs)
+- [Contributing](#contributing)
+- [License](#license)
 
-A continuacion un primer desarrollo del concepto que se quiere lograr.
+## Description
+This repo contains the development of the Nuclear PoE by [NUCLEARIS](https://nuclearis.com.ar)
 
-## Funcionamiento
+<a name="installation"></a>
 
-Se detalla el funcionamiento de la herramienta.
+## Installation
 
-### Carga de documentos
+```shell
+git clone https://github.com/sebastinez/NUCLEARIS-Material-Organization.git
+cd NUCLEARIS-Material-Organization
+npm client
+npm start
+```
 
-A traves de un front-end se permite al usuario cargar la huella digital (hash) de un documento:
+## External resources
 
-### Autentificación del archivo
+## License
 
-La autentificación de los archivos se realiza de la siguiente manera:
-
-### Logica
-
-El smart contract guardado en la blockchain bajo una dirección especifica, guarda los siguientes datos:
+The Nuclear PoE is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT)
