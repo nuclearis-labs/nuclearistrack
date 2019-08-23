@@ -22,17 +22,16 @@ router.post(
   "/upload",
   upload.single("file"),
   asyncMiddleware(async (req, res) => {
-    let file = new Documento()
-    let { foundBlock } = await file.createHash(req.file).findBlock()
+    let file = new Documento(req.body.keys)
+    await file.createHash(req.file)
 
-    if (foundBlock.blockNumber === '0') {
-      await file.addDocHash()
-      await file.sendTx()
+    await file.addDocHash(
+      req.body.expediente,
+      req.body.documentTitle,
+      req.body.IPFSHash)
+    await file.sendTx()
 
-      res.json({ message: "Transaction successful", data: file });
-    } else {
-      res.json({ message: "Duplicate", data: file });
-    }
+    res.json({ message: "Transaction successful", data: file });
   })
 );
 
