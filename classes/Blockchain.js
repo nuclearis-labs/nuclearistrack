@@ -2,20 +2,11 @@ const Web3 = require("web3"),
     fs = require("fs"),
     documentModel = require("../models/document"),
     { createHash } = require("crypto"),
+    bs58 = require("bs58"),
     Transaction = require("ethereumjs-tx");
 
-// ***************************** DECLARAR VARIABLES *********************************
-const walletaddress = process.env.RSKadress || "0xbA8692699d88831563E2fE10E04489919C42e4b0",
-    SCaddress = process.env.SCadress || "0x0A464b1319Ba83aF0AA39ba42Cf766154E24845e",
-    privateKey = new Buffer.from(
-        process.env.RSKprivkey ||
-        '725cff30fe95d94f5497487bfdfe6fc8c640ce57e99ad9a7ecbe73b62441fb20',
-        'hex'
-    )
-
-// ***************************** ARMAR ENVIROMENT *********************************
-
 const web3 = new Web3(process.env.blockchain || "http://127.0.0.1:7545"),
+    SCaddress = "0x23fEdbB39210743F9cb0eed883eDbafa8f08146f",
     jsonFile = "build/contracts/NuclearPoE.json",
     parsed = JSON.parse(fs.readFileSync(jsonFile)),
     abi = parsed.abi,
@@ -27,6 +18,12 @@ const web3 = new Web3(process.env.blockchain || "http://127.0.0.1:7545"),
  * @constructor
  */
 class Blockchain {
+    constructor(keys) {
+        let jsonKeys = JSON.parse(keys)
+        let privateBuffer = Buffer.from(jsonKeys.private, "hex")
+        this.wallet = jsonKeys.wallet
+        this.private = privateBuffer
+    }
     /**
      * Crea el hash del archivo
      * @name createHash
@@ -72,7 +69,7 @@ class Blockchain {
     async findBlock() {
         let result = await contract.methods
             .findDocHash(this.fileHash)
-            .call({ from: walletaddress })
+            .call({ from: this.wallet })
         let blockNumber = result[1]
         let mineTime = result[0]
 
@@ -98,15 +95,24 @@ class Blockchain {
      * @function
      * @memberof Blockchain
      */
-    async addDocHash() {
-        this.data = contract.methods.addDocHash(this.fileHash).encodeABI()
+    async addDocHash(expediente, documentTitle, IPFSHash) {
+        IPFSHash = bs58.decode(IPFSHash).toString("hex")
+        let storageFunction = IPFSHash.slice(0, 2)
+        let storageSize = IPFSHash.slice(2, 4)
+        let storageHash = IPFSHash.slice(4)
+        console.log(storageFunction, storageSize, storageHash);
+
+        this.data = contract.methods.addDocument(this.fileHash, expediente, 342343, documentTitle, Number(storageHash), Number(storageFunction), Number(storageSize)).encodeABI()
         this.gaslimit = await contract.methods
-            .addDocHash(this.fileHash)
-            .estimateGas({ from: walletaddress })
+            .addDocument(this.fileHash, expediente, 342343, documentTitle, storageHash, storageFunction, storageSize)
+            .estimateGas({ from: this.wallet })
         return this
     }
 
     checkForInputType(input, type) {
+        if (input === undefined) {
+            throw Error("Input undefined")
+        }
         if (typeof input !== type) {
             throw Error(`Input is not a ${type}`)
         }
@@ -127,21 +133,38 @@ class Blockchain {
             .encodeABI()
         this.gaslimit = await contract.methods
             .createNewProject(expediente, projectTitle, clientAddress, clientName)
-            .estimateGas({ from: walletaddress })
+            .estimateGas({ from: this.wallet })
         return this
     }
 
     async approveProject(expediente) {
         //Validate and convert input data
         this.checkForInputType(expediente, "number")
-
         //Prepare data package and estimate gas cost
         this.data = contract.methods
             .approveProject(expediente)
             .encodeABI()
         this.gaslimit = await contract.methods
             .approveProject(expediente)
-            .estimateGas({ from: walletaddress })
+            .estimateGas({ from: this.wallet })
+        return this
+    }
+
+    async addProcess(expediente, supplierAddress, processTitle, supplierName) {
+        //Validate and convert input data
+        this.checkForInputType(expediente, "number")
+        this.checkForInputType(processTitle, "string")
+        this.checkForInputType(supplierName, "string")
+        processTitle = web3.utils.fromAscii(processTitle)
+        supplierAddress = web3.utils.toChecksumAddress(supplierAddress)
+        supplierName = web3.utils.fromAscii(supplierName)
+        //Prepare data package and estimate gas cost
+        this.data = contract.methods
+            .addProcessToProject(supplierAddress, expediente, processTitle, supplierName)
+            .encodeABI()
+        this.gaslimit = await contract.methods
+            .addProcessToProject(supplierAddress, expediente, processTitle, supplierName)
+            .estimateGas({ from: this.wallet })
         return this
     }
 
@@ -154,7 +177,7 @@ class Blockchain {
     async sendTx() {
         return new Promise(async (resolve, reject) => {
             let gasprice = await web3.eth.getGasPrice()
-            let nonce = await web3.eth.getTransactionCount(walletaddress)
+            let nonce = await web3.eth.getTransactionCount(this.wallet)
 
             const rawTx = {
                 nonce: web3.utils.toHex(nonce),
@@ -166,7 +189,7 @@ class Blockchain {
             }
 
             let tx = new Transaction(rawTx)
-            tx.sign(privateKey)
+            tx.sign(this.private)
             let serializedTx = tx.serialize()
 
             web3.eth
