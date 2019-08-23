@@ -32,7 +32,7 @@
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^5.0.1",
     "truffle-hdwallet-provider": "^1.0.5",
-    "web3": "^1.0.0-beta.47",
+    "web3": "^1.2.1",
     "winston": "^3.2.1"
   },
   "devDependencies": {
