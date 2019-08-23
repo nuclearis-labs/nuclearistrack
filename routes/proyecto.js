@@ -2,16 +2,28 @@ let express = require('express'),
     Blockchain = require('../classes/Blockchain'),
     router = express.Router({ mergeParams: true })
 
-router.get('/list', (req, res) => {
-    res.json({ message: 'Upload Form' })
+router.post('/', async (req, res) => {
+    let proyecto = new Blockchain()
+    await proyecto.addProject(
+        Number(req.body.expediente),
+        req.body.proyectoTitle.toString(),
+        req.body.clientAddress.toString(),
+        req.body.clientName.toString()
+    )
+    let tx = await proyecto.sendTx()
+    res.json({ message: `Project created`, data: tx })
 })
 
-router.post('/', async (req, res) => {
-    let blockchain = new Blockchain()
-    await blockchain.addProject(41955, 'Test', 'Address', 'Name')
-    await blockchain.sendTx()
-
-    res.json({ message: 'Upload Form' })
+router.post('/approve', async (req, res) => {
+    let proyecto = new Blockchain()
+    try {
+        await proyecto.approveProject(Number(req.body.expediente))
+        let tx = await proyecto.sendTx()
+        res.json({ message: `Project approved`, data: tx })
+    }
+    catch (e) {
+        res.json({ error: e.message })
+    }
 })
 
 module.exports = router
