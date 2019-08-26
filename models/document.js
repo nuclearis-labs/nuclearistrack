@@ -1,6 +1,6 @@
-var mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-var docSchema = new mongoose.Schema({
+const docSchema = new mongoose.Schema({
   id: String,
   proyecto: Number,
   username: String,
@@ -12,4 +12,4 @@ var docSchema = new mongoose.Schema({
   visible: { type: Boolean, default: true }
 });
 
-module.exports = mongoose.model("Document", docSchema);
+module.exports = mongoose.model('Document', docSchema);
