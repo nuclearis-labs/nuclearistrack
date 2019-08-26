@@ -7,6 +7,12 @@
     height: 1000px;
 }
 
+.App div.container {
+    margin-top:50px;
+    margin-left:200px;
+    height: 500px;
+}
+
 .App footer {
     bottom: 0px;
     background-color: #000;
