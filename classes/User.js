@@ -1,23 +1,24 @@
-const userModel = require("../models/user");
+const UserModel = require('../models/user');
 
 class User {
   constructor(body) {
     this.body = body;
   }
+
   async createUser() {
     try {
-      let user = await userModel.register(
-        new userModel({ username: this.body.username, mail: this.body.mail }),
+      await UserModel.register(
+        new UserModel({ username: this.body.username, mail: this.body.mail }),
         this.body.password
       );
-      if (!user) res.json({ message: "Problem logging in" });
     } catch (error) {
       throw new Error(error.message);
     }
   }
+
   static async listUser(filter, project) {
     try {
-      let data = await userModel.find(filter, project);
+      const data = await UserModel.find(filter, project);
       return data;
     } catch (error) {
       throw new Error(error.message);
@@ -26,7 +27,7 @@ class User {
 
   async updateUser(id) {
     try {
-      let user = await userModel.findOneAndUpdate(
+      const user = await UserModel.findOneAndUpdate(
         { _id: id },
         { $set: this.body },
         { new: true }
@@ -36,9 +37,10 @@ class User {
       throw new Error(error.message);
     }
   }
+
   static async deleteUser(id) {
     try {
-      let user = await userModel.findOneAndUpdate(
+      const user = await UserModel.findOneAndUpdate(
         { _id: id },
         { $set: { active: false } },
         { new: true }

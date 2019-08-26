@@ -1,7 +1,7 @@
-var HDWalletProvider = require("truffle-hdwallet-provider");
+const HDWalletProvider = require('truffle-hdwallet-provider');
 
-var testNode = "https://public-node.testnet.rsk.co:443";
-var publicNode = "https://public-node.rsk.co";
+const testNode = 'https://public-node.testnet.rsk.co:443';
+const publicNode = 'https://public-node.rsk.co';
 
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
@@ -9,21 +9,21 @@ module.exports = {
 
   networks: {
     test: {
-      provider: () => new HDWalletProvider(privkeytest, testNode),
-      network_id: "*",
+      provider: () => new HDWalletProvider(process.env.PRIVKEYTEST, testNode),
+      network_id: '*',
       gas: 2500000,
       gasPrice: 183000
     },
     live: {
-      provider: () => new HDWalletProvider(privkeylive, publicNode),
-      network_id: "30",
+      provider: () => new HDWalletProvider(process.env.PRIVKEYLIVE, publicNode),
+      network_id: '30',
       gas: 6800000,
       gasPrice: 60240000
     },
     dev: {
-      host: "127.0.0.1",
+      host: '127.0.0.1',
       port: 7545,
-      network_id: "*"
+      network_id: '*'
     }
   }
 };
