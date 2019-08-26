@@ -5,12 +5,11 @@ const Web3 = require("web3"),
     bs58 = require("bs58"),
     Transaction = require("ethereumjs-tx");
 
-const web3 = new Web3(process.env.blockchain || "http://127.0.0.1:7545"),
-    SCaddress = "0x23fEdbB39210743F9cb0eed883eDbafa8f08146f",
+const web3 = new Web3(process.env.BLOCKCHAIN || "http://127.0.0.1:7545"),
     jsonFile = "build/contracts/NuclearPoE.json",
     parsed = JSON.parse(fs.readFileSync(jsonFile)),
     abi = parsed.abi,
-    contract = new web3.eth.Contract(abi, SCaddress)
+    contract = new web3.eth.Contract(abi, process.env.SCADDRESS)
 /**
  * @name Blockchain
  * @desc Parent Class of Documento with Blockchain functions
@@ -183,7 +182,7 @@ class Blockchain {
                 nonce: web3.utils.toHex(nonce),
                 gasPrice: web3.utils.toHex(gasprice),
                 gasLimit: web3.utils.toHex(this.gaslimit),
-                to: SCaddress,
+                to: process.env.SCADDRESS,
                 value: '0x00',
                 data: this.data,
             }
