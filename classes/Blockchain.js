@@ -1,3 +1,4 @@
+require('dotenv').config();
 const Web3C = require('web3');
 const fs = require('fs');
 const { createHash } = require('crypto');
@@ -18,9 +19,9 @@ const contract = new web3.eth.Contract(abi, process.env.SCADDRESS);
  */
 class Blockchain {
   constructor(keys) {
-    const jsonKeys = JSON.parse(keys);
-    const privateBuffer = Buffer.from(jsonKeys.private, 'hex');
-    this.wallet = jsonKeys.wallet;
+    // const jsonKeys = JSON.parse(keys);
+    const privateBuffer = Buffer.from(keys.private, 'hex');
+    this.wallet = keys.wallet;
     this.private = privateBuffer;
   }
   /**
@@ -77,7 +78,6 @@ class Blockchain {
         mineTime: new Date(mineTime * 1000),
         blockNumber
       };
-
       return this;
     }
     this.foundBlock = {
@@ -127,15 +127,15 @@ class Blockchain {
 
   async addProject(expediente, projectTitle, clientAddress, clientName) {
     // Validate and convert input data
-    if (typeof expediente !== 'number') {
-      throw Error(`Expediente is not a number`);
-    }
-    if (typeof projectTitle !== 'string') {
-      throw Error(`Project Title is not a string`);
-    }
-    if (typeof clientName !== 'string') {
-      throw Error(`Client Name is not a string`);
-    }
+    if (typeof expediente !== 'number')
+      throw TypeError(`Expediente is not a number`);
+
+    if (typeof projectTitle !== 'string')
+      throw TypeError(`Project Title is not a string`);
+
+    if (typeof clientName !== 'string')
+      throw TypeError(`Client Name is not a string`);
+
     const title = web3.utils.fromAscii(projectTitle);
     const address = web3.utils.toChecksumAddress(clientAddress);
     const name = web3.utils.fromAscii(clientName);
@@ -152,7 +152,9 @@ class Blockchain {
 
   async approveProject(expediente) {
     // Validate and convert input data
-    this.checkForInputType(expediente, 'number');
+    if (typeof expediente !== 'number')
+      throw TypeError(`Expediente is not a number`);
+
     // Prepare data package and estimate gas cost
     this.data = contract.methods.approveProject(expediente).encodeABI();
     this.gaslimit = await contract.methods
@@ -163,9 +165,15 @@ class Blockchain {
 
   async addProcess(expediente, supplierAddress, processTitle, supplierName) {
     // Validate and convert input data
-    this.checkForInputType(expediente, 'number');
-    this.checkForInputType(processTitle, 'string');
-    this.checkForInputType(supplierName, 'string');
+    if (typeof expediente !== 'number')
+      throw TypeError(`Expediente is not a number`);
+
+    if (typeof processTitle !== 'string')
+      throw TypeError(`Title of Process is not a string`);
+
+    if (typeof supplierName !== 'string')
+      throw TypeError(`Name of supplier is not a string`);
+
     const title = web3.utils.fromAscii(processTitle);
     const address = web3.utils.toChecksumAddress(supplierAddress);
     const name = web3.utils.fromAscii(supplierName);
