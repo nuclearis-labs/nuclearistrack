@@ -8,12 +8,17 @@ const Blockchain = require('./Blockchain');
  * @param {Object} - El archivo cargado del front-end
  */
 class Documento extends Blockchain {
+  constructor(file, keys) {
+    super(keys);
+    this.file = file;
+  }
   /**
    * Getter of file object
    * @name getFile
    * @function
    * @memberof Documento
    */
+
   get getFile() {
     return this.file;
   }
@@ -24,7 +29,10 @@ class Documento extends Blockchain {
    * @function
    * @memberof Documento
    */
+
   get getExtension() {
+    if (typeof this.file.originalname !== 'string')
+      throw TypeError('Should be string');
     const fileNameArray = this.file.originalname.split('.');
     if (fileNameArray.length > 1) {
       return fileNameArray[fileNameArray.length - 1];
