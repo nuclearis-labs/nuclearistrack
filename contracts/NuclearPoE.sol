@@ -1,5 +1,4 @@
 pragma solidity >=0.5.0 <0.7.0;
-pragma experimental ABIEncoderV2;
 
 /// @title A contract to maintain the records for the future of the nuclear industry
 /// @author Sebastian Martinez
