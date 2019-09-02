@@ -103,25 +103,25 @@ contract NuclearPoE {
 
     /// @notice Checks for existing Document
     /// @param hash Hash of requested document
-    /// @param supplier Address of supplier
+    /// @param supplierAddress Address of supplier
     /// @return user Address who saved document
     /// @return mineTime Timestamp of operation
     /// @return blockNumber Block Number of TX
     /// @return title Title of document
-    function findDocument (bytes32 hash, uint expediente, address supplier) public view returns(address, uint, uint32, uint, bytes32, uint) {
-        require(project[expediente].process[supplier].document[hash].created == true, "Document does not exist");
-        return (project[expediente].process[supplier].document[hash].user,
-          project[expediente].process[supplier].document[hash].expediente,
-        project[expediente].process[supplier].document[hash].mineTime,
-        project[expediente].process[supplier].document[hash].blockNumber,
-        project[expediente].process[supplier].document[hash].title,
-        project[expediente].process[supplier].document[hash].noteQt
+    function findDocument (bytes32 hash, uint expediente, address supplierAddress) public view returns(address, uint, uint32, uint, bytes32, uint) {
+        require(project[expediente].process[supplierAddress].document[hash].created == true, "Document does not exist");
+        return (project[expediente].process[supplierAddress].document[hash].user,
+          project[expediente].process[supplierAddress].document[hash].expediente,
+        project[expediente].process[supplierAddress].document[hash].mineTime,
+        project[expediente].process[supplierAddress].document[hash].blockNumber,
+        project[expediente].process[supplierAddress].document[hash].title,
+        project[expediente].process[supplierAddress].document[hash].noteQt
       );
     }
 
     /// @notice Checks for existing Document
     /// @param hash Hash of requested document
-    /// @param supplier Address of supplier
+    /// @param supplierAddress Address of supplier
     /// @param expediente Number of project
     /// @return storageHash Hash of Storage
     /// @return storageFunction Function of Storage Hash
@@ -163,7 +163,8 @@ contract NuclearPoE {
 
     /// @notice Adds a new client to the contract
     /// @param expediente Number of expediente
-    /// @param client Name of client
+    /// @param clientAddress Address of client
+    /// @param clientName Name of client
     /// @param projectTitle Title of document
     function createNewProject(uint expediente, bytes32 projectTitle, address clientAddress, bytes32 clientName) public onlyOwner {
         require(project[expediente].created == false, "Project already created");
@@ -195,7 +196,7 @@ contract NuclearPoE {
     }
 
     /// @notice Adds a new client to the contract
-    /// @param direction Address of client
+    /// @param clientAddress Address of client
     /// @param name Name of client
     function addClientToProject(address clientAddress, uint expediente, bytes32 name) internal onlyOwner {
       require(project[expediente].created == true, "Project does not exist");
@@ -206,7 +207,7 @@ contract NuclearPoE {
     }
 
     /// @notice Adds a new allowed supplier to the contract
-    /// @param direction Address of suppliers
+    /// @param supplierAddress Address of suppliers
     /// @param name Name of supplier
     function addSupplierToProcess(address supplierAddress, uint expediente, bytes32 name) internal onlyOwner {
       require(project[expediente].created == true, "Project does not exist");
