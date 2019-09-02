@@ -6,13 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "client": "npm start --prefix client",
-    "test": "jest --coverage --verbose"
-  },
-  "jest": {
-    "setupFilesAfterEnv": [
-      "jest-extended"
-    ],
-    "preset": "@shelf/jest-mongodb"
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -59,8 +53,6 @@
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^1.7.0",
     "jest": "^24.9.0",
-    "jest-extended": "^0.11.2",
-    "mocha": "^6.2.0",
     "prettier": "^1.18.2",
     "react-test-renderer": "^16.9.0"
   }

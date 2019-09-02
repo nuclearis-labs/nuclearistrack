@@ -4,6 +4,7 @@ const fs = require('fs');
 const { createHash } = require('crypto');
 const bs58 = require('bs58');
 const Transaction = require('ethereumjs-tx');
+const documentModel = require('../models/document');
 
 const web3 = new Web3C(process.env.BLOCKCHAIN || 'http://127.0.0.1:7545');
 const jsonFile = 'build/contracts/NuclearPoE.json';
@@ -49,17 +50,42 @@ class Blockchain {
   }
 
   /**
+   * Get db record
+   * @name getRecord
+   * @function
+   * @memberof Blockchain
+   */
+  async getRecord() {
+    this.record = await documentModel.findOne({ fileHash: this.getHash });
+    return this;
+  }
+
+  /**
    * Busca el hash del documento en el contrato inteligente
    * @name findBlock
    * @function
    * @memberof Blockchain
    */
-  async findBlock(expediente, supplierAddress) {
+  async findBlock() {
     const result = await contract.methods
-      .findDocument(this.fileHash, expediente, supplierAddress)
+      .findDocHash(this.fileHash)
       .call({ from: this.wallet });
+    const blockNumber = result[1];
+    const mineTime = result[0];
 
-    return result;
+    if (blockNumber === '0') {
+      this.foundBlock = {
+        mineTime: new Date(mineTime * 1000),
+        blockNumber
+      };
+      return this;
+    }
+    this.foundBlock = {
+      mineTime: new Date(mineTime * 1000),
+      blockNumber
+    };
+
+    return this;
   }
 
   /**
@@ -70,27 +96,27 @@ class Blockchain {
    */
   async addDocHash(expediente, documentTitle, IPFSHash) {
     const hash = bs58.decode(IPFSHash).toString('hex');
-    const storageFunction = Number(hash.slice(0, 2));
-    const storageSize = Number(hash.slice(2, 4));
-    const storageHash = Number(hash.slice(4));
+    const storageFunction = hash.slice(0, 2);
+    const storageSize = hash.slice(2, 4);
+    const storageHash = hash.slice(4);
 
     this.data = contract.methods
       .addDocument(
         this.fileHash,
         expediente,
-        Date.now(),
-        web3.utils.fromAscii(documentTitle),
-        storageHash,
-        storageFunction,
-        storageSize
+        342343,
+        documentTitle,
+        Number(storageHash),
+        Number(storageFunction),
+        Number(storageSize)
       )
       .encodeABI();
     this.gaslimit = await contract.methods
       .addDocument(
         this.fileHash,
         expediente,
-        Date.now(),
-        web3.utils.fromAscii(documentTitle),
+        342343,
+        documentTitle,
         storageHash,
         storageFunction,
         storageSize

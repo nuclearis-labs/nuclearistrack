@@ -1,26 +1,24 @@
-const fs = require('fs');
 const Blockchain = require('../classes/Blockchain');
 
 const Block = new Blockchain({
-  wallet: '0x7bBd83b988479F8eC82756f58e9ea8B54De103e4',
-  private: 'b6679ffaf50f7a4332855238fe0fae5fa19dd8afc7d90eb63decba74c21bed59'
+  wallet: '0xF691198C305eaDc10c2954202eA6b0BB38A76B43',
+  private: 'b79493c56182cffcb710c1e084be41b2c076a59fdff37ffa540e720f28f7e26f'
 });
 
-const file = {
-  buffer: fs.readFileSync('./test/test.pdf'),
-  originalname: 'test.pdf'
-};
-
+const string = Buffer.from('hello');
 const desiredHashOutput = {
-  fileHash: '0x35e8c8851f448e6faf58ef7232f42ffd2504edecee824ecdccaf9496d338a60d'
+  fileHash: '0x2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824'
 };
 describe('Hash Functions', () => {
   test('Should return a valid SHA256 Hash with Hex Prefix', () => {
-    expect(Block.createHash(file)).toMatchObject(desiredHashOutput);
+    expect(Block.createHash({ buffer: string })).toMatchObject(
+      desiredHashOutput
+    );
   });
-  test('Should return created Hash from Blockchain Instance', () => {
+
+  test('Should return hash from Blockchain Prototype', () => {
     expect(Block.getHash).toBe(
-      '0x35e8c8851f448e6faf58ef7232f42ffd2504edecee824ecdccaf9496d338a60d'
+      '0x2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824'
     );
   });
 });
@@ -76,36 +74,6 @@ describe('Check approve project', () => {
     expect(Block.approveProject('41955')).rejects.toEqual(
       TypeError(`Expediente is not a number`)
     );
-  });
-});
-
-describe('Retrieve documents', () => {
-  test('Should throw an error when document does not exist', () => {
-    expect(
-      Block.findBlock('41955', '0x183A598706A5F0cFE239686759a1135158cBC69A')
-    ).rejects.toEqual(
-      Error(
-        'Returned error: VM Exception while processing transaction: revert Document does not exist'
-      )
-    );
-  });
-  test('Should receive an object when document exists', () => {
-    expect(
-      Block.findBlock('41955', '0x183A598706A5F0cFE239686759a1135158cBC69A')
-    ).toBeObject();
-  });
-});
-
-describe('Add documents', () => {
-  test('Should add a document to the Smart Contract', () => {
-    Block.createHash(file);
-    expect(
-      Block.addDocHash(
-        '41955',
-        'Titulo',
-        'QmTkzDwWqPbnAh5YiV5VwcTLnGdwSNsNTn2aDxdXBFca7D'
-      )
-    ).rejects.toEqual(Error('Document does not exist'));
   });
 });
 
