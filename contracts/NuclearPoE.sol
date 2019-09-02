@@ -70,8 +70,8 @@ contract NuclearPoE {
     }
 
     modifier onlyClient(uint expediente) {
-    require(project[expediente].client[msg.sender].created == true, "Client is not assigned to project");
     require(msg.sender == project[expediente].client[msg.sender].direction,"Only clients can realize this operation");_;
+    require(project[expediente].client[msg.sender].created == true, "Client is not assigned to project");
     }
 
     modifier onlyOwner() {
@@ -96,7 +96,6 @@ contract NuclearPoE {
         require(project[expediente].process[msg.sender].document[hash].created == false,"Document already created");
         require(project[expediente].created == true,"Project does not exist");
         require(project[expediente].approved == true,"Project is not approved by client");
-
         project[expediente].process[msg.sender].document[hash] = Document(msg.sender, expediente, mineTime, block.number, title, storageHash, storageFunction, storageSize, true, 0);
 
         project[expediente].process[msg.sender].documents.push(hash);
@@ -189,6 +188,7 @@ contract NuclearPoE {
     function addProcessToProject(address supplierAddress, uint expediente, bytes32 processTitle,bytes32 supplierName) public onlyOwner {
       require(project[expediente].created == true, "Project does not exist");
       require(project[expediente].process[supplierAddress].created == false, "Process already created");
+      require(project[expediente].approved == false,"Project is already approved by client");
       bytes32[] memory emptyBytes32Array;
       project[expediente].process[supplierAddress] = Process(processTitle, expediente, true, emptyBytes32Array);
       addSupplierToProcess(supplierAddress,expediente,supplierName);

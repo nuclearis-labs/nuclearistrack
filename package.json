@@ -1,12 +1,12 @@
 {
-  "name": "NUCLEARIS-Material-Organization",
+  "name": "nuclearis-poe",
   "version": "0.1.0",
   "description": "This repository holds the source code for the tutorials at:",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "client": "npm start --prefix client",
-    "test": "mocha"
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   "homepage": "https://github.com/Sebastinez/NUCLEARIS-Material-Organization#readme",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "bs58": "^4.0.1",
     "connect-busboy": "0.0.2",
     "dotenv": "^8.0.0",
     "ejs": "^2.6.1",
@@ -32,11 +33,27 @@
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^5.0.1",
     "truffle-hdwallet-provider": "^1.0.5",
-    "web3": "^1.0.0-beta.47",
+    "web3": "^1.2.1",
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "mocha": "^6.1.4"
+    "@shelf/jest-mongodb": "^1.1.0",
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-mocha": "0.0.0",
+    "eslint-config-node": "^4.0.0",
+    "eslint-config-prettier": "^6.1.0",
+    "eslint-plugin-chai-expect": "^2.0.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^22.16.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-mocha": "^6.1.0",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-react": "^7.14.3",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "jest": "^24.9.0",
+    "prettier": "^1.18.2",
+    "react-test-renderer": "^16.9.0"
   }
 }

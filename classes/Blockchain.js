@@ -1,25 +1,16 @@
-const Web3 = require("web3"),
-  fs = require("fs"),
-  documentModel = require("../models/document"),
-  logger = require("../services/winston"),
-  { createHash } = require("crypto"),
-  Transaction = require("ethereumjs-tx");
+require('dotenv').config();
+const Web3C = require('web3');
+const fs = require('fs');
+const { createHash } = require('crypto');
+const bs58 = require('bs58');
+const Transaction = require('ethereumjs-tx');
+const documentModel = require('../models/document');
 
-// ***************************** DECLARAR VARIABLES *********************************
-const walletaddress = process.env.RSKadress || "0x7bbd83b988479f8ec82756f58e9ea8b54de103e4",
-  SCaddress = process.env.SCadress || "0x2214c4A7c9f0A603Bd13AF2eA37089E456F0Caa4",
-  privateKey = new Buffer.from(
-    process.env.RSKprivkey || "b6679ffaf50f7a4332855238fe0fae5fa19dd8afc7d90eb63decba74c21bed59",
-    "hex"
-  );
-
-// ***************************** ARMAR ENVIROMENT *********************************
-
-const web3 = new Web3(process.env.blockchain || "http://127.0.0.1:7545"),
-  jsonFile = "build/contracts/MO.json",
-  parsed = JSON.parse(fs.readFileSync(jsonFile)),
-  abi = parsed.abi,
-  contract = new web3.eth.Contract(abi, SCaddress);
+const web3 = new Web3C(process.env.BLOCKCHAIN || 'http://127.0.0.1:7545');
+const jsonFile = 'build/contracts/NuclearPoE.json';
+const parsed = JSON.parse(fs.readFileSync(jsonFile));
+const { abi } = parsed;
+const contract = new web3.eth.Contract(abi, process.env.SCADDRESS);
 /**
  * @name Blockchain
  * @desc Parent Class of Documento with Blockchain functions
@@ -27,24 +18,27 @@ const web3 = new Web3(process.env.blockchain || "http://127.0.0.1:7545"),
  * @constructor
  */
 class Blockchain {
-  constructor(file) {
-    this.file = file;
+  constructor(keys) {
+    // const jsonKeys = JSON.parse(keys);
+    const privateBuffer = Buffer.from(keys.private, 'hex');
+    this.wallet = keys.wallet;
+    this.private = privateBuffer;
   }
-
   /**
    * Crea el hash del archivo
    * @name createHash
    * @function
    * @memberof Blockchain
    */
-  createHash() {
-    this.fileHash =
-      "0x" +
-      createHash("sha256")
-        .update(this.file.buffer)
-        .digest("hex");
+
+  createHash(file) {
+    this.file = file;
+    this.fileHash = `0x${createHash('sha256')
+      .update(this.file.buffer)
+      .digest('hex')}`;
     return this;
   }
+
   /**
    * Getter of hash value
    * @name getHash
@@ -73,22 +67,22 @@ class Blockchain {
    * @memberof Blockchain
    */
   async findBlock() {
-    let result = await contract.methods.findDocHash(this.fileHash).call({ from: walletaddress });
-    let blockNumber = result[1];
-    let mineTime = result[0];
+    const result = await contract.methods
+      .findDocHash(this.fileHash)
+      .call({ from: this.wallet });
+    const blockNumber = result[1];
+    const mineTime = result[0];
 
-    if (blockNumber === "0") {
+    if (blockNumber === '0') {
       this.foundBlock = {
         mineTime: new Date(mineTime * 1000),
-        blockNumber: blockNumber
+        blockNumber
       };
-
       return this;
     }
-    //await this.getRecord();
     this.foundBlock = {
       mineTime: new Date(mineTime * 1000),
-      blockNumber: blockNumber
+      blockNumber
     };
 
     return this;
@@ -96,29 +90,101 @@ class Blockchain {
 
   /**
    * Prepara la transacción
-   * @name prepareTx
+   * @name addDocHash
    * @function
    * @memberof Blockchain
    */
-  async _prepareTx() {
-    let data = contract.methods.addDocHash(this.fileHash).encodeABI();
+  async addDocHash(expediente, documentTitle, IPFSHash) {
+    const hash = bs58.decode(IPFSHash).toString('hex');
+    const storageFunction = hash.slice(0, 2);
+    const storageSize = hash.slice(2, 4);
+    const storageHash = hash.slice(4);
 
-    let gasprice = await web3.eth.getGasPrice();
-    let gaslimit = await contract.methods.addDocHash(this.fileHash).estimateGas({ from: walletaddress });
-    let nonce = await web3.eth.getTransactionCount(walletaddress);
+    this.data = contract.methods
+      .addDocument(
+        this.fileHash,
+        expediente,
+        342343,
+        documentTitle,
+        Number(storageHash),
+        Number(storageFunction),
+        Number(storageSize)
+      )
+      .encodeABI();
+    this.gaslimit = await contract.methods
+      .addDocument(
+        this.fileHash,
+        expediente,
+        342343,
+        documentTitle,
+        storageHash,
+        storageFunction,
+        storageSize
+      )
+      .estimateGas({ from: this.wallet });
+    return this;
+  }
 
-    const rawTx = {
-      nonce: web3.utils.toHex(nonce),
-      gasPrice: web3.utils.toHex(gasprice),
-      gasLimit: web3.utils.toHex(gaslimit),
-      to: SCaddress,
-      value: "0x00",
-      data: data
-    };
+  async addProject(expediente, projectTitle, clientAddress, clientName) {
+    // Validate and convert input data
+    if (typeof expediente !== 'number')
+      throw TypeError(`Expediente is not a number`);
 
-    let tx = new Transaction(rawTx);
-    tx.sign(privateKey);
-    return tx.serialize();
+    if (typeof projectTitle !== 'string')
+      throw TypeError(`Project Title is not a string`);
+
+    if (typeof clientName !== 'string')
+      throw TypeError(`Client Name is not a string`);
+
+    const title = web3.utils.fromAscii(projectTitle);
+    const address = web3.utils.toChecksumAddress(clientAddress);
+    const name = web3.utils.fromAscii(clientName);
+
+    // Prepare data package and estimate gas cost
+    this.data = contract.methods
+      .createNewProject(expediente, title, address, name)
+      .encodeABI();
+    this.gaslimit = await contract.methods
+      .createNewProject(expediente, title, address, name)
+      .estimateGas({ from: this.wallet });
+    return this;
+  }
+
+  async approveProject(expediente) {
+    // Validate and convert input data
+    if (typeof expediente !== 'number')
+      throw TypeError(`Expediente is not a number`);
+
+    // Prepare data package and estimate gas cost
+    this.data = contract.methods.approveProject(expediente).encodeABI();
+    this.gaslimit = await contract.methods
+      .approveProject(expediente)
+      .estimateGas({ from: this.wallet });
+    return this;
+  }
+
+  async addProcess(expediente, supplierAddress, processTitle, supplierName) {
+    // Validate and convert input data
+    if (typeof expediente !== 'number')
+      throw TypeError(`Expediente is not a number`);
+
+    if (typeof processTitle !== 'string')
+      throw TypeError(`Title of Process is not a string`);
+
+    if (typeof supplierName !== 'string')
+      throw TypeError(`Name of supplier is not a string`);
+
+    const title = web3.utils.fromAscii(processTitle);
+    const address = web3.utils.toChecksumAddress(supplierAddress);
+    const name = web3.utils.fromAscii(supplierName);
+    // Prepare data package and estimate gas cost
+    this.data = contract.methods
+      .addProcessToProject(address, expediente, title, name)
+      .encodeABI();
+    this.gaslimit = await contract.methods
+      .addProcessToProject(address, expediente, title, name)
+      .estimateGas({ from: this.wallet });
+    return this;
   }
 
   /**
@@ -128,37 +194,30 @@ class Blockchain {
    * @memberof Blockchain
    */
   async sendTx() {
-    let serializedTx = await this._prepareTx();
+    const gasprice = await web3.eth.getGasPrice();
+    const nonce = await web3.eth.getTransactionCount(this.wallet);
+
+    const rawTx = {
+      nonce: web3.utils.toHex(nonce),
+      gasPrice: web3.utils.toHex(gasprice),
+      gasLimit: web3.utils.toHex(this.gaslimit),
+      to: process.env.SCADDRESS,
+      value: '0x00',
+      data: this.data
+    };
+
+    const tx = new Transaction(rawTx);
+    tx.sign(this.private);
+    const serializedTx = tx.serialize();
+
     web3.eth
-      .sendSignedTransaction("0x" + serializedTx.toString("hex"))
-      .on("transactionHash", tx => {
-        logger.log({
-          level: "info",
-          message: `Se envío la transacción ${tx}`
-        });
-        this.transactionHash = tx;
+      .sendSignedTransaction(`0x${serializedTx.toString('hex')}`)
+      .on('transactionHash', returnTx => {
+        this.transactionHash = returnTx;
         return this;
       })
-      .on("receipt", ({ transactionHash, blockHash, blockNumber }) => {
-        logger.log({
-          level: "info",
-          message: `Se recibio el receipt de la transacción
-             TransactionHash: ${transactionHash}
-             BlockHash: ${blockHash}
-             BlockNumber: ${blockNumber}`
-        });
-        documentModel.findOneAndUpdate(
-          { tx: transactionHash },
-          { $set: { blockHash: blockHash, blockNumber: blockNumber } },
-          (err, doc) => {
-            if (err) {
-              reject(err);
-            }
-          }
-        );
-      })
-      .on("error", error => {
-        reject(error);
+      .on('error', error => {
+        throw Error(error);
       });
   }
 }

@@ -1,19 +1,23 @@
-const express = require("express"),
-  app = express(),
-  bodyParser = require("body-parser"),
-  logger = require("./services/winston");
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
 
-require("./services/mongoose_connect");
-require("dotenv").config();
+const app = express();
+
+require('./services/mongoose_connect');
+require('dotenv').config();
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(__dirname + "/public"));
+// app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.resolve(__dirname, '/public')));
 
-app.use("/", require("./routes/index"));
-app.use("/doc", require("./routes/documents"));
-app.use("/user", require("./routes/user"));
+app.use('/', require('./routes/index'));
+app.use('/doc', require('./routes/documents'));
+app.use('/project', require('./routes/proyecto'));
+app.use('/process', require('./routes/process'));
+app.use('/user', require('./routes/user'));
 
 app.listen(process.env.PORT, () =>
-  console.log("Server started working on port " + process.env.PORT)
+  // eslint-disable-next-line no-console
+  console.log(`Server started working on port ${process.env.PORT}`)
 );
