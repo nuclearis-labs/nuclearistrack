@@ -8,19 +8,19 @@ module.exports = {
   // to customize your Truffle configuration!
 
   networks: {
-    test: {
+    testnet: {
       provider: () => new HDWalletProvider(process.env.PRIVKEYTEST, testNode),
       network_id: '*',
       gas: 2500000,
       gasPrice: 183000
     },
-    live: {
+    mainnet: {
       provider: () => new HDWalletProvider(process.env.PRIVKEYLIVE, publicNode),
       network_id: '30',
       gas: 6800000,
       gasPrice: 60240000
     },
-    dev: {
+    test: {
       host: '127.0.0.1',
       port: 8545,
       network_id: '*'
