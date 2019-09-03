@@ -50,17 +50,6 @@ class Blockchain {
   }
 
   /**
-   * Get db record
-   * @name getRecord
-   * @function
-   * @memberof Blockchain
-   */
-  async getRecord() {
-    this.record = await documentModel.findOne({ fileHash: this.getHash });
-    return this;
-  }
-
-  /**
    * Busca el hash del documento en el contrato inteligente
    * @name findBlock
    * @function
