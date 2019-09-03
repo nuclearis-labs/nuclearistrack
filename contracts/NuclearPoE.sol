@@ -7,7 +7,7 @@ pragma experimental ABIEncoderV2;
 /// @dev All function calls are currently implemented without side effects
 contract NuclearPoE {
 
-    address private owner;
+    address payable public owner;
 
     struct Document {
         address user;
@@ -65,13 +65,15 @@ contract NuclearPoE {
     }
 
     modifier onlySupplier(uint expediente) {
-    require(project[expediente].process[msg.sender].created == true, "Supplier process missing");
     require(msg.sender == project[expediente].process[msg.sender].supplier[msg.sender].direction,"Only supplier can realize this operation");_;
     }
 
+    modifier projectExists(uint expediente) {
+    require(project[expediente].created == true, "Project does not exist");_;
+    }
+
     modifier onlyClient(uint expediente) {
-    require(msg.sender == project[expediente].client[msg.sender].direction,"Only clients can realize this operation");_;
-    require(project[expediente].client[msg.sender].created == true, "Client is not assigned to project");
+    require(msg.sender == project[expediente].client[msg.sender].direction,"Only clients of this project can realize this operation");_;
     }
 
     modifier onlyOwner() {
@@ -80,7 +82,7 @@ contract NuclearPoE {
 
     /// @notice Get an array of all documents saved inside the contract
     /// @return A bytes32 array with all documents
-    function getDocuments(uint expediente, address supplierAddress) public view onlyOwner returns (bytes32[] memory) {
+    function getDocuments(uint expediente, address supplierAddress) public view onlyOwner projectExists(expediente) returns (bytes32[] memory) {
         return project[expediente].process[supplierAddress].documents;
     }
 
@@ -92,9 +94,8 @@ contract NuclearPoE {
     /// @param storageHash Hash of Storage
     /// @param storageFunction Function of Storage Hash
     /// @param storageSize Size of Storage Hash
-    function addDocument (bytes32 hash, uint expediente, uint32 mineTime, bytes32 title, bytes32 storageHash, uint8 storageFunction, uint8 storageSize) public onlySupplier(expediente) {
+    function addDocument (bytes32 hash, uint expediente, uint32 mineTime, bytes32 title, bytes32 storageHash, uint8 storageFunction, uint8 storageSize) public projectExists(expediente) onlySupplier(expediente) {
         require(project[expediente].process[msg.sender].document[hash].created == false,"Document already created");
-        require(project[expediente].created == true,"Project does not exist");
         require(project[expediente].approved == true,"Project is not approved by client");
         project[expediente].process[msg.sender].document[hash] = Document(msg.sender, expediente, mineTime, block.number, title, storageHash, storageFunction, storageSize, true, 0);
 
@@ -108,14 +109,13 @@ contract NuclearPoE {
     /// @return mineTime Timestamp of operation
     /// @return blockNumber Block Number of TX
     /// @return title Title of document
-    function findDocument (bytes32 hash, uint expediente, address supplierAddress) public view returns(address, uint, uint32, uint, bytes32, uint) {
+    function findDocument (bytes32 hash, uint expediente, address supplierAddress) public view projectExists(expediente) returns(address, uint, uint32, uint, bytes32) {
         require(project[expediente].process[supplierAddress].document[hash].created == true, "Document does not exist");
         return (project[expediente].process[supplierAddress].document[hash].user,
           project[expediente].process[supplierAddress].document[hash].expediente,
         project[expediente].process[supplierAddress].document[hash].mineTime,
         project[expediente].process[supplierAddress].document[hash].blockNumber,
-        project[expediente].process[supplierAddress].document[hash].title,
-        project[expediente].process[supplierAddress].document[hash].noteQt
+        project[expediente].process[supplierAddress].document[hash].title
       );
     }
 
@@ -126,8 +126,7 @@ contract NuclearPoE {
     /// @return storageHash Hash of Storage
     /// @return storageFunction Function of Storage Hash
     /// @return storageSize Size of Storage Hash
-    function findDocumentStorage (bytes32 hash, address supplierAddress, uint expediente) public view returns(bytes32, uint8, uint8) {
-        require(project[expediente].created == true, "Project does not exist");
+    function findDocumentStorage (bytes32 hash, address supplierAddress, uint expediente) public view projectExists(expediente) returns(bytes32, uint8, uint8) {
         require(project[expediente].process[supplierAddress].document[hash].created == true,"Document does not exist");
         return (project[expediente].process[supplierAddress].document[hash].storageHash,
         project[expediente].process[supplierAddress].document[hash].storageFunction,
@@ -138,8 +137,7 @@ contract NuclearPoE {
     /// @param noteID ID of note
     /// @param hash Hash of document
     /// @param note Note from the supplier
-    function addNote (uint noteID, bytes32 hash, uint expediente, address supplierAddress, string memory note) public onlySupplier(expediente) {
-      require(project[expediente].created == true, "Project does not exist");
+    function addNote (uint noteID, bytes32 hash, uint expediente, address supplierAddress, string memory note) public projectExists(expediente)  {
       require(project[expediente].process[supplierAddress].document[hash].created == true, "Document does not exist");
       require(project[expediente].process[supplierAddress].document[hash].notes[noteID].created == false,"Note does already exist");
       project[expediente].process[supplierAddress].document[hash].notes[noteID] = Notes(msg.sender, note, true);
@@ -151,8 +149,7 @@ contract NuclearPoE {
     /// @param noteID ID of note to return
     /// @return noteUser User who redacted note
     /// @return note Note from user
-    function returnNote (bytes32 hash, uint expediente, address supplierAddress, uint noteID) public view returns(address, string memory) {
-        require(project[expediente].created == true, "Project does not exist");
+    function returnNote (bytes32 hash, uint expediente, address supplierAddress, uint noteID) public view projectExists(expediente) returns(address, string memory) {
         require(project[expediente].process[supplierAddress].document[hash].created == true,"Document does not exist");
         require(project[expediente].process[supplierAddress].document[hash].notes[noteID].created == true,"Note does not exist");
         return (project[expediente].process[supplierAddress].document[hash].notes[noteID].user,
@@ -172,13 +169,16 @@ contract NuclearPoE {
         addClientToProject(clientAddress,expediente,clientName);
     }
 
+    function kill() external {
+        require(msg.sender == owner, "Only the owner can kill this contract");
+        selfdestruct(owner);
+    }
+
 
     /// @notice Approves the project with
     /// @param expediente Number of expediente
-    function approveProject(uint expediente) public onlyClient(expediente) {
-        require(project[expediente].created == true, "Project does not exist");
+    function approveProject(uint expediente) public projectExists(expediente) onlyClient(expediente) {
         require(project[expediente].approved == false,"Project already approved");
-        require(project[expediente].client[msg.sender].direction == msg.sender, "Different client registered");
         project[expediente].approved = true;
     }
 
@@ -186,8 +186,7 @@ contract NuclearPoE {
     /// @param supplierAddress Address of supplier
     /// @param expediente Number of project
     /// @param processTitle Name of process
-    function addProcessToProject(address supplierAddress, uint expediente, bytes32 processTitle,bytes32 supplierName) public onlyOwner {
-      require(project[expediente].created == true, "Project does not exist");
+    function addProcessToProject(address supplierAddress, uint expediente, bytes32 processTitle,bytes32 supplierName) public projectExists(expediente) onlyOwner {
       require(project[expediente].process[supplierAddress].created == false, "Process already created");
       require(project[expediente].approved == false,"Project is already approved by client");
       bytes32[] memory emptyBytes32Array;
