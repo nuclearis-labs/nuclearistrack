@@ -8,6 +8,10 @@ const Blockchain = require('./Blockchain');
  * @param {Object} - El archivo cargado del front-end
  */
 class Documento extends Blockchain {
+  constructor(file, keys) {
+    super(keys);
+    this.file = file;
+  }
   /**
    * Getter of file object
    * @name getFile
