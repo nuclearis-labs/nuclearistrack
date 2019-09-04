@@ -34,16 +34,17 @@ contract('Add Document', accounts => {
       'Project is not approved by client'
     );
   });
-  it('Add a document', async () => {
+  it('EVENT: Add a document', async () => {
+    let time = Date.now();
     await instance.approveProject(41955, { from: accounts[1] });
     let result = await instance.addDocument(
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
       41955,
-      Date.now(),
+      time,
       web3.utils.fromAscii('Certificado'),
       '0x5086706447789201a455871d91ecb6b44562bd6213601efefcb4cf32af50d624',
-      '12',
-      '20',
+      12,
+      20,
       { from: accounts[2] }
     );
     assert.nestedProperty(
@@ -51,6 +52,7 @@ contract('Add Document', accounts => {
       'receipt.transactionHash',
       'Result is missing a transactionHash property'
     );
+    truffleAssert.eventEmitted(result, 'AddDocument');
   });
   it('REVERT: Add a duplicate document (same hash)', async () => {
     await truffleAssert.reverts(

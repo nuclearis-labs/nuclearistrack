@@ -7,7 +7,7 @@ contract('Create Project', accounts => {
   before(async () => {
     instance = await NuclearPoE.deployed();
   });
-  it('Create a new project', async () => {
+  it('EVENT: Create a new project', async () => {
     let result = await instance.createNewProject(
       41955,
       web3.utils.fromAscii('Conjunto Soporte'),
@@ -19,6 +19,13 @@ contract('Create Project', accounts => {
       'receipt.transactionHash',
       'Result is missing a transactionHash property'
     );
+    truffleAssert.eventEmitted(result, 'CreateNewProject', ev => {
+      return (
+        ev.expediente.toNumber() === 41955 &&
+        ev.projectTitle ===
+          '0x436f6e6a756e746f20536f706f72746500000000000000000000000000000000'
+      );
+    });
   });
   it('REVERT: Create duplicate project', async () => {
     await truffleAssert.reverts(
@@ -59,7 +66,7 @@ contract('Add Process', accounts => {
       web3.utils.fromAscii('NA-SA')
     );
   });
-  it('Add a process', async () => {
+  it('EVENT: Add a process', async () => {
     let result = await instance.addProcessToProject(
       accounts[2],
       41955,
@@ -71,6 +78,7 @@ contract('Add Process', accounts => {
       'receipt.transactionHash',
       'Result is missing a transactionHash property'
     );
+    truffleAssert.eventEmitted(result, 'AddProcessToProject');
   });
   it('REVERT: Add duplicate process', async () => {
     await truffleAssert.reverts(
@@ -129,13 +137,14 @@ contract('Approve Project', accounts => {
       web3.utils.fromAscii('BGH')
     );
   });
-  it('Approve a project', async () => {
+  it('EVENT: Approve a project', async () => {
     let result = await instance.approveProject(41955, { from: accounts[1] });
     assert.nestedProperty(
       result,
       'receipt.transactionHash',
       'Result is missing a transactionHash property'
     );
+    truffleAssert.eventEmitted(result, 'ApproveProject');
   });
   it('REVERT: Approve project as non assigned client', async () => {
     await truffleAssert.reverts(

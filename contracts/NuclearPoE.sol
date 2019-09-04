@@ -80,6 +80,13 @@ contract NuclearPoE {
     require(msg.sender == owner,"Only owner can make this change");_;
     }
 
+    event CreateNewProject(uint expediente,bytes32 projectTitle);
+    event AddDocument(bytes32 hash,uint expediente, uint mineTime, uint blockNumber);
+    event ApproveProject(uint expediente);
+    event AddProcessToProject(uint expediente,bytes32 processTitle,bytes32 supplierName);
+    event AddNote(bytes32 hash, uint expediente);
+
+
     /// @notice Get an array of all documents saved inside the contract
     /// @return A bytes32 array with all documents
     function getDocuments(uint expediente, address supplierAddress) public view onlyOwner projectExists(expediente) returns (bytes32[] memory) {
@@ -100,6 +107,7 @@ contract NuclearPoE {
         project[expediente].process[msg.sender].document[hash] = Document(msg.sender, expediente, mineTime, block.number, title, storageHash, storageFunction, storageSize, true, 0);
 
         project[expediente].process[msg.sender].documents.push(hash);
+        emit AddDocument(hash,expediente,mineTime,block.number);
     }
 
     /// @notice Checks for existing Document
@@ -141,6 +149,7 @@ contract NuclearPoE {
       require(project[expediente].process[supplierAddress].document[hash].created == true, "Document does not exist");
       require(project[expediente].process[supplierAddress].document[hash].notes[noteID].created == false,"Note does already exist");
       project[expediente].process[supplierAddress].document[hash].notes[noteID] = Notes(msg.sender, note, true);
+      emit AddNote(hash,expediente);
     }
 
     /// @notice Checks for existing Document
@@ -167,6 +176,7 @@ contract NuclearPoE {
         require(project[expediente].created == false, "Project already created");
         project[expediente] = Project(projectTitle, false, true);
         addClientToProject(clientAddress,expediente,clientName);
+        emit CreateNewProject(expediente, projectTitle);
     }
 
     function kill() external {
@@ -180,6 +190,7 @@ contract NuclearPoE {
     function approveProject(uint expediente) public projectExists(expediente) onlyClient(expediente) {
         require(project[expediente].approved == false,"Project already approved");
         project[expediente].approved = true;
+        emit ApproveProject(expediente);
     }
 
     /// @notice Adds a new allowed supplier to the contract
@@ -191,6 +202,7 @@ contract NuclearPoE {
       require(project[expediente].approved == false,"Project is already approved by client");
       bytes32[] memory emptyBytes32Array;
       project[expediente].process[supplierAddress] = Process(processTitle, expediente, true, emptyBytes32Array);
+      emit AddProcessToProject(expediente,processTitle,supplierName);
       addSupplierToProcess(supplierAddress,expediente,supplierName);
     }
 

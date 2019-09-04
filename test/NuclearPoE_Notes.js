@@ -30,7 +30,7 @@ contract('Add Note', accounts => {
       { from: accounts[2] }
     );
   });
-  it('Add a new note', async () => {
+  it('EVENT: Add a new note', async () => {
     let result = await instance.addNote(
       1,
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
@@ -43,6 +43,13 @@ contract('Add Note', accounts => {
       'receipt.transactionHash',
       'Result is missing a transactionHash property'
     );
+    truffleAssert.eventEmitted(result, 'AddNote', ev => {
+      return (
+        ev.hash ===
+          '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd' &&
+        ev.expediente.toNumber() === 41955
+      );
+    });
   });
   it('REVERT: Add duplicate note', async () => {
     await truffleAssert.reverts(
