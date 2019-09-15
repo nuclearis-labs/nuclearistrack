@@ -11,13 +11,11 @@ contract NuclearPoE {
 
     struct ProjectStruct {
         address contractAddress;
-        bytes32 title;
         bool created;
     }
 
     struct ClientStruct {
         address contractAddress;
-        bytes32 name;
         bool created;
     }
 
@@ -27,23 +25,23 @@ contract NuclearPoE {
     function createProject(uint expediente, bytes32 projectTitle, address client, bytes32 clientName) public returns (address) {
         require(projectContracts[expediente].created == false, "Project already created");
 
-        address newClientContractAddress;
+        address ClientContractAddress;
 
         // Verificacion de existencia de contrato de cliente
         if(clientContracts[client].created == false) {
             Client newClient = new Client(clientName);
-            newClientContractAddress = newClient.contractAddress();
+            ClientContractAddress = newClient.contractAddress();
         } else {
-            newClientContractAddress = clientContracts[client].contractAddress;
+            ClientContractAddress = clientContracts[client].contractAddress;
         }
 
-        clientContracts[client] = ClientStruct(newClientContractAddress, clientName,true);
+        clientContracts[client] = ClientStruct(ClientContractAddress, true);
 
         // Creacion de un nuevo contrato para el proyecto y lo guarda en el struct de proyectos.
-        Project newProject = new Project(expediente, projectTitle, newClientContractAddress);
+        Project newProject = new Project(expediente, projectTitle, ClientContractAddress);
         address newProjectContractAddress = newProject.contractAddress();
 
-        projectContracts[expediente] = ProjectStruct(newProjectContractAddress,projectTitle,true);
+        projectContracts[expediente] = ProjectStruct(newProjectContractAddress,true);
         return newProjectContractAddress;
     }
 }
@@ -95,6 +93,10 @@ contract Project {
         documentQty = 0;
     }
 
+    function contractDetails() public view returns (uint, bytes32) {
+        return (expediente, title);
+    }
+
     function addDocument (address _supplier, bytes32 hash, bytes32 docTitle, bytes32 supplierName) public {
         require(approved == true,"Project is not approved by client");
         require(process[_supplier].created == true, "Process does not exist");
@@ -142,8 +144,14 @@ contract Client {
 
     constructor (bytes32 _name) public {
         name = _name;
+
         contractAddress = address(this);
     }
+
+    function contractDetails() public view returns (name) {
+        return (name);
+    }
+
 }
 
 contract Supplier {
