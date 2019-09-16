@@ -4,7 +4,7 @@ const Blockchain = require('../classes/Blockchain');
 const router = express.Router({ mergeParams: true });
 
 router.post('/', async (req, res) => {
-  const proyecto = new Blockchain(req.body.keys);
+  const proyecto = new Blockchain(req.body.wallet, req.body.privateKey);
   try {
     await proyecto.addProject(
       Number(req.body.expediente),
@@ -12,19 +12,21 @@ router.post('/', async (req, res) => {
       req.body.clientAddress.toString(),
       req.body.clientName.toString()
     );
-    const tx = await proyecto.sendTx();
-    res.json({ message: `Project created`, data: tx });
+    let txResult = await proyecto.sendTx();
+    console.log(txResult);
+
+    res.json({ message: `Project created`, data: txResult });
   } catch (e) {
     res.json({ error: e.message });
   }
 });
 
 router.post('/approve', async (req, res) => {
-  const proyecto = new Blockchain(req.body.keys);
+  const proyecto = new Blockchain(req.body.wallet, req.body.privateKey);
   try {
     await proyecto.approveProject(Number(req.body.expediente));
     const tx = await proyecto.sendTx();
-    res.json({ message: `Project approved`, data: tx });
+    res.json({ message: `Project approved`, data: result });
   } catch (e) {
     res.json({ error: e.message });
   }
