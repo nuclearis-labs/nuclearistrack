@@ -1,4 +1,4 @@
-const NuclearPoE = artifacts.require('./contracts/NuclearPoE.sol');
+/* const NuclearPoE = artifacts.require('./contracts/NuclearPoE.sol');
 const assert = require('chai').assert;
 const truffleAssert = require('truffle-assertions');
 
@@ -55,3 +55,4 @@ contract('Document Storage', accounts => {
     await instance.kill({ from: accounts[0] });
   });
 });
+ */

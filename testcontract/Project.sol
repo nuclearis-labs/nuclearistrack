@@ -29,6 +29,8 @@ contract Project {
         bool created;
     }
 
+    uint public processCount = 0;
+    address[] public supplierAddresses;
     bytes32[] public allDocuments;
     uint public documentQty;
 
@@ -69,6 +71,10 @@ contract Project {
         emit AddDocument(hash, now, block.number);
     }
 
+    function returnDocument() public view returns(bytes32[] memory) {
+        return allDocuments;
+    }
+
     function findDocument(address _supplier, bytes32 hash) public view returns (address, uint, uint, bytes32) {
         require(process[_supplier].documents[hash].created == true, "Document does not exist");
         return (process[_supplier].documents[hash].user, process[_supplier].documents[hash].mineTime, process[_supplier].documents[hash].blockNumber, process[_supplier].documents[hash].title);
@@ -84,7 +90,6 @@ contract Project {
     function addProcess(address _supplier, bytes32 processTitle, bytes32 supplierName) public {
 
         address newSupplierContractAddress;
-
         // Verificacion de existencia de contrato de supplier
         if(supplierContracts[_supplier].created == false) {
             Supplier newSupplier = new Supplier(supplierName);
@@ -95,23 +100,28 @@ contract Project {
 
         supplierContracts[_supplier] = SupplierStruct(newSupplierContractAddress, supplierName,true);
 
-
+        processCount++;
         process[_supplier] = Process(processTitle,true);
         emit AddProcess(_supplier, processTitle);
     }
+    function getProcess(address _supplier) public view returns(bytes32) {
+        return process[_supplier].title;
+    }
+
 }
 
 // Contrato de proveedores que se genera para cada proveedor nuevo y hace seguimiento a los proyectos nuevos asignados
 contract Supplier {
 
     bytes32 public name;
+    address[] public contractAddresses;
     address public contractAddress;
-
+    
     constructor (bytes32 _name) public {
         name = _name;
         contractAddress = address(this);
     }
-    function contractDetails() public view returns (bytes32) {
-        return (name);
+    function contractDetails() public view returns (bytes32, address[] memory) {
+        return (name, contractAddresses);
     }
 }

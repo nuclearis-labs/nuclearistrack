@@ -22,11 +22,14 @@ contract NuclearPoE {
     mapping(uint => ProjectStruct) public projectContracts;
     mapping(address => ClientStruct) public clientContracts;
 
+    address[] public projectContractsArray;
+    uint public projectCount = 0;
+
     modifier onlyOwner() {
     require(msg.sender == owner,"Only owner can make this change");_;
     }
 
-    event CreateNewProject(address newProjectContractAddress, uint expediente,bytes32 projectTitle);
+    event CreateNewProject(address newProjectContractAddress, address ClientContractAddress, uint expediente,bytes32 projectTitle);
 
     function createProject(uint expediente, bytes32 projectTitle, address client, bytes32 clientName) public onlyOwner() returns (address) {
         require(projectContracts[expediente].created == false, "Project already created");
@@ -53,14 +56,13 @@ contract NuclearPoE {
 
         newProject.setClientAddress(client);
 
-        emit CreateNewProject(newProjectContractAddress, expediente, projectTitle);
+        projectContractsArray.push(newProjectContractAddress);
+        projectCount++;
+
+        emit CreateNewProject(newProjectContractAddress, ClientContractAddress, expediente, projectTitle);
         return newProjectContractAddress;
     }
-    // Función temporal para clean-room testing, borrar para production
-    function kill() external {
-        require(msg.sender == owner, "Only the owner can kill this contract");
-        selfdestruct(owner);
-    }
+
 
 }
 
@@ -93,6 +95,8 @@ contract Project {
         bool created;
     }
 
+   uint public processCount = 0;
+    address[] public supplierAddresses;
     bytes32[] public allDocuments;
     uint public documentQty;
 
@@ -118,10 +122,6 @@ contract Project {
         clientAddress = _a;
     }
 
-    function kill() external {
-        selfdestruct(msg.sender);
-    }
-    // Función temporal para clean-room testing, borrar para production
     function addDocument (address _supplier, bytes32 hash, bytes32 docTitle) public {
         require(approved == true,"Project is not approved by client");
         require(process[_supplier].created == true, "Process does not exist");
@@ -131,6 +131,10 @@ contract Project {
         allDocuments.push(hash);
         documentQty++;
         emit AddDocument(hash, now, block.number);
+    }
+
+    function returnDocument() public view returns(bytes32[] memory) {
+        return allDocuments;
     }
 
     function findDocument(address _supplier, bytes32 hash) public view returns (address, uint, uint, bytes32) {
@@ -180,9 +184,10 @@ contract Client {
         contractAddress = address(this);
     }
 
-    function contractDetails() public view returns (bytes32) {
-        return (name);
+    function contractDetails() public view returns (bytes32, address[] memory) {
+        return (name, projectAddresses);
     }
+
     function addProject(address _a) public {
         projectAddresses.push(_a);
     }
@@ -193,13 +198,15 @@ contract Client {
 contract Supplier {
 
     bytes32 public name;
+    address[] public contractAddresses;
     address public contractAddress;
-
+    
     constructor (bytes32 _name) public {
         name = _name;
         contractAddress = address(this);
     }
-    function contractDetails() public view returns (bytes32) {
-        return (name);
+    
+    function contractDetails() public view returns (bytes32, address[] memory) {
+        return (name, contractAddresses);
     }
 }
