@@ -6,7 +6,7 @@ const bs58 = require('bs58');
 const Transaction = require('ethereumjs-tx');
 const documentModel = require('../models/document');
 
-const web3 = new Web3C(process.env.BLOCKCHAIN || 'http://127.0.0.1:7545');
+const web3 = new Web3C(process.env.BLOCKCHAIN || 'http://127.0.0.1:8545');
 const NuclearPoEABI = 'build/contracts/NuclearPoE.json';
 const ProjectABI = 'build/contracts/Project.json';
 const parsedProject = JSON.parse(fs.readFileSync(ProjectABI));
@@ -21,7 +21,6 @@ const contract = new web3.eth.Contract(parsed.abi, process.env.SCADDRESS);
  */
 class Blockchain {
   constructor(wallet, privateKey) {
-    // const jsonKeys = JSON.parse(keys);
     const privateBuffer = Buffer.from(privateKey, 'hex');
     this.wallet = wallet;
     this.private = privateBuffer;
@@ -85,33 +84,19 @@ class Blockchain {
    * @function
    * @memberof Blockchain
    */
-  async addDocHash(expediente, documentTitle, IPFSHash) {
-    const hash = bs58.decode(IPFSHash).toString('hex');
+  async addDocHash(supplier, documentTitle, contractAddr) {
+    const contract = new web3.eth.Contract(parsedProject.abi, contractAddr);
+    /*     const hash = bs58.decode(IPFSHash).toString('hex');
     const storageFunction = hash.slice(0, 2);
     const storageSize = hash.slice(2, 4);
-    const storageHash = hash.slice(4);
+    const storageHash = hash.slice(4); */
+    const title = web3.utils.fromAscii(documentTitle);
 
     this.data = contract.methods
-      .addDocument(
-        this.fileHash,
-        expediente,
-        342343,
-        documentTitle,
-        Number(storageHash),
-        Number(storageFunction),
-        Number(storageSize)
-      )
+      .addDocument(supplier, this.fileHash, title)
       .encodeABI();
     this.gaslimit = await contract.methods
-      .addDocument(
-        this.fileHash,
-        expediente,
-        342343,
-        documentTitle,
-        storageHash,
-        storageFunction,
-        storageSize
-      )
+      .addDocument(supplier, this.fileHash, title)
       .estimateGas({ from: this.wallet });
     return this;
   }
@@ -149,19 +134,41 @@ class Blockchain {
     let contratoExpediente = await contract.methods
       .projectContracts(expediente)
       .call();
-    console.log(contratoExpediente.contractAddress);
-
+    this.projectContractAddress = contratoExpediente.contractAddress;
     let proyectoContract = new web3.eth.Contract(
       parsedProject.abi,
-      contratoExpediente.contractAddress
+      this.projectContractAddress
     );
-    console.log(proyectoContract);
 
     // Prepare data package and estimate gas cost
     this.data = proyectoContract.methods.approveProject().encodeABI();
     this.gaslimit = await proyectoContract.methods
       .approveProject()
       .estimateGas({ from: this.wallet });
+    return this;
+  }
+
+  async contractDetails(expediente) {
+    let contratoExpediente = await contract.methods
+      .projectContracts(expediente)
+      .call();
+
+    const contractProjecto = new web3.eth.Contract(
+      parsedProject.abi,
+      contratoExpediente.contractAddress
+    );
+    let result = await contractProjecto.methods.contractDetails().call();
+    this.contractDetails = {
+      expediente: result[0],
+      contractName: web3.utils.toAscii(result[1])
+    };
+    return this;
+  }
+
+  async returnDocuments(contractAddr) {
+    const contract = new web3.eth.Contract(parsedProject.abi, contractAddr);
+    this.data = await contract.methods.returnDocument().call();
+
     return this;
   }
 
@@ -195,33 +202,39 @@ class Blockchain {
    * @function
    * @memberof Blockchain
    */
-  sendTx(contract) {
+  sendTx(contractAddr = process.env.SCADDRESS) {
     return new Promise(async (resolve, reject) => {
-      const gasprice = await web3.eth.getGasPrice();
-      const nonce = await web3.eth.getTransactionCount(this.wallet);
+      let rawTx;
+      let serializedTx;
+      try {
+        const gasprice = await web3.eth.getGasPrice();
+        const nonce = await web3.eth.getTransactionCount(this.wallet);
 
-      const rawTx = {
-        nonce: web3.utils.toHex(nonce),
-        gasPrice: web3.utils.toHex(gasprice),
-        gasLimit: web3.utils.toHex(this.gaslimit),
-        to: contract,
-        value: '0x00',
-        data: this.data
-      };
+        rawTx = {
+          nonce: web3.utils.toHex(nonce),
+          gasPrice: web3.utils.toHex(gasprice),
+          gasLimit: web3.utils.toHex(this.gaslimit),
+          to: contractAddr,
+          value: '0x00',
+          data: this.data
+        };
 
-      const tx = new Transaction(rawTx);
-      tx.sign(this.private);
-      const serializedTx = tx.serialize();
+        const tx = new Transaction(rawTx);
+        tx.sign(this.private);
+        serializedTx = tx.serialize();
 
-      web3.eth
-        .sendSignedTransaction(`0x${serializedTx.toString('hex')}`)
-        .on('transactionHash', returnTx => {
-          this.transactionHash = returnTx;
-          resolve(this);
-        })
-        .on('error', error => {
-          reject(error);
-        });
+        web3.eth
+          .sendSignedTransaction(`0x${serializedTx.toString('hex')}`)
+          .on('receipt', returnTx => {
+            this.receipt = returnTx;
+            resolve(this);
+          })
+          .on('error', error => {
+            reject(error);
+          });
+      } catch (e) {
+        reject(e);
+      }
     });
   }
 }

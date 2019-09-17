@@ -3,6 +3,7 @@ const storage = require('multer').memoryStorage();
 const upload = require('multer')({ storage });
 const { asyncMiddleware } = require('../middleware/index');
 const Documento = require('../classes/Documento');
+const Blockchain = require('../classes/Blockchain');
 
 const router = express.Router({ mergeParams: true });
 
@@ -22,15 +23,15 @@ router.post(
   '/upload',
   upload.single('file'),
   asyncMiddleware(async (req, res) => {
-    const file = new Documento(req.body.keys);
+    const file = new Documento(req.file, req.body.wallet, req.body.privateKey);
     await file.createHash(req.file);
 
     await file.addDocHash(
-      req.body.expediente,
+      req.body.supplier,
       req.body.documentTitle,
-      req.body.IPFSHash
+      req.body.scaddress
     );
-    await file.sendTx();
+    await file.sendTx(req.body.scaddress);
 
     res.json({ message: 'Transaction successful', data: file });
   })
@@ -49,5 +50,15 @@ router.post(
     }
   })
 );
+
+router.post('/', async (req, res) => {
+  const proyecto = new Blockchain(req.body.wallet, req.body.privateKey);
+  try {
+    let data = await proyecto.returnDocuments(req.body.scaddress);
+    res.json({ message: `Got project details`, data: data });
+  } catch (e) {
+    res.json({ error: e.message });
+  }
+});
 
 module.exports = router;
