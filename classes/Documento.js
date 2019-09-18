@@ -12,15 +12,6 @@ class Documento extends Blockchain {
     super(wallet, privateKey);
     this.file = file;
   }
-  /**
-   * Getter of file object
-   * @name getFile
-   * @function
-   * @memberof Documento
-   */
-  get getFile() {
-    return this.file;
-  }
 
   /**
    * Getter of file extension

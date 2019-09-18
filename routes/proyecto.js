@@ -24,24 +24,19 @@ router.post('/', async (req, res) => {
 router.post('/approve', async (req, res) => {
   const proyecto = new Blockchain(req.body.wallet, req.body.privateKey);
   try {
-    let { projectContractAddress } = await proyecto.approveProject(
-      Number(req.body.expediente)
-    );
-
-    const tx = await proyecto.sendTx(projectContractAddress);
+    await proyecto.approveProject(req.body.contractAddress);
+    const tx = await proyecto.sendTx(req.body.contractAddress);
     res.json({ tx });
   } catch (e) {
     res.json({ error: e.message });
   }
 });
 
-router.post('/documents', async (req, res) => {
+router.post('/get', async (req, res) => {
   const proyecto = new Blockchain(req.body.wallet, req.body.privateKey);
   try {
-    let { documents, projectContractAddress } = await proyecto.returnDocuments(
-      Number(req.body.expediente)
-    );
-    res.json({ projectContractAddress, documents });
+    let { projectos } = await proyecto.returnAllProjects();
+    res.json({ projectos });
   } catch (e) {
     res.json({ error: e.message });
   }
@@ -50,11 +45,9 @@ router.post('/documents', async (req, res) => {
 router.post('/details', async (req, res) => {
   const proyecto = new Blockchain(req.body.wallet, req.body.privateKey);
   try {
-    let { contractDetails } = await proyecto.contractDetails(
-      Number(req.body.expediente)
-    );
+    let result = await proyecto.contractDetails(req.body.contractAddress);
 
-    res.json({ contractDetails });
+    res.json(result);
   } catch (e) {
     res.json({ error: e.message });
   }

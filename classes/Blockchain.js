@@ -9,7 +9,9 @@ const documentModel = require('../models/document');
 const web3 = new Web3C(process.env.BLOCKCHAIN || 'http://127.0.0.1:8545');
 const NuclearPoEABI = 'build/contracts/NuclearPoE.json';
 const ProjectABI = 'build/contracts/Project.json';
+const ClientABI = 'build/contracts/Client.json';
 const parsedProject = JSON.parse(fs.readFileSync(ProjectABI));
+const parsedClient = JSON.parse(fs.readFileSync(ClientABI));
 const parsed = JSON.parse(fs.readFileSync(NuclearPoEABI));
 const contract = new web3.eth.Contract(parsed.abi, process.env.SCADDRESS);
 
@@ -31,10 +33,9 @@ class Blockchain {
    * @function
    * @memberof Blockchain
    */
-
   createHash(file) {
     this.file = file;
-    this.fileHash = `0x${createHash('sha256')
+    this.documentHash = `0x${createHash('sha256')
       .update(this.file.buffer)
       .digest('hex')}`;
     return this;
@@ -46,59 +47,64 @@ class Blockchain {
    * @function
    * @memberof Blockchain
    */
-  async addDocHash(expediente, supplier, documentTitle, contractAddr) {
-    const proyectoContract = await this.getProjectContractInstance(expediente);
-
-    const title = web3.utils.fromAscii(documentTitle);
-    const address = web3.utils.toChecksumAddress(supplier);
+  async addDocument(contractAddress, _supplierAddress, _documentName) {
+    const proyectoContract = new web3.eth.Contract(
+      parsedProject.abi,
+      contractAddress
+    );
+    const documentName = web3.utils.fromAscii(_documentName);
+    const supplierAddress = web3.utils.toChecksumAddress(_supplierAddress);
 
     this.data = proyectoContract.methods
-      .addDocument(address, this.fileHash, title)
+      .addDocument(supplierAddress, this.documentHash, documentName)
       .encodeABI();
     this.gaslimit = await proyectoContract.methods
-      .addDocument(address, this.fileHash, title)
+      .addDocument(supplierAddress, this.documentHash, documentName)
       .estimateGas({ from: this.wallet });
     return this;
   }
 
-  async addProject(expediente, projectTitle, clientAddress, clientName) {
+  async findDocument(contractAddress) {
+    const proyectoContract = new web3.eth.Contract(
+      parsedProject.abi,
+      contractAddress
+    );
+    this.document = await proyectoContract.methods
+      .findDocument(this.documentHash)
+      .call();
+    return this;
+  }
+
+  async addProject(expediente, _projectTitle, _clientAddress, _clientName) {
     // Validate and convert input data
     if (typeof expediente !== 'number')
       throw TypeError(`Expediente is not a number`);
 
-    if (typeof projectTitle !== 'string')
+    if (typeof _projectTitle !== 'string')
       throw TypeError(`Project Title is not a string`);
 
-    if (typeof clientName !== 'string')
+    if (typeof _clientName !== 'string')
       throw TypeError(`Client Name is not a string`);
 
-    const title = web3.utils.fromAscii(projectTitle);
-    const address = web3.utils.toChecksumAddress(clientAddress);
-    const name = web3.utils.fromAscii(clientName);
+    const projectTitle = web3.utils.fromAscii(_projectTitle);
+    const clientAddress = web3.utils.toChecksumAddress(_clientAddress);
+    const clientName = web3.utils.fromAscii(_clientName);
 
     // Prepare data package and estimate gas cost
     this.data = contract.methods
-      .createProject(expediente, title, address, name)
+      .createProject(expediente, projectTitle, clientAddress, clientName)
       .encodeABI();
     this.gaslimit = await contract.methods
-      .createProject(expediente, title, address, name)
+      .createProject(expediente, projectTitle, clientAddress, clientName)
       .estimateGas({ from: this.wallet });
     return this;
   }
 
-  async getProjectContractInstance(expediente) {
-    let contratoExpediente = await contract.methods
-      .projectContracts(expediente)
-      .call();
-    this.projectContractAddress = contratoExpediente.contractAddress;
-    return new web3.eth.Contract(
+  async getProcess(contractAddress) {
+    const proyectoContract = new web3.eth.Contract(
       parsedProject.abi,
-      this.projectContractAddress
+      contractAddress
     );
-  }
-
-  async getProcess(expediente) {
-    const proyectoContract = await this.getProjectContractInstance(expediente);
     let processCount = await proyectoContract.methods.supplierCount().call();
     this.processList = [];
     for (let i = 0; i < processCount; i++) {
@@ -115,13 +121,11 @@ class Blockchain {
     return this;
   }
 
-  async approveProject(expediente) {
-    // Validate and convert input data
-    if (typeof expediente !== 'number')
-      throw TypeError(`Expediente is not a number`);
-
-    const proyectoContract = await this.getProjectContractInstance(expediente);
-
+  async approveProject(contractAddress) {
+    const proyectoContract = new web3.eth.Contract(
+      parsedProject.abi,
+      contractAddress
+    );
     // Prepare data package and estimate gas cost
     this.data = proyectoContract.methods.approveProject().encodeABI();
     this.gaslimit = await proyectoContract.methods
@@ -130,19 +134,48 @@ class Blockchain {
     return this;
   }
 
-  async contractDetails(expediente) {
-    const proyectoContract = await this.getProjectContractInstance(expediente);
+  async contractDetails(contractAddress) {
+    const proyectoContract = new web3.eth.Contract(
+      parsedProject.abi,
+      contractAddress
+    );
 
     let result = await proyectoContract.methods.contractDetails().call();
-    this.contractDetails = {
+    return {
       expediente: result[0],
-      contractName: web3.utils.toAscii(result[1])
+      contractAddress: result[1],
+      clientAddress: result[2],
+      contractName: web3.utils.toAscii(result[3]),
+      approved: result[4],
+      allDocuments: result[5],
+      allSuppliers: result[6]
     };
+  }
+
+  async getClientDetails() {
+    let contrato = await contract.methods.clientContracts(this.wallet).call();
+    this.clientContractAddress = contrato.contractAddress;
+    let clientContract = new web3.eth.Contract(
+      parsedClient.abi,
+      this.clientContractAddress
+    );
+
+    let client = await clientContract.methods.contractDetails().call();
+    let allClientProjects = client[1];
+    this.clientsProjects = [];
+    for (let i = 0; i < allClientProjects.length; i++) {
+      let result = await this.contractDetails(allClientProjects[i]);
+      this.clientsProjects.push(result);
+    }
     return this;
   }
 
-  async returnDocuments(expediente) {
-    const proyectoContract = await this.getProjectContractInstance(expediente);
+  async returnDocuments(contractAddress) {
+    const proyectoContract = new web3.eth.Contract(
+      parsedProject.abi,
+      contractAddress
+    );
+
     this.documentsQty = await proyectoContract.methods.documentQty().call();
     this.documents = [];
     for (let i = 0; i < this.documentsQty; i++) {
@@ -155,19 +188,22 @@ class Blockchain {
     return this;
   }
 
-  async addProcess(expediente, supplierAddress, processTitle, supplierName) {
-    // Validate and convert input data
-    if (typeof expediente !== 'number')
-      throw TypeError(`Expediente is not a number`);
-
+  async addProcess(
+    contractAddress,
+    supplierAddress,
+    processTitle,
+    supplierName
+  ) {
     if (typeof processTitle !== 'string')
       throw TypeError(`Title of Process is not a string`);
 
     if (typeof supplierName !== 'string')
       throw TypeError(`Name of supplier is not a string`);
 
-    const proyectoContract = await this.getProjectContractInstance(expediente);
-
+    const proyectoContract = new web3.eth.Contract(
+      parsedProject.abi,
+      contractAddress
+    );
     const title = web3.utils.fromAscii(processTitle);
     const address = web3.utils.toChecksumAddress(supplierAddress);
     const name = web3.utils.fromAscii(supplierName);
@@ -181,13 +217,24 @@ class Blockchain {
     return this;
   }
 
+  async returnAllProjects() {
+    let cantidadProjectos = await contract.methods.projectCount().call();
+    this.projectos = [];
+    for (let i = 0; i < cantidadProjectos; i++) {
+      let result = await contract.methods.projectContractsArray(i).call();
+      let details = await this.contractDetails(result);
+      this.projectos.push(details);
+    }
+    return this;
+  }
+
   /**
    * Emite la transacción y espera respuesta
    * @name sendTx
    * @function
    * @memberof Blockchain
    */
-  sendTx(contractAddr = process.env.SCADDRESS) {
+  sendTx(contractAddress = process.env.SCADDRESS) {
     return new Promise(async (resolve, reject) => {
       let rawTx;
       let serializedTx;
@@ -199,7 +246,7 @@ class Blockchain {
           nonce: web3.utils.toHex(nonce),
           gasPrice: web3.utils.toHex(gasprice),
           gasLimit: web3.utils.toHex(this.gaslimit),
-          to: contractAddr,
+          to: contractAddress,
           value: '0x00',
           data: this.data
         };

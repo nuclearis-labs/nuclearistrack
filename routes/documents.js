@@ -26,14 +26,17 @@ router.post(
     const file = new Documento(req.file, req.body.wallet, req.body.privateKey);
     await file.createHash(req.file);
 
-    await file.addDocHash(
-      req.body.expediente,
+    await file.addDocument(
+      req.body.contractAddress,
       req.body.supplier,
       req.body.documentTitle
     );
-    await file.sendTx(file.projectContractAddress);
+    let tx = await file.sendTx(req.body.contractAddress);
 
-    res.json({ file });
+    res.json({
+      documentHash: file.documentHash,
+      transaction: tx
+    });
   })
 );
 
@@ -41,21 +44,28 @@ router.post(
   '/verify',
   upload.single('file'),
   asyncMiddleware(async (req, res) => {
-    const file = await new Documento(req.file).createHash().findBlock();
+    const file = await new Documento(
+      req.file,
+      req.body.wallet,
+      req.body.privateKey
+    )
+      .createHash(req.file)
+      .findDocument(req.body.contractAddress);
 
-    if (file.foundBlock.blockNumber === '0') {
-      res.json({ message: 'Not found', data: file });
-    } else {
-      res.json({ message: 'Hash found', data: file });
-    }
+    res.json({
+      documentHash: file.documentHash,
+      documentDetail: file.document
+    });
   })
 );
 
-router.post('/', async (req, res) => {
+router.post('/get', async (req, res) => {
   const proyecto = new Blockchain(req.body.wallet, req.body.privateKey);
   try {
-    let data = await proyecto.returnDocuments(req.body.scaddress);
-    res.json({ message: `Got project details`, data: data });
+    let { documents, projectContractAddress } = await proyecto.returnDocuments(
+      req.body.contractAddress
+    );
+    res.json({ projectContractAddress, documents });
   } catch (e) {
     res.json({ error: e.message });
   }

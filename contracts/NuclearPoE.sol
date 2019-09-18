@@ -93,7 +93,7 @@ contract Project {
     uint public supplierCount = 0;
     address[] public supplierAddresses;
     bytes32[] public allDocuments;
-    uint public documentQty;
+    uint public documentQty = 0;
 
     mapping(address => Process) public process;
     mapping(bytes32 => Document) public document;
@@ -109,8 +109,8 @@ contract Project {
         documentQty = 0;
     }
 
-    function contractDetails() public view returns (uint, bytes32) {
-        return (expediente, title);
+    function contractDetails() public view returns (uint, address, address, bytes32, bool, bytes32[] memory, address[] memory) {
+        return (expediente, contractAddress, clientAddress, title, approved, allDocuments,supplierAddresses);
     }
 
     function setClientAddress(address _a) public {
