@@ -27,13 +27,13 @@ router.post(
     await file.createHash(req.file);
 
     await file.addDocHash(
+      req.body.expediente,
       req.body.supplier,
-      req.body.documentTitle,
-      req.body.scaddress
+      req.body.documentTitle
     );
-    await file.sendTx(req.body.scaddress);
+    await file.sendTx(file.projectContractAddress);
 
-    res.json({ message: 'Transaction successful', data: file });
+    res.json({ file });
   })
 );
 

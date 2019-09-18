@@ -70,38 +70,33 @@ contract NuclearPoE {
 contract Project {
 
     uint public expediente;
-    bool public approved;
+    bool public approved = false;
     address public contractAddress;
     address public clientAddress;
     bytes32 public title;
 
     struct Document {
-        address user;
+        address supplierAddress;
         uint mineTime;
         uint256 blockNumber;
-        bytes32 title;
+        bytes32 documentTitle;
         bool created;
     }
 
     struct Process {
-        bytes32 title;
-        bool created;
-        mapping(bytes32 => Document) documents;
-    }
-
-    struct SupplierStruct {
-        address contractAddress;
-        bytes32 name;
+        bytes32 processName;
+        bytes32 supplierName;
+        address supplierContractAddress;
         bool created;
     }
 
-   uint public processCount = 0;
+    uint public supplierCount = 0;
     address[] public supplierAddresses;
     bytes32[] public allDocuments;
     uint public documentQty;
 
     mapping(address => Process) public process;
-    mapping(address => SupplierStruct) public supplierContracts;
+    mapping(bytes32 => Document) public document;
 
     event AddDocument(bytes32 hash, uint mineTime, uint blockNumber);
     event AddProcess(address _supplierAddress, bytes32 processTitle);
@@ -122,12 +117,12 @@ contract Project {
         clientAddress = _a;
     }
 
-    function addDocument (address _supplier, bytes32 hash, bytes32 docTitle) public {
+    function addDocument (address supplierAddress, bytes32 hash, bytes32 documentName) public {
         require(approved == true,"Project is not approved by client");
-        require(process[_supplier].created == true, "Process does not exist");
-        require(process[_supplier].documents[hash].created == false,"Document already created");
+        require(process[supplierAddress].created == true, "Process does not exist");
+        require(document[hash].created == false, "Document already created");
 
-        process[_supplier].documents[hash] = Document(msg.sender, now, block.number, docTitle ,true);
+        document[hash] = Document(supplierAddress, now, block.number, documentName, true);
         allDocuments.push(hash);
         documentQty++;
         emit AddDocument(hash, now, block.number);
@@ -137,9 +132,14 @@ contract Project {
         return allDocuments;
     }
 
-    function findDocument(address _supplier, bytes32 hash) public view returns (address, uint, uint, bytes32) {
-        require(process[_supplier].documents[hash].created == true, "Document does not exist");
-        return (process[_supplier].documents[hash].user, process[_supplier].documents[hash].mineTime, process[_supplier].documents[hash].blockNumber, process[_supplier].documents[hash].title);
+    function findDocument(bytes32 hash) public view returns (address, uint, uint, bytes32) {
+        require(document[hash].created == true, "Document does not exist");
+        return (
+            document[hash].supplierAddress,
+            document[hash].mineTime,
+            document[hash].blockNumber,
+            document[hash].documentTitle
+            );
     }
 
     function approveProject() public {
@@ -149,26 +149,28 @@ contract Project {
         emit ApproveProject(expediente);
     }
 
-    function addProcess(address _supplier, bytes32 processTitle, bytes32 supplierName) public {
-        require(process[_supplier].created == false,"Process already created");
+    function addProcess(address supplierAddress, bytes32 processName, bytes32 supplierName) public {
+        require(process[supplierAddress].created == false,"Process already created");
         require(approved == false,"Project is already approved by client");
 
-        address newSupplierContractAddress;
+        address supplierContractAddress;
 
         // Verificacion de existencia de contrato de supplier
-        if(supplierContracts[_supplier].created == false) {
+        if(process[supplierAddress].created == false) {
             Supplier newSupplier = new Supplier(supplierName);
-            newSupplierContractAddress = newSupplier.contractAddress();
+            supplierContractAddress = newSupplier.contractAddress();
         } else {
-            newSupplierContractAddress = supplierContracts[_supplier].contractAddress;
+            supplierContractAddress = process[supplierAddress].supplierContractAddress;
         }
 
-        supplierContracts[_supplier] = SupplierStruct(newSupplierContractAddress, supplierName,true);
+        supplierCount++;
+        supplierAddresses.push(supplierAddress);
 
+        process[supplierAddress] = Process(processName, supplierName, supplierContractAddress, true);
 
-        process[_supplier] = Process(processTitle,true);
-        emit AddProcess(_supplier, processTitle);
+        emit AddProcess(supplierAddress, processName);
     }
+
 }
 
 
@@ -201,8 +203,8 @@ contract Supplier {
     address[] public contractAddresses;
     address public contractAddress;
     
-    constructor (bytes32 _name) public {
-        name = _name;
+    constructor (bytes32 supplierName) public {
+        name = supplierName;
         contractAddress = address(this);
     }
     
