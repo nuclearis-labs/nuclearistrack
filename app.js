@@ -17,6 +17,7 @@ app.use('/project', require('./routes/proyecto'));
 app.use('/process', require('./routes/process'));
 app.use('/user', require('./routes/user'));
 app.use('/client', require('./routes/client'));
+app.use('/supplier', require('./routes/supplier'));
 
 app.listen(process.env.PORT, () =>
   // eslint-disable-next-line no-console

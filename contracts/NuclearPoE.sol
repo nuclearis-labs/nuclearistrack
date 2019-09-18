@@ -19,8 +19,14 @@ contract NuclearPoE {
         bool created;
     }
 
+    struct SupplierStruct {
+        address contractAddress;
+        bool created;
+    }
+
     mapping(uint => ProjectStruct) public projectContracts;
     mapping(address => ClientStruct) public clientContracts;
+    mapping(address => SupplierStruct) public supplierContracts;
 
     address[] public projectContractsArray;
     uint public projectCount = 0;
@@ -35,7 +41,7 @@ contract NuclearPoE {
         require(projectContracts[expediente].created == false, "Project already created");
 
         // Creacion de un nuevo contrato para el proyecto y lo guarda en el struct de proyectos.
-        Project newProject = new Project(expediente, projectTitle);
+        Project newProject = new Project(expediente, projectTitle, address(this));
         address newProjectContractAddress = newProject.contractAddress();
         projectContracts[expediente] = ProjectStruct(newProjectContractAddress,true);
 
@@ -64,6 +70,10 @@ contract NuclearPoE {
     }
 
 
+    function addNewSupplier(address supplierAddress, address SupplierContractAddress) public onlyOwner() {
+        supplierContracts[supplierAddress] = SupplierStruct(SupplierContractAddress, true);
+    }
+
 }
 
 // Contrato de proyectos, cada vez que se crea un proyecto nuevo se debe generar un contrato proyecto.
@@ -71,6 +81,7 @@ contract Project {
 
     uint public expediente;
     bool public approved = false;
+    address public mainContract;
     address public contractAddress;
     address public clientAddress;
     bytes32 public title;
@@ -102,10 +113,11 @@ contract Project {
     event AddProcess(address _supplierAddress, bytes32 processTitle);
     event ApproveProject(uint expediente);
 
-    constructor (uint _expediente, bytes32 _title) public {
+    constructor (uint _expediente, bytes32 _title, address _mainContract) public {
         expediente = _expediente;
         title = _title;
         contractAddress = address(this);
+        mainContract = _mainContract;
         documentQty = 0;
     }
 
@@ -153,6 +165,8 @@ contract Project {
         require(process[supplierAddress].created == false,"Process already created");
         require(approved == false,"Project is already approved by client");
 
+        
+
         address supplierContractAddress;
 
         // Verificacion de existencia de contrato de supplier
@@ -162,6 +176,9 @@ contract Project {
         } else {
             supplierContractAddress = process[supplierAddress].supplierContractAddress;
         }
+
+        NuclearPoE main = NuclearPoE(mainContract);
+        main.supplierContracts(supplierContractAddress);
 
         supplierCount++;
         supplierAddresses.push(supplierAddress);
