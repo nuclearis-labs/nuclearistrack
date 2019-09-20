@@ -31,7 +31,7 @@ router.post(
       req.body.supplier,
       req.body.documentTitle
     );
-    let tx = await file.sendTx(req.body.contractAddress);
+    const tx = await file.sendTx(req.body.contractAddress);
 
     res.json({
       documentHash: file.documentHash,
@@ -62,9 +62,10 @@ router.post(
 router.post('/get', async (req, res) => {
   const proyecto = new Blockchain(req.body.wallet, req.body.privateKey);
   try {
-    let { documents, projectContractAddress } = await proyecto.returnDocuments(
-      req.body.contractAddress
-    );
+    const {
+      documents,
+      projectContractAddress
+    } = await proyecto.returnDocuments(req.body.contractAddress);
     res.json({ projectContractAddress, documents });
   } catch (e) {
     res.json({ error: e.message });
