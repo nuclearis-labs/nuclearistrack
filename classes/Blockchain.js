@@ -1,10 +1,9 @@
+/* eslint-disable no-await-in-loop */
 require('dotenv').config();
 const Web3C = require('web3');
 const fs = require('fs');
 const { createHash } = require('crypto');
-const bs58 = require('bs58');
 const Transaction = require('ethereumjs-tx');
-const documentModel = require('../models/document');
 
 const web3 = new Web3C(process.env.BLOCKCHAIN || 'http://127.0.0.1:8545');
 const NuclearPoEABI = 'build/contracts/NuclearPoE.json';
@@ -33,6 +32,7 @@ class Blockchain {
    * @function
    * @memberof Blockchain
    */
+
   createHash(file) {
     this.file = file;
     this.documentHash = `0x${createHash('sha256')
@@ -105,13 +105,15 @@ class Blockchain {
       parsedProject.abi,
       contractAddress
     );
-    let processCount = await proyectoContract.methods.supplierCount().call();
+    const processCount = await proyectoContract.methods.supplierCount().call();
     this.processList = [];
-    for (let i = 0; i < processCount; i++) {
-      let supplierAddress = await proyectoContract.methods
+    for (let i = 0; i < processCount; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      const supplierAddress = await proyectoContract.methods
         .supplierAddresses(i)
         .call();
-      let process = await proyectoContract.methods
+      // eslint-disable-next-line no-await-in-loop
+      const process = await proyectoContract.methods
         .process(supplierAddress)
         .call();
       process.processName = web3.utils.toAscii(process.processName);
@@ -140,7 +142,7 @@ class Blockchain {
       contractAddress
     );
 
-    let result = await proyectoContract.methods.contractDetails().call();
+    const result = await proyectoContract.methods.contractDetails().call();
     return {
       expediente: result[0],
       contractAddress: result[1],
@@ -153,20 +155,21 @@ class Blockchain {
   }
 
   async getClientDetails() {
-    let contrato = await contract.methods.clientContracts(this.wallet).call();
+    const contrato = await contract.methods.clientContracts(this.wallet).call();
     this.clientContractAddress = contrato.contractAddress;
-    let clientContract = new web3.eth.Contract(
+    const clientContract = new web3.eth.Contract(
       parsedClient.abi,
       this.clientContractAddress
     );
 
-    let client = await clientContract.methods.contractDetails().call();
-    let allClientProjects = client[1];
+    const client = await clientContract.methods.contractDetails().call();
+    const allClientProjects = client[1];
     this.clientsProjects = [];
-    for (let i = 0; i < allClientProjects.length; i++) {
-      let result = await this.contractDetails(allClientProjects[i]);
+    for (let i = 0; i < allClientProjects.length; i += 1) {
+      const result = this.contractDetails(allClientProjects[i]);
       this.clientsProjects.push(result);
     }
+    this.clientsProjects = await Promise.all(this.clientsProjects);
     return this;
   }
 
@@ -178,9 +181,9 @@ class Blockchain {
 
     this.documentsQty = await proyectoContract.methods.documentQty().call();
     this.documents = [];
-    for (let i = 0; i < this.documentsQty; i++) {
-      let document = await proyectoContract.methods.allDocuments(i).call();
-      let documentDetails = await proyectoContract.methods
+    for (let i = 0; i < this.documentsQty; i += 1) {
+      const document = await proyectoContract.methods.allDocuments(i).call();
+      const documentDetails = await proyectoContract.methods
         .findDocument(document)
         .call();
       this.documents.push(documentDetails);
@@ -218,11 +221,11 @@ class Blockchain {
   }
 
   async returnAllProjects() {
-    let cantidadProjectos = await contract.methods.projectCount().call();
+    const cantidadProjectos = await contract.methods.projectCount().call();
     this.projectos = [];
-    for (let i = 0; i < cantidadProjectos; i++) {
-      let result = await contract.methods.projectContractsArray(i).call();
-      let details = await this.contractDetails(result);
+    for (let i = 0; i < cantidadProjectos; i += 1) {
+      const result = await contract.methods.projectContractsArray(i).call();
+      const details = await this.contractDetails(result);
       this.projectos.push(details);
     }
     return this;
@@ -234,39 +237,38 @@ class Blockchain {
    * @function
    * @memberof Blockchain
    */
-  sendTx(contractAddress = process.env.SCADDRESS) {
-    return new Promise(async (resolve, reject) => {
-      let rawTx;
-      let serializedTx;
-      try {
-        const gasprice = await web3.eth.getGasPrice();
-        const nonce = await web3.eth.getTransactionCount(this.wallet);
+  // eslint-disable-next-line consistent-return
+  async sendTx(contractAddress = process.env.SCADDRESS) {
+    let rawTx;
+    let serializedTx;
+    try {
+      const gasprice = await web3.eth.getGasPrice();
+      const nonce = await web3.eth.getTransactionCount(this.wallet);
 
-        rawTx = {
-          nonce: web3.utils.toHex(nonce),
-          gasPrice: web3.utils.toHex(gasprice),
-          gasLimit: web3.utils.toHex(this.gaslimit),
-          to: contractAddress,
-          value: '0x00',
-          data: this.data
-        };
+      rawTx = {
+        nonce: web3.utils.toHex(nonce),
+        gasPrice: web3.utils.toHex(gasprice),
+        gasLimit: web3.utils.toHex(this.gaslimit),
+        to: contractAddress,
+        value: '0x00',
+        data: this.data
+      };
 
-        const tx = new Transaction(rawTx);
-        tx.sign(this.private);
-        serializedTx = tx.serialize();
+      const tx = new Transaction(rawTx);
+      tx.sign(this.private);
+      serializedTx = tx.serialize();
 
-        web3.eth
-          .sendSignedTransaction(`0x${serializedTx.toString('hex')}`)
-          .on('receipt', receipt => {
-            resolve(receipt);
-          })
-          .on('error', error => {
-            reject(error);
-          });
-      } catch (e) {
-        reject(e);
-      }
-    });
+      web3.eth
+        .sendSignedTransaction(`0x${serializedTx.toString('hex')}`)
+        .on('receipt', receipt => {
+          return receipt;
+        })
+        .on('error', error => {
+          return error;
+        });
+    } catch (e) {
+      return e;
+    }
   }
 }
 module.exports = Blockchain;

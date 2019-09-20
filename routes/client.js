@@ -8,7 +8,7 @@ router.post(
   '/get',
   asyncMiddleware(async (req, res) => {
     const client = new Blockchain(req.body.wallet, req.body.privateKey);
-    let {
+    const {
       clientContractAddress,
       clientsProjects
     } = await client.getClientDetails();
