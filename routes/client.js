@@ -37,4 +37,27 @@ router.post(
   })
 );
 
+router.post(
+  '/change',
+  asyncMiddleware(async (req, res) => {
+    try {
+      const wallet = new Wallet(true);
+      const client = await ClientModel.findById('');
+
+      // Generation of encrypted privatekey and address
+      wallet
+        .decryptBIP38(client.encryptedPrivateKey, req.body.passphrase)
+        .encryptBIP38(req.body.newPassphrase);
+
+      const updatedClient = await ClientModel.findByIdAndUpdate('id', {
+        encryptedPrivateKey: wallet.encryptedPrivateKey
+      });
+
+      res.json(updatedClient);
+    } catch (e) {
+      res.json({ error: e.message });
+    }
+  })
+);
+
 module.exports = router;

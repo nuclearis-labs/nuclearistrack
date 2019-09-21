@@ -12,10 +12,24 @@ class Wallet {
   }
 
   encryptBIP38(passphrase) {
-    if (passphrase.length === 0) {
-      throw new Error('class Wallet => encryptBIP38() is missing a passphrase');
-    }
-    this.encryptedKey = bip38.encrypt(this.privKey, this.publicKey, passphrase);
+    let decoded = wif.decode(this.wifPrivKey);
+    this.decodedPrivKey = decoded.privateKey;
+
+    this.encryptedKey = bip38.encrypt(
+      this.privKey,
+      decoded.compressed,
+      passphrase
+    );
+    return this;
+  }
+
+  decryptBIP38(passphrase) {
+    let key = bip38.decrypt(this.encryptedKey, passphrase, status => {});
+    this.decryptedKey = wif.encode(
+      this.network,
+      key.privateKey,
+      key.compressed
+    );
     return this;
   }
 
