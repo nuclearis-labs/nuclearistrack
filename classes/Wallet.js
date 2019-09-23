@@ -24,7 +24,7 @@ class Wallet {
   }
 
   decryptBIP38(passphrase) {
-    let key = bip38.decrypt(this.encryptedKey, passphrase, status => {});
+    const key = bip38.decrypt(this.encryptedKey, passphrase);
     this.decryptedKey = wif.encode(
       this.network,
       key.privateKey,
@@ -73,10 +73,11 @@ class Wallet {
   }
 
   toHex(fields) {
+    if (fields && typeof fields === 'string')
+      throw new Error(`Type of input must be array`);
     fields.forEach(element => {
-      if (!this[element]) {
-        throw new Error(`Variable ${element} is not set`);
-      }
+      if (!this[element]) throw new Error(`Variable ${element} is not set`);
+
       this[element] = this[element].toString('hex');
     });
     return this;

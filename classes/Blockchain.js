@@ -12,6 +12,7 @@ const ClientABI = 'build/contracts/Client.json';
 const parsedProject = JSON.parse(fs.readFileSync(ProjectABI));
 const parsedClient = JSON.parse(fs.readFileSync(ClientABI));
 const parsed = JSON.parse(fs.readFileSync(NuclearPoEABI));
+const parsedBin = fs.readFileSync('./contracts_NuclearPoE_sol_NuclearPoE.bin');
 const contract = new web3.eth.Contract(parsed.abi, process.env.SCADDRESS);
 
 /**
@@ -32,6 +33,25 @@ class Blockchain {
    * @function
    * @memberof Blockchain
    */
+
+  async createNewNuclearPoE() {
+    try {
+      const newContract = new web3.eth.Contract(parsed.abi);
+      newContract
+        .deploy({ data: parsedBin.toString() })
+        .send({
+          from: '0x59484aA6E2C33B96E541CfC6Ce0d59c18f7b7Bb1',
+          gas: 5000000,
+          gasPrice: 0
+        })
+        .then(newContractInstance => {
+          this.NuclearPoEAddress = newContractInstance.options.address;
+        });
+      return this;
+    } catch (e) {
+      throw Error('Problem deploying NuclearPoE Contract');
+    }
+  }
 
   createHash(file) {
     this.file = file;
@@ -56,6 +76,7 @@ class Blockchain {
       parsedProject.abi,
       contractAddress
     );
+
     const documentName = web3.utils.fromAscii(_documentName);
     const supplierAddress = web3.utils.toChecksumAddress(_supplierAddress);
 

@@ -13,7 +13,7 @@ router.post('/', async (req, res) => {
       req.body.clientName.toString()
     );
 
-    let tx = await proyecto.sendTx();
+    const tx = await proyecto.sendTx();
 
     res.json({ tx });
   } catch (e) {
@@ -35,7 +35,7 @@ router.post('/approve', async (req, res) => {
 router.post('/get', async (req, res) => {
   const proyecto = new Blockchain(req.body.wallet, req.body.privateKey);
   try {
-    let { projectos } = await proyecto.returnAllProjects();
+    const { projectos } = await proyecto.returnAllProjects();
     res.json({ projectos });
   } catch (e) {
     res.json({ error: e.message });
@@ -45,7 +45,7 @@ router.post('/get', async (req, res) => {
 router.post('/details', async (req, res) => {
   const proyecto = new Blockchain(req.body.wallet, req.body.privateKey);
   try {
-    let result = await proyecto.contractDetails(req.body.contractAddress);
+    const result = await proyecto.contractDetails(req.body.contractAddress);
 
     res.json(result);
   } catch (e) {
