@@ -12,7 +12,7 @@ class Wallet {
   }
 
   encryptBIP38(passphrase) {
-    let decoded = wif.decode(this.wifPrivKey);
+    const decoded = wif.decode(this.wifPrivKey);
     this.decodedPrivKey = decoded.privateKey;
 
     this.encryptedKey = bip38.encrypt(

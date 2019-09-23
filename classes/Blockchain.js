@@ -41,6 +41,10 @@ class Blockchain {
     return this;
   }
 
+  get getHash() {
+    return this.documentHash;
+  }
+
   /**
    * Prepara la transacción
    * @name addDocHash

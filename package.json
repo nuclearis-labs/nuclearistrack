@@ -1,7 +1,7 @@
 {
   "name": "nuclearis-poe",
   "version": "0.1.0",
-  "description": "This repository holds the source code for the tutorials at:",
+  "description": "This repo contains the development of the Nuclear PoE by NUCLEARIS.",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Sebastinez/NUCLEARIS-Material-Organization.git"
+    "url": "git+https://github.com/Sebastinez/NUCLEARIS-PoE.git"
   },
-  "author": "Sebastian Martinez",
-  "license": "ISC",
+  "author": "Sebastinez",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Sebastinez/NUCLEARIS-Material-Organization/issues"
+    "url": "https://github.com/Sebastinez/NUCLEARIS-PoE/issues"
   },
-  "homepage": "https://github.com/Sebastinez/NUCLEARIS-Material-Organization#readme",
+  "homepage": "https://github.com/Sebastinez/NUCLEARIS-PoE#readme",
   "dependencies": {
     "bip38": "^3.0.0",
     "bitcoinjs-lib": "^5.1.6",
@@ -59,6 +59,7 @@
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^1.7.0",
     "jest": "^24.9.0",
+    "jest-tobetype": "^1.2.3",
     "prettier": "^1.18.2",
     "truffle-assertions": "^0.9.1"
   }
