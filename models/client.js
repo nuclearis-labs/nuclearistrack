@@ -5,6 +5,7 @@ const clientSchema = new mongoose.Schema({
   name: String,
   email: String,
   address: String,
+  contract: String,
   encryptedPrivateKey: String
 });
 

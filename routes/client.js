@@ -1,6 +1,8 @@
 const express = require('express');
 const { asyncMiddleware } = require('../middleware/index');
 const Wallet = require('../classes/Wallet');
+const NuclearPoE = require('../classes/NuclearPoE');
+const Client = require('../classes/Client');
 const ClientModel = require('../models/client');
 
 const router = express.Router({ mergeParams: true });
@@ -19,18 +21,27 @@ router.post(
         .encryptBIP38(req.body.passphrase)
         .toHex(['rskAddressFromPublicKey']);
 
+      const nuclear = new NuclearPoE(req.body.wallet, req.body.privateKey);
+      const tx = await nuclear.createThirdParty(
+        wallet.rskAddressFromPublicKey,
+        req.body.clientName,
+        'createClient',
+        'CreateClient'
+      );
+
       // Create DB record and hash password
-      const client = await ClientModel.register(
+      const result = await ClientModel.register(
         new ClientModel({
-          username: req.body.name,
+          username: req.body.clientName,
           email: req.body.email,
           address: wallet.rskAddressFromPublicKey,
-          encryptedPrivateKey: wallet.wifPrivKey
+          contract: tx.contractAddress,
+          encryptedPrivateKey: wallet.encryptedKey
         }),
         req.body.password
       );
 
-      res.json(client);
+      res.json({ result });
     } catch (e) {
       res.json({ error: e.message });
     }
@@ -59,5 +70,20 @@ router.post(
     }
   })
 );
+
+router.post('/get/:contract', (req, res) => {
+  try {
+    const client = new Client(
+      req.params.contract,
+      req.body.wallet,
+      req.body.privateKey
+    );
+
+    const result = client.getClientDetails();
+    res.json({ result });
+  } catch (e) {
+    res.json({ error: e.message });
+  }
+});
 
 module.exports = router;

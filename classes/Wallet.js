@@ -2,6 +2,7 @@ require('dotenv').config();
 const ecc = require('tiny-secp256k1');
 const crypto = require('crypto');
 const ethereumjs = require('ethereumjs-util');
+const utils = require('../functions/utils');
 const wif = require('wif');
 const bip38 = require('bip38');
 const { networks } = require('bitcoinjs-lib');
@@ -65,9 +66,8 @@ class Wallet {
         'class Wallet => generateRSKAddress() is missing a public key'
       );
     }
-    this.rskAddressFromPublicKey = ethereumjs.pubToAddress(
-      this.publicKey,
-      true
+    this.rskAddressFromPublicKey = utils.toChecksumAddress(
+      ethereumjs.pubToAddress(this.publicKey, true).toString('hex')
     );
     return this;
   }

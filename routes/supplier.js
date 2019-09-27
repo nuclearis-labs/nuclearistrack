@@ -1,6 +1,7 @@
 const express = require('express');
 const { asyncMiddleware } = require('../middleware/index');
 const Wallet = require('../classes/Wallet');
+const NuclearPoE = require('../classes/NuclearPoE');
 const SupplierModel = require('../models/supplier');
 
 const router = express.Router({ mergeParams: true });
@@ -19,18 +20,27 @@ router.post(
         .encryptBIP38(req.body.passphrase)
         .toHex(['rskAddressFromPublicKey']);
 
+      const nuclear = new NuclearPoE(req.body.wallet, req.body.privateKey);
+      const tx = await nuclear.createThirdParty(
+        wallet.rskAddressFromPublicKey,
+        req.body.clientName,
+        'createSupplier',
+        'CreateSupplier'
+      );
+
       // Create DB record and hash password
-      const supplier = await SupplierModel.register(
+      const result = await SupplierModel.register(
         new SupplierModel({
-          username: req.body.name,
+          username: req.body.clientName,
           email: req.body.email,
+          contract: tx.contractAddress,
           address: wallet.rskAddressFromPublicKey,
           encryptedPrivateKey: wallet.wifPrivKey
         }),
         req.body.password
       );
 
-      res.json(supplier);
+      res.json({ result });
     } catch (e) {
       res.json({ error: e.message });
     }

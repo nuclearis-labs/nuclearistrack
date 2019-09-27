@@ -3,7 +3,7 @@ pragma solidity >=0.5.0 <0.7.0;
 //Contrato general que manejo los subcontratos que se crean en runtime
 contract NuclearPoE {
 
-    address payable public owner;
+    address private owner;
 
     constructor() public {
       owner = msg.sender;
@@ -24,73 +24,73 @@ contract NuclearPoE {
         bool created;
     }
 
-    mapping(uint => ProjectStruct) public projectContracts;
-    mapping(address => ClientStruct) public clientContracts;
-    mapping(address => SupplierStruct) public supplierContracts;
+    mapping(uint => ProjectStruct) private projectContracts;
+    mapping(address => ClientStruct) private client;
+    mapping(address => SupplierStruct) private supplier;
 
-    address[] public projectContractsArray;
-    uint public projectCount = 0;
+    address[] private projectContractsArray;
+    address[] private supplierContractsArray;
+    address[] private clientContractsArray;
+    uint8 private projectCount;
+    uint8 private clientCount;
+    uint8 private supplierCount;
 
     modifier onlyOwner() {
     require(msg.sender == owner,"Only owner can make this change");_;
     }
 
-    event CreateNewProject(address newProjectContractAddress, address ClientContractAddress, uint expediente,bytes32 projectTitle);
+    event CreateProject(address newProjectContractAddress);
+    event CreateClient(address ContractAddress);
+    event CreateSupplier(address ContractAddress);
 
-    function createProject(uint expediente, bytes32 projectTitle, address client, bytes32 clientName) public onlyOwner() returns (address) {
-        require(projectContracts[expediente].created == false, "Project already created");
+    function createProject(uint _expediente, bytes32 _projectTitle, address _clientAddress) external onlyOwner() {
+        require(projectContracts[_expediente].created == false, "Project already created");
+        require(client[_clientAddress].created == true, "Client does not exist");
 
-        // Creacion de un nuevo contrato para el proyecto y lo guarda en el struct de proyectos.
-        Project newProject = new Project(expediente, projectTitle, address(this));
-        address newProjectContractAddress = newProject.contractAddress();
-        projectContracts[expediente] = ProjectStruct(newProjectContractAddress,true);
+        address ProjectContractAddress = address(new Project(_expediente, _projectTitle, _clientAddress));
+        projectContracts[_expediente] = ProjectStruct(ProjectContractAddress, true);
 
-        address ClientContractAddress;
-
-        // Verificacion de existencia de contrato de cliente
-        if(clientContracts[client].created == false) {
-            Client newClient = new Client(clientName);
-            ClientContractAddress = newClient.contractAddress();
-            newClient.addProject(newProjectContractAddress);
-        } else {
-            ClientContractAddress = clientContracts[client].contractAddress;
-            Client newClient = Client(ClientContractAddress);
-            newClient.addProject(newProjectContractAddress);
-        }
-
-        clientContracts[client] = ClientStruct(ClientContractAddress, true);
-
-        newProject.setClientAddress(client);
-
-        projectContractsArray.push(newProjectContractAddress);
+        projectContractsArray.push(ProjectContractAddress);
         projectCount++;
 
-        emit CreateNewProject(newProjectContractAddress, ClientContractAddress, expediente, projectTitle);
-        return newProjectContractAddress;
+        emit CreateProject(ProjectContractAddress);
     }
 
+    function createSupplier(address supplierAddress, bytes32 _supplierName) external onlyOwner() {
+        require(supplier[supplierAddress].created == false,"Supplier already created");
 
-    function addNewSupplier(address supplierAddress, address SupplierContractAddress) public onlyOwner() {
-        supplierContracts[supplierAddress] = SupplierStruct(SupplierContractAddress, true);
+        address ContractAddress = address(new Supplier(_supplierName));
+
+        supplier[supplierAddress] = SupplierStruct(ContractAddress, true);
+        supplierCount++;
+
+        emit CreateSupplier(ContractAddress);
     }
 
+    function createClient(address _clientAddress, bytes32 _clientName) external onlyOwner() {
+        require(client[_clientAddress].created == false,"Client already created");
+
+        address ContractAddress = address(new Client(_clientName));
+
+        client[_clientAddress] = ClientStruct(ContractAddress, true);
+        clientCount++;
+
+        emit CreateClient(ContractAddress);
+    }
 }
 
 // Contrato de proyectos, cada vez que se crea un proyecto nuevo se debe generar un contrato proyecto.
 contract Project {
 
-    uint public expediente;
-    bool public approved = false;
-    address public mainContract;
-    address public contractAddress;
-    address public clientAddress;
-    bytes32 public title;
+    uint private expediente;
+    bool private approved;
+    address private clientAddress;
+    bytes32 private title;
 
     struct Document {
         address supplierAddress;
-        uint mineTime;
-        uint256 blockNumber;
         bytes32 documentTitle;
+        uint mineTime;
         bool created;
     }
 
@@ -101,114 +101,92 @@ contract Project {
         bool created;
     }
 
-    uint public supplierCount = 0;
-    address[] public supplierAddresses;
-    bytes32[] public allDocuments;
-    uint public documentQty = 0;
+    uint private supplierCount;
+    uint private documentQty;
+    address[] private supplierAddresses;
+    bytes32[] private allDocuments;
 
-    mapping(address => Process) public process;
-    mapping(bytes32 => Document) public document;
+    mapping(address => Process) private process;
+    mapping(bytes32 => Document) private document;
 
-    event AddDocument(bytes32 hash, uint mineTime, uint blockNumber);
-    event AddProcess(address _supplierAddress, bytes32 processTitle);
-    event ApproveProject(uint expediente);
+    event AddDocument();
+    event AddProcess();
+    event ApproveProject();
 
-    constructor (uint _expediente, bytes32 _title, address _mainContract) public {
+    constructor (uint _expediente, bytes32 _title,address _clientAddress) public {
         expediente = _expediente;
         title = _title;
-        contractAddress = address(this);
-        mainContract = _mainContract;
-        documentQty = 0;
+        clientAddress = _clientAddress;
     }
 
-    function contractDetails() public view returns (uint, address, address, bytes32, bool, bytes32[] memory, address[] memory) {
-        return (expediente, contractAddress, clientAddress, title, approved, allDocuments,supplierAddresses);
-    }
-
-    function setClientAddress(address _a) public {
-        clientAddress = _a;
-    }
-
-    function addDocument (address supplierAddress, bytes32 hash, bytes32 documentName) public {
+    function addDocument (address _supplierAddress, bytes32 _hash, bytes32 _documentName) external {
         require(approved == true,"Project is not approved by client");
-        require(process[supplierAddress].created == true, "Process does not exist");
-        require(document[hash].created == false, "Document already created");
+        require(process[_supplierAddress].created == true, "Process does not exist");
+        require(document[_hash].created == false, "Document already created");
 
-        document[hash] = Document(supplierAddress, now, block.number, documentName, true);
-        allDocuments.push(hash);
+        document[_hash] = Document(_supplierAddress, _documentName, now, true);
+        allDocuments.push(_hash);
         documentQty++;
-        emit AddDocument(hash, now, block.number);
+        emit AddDocument();
     }
 
-    function returnDocument() public view returns(bytes32[] memory) {
-        return allDocuments;
-    }
 
-    function findDocument(bytes32 hash) public view returns (address, uint, uint, bytes32) {
-        require(document[hash].created == true, "Document does not exist");
+    function findDocument(bytes32 _hash) external view returns (address, uint, bytes32) {
+        require(document[_hash].created == true, "Document does not exist");
         return (
-            document[hash].supplierAddress,
-            document[hash].mineTime,
-            document[hash].blockNumber,
-            document[hash].documentTitle
+            document[_hash].supplierAddress,
+            document[_hash].mineTime,
+            document[_hash].documentTitle
             );
     }
 
-    function approveProject() public {
+    function approveProject() external {
         require(msg.sender == clientAddress,"Only clients of this project can realize this operation");
         require(approved == false,"Project already approved");
         approved = true;
-        emit ApproveProject(expediente);
+        emit ApproveProject();
     }
 
-    function addProcess(address supplierAddress, bytes32 processName, bytes32 supplierName) public {
-        require(process[supplierAddress].created == false,"Process already created");
+    function addProcess(address _supplierContractAddress, address _supplierAddress, bytes32 _processName, bytes32 _supplierName) external {
+        require(process[_supplierAddress].created == false,"Process already created");
         require(approved == false,"Project is already approved by client");
 
-        
-
-        address supplierContractAddress;
-
-        // Verificacion de existencia de contrato de supplier
-        if(process[supplierAddress].created == false) {
-            Supplier newSupplier = new Supplier(supplierName);
-            supplierContractAddress = newSupplier.contractAddress();
-        } else {
-            supplierContractAddress = process[supplierAddress].supplierContractAddress;
-        }
-
-        NuclearPoE main = NuclearPoE(mainContract);
-        main.supplierContracts(supplierContractAddress);
-
         supplierCount++;
-        supplierAddresses.push(supplierAddress);
+        supplierAddresses.push(_supplierAddress);
 
-        process[supplierAddress] = Process(processName, supplierName, supplierContractAddress, true);
+        process[_supplierAddress] = Process(_processName, _supplierName, _supplierContractAddress, true);
 
-        emit AddProcess(supplierAddress, processName);
+        emit AddProcess();
     }
 
+        function contractDetails() external view returns (uint, address, address, bytes32, bool, bytes32[] memory, address[] memory) {
+        return (expediente, address(this), clientAddress, title, approved, allDocuments, supplierAddresses);
+    }
+
+    function returnAllDocuments() external view returns(bytes32[] memory) {
+        return allDocuments;
+    }
 }
 
 
 // Contrato de cliente que se genera para cada cliente nuevo y hace seguimiento a los proyectos nuevos asignados
 contract Client {
 
-    bytes32 public name;
-    address public contractAddress;
-    address[] public projectAddresses;
+    bytes32 private name;
+    address[] private projectAddresses;
+    uint private projectCount;
 
     constructor (bytes32 _name) public {
         name = _name;
-        contractAddress = address(this);
     }
 
-    function contractDetails() public view returns (bytes32, address[] memory) {
+    function contractDetails() external view returns (bytes32, address[] memory) {
         return (name, projectAddresses);
     }
 
-    function addProject(address _a) public {
+    function addProject(address _a) external {
         projectAddresses.push(_a);
+        projectCount++;
     }
 
 }
@@ -216,16 +194,20 @@ contract Client {
 // Contrato de proveedores que se genera para cada proveedor nuevo y hace seguimiento a los proyectos nuevos asignados
 contract Supplier {
 
-    bytes32 public name;
-    address[] public contractAddresses;
-    address public contractAddress;
-    
+    bytes32 private name;
+    address[] private projectAddresses;
+    uint private projectCount;
+
     constructor (bytes32 supplierName) public {
         name = supplierName;
-        contractAddress = address(this);
     }
-    
-    function contractDetails() public view returns (bytes32, address[] memory) {
-        return (name, contractAddresses);
+
+    function contractDetails() external view returns (bytes32, address[] memory) {
+        return (name, projectAddresses);
+    }
+
+    function addProject(address _a) external {
+        projectAddresses.push(_a);
+        projectCount++;
     }
 }
