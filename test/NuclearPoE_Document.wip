@@ -1,17 +1,22 @@
-const assert = require('chai').assert;
+/* eslint-disable no-undef */
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable node/no-unpublished-require */
+
+const { assert } = require('chai');
+const truffleAssert = require('truffle-assertions');
+const web3 = require('web3');
+
 const NuclearPoE = artifacts.require('../contracts/NuclearPoE.sol');
 const Project = artifacts.require('../contracts/Project.sol');
-const truffleAssert = require('truffle-assertions');
 
 contract('Add Document', accounts => {
   let instance;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    let result = await instance.createProject(
+    const result = await instance.createProject(
       41955,
       web3.utils.fromAscii('Conjunto Soporte'),
-      accounts[1],
-      web3.utils.fromAscii('NA-SA')
+      accounts[1]
     );
     instance = await Project.at(result.logs[0].args[0]);
 
@@ -34,7 +39,7 @@ contract('Add Document', accounts => {
   });
   it('EVENT: Add a document', async () => {
     await instance.approveProject({ from: accounts[1] });
-    let result = await instance.addDocument(
+    const result = await instance.addDocument(
       accounts[2],
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
       web3.utils.fromAscii('Certificado'),
@@ -69,7 +74,7 @@ contract('Find Document', accounts => {
   let instance;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    let result = await instance.createProject(
+    const result = await instance.createProject(
       41955,
       web3.utils.fromAscii('Conjunto Soporte'),
       accounts[1],
@@ -91,7 +96,7 @@ contract('Find Document', accounts => {
     );
   });
   it('Find a document', async () => {
-    let result = await instance.findDocument(
+    const result = await instance.findDocument(
       accounts[2],
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd'
     );
@@ -118,7 +123,7 @@ contract('Return Documents', accounts => {
   let instance;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    let result = await instance.createProject(
+    const result = await instance.createProject(
       41955,
       web3.utils.fromAscii('Conjunto Soporte'),
       accounts[1],
@@ -146,7 +151,7 @@ contract('Return Documents', accounts => {
     );
   });
   it('Return 2 document hashes', async () => {
-    let result = await instance.returnDocument();
+    const result = await instance.returnDocument();
     assert.lengthOf(result, 2, 'Result should be array of 2 document hashes');
   });
   after(async () => {

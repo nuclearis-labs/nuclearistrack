@@ -1,27 +1,38 @@
+/* eslint-disable no-undef */
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable node/no-unpublished-require */
+
 const NuclearPoE = artifacts.require('../contracts/NuclearPoE.sol');
 const Client = artifacts.require('../contracts/Client.sol');
-const assert = require('chai').assert;
-let clientInstance;
-let result;
+const { assert } = require('chai');
+const truffleAssert = require('truffle-assertions');
+
+const web3 = require('web3');
 
 contract('Client Contracts', accounts => {
   let instance;
+  let clientInstance;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    result = await instance.createProject(
-      41955,
-      web3.utils.fromAscii('Conjunto Soporte'),
+  });
+
+  it('Create client', async () => {
+    const result = await instance.createClient(
       accounts[1],
       web3.utils.fromAscii('NA-SA')
     );
-    clientInstance = await Client.at(result.logs[0].args[1]);
+    clientInstance = await Client.at(result.logs[0].args[0]);
+    truffleAssert.eventEmitted(result, 'CreateClient', ev => {
+      return ev.ContractAddress;
+    });
   });
+
   it('Return client projects', async () => {
-    let contractDetails = await clientInstance.contractDetails();
-    assert.equal(contractDetails[1], result.logs[0].args[0]);
+    const contractDetails = await clientInstance.contractDetails();
+    assert.include(contractDetails[0], web3.utils.fromAscii('NA-SA'));
   });
 
   after(async () => {
-    await clientInstance.kill({ from: accounts[0] });
+    await instance.kill({ from: accounts[0] });
   });
 });

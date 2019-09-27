@@ -3,7 +3,7 @@ pragma solidity >=0.5.0 <0.7.0;
 //Contrato general que manejo los subcontratos que se crean en runtime
 contract NuclearPoE {
 
-    address private owner;
+    address payable private owner;
 
     constructor() public {
       owner = msg.sender;
@@ -56,12 +56,16 @@ contract NuclearPoE {
         emit CreateProject(ProjectContractAddress);
     }
 
-    function createSupplier(address supplierAddress, bytes32 _supplierName) external onlyOwner() {
-        require(supplier[supplierAddress].created == false,"Supplier already created");
+    function kill() public onlyOwner() {
+        selfdestruct(owner);
+    }
+
+    function createSupplier(address _supplierAddress, bytes32 _supplierName) external onlyOwner() {
+        require(supplier[_supplierAddress].created == false,"Supplier already created");
 
         address ContractAddress = address(new Supplier(_supplierName));
 
-        supplier[supplierAddress] = SupplierStruct(ContractAddress, true);
+        supplier[_supplierAddress] = SupplierStruct(ContractAddress, true);
         supplierCount++;
 
         emit CreateSupplier(ContractAddress);
@@ -86,6 +90,7 @@ contract Project {
     bool private approved;
     address private clientAddress;
     bytes32 private title;
+    address payable owner;
 
     struct Document {
         address supplierAddress;
@@ -117,6 +122,7 @@ contract Project {
         expediente = _expediente;
         title = _title;
         clientAddress = _clientAddress;
+        owner = msg.sender; // TEMP
     }
 
     function addDocument (address _supplierAddress, bytes32 _hash, bytes32 _documentName) external {
@@ -139,6 +145,10 @@ contract Project {
             document[_hash].documentTitle
             );
     }
+    // TEMP
+    function kill() public {
+        selfdestruct(owner);
+    }
 
     function approveProject() external {
         require(msg.sender == clientAddress,"Only clients of this project can realize this operation");
@@ -159,7 +169,7 @@ contract Project {
         emit AddProcess();
     }
 
-        function contractDetails() external view returns (uint, address, address, bytes32, bool, bytes32[] memory, address[] memory) {
+    function contractDetails() external view returns (uint, address, address, bytes32, bool, bytes32[] memory, address[] memory) {
         return (expediente, address(this), clientAddress, title, approved, allDocuments, supplierAddresses);
     }
 
@@ -175,13 +185,20 @@ contract Client {
     bytes32 private name;
     address[] private projectAddresses;
     uint private projectCount;
+    address payable owner;
 
     constructor (bytes32 _name) public {
         name = _name;
+        owner = msg.sender; // TEMP
     }
 
     function contractDetails() external view returns (bytes32, address[] memory) {
         return (name, projectAddresses);
+    }
+
+    // TEMP
+    function kill() public {
+        selfdestruct(owner);
     }
 
     function addProject(address _a) external {

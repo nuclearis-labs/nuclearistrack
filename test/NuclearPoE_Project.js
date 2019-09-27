@@ -1,7 +1,13 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-undef */
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable node/no-unpublished-require */
+
 const NuclearPoE = artifacts.require('../contracts/NuclearPoE.sol');
 const Project = artifacts.require('../contracts/Project.sol');
-const assert = require('chai').assert;
+const { assert } = require('chai');
 const truffleAssert = require('truffle-assertions');
+const web3 = require('web3');
 
 contract('Create Project', accounts => {
   let instance;
@@ -9,26 +15,15 @@ contract('Create Project', accounts => {
     instance = await NuclearPoE.deployed();
   });
   it('EVENT: Create a new project', async () => {
-    let result = await instance.createProject(
+    await instance.createClient(accounts[1], web3.utils.fromAscii('NA-SA'));
+    const result = await instance.createProject(
       41955,
       web3.utils.fromAscii('Conjunto Soporte'),
-      accounts[1],
-      web3.utils.fromAscii('NA-SA')
+      accounts[1]
     );
 
-    assert.nestedPropertyVal(
-      result,
-      'receipt.status',
-      true,
-      'Result is missing a transactionHash property'
-    );
-    truffleAssert.eventEmitted(result, 'CreateNewProject', ev => {
-      return (
-        ev.newProjectContractAddress &&
-        ev.expediente.toNumber() === 41955 &&
-        ev.projectTitle ===
-          '0x436f6e6a756e746f20536f706f72746500000000000000000000000000000000'
-      );
+    truffleAssert.eventEmitted(result, 'CreateProject', ev => {
+      return ev.newProjectContractAddress;
     });
   });
   it('REVERT: Create duplicate project', async () => {
@@ -36,10 +31,19 @@ contract('Create Project', accounts => {
       instance.createProject(
         41955,
         web3.utils.fromAscii('Conjunto Soporte'),
-        accounts[1],
-        web3.utils.fromAscii('NA-SA')
+        accounts[1]
       ),
       'Project already created'
+    );
+  });
+  it('REVERT: Create project with non-existing client', async () => {
+    await truffleAssert.reverts(
+      instance.createProject(
+        56543,
+        web3.utils.fromAscii('Conjunto Soporte'),
+        accounts[3]
+      ),
+      'Client does not exist'
     );
   });
   it('REVERT: Create new project as non-owner', async () => {
@@ -48,7 +52,6 @@ contract('Create Project', accounts => {
         41950,
         web3.utils.fromAscii('Conjunto Soporte'),
         accounts[1],
-        web3.utils.fromAscii('NA-SA'),
         { from: accounts[1] }
       ),
       'Only owner can make this change'
@@ -61,28 +64,30 @@ contract('Create Project', accounts => {
 
 contract('Add Process', accounts => {
   let instance;
+  let supplier;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    let result = await instance.createProject(
+    await instance.createClient(accounts[1], web3.utils.fromAscii('NA-SA'));
+    supplier = await instance.createSupplier(
+      accounts[2],
+      web3.utils.fromAscii('IMECO')
+    );
+
+    const result = await instance.createProject(
       41955,
       web3.utils.fromAscii('Conjunto Soporte'),
-      accounts[1],
-      web3.utils.fromAscii('NA-SA')
+      accounts[1]
     );
+
     instance = await Project.at(result.logs[0].args[0]);
   });
 
   it('EVENT: Add a process', async () => {
-    let result = await instance.addProcess(
+    const result = await instance.addProcess(
+      supplier.logs[0].args[0],
       accounts[2],
       web3.utils.fromAscii('Mecanizado'),
       web3.utils.fromAscii('BGH')
-    );
-    assert.nestedPropertyVal(
-      result,
-      'receipt.status',
-      true,
-      'Result is missing a transactionHash property'
     );
     truffleAssert.eventEmitted(result, 'AddProcess');
   });
@@ -90,6 +95,7 @@ contract('Add Process', accounts => {
   it('REVERT: Add duplicate process', async () => {
     await truffleAssert.reverts(
       instance.addProcess(
+        supplier.logs[0].args[0],
         accounts[2],
         web3.utils.fromAscii('Mecanizado'),
         web3.utils.fromAscii('BGH')
@@ -97,10 +103,12 @@ contract('Add Process', accounts => {
       'Process already created'
     );
   });
+
   it('REVERT: Add process to already approved project', async () => {
     await instance.approveProject({ from: accounts[1] });
     await truffleAssert.reverts(
       instance.addProcess(
+        supplier.logs[0].args[0],
         accounts[3],
         web3.utils.fromAscii('Plateado'),
         web3.utils.fromAscii('NRS')
@@ -117,22 +125,18 @@ contract('Approve Project', accounts => {
   let instance;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    let result = await instance.createProject(
+    await instance.createClient(accounts[1], web3.utils.fromAscii('NA-SA'));
+    await instance.createSupplier(accounts[2], web3.utils.fromAscii('IMECO'));
+    const result = await instance.createProject(
       41955,
       web3.utils.fromAscii('Conjunto Soporte'),
-      accounts[1],
-      web3.utils.fromAscii('NA-SA')
+      accounts[1]
     );
     instance = await Project.at(result.logs[0].args[0]);
   });
   it('EVENT: Approve a project', async () => {
-    let result = await instance.approveProject({ from: accounts[1] });
-    assert.nestedPropertyVal(
-      result,
-      'receipt.status',
-      true,
-      'Result is missing a transactionHash property'
-    );
+    const result = await instance.approveProject({ from: accounts[1] });
+
     truffleAssert.eventEmitted(result, 'ApproveProject');
   });
 
@@ -157,36 +161,35 @@ contract('Return Projects', accounts => {
   let instance;
   before(async () => {
     instance = await NuclearPoE.deployed();
+    await instance.createClient(accounts[1], web3.utils.fromAscii('NA-SA'));
+    supplier = await instance.createSupplier(
+      accounts[2],
+      web3.utils.fromAscii('IMECO')
+    );
     await instance.createProject(
       41955,
       web3.utils.fromAscii('Conjunto Soporte'),
-      accounts[1],
-      web3.utils.fromAscii('NA-SA')
+      accounts[1]
     );
     await instance.createProject(
       41800,
-      web3.utils.fromAscii('Conjunto Soporte'),
-      accounts[1],
-      web3.utils.fromAscii('NA-SA')
+      web3.utils.fromAscii('Anillos 2020'),
+      accounts[1]
     );
   });
   it('Return projects contracts', async () => {
-    let projectCount = await instance.projectCount();
-    let result = [];
-    for (let i = 0; i < projectCount; i++) {
-      let res = await instance.projectContractsArray(i);
-      projectInstance = await Project.at(res);
-      let contractDetails = await projectInstance.contractDetails();
-      result[res] = {
+    const projectCount = await instance.projectCount();
+    const result = [];
+    for (let i = 0; i < projectCount; i += 1) {
+      const res = await instance.projectContractsArray(i);
+      const projectInstance = await Project.at(res);
+      const contractDetails = await projectInstance.contractDetails();
+      result.push({
         expediente: contractDetails[0],
         title: contractDetails[1]
-      };
-      assert.nestedProperty(
-        result[res],
-        'title',
-        'Result should be array of 2 projects'
-      );
+      });
     }
+    assert.lengthOf(result, 2, 'Result should be array of 2 projects');
   });
   after(async () => {
     await instance.kill({ from: accounts[0] });
