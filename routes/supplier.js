@@ -2,6 +2,7 @@ const express = require('express');
 const { asyncMiddleware } = require('../middleware/index');
 const Wallet = require('../classes/Wallet');
 const NuclearPoE = require('../classes/NuclearPoE');
+const Supplier = require('../classes/Supplier');
 const SupplierModel = require('../models/supplier');
 
 const router = express.Router({ mergeParams: true });
@@ -46,5 +47,20 @@ router.post(
     }
   })
 );
+
+router.post('/get/:contract', async (req, res) => {
+  try {
+    const supplier = new Supplier(
+      req.params.contract,
+      req.body.wallet,
+      req.body.privateKey
+    );
+
+    const result = await supplier.getSupplierDetails();
+    res.json({ result });
+  } catch (e) {
+    res.json({ error: e.message });
+  }
+});
 
 module.exports = router;

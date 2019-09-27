@@ -25,3 +25,8 @@ module.exports.toChecksumAddress = address => {
 module.exports.toAscii = bytes32 => {
   return web3.utils.toAscii(bytes32);
 };
+
+module.exports.convertResult = object => {
+  const result = Object.values(object.result);
+  return result;
+};

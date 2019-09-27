@@ -73,13 +73,7 @@ class Contract {
   async getDetails() {
     const result = await this.instance.methods.contractDetails().call();
     return {
-      expediente: result[0],
-      contractAddress: result[1],
-      clientAddress: result[2],
-      contractName: web3.utils.toAscii(result[3]),
-      approved: result[4],
-      allDocuments: result[5],
-      allSuppliers: result[6]
+      result
     };
   }
 }

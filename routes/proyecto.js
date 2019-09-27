@@ -35,8 +35,8 @@ router.post('/approve/:contract', async (req, res) => {
 router.post('/get', async (req, res) => {
   const proyecto = new NuclearPoE(req.body.wallet, req.body.privateKey);
   try {
-    const { projectos } = await proyecto.returnAllProjects();
-    res.json({ result: projectos });
+    const result = await proyecto.returnAllProjects();
+    res.json({ result });
   } catch (e) {
     res.json({ error: e.message });
   }

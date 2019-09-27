@@ -71,15 +71,24 @@ class NuclearPoE extends Contract {
 
   async returnAllProjects() {
     const cantidadProjectos = await this.instance.methods.projectCount().call();
-    this.projectos = [];
+    const result = [];
     for (let i = 0; i < cantidadProjectos; i += 1) {
       const contractAddress = await this.instance.methods
         .projectContractsArray(i)
         .call();
       const project = new Project(contractAddress);
-      this.projectos.push(await project.getDetails());
+      const details = utils.convertResult(await project.getDetails());
+      result.push({
+        expediente: details[0],
+        contractAddress: details[1],
+        clientAddress: details[2],
+        projectTitle: details[3],
+        approved: details[4],
+        allDocuments: details[5],
+        allSuppliers: details[6]
+      });
     }
-    return this;
+    return result;
   }
 
   async createThirdParty(_address, _name, _type, _event) {

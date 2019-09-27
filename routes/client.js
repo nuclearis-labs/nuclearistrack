@@ -11,6 +11,12 @@ router.post(
   '/',
   asyncMiddleware(async (req, res) => {
     try {
+      const user = await ClientModel.findOne({ username: req.body.clientName });
+
+      if (user) {
+        throw Error('A user with the given username is already registered');
+      }
+
       const wallet = new Wallet(true);
 
       // Generation of encrypted privatekey and address
@@ -71,7 +77,7 @@ router.post(
   })
 );
 
-router.post('/get/:contract', (req, res) => {
+router.post('/get/:contract', async (req, res) => {
   try {
     const client = new Client(
       req.params.contract,
@@ -79,7 +85,7 @@ router.post('/get/:contract', (req, res) => {
       req.body.privateKey
     );
 
-    const result = client.getClientDetails();
+    const result = await client.getClientDetails();
     res.json({ result });
   } catch (e) {
     res.json({ error: e.message });

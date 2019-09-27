@@ -28,10 +28,10 @@ contract NuclearPoE {
     mapping(address => ClientStruct) private client;
     mapping(address => SupplierStruct) private supplier;
 
-    address[] private projectContractsArray;
+    address[] public projectContractsArray;
     address[] private supplierContractsArray;
     address[] private clientContractsArray;
-    uint8 private projectCount;
+    uint8 public projectCount;
     uint8 private clientCount;
     uint8 private supplierCount;
 
