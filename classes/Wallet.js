@@ -31,6 +31,7 @@ class Wallet {
       key.privateKey,
       key.compressed
     );
+    this.privKey = key.privateKey;
     return this;
   }
 

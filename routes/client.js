@@ -28,6 +28,7 @@ router.post(
         .toHex(['rskAddressFromPublicKey']);
 
       const nuclear = new NuclearPoE(req.body.wallet, req.body.privateKey);
+
       const tx = await nuclear.createThirdParty(
         wallet.rskAddressFromPublicKey,
         req.body.clientName,
@@ -50,6 +51,32 @@ router.post(
       res.json({ result });
     } catch (e) {
       res.json({ error: e.message });
+    }
+  })
+);
+
+router.post(
+  '/validate',
+  asyncMiddleware(async (req, res) => {
+    try {
+      const user = await ClientModel.findOne({ email: req.body.email });
+
+      if (!user) throw Error();
+
+      const wallet = new Wallet(true);
+
+      wallet.encryptedKey = user.encryptedPrivateKey;
+      // Generation of encrypted privatekey and address
+      wallet
+        .decryptBIP38(req.body.passphrase)
+        .generatePublicKey()
+        .generateRSKAddress();
+
+      const validate = wallet.rskAddressFromPublicKey === user.address;
+      if (validate) res.json({ message: 'Estas logueado' });
+      else throw Error();
+    } catch (e) {
+      res.json({ error: 'Usuario o contraseña incorrecta' });
     }
   })
 );
