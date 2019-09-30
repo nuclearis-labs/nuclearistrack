@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
 import Web3 from 'web3';
 import NuclearPoE from './contracts/NuclearPoE';
 import axios from 'axios';
 
 function App() {
   const [block, setBlock] = useState({ number: 0 });
-  const [inProgress, setInProgress] = useState(true);
+  const [error, setError] = useState(false);
+  const [project, setProject] = useState([]);
+  const [inProgress, setInProgress] = useState();
   const [form, setForm] = useState([]);
   const web3 = new Web3(
     new Web3.providers.WebsocketProvider('ws://127.0.0.1:8545')
@@ -15,7 +15,7 @@ function App() {
 
   const contract = new web3.eth.Contract(
     NuclearPoE.abi,
-    '0xe6ef10eA5678fBDc9CC1FC051241Bf235393cbA0'
+    '0x955eB19F7741e102DBf61e4347079A8decF30fF7'
   );
 
   contract.events.allEvents().on('data', event => {
@@ -24,6 +24,23 @@ function App() {
       setBlock(event);
     }
   });
+
+  useEffect(() => {
+    setProject([]);
+    contract.methods
+      .projectCount()
+      .call()
+      .then(count => {
+        for (let i = 0; i < count; i++) {
+          contract.methods
+            .projectContractsArray(i)
+            .call()
+            .then(indProject => {
+              setProject(projects => [...projects, indProject]);
+            });
+        }
+      });
+  }, [inProgress]);
 
   function handleInput(e) {
     e.persist();
@@ -34,52 +51,101 @@ function App() {
     e.preventDefault();
     setInProgress(true);
     axios.post('/api/project', form).then(response => {
+      if (response.data.error) {
+        console.log(response.data.error);
+        setInProgress(false);
+
+        setError('Project not created');
+      }
       console.log(response);
     });
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Creación de nuevo proyecto</h1>
-        {!inProgress ? (
-          <div>
-            <div>{form.expediente}</div>
-            <div>{form.proyectoTitle}</div>
+    <div className="container">
+      <h1>Creación de nuevo proyecto</h1>
+      {inProgress === false ? (
+        <div className="jumbotron jumbotron-fluid">
+          <div className="container">
+            <h1 className="display-4">Project created!</h1>
+            <div>Expediente number {form.expediente}</div>
+            <div>Project Title {form.proyectoTitle}</div>
             <div>
-              Dirección{' '}
+              Blockchain Address{' '}
               {block.returnValues &&
                 block.returnValues.newProjectContractAddress}
             </div>
             <div>Transaction Hash {block.transactionHash}</div>
           </div>
-        ) : (
-          <div>Creation in process</div>
-        )}
-        <div>
-          <label>Expediente</label>
-          <input type="text" name="expediente" onChange={handleInput} />
         </div>
-        <div>
-          <label>proyectoTitle</label>
-          <input type="text" name="proyectoTitle" onChange={handleInput} />
+      ) : inProgress === true ? (
+        <div className="alert alert-primary">Creation in process</div>
+      ) : error == 'Project not created' ? (
+        <div className="alert alert-primary">Warning</div>
+      ) : (
+        <div></div>
+      )}
+      <form>
+        <div className="form-group">
+          <label htmlFor="expediente">Expediente</label>
+          <input
+            id="expediente"
+            type="text"
+            className="form-control"
+            name="expediente"
+            onChange={handleInput}
+          />
         </div>
-        <div>
-          <label>clientAddress</label>
-          <input type="text" name="clientAddress" onChange={handleInput} />
+        <div className="form-group">
+          <label htmlFor="title">Title</label>
+          <input
+            id="title"
+            type="text"
+            className="form-control"
+            name="proyectoTitle"
+            onChange={handleInput}
+          />
         </div>
-        <div>
-          <label>wallet</label>
-          <input type="text" name="wallet" onChange={handleInput} />
+        <div className="form-group">
+          <label htmlFor="client">Client Wallet</label>
+          <input
+            id="client"
+            type="text"
+            className="form-control"
+            name="clientAddress"
+            onChange={handleInput}
+          />
         </div>
-        <div>
-          <label>privateKey</label>
-          <input type="text" name="privateKey" onChange={handleInput} />
+        <div className="form-group">
+          <label htmlFor="wallet">Owner Wallet</label>
+          <input
+            type="text"
+            className="form-control"
+            name="wallet"
+            onChange={handleInput}
+          />
         </div>
-        <button type="submit" onClick={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="Owner Private Key">Owner Private Key</label>
+          <input
+            type="text"
+            className="form-control"
+            name="privateKey"
+            onChange={handleInput}
+          />
+        </div>
+        <button
+          type="submit"
+          className="btn btn-primary"
+          onClick={handleSubmit}
+        >
           Crear proyecto
         </button>
-      </header>
+      </form>
+      <h1>Created Projects</h1>
+      {project.map(m => (
+        <div>{m}</div>
+      ))}
     </div>
   );
 }
