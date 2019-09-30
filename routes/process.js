@@ -14,6 +14,7 @@ router.post('/create/:contract', async (req, res) => {
   );
   try {
     const result = await process.addProcess(
+      req.body.projectContractAddress,
       req.body.supplierAddress,
       req.body.processTitle,
       req.body.supplierName

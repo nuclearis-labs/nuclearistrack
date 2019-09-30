@@ -11,13 +11,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.resolve(__dirname, '/public')));
 
-app.use('/', require('./routes/index'));
-app.use('/doc', require('./routes/documents'));
-app.use('/project', require('./routes/proyecto'));
-app.use('/process', require('./routes/process'));
-app.use('/user', require('./routes/user'));
-app.use('/client', require('./routes/client'));
-app.use('/supplier', require('./routes/supplier'));
+app.use('/api/', require('./routes/index'));
+app.use('/api/doc', require('./routes/documents'));
+app.use('/api/project', require('./routes/proyecto'));
+app.use('/api/process', require('./routes/process'));
+app.use('/api/user', require('./routes/user'));
+app.use('/api/client', require('./routes/client'));
+app.use('/api/supplier', require('./routes/supplier'));
 
 app.listen(process.env.PORT, () =>
   // eslint-disable-next-line no-console

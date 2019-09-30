@@ -1,4 +1,4 @@
-//const HDWalletProvider = require('truffle-hdwallet-provider');
+// const HDWalletProvider = require('truffle-hdwallet-provider');
 
 const testNode = 'https://public-node.testnet.rsk.co:443';
 const publicNode = 'https://public-node.rsk.co';
@@ -20,11 +20,11 @@ module.exports = {
       gas: 6800000,
       gasPrice: 60240000
     },
-    dev: {
+    development: {
       host: '127.0.0.1',
       port: 8545,
       network_id: '*',
-      gas: 5000000,
+      gas: 9000000,
       gasPrice: 183000
     }
   }

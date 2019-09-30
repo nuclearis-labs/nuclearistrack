@@ -26,6 +26,7 @@ contract('Create Project', accounts => {
       return ev.newProjectContractAddress;
     });
   });
+
   it('REVERT: Create duplicate project', async () => {
     await truffleAssert.reverts(
       instance.createProject(
@@ -65,6 +66,7 @@ contract('Create Project', accounts => {
 contract('Add Process', accounts => {
   let instance;
   let supplier;
+  let projectAddress;
   before(async () => {
     instance = await NuclearPoE.deployed();
     await instance.createClient(accounts[1], web3.utils.fromAscii('NA-SA'));
@@ -79,24 +81,39 @@ contract('Add Process', accounts => {
       accounts[1]
     );
 
-    instance = await Project.at(result.logs[0].args[0]);
+    projectAddress = result.logs[0].args[0];
+    projectInstance = await Project.at(projectAddress);
+  });
+
+  it('REVERT: Create new process as non-owner', async () => {
+    await truffleAssert.reverts(
+      instance.addProcessToProject(
+        accounts[2],
+        projectAddress,
+        web3.utils.fromAscii('Mecanizado'),
+        web3.utils.fromAscii('BGH'),
+        { from: accounts[1] }
+      ),
+      'Only owner can make this change'
+    );
   });
 
   it('EVENT: Add a process', async () => {
-    const result = await instance.addProcess(
-      supplier.logs[0].args[0],
-      accounts[2],
-      web3.utils.fromAscii('Mecanizado'),
-      web3.utils.fromAscii('BGH')
+    truffleAssert.passes(
+      instance.addProcessToProject(
+        accounts[2],
+        projectAddress,
+        web3.utils.fromAscii('Mecanizado'),
+        web3.utils.fromAscii('BGH')
+      )
     );
-    truffleAssert.eventEmitted(result, 'AddProcess');
   });
 
   it('REVERT: Add duplicate process', async () => {
     await truffleAssert.reverts(
-      instance.addProcess(
-        supplier.logs[0].args[0],
+      instance.addProcessToProject(
         accounts[2],
+        projectAddress,
         web3.utils.fromAscii('Mecanizado'),
         web3.utils.fromAscii('BGH')
       ),
@@ -104,12 +121,25 @@ contract('Add Process', accounts => {
     );
   });
 
-  it('REVERT: Add process to already approved project', async () => {
-    await instance.approveProject({ from: accounts[1] });
-    await truffleAssert.reverts(
-      instance.addProcess(
-        supplier.logs[0].args[0],
+  it('REVERT: Add a process with non-existing supplier', async () => {
+    truffleAssert.reverts(
+      instance.addProcessToProject(
         accounts[3],
+        projectAddress,
+        web3.utils.fromAscii('Mecanizado'),
+        web3.utils.fromAscii('BGH')
+      ),
+      'Supplier does not exist'
+    );
+  });
+
+  it('REVERT: Add process to already approved project', async () => {
+    await instance.createSupplier(accounts[3], web3.utils.fromAscii('BGH'));
+    await projectInstance.approveProject({ from: accounts[1] });
+    await truffleAssert.reverts(
+      instance.addProcessToProject(
+        accounts[3],
+        projectAddress,
         web3.utils.fromAscii('Plateado'),
         web3.utils.fromAscii('NRS')
       ),
@@ -118,6 +148,7 @@ contract('Add Process', accounts => {
   });
   after(async () => {
     await instance.kill({ from: accounts[0] });
+    await projectInstance.kill({ from: accounts[0] });
   });
 });
 
@@ -132,23 +163,29 @@ contract('Approve Project', accounts => {
       web3.utils.fromAscii('Conjunto Soporte'),
       accounts[1]
     );
-    instance = await Project.at(result.logs[0].args[0]);
+    projectInstance = await Project.at(result.logs[0].args[0]);
   });
   it('EVENT: Approve a project', async () => {
-    const result = await instance.approveProject({ from: accounts[1] });
-
+    const result = await projectInstance.approveProject({ from: accounts[1] });
     truffleAssert.eventEmitted(result, 'ApproveProject');
+  });
+
+  it('REVERT: Approve project as owner', async () => {
+    await truffleAssert.reverts(
+      projectInstance.approveProject({ from: accounts[0] }),
+      'Only clients of this project can realize this operation'
+    );
   });
 
   it('REVERT: Approve project as non assigned client', async () => {
     await truffleAssert.reverts(
-      instance.approveProject({ from: accounts[2] }),
+      projectInstance.approveProject({ from: accounts[2] }),
       'Only clients of this project can realize this operation'
     );
   });
   it('REVERT: Approve of already approved project', async () => {
     await truffleAssert.reverts(
-      instance.approveProject({ from: accounts[1] }),
+      projectInstance.approveProject({ from: accounts[1] }),
       'Project already approved'
     );
   });

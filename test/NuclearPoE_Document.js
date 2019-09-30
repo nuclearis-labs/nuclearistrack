@@ -11,7 +11,8 @@ const Project = artifacts.require('../contracts/Project.sol');
 
 contract('Add Document', accounts => {
   let instance;
-  let project;
+  let projectAddress;
+  let projectInstance;
   before(async () => {
     instance = await NuclearPoE.deployed();
     await instance.createClient(accounts[1], web3.utils.fromAscii('NA-SA'));
@@ -25,18 +26,19 @@ contract('Add Document', accounts => {
       accounts[2],
       web3.utils.fromAscii('IMECO')
     );
-    project = await Project.at(result.logs[0].args[0]);
+    projectAddress = result.logs[0].args[0];
+    projectInstance = await Project.at(projectAddress);
 
-    await project.addProcess(
-      supplier.logs[0].args[0],
+    await instance.addProcessToProject(
       accounts[2],
+      projectAddress,
       web3.utils.fromAscii('Mecanizado'),
       web3.utils.fromAscii('BGH')
     );
   });
   it('REVERT: Add a document before approval of project', async () => {
     await truffleAssert.reverts(
-      project.addDocument(
+      projectInstance.addDocument(
         accounts[2],
         web3.utils.fromAscii('Certificado'),
         '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
@@ -48,8 +50,8 @@ contract('Add Document', accounts => {
     );
   });
   it('EVENT: Add a document', async () => {
-    await project.approveProject({ from: accounts[1] });
-    const result = await project.addDocument(
+    await projectInstance.approveProject({ from: accounts[1] });
+    const result = await projectInstance.addDocument(
       accounts[2],
       web3.utils.fromAscii('Certificado'),
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
@@ -60,7 +62,7 @@ contract('Add Document', accounts => {
   });
   it('REVERT: Add a duplicate document (same hash)', async () => {
     await truffleAssert.reverts(
-      project.addDocument(
+      projectInstance.addDocument(
         accounts[2],
         web3.utils.fromAscii('Certificado'),
         '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
@@ -77,6 +79,8 @@ contract('Add Document', accounts => {
 
 contract('Find Document', accounts => {
   let instance;
+  let projectAddress;
+  let projectInstance;
   before(async () => {
     instance = await NuclearPoE.deployed();
     await instance.createClient(accounts[1], web3.utils.fromAscii('NA-SA'));
@@ -90,16 +94,17 @@ contract('Find Document', accounts => {
       accounts[2],
       web3.utils.fromAscii('IMECO')
     );
-    project = await Project.at(result.logs[0].args[0]);
+    projectAddress = result.logs[0].args[0];
+    projectInstance = await Project.at(result.logs[0].args[0]);
 
-    await project.addProcess(
-      supplier.logs[0].args[0],
+    await instance.addProcessToProject(
       accounts[2],
+      projectAddress,
       web3.utils.fromAscii('Mecanizado'),
       web3.utils.fromAscii('BGH')
     );
-    await project.approveProject({ from: accounts[1] });
-    await project.addDocument(
+    await projectInstance.approveProject({ from: accounts[1] });
+    await projectInstance.addDocument(
       accounts[2],
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
       web3.utils.fromAscii('Certificado'),
@@ -107,7 +112,7 @@ contract('Find Document', accounts => {
     );
   });
   it('Find a document', async () => {
-    const result = await project.findDocument(
+    const result = await projectInstance.findDocument(
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd'
     );
     assert.equal(
@@ -118,7 +123,7 @@ contract('Find Document', accounts => {
   });
   it('REVERT: Find a non-existent document', async () => {
     await truffleAssert.reverts(
-      project.findDocument(
+      projectInstance.findDocument(
         '0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
       )
     );

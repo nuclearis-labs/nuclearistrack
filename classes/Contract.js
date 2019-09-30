@@ -50,17 +50,8 @@ class Contract {
       const transaction = new Promise((resolve, reject) => {
         web3.eth
           .sendSignedTransaction(`0x${serializedTx.toString('hex')}`)
-          .on('error', error => {
-            reject(error);
-          });
-
-        this.instance.events[eventName]()
-          .on('data', data => {
-            resolve(data);
-          })
-          .on('error', error => {
-            reject(error);
-          });
+          .on('transactionHash', hash => resolve(hash))
+          .on('error', error => reject(error));
       });
 
       const result = await transaction;

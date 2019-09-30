@@ -16,6 +16,15 @@ contract('Supplier Contracts', accounts => {
     instance = await NuclearPoE.deployed();
   });
 
+  it('REVERT: Create new supplier as non-owner', async () => {
+    await truffleAssert.reverts(
+      instance.createSupplier(accounts[2], web3.utils.fromAscii('IMECO'), {
+        from: accounts[1]
+      }),
+      'Only owner can make this change'
+    );
+  });
+
   it('Create supplier', async () => {
     const result = await instance.createSupplier(
       accounts[2],
@@ -27,6 +36,13 @@ contract('Supplier Contracts', accounts => {
     });
   });
 
+  it('REVERT: Create duplicate supplier', async () => {
+    await truffleAssert.reverts(
+      instance.createSupplier(accounts[2], web3.utils.fromAscii('IMECO')),
+      'Supplier already created'
+    );
+  });
+
   it('Return supplier projects', async () => {
     const contractDetails = await supplierInstance.contractDetails();
     assert.include(contractDetails[0], web3.utils.fromAscii('IMECO'));
@@ -34,5 +50,6 @@ contract('Supplier Contracts', accounts => {
 
   after(async () => {
     await instance.kill({ from: accounts[0] });
+    await supplierInstance.kill({ from: accounts[0] });
   });
 });

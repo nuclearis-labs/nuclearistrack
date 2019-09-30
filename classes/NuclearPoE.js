@@ -40,7 +40,6 @@ class NuclearPoE extends Contract {
         expediente,
         projectTitle: _projectTitle,
         clientAddress: _clientAddress,
-        contractAddress: this.result.returnValues.newProjectContractAddress,
         transactionHash: this.result.transactionHash,
         blockNumber: this.result.blockNumber
       };
@@ -112,7 +111,6 @@ class NuclearPoE extends Contract {
       this.result = await this.sendTx(_event);
 
       return {
-        contractAddress: this.result.returnValues.ContractAddress,
         transactionHash: this.result.transactionHash,
         blockNumber: this.result.blockNumber
       };

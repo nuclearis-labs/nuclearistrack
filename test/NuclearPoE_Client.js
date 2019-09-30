@@ -16,6 +16,15 @@ contract('Client Contracts', accounts => {
     instance = await NuclearPoE.deployed();
   });
 
+  it('REVERT: Create new client as non-owner', async () => {
+    await truffleAssert.reverts(
+      instance.createClient(accounts[1], web3.utils.fromAscii('NA-SA'), {
+        from: accounts[1]
+      }),
+      'Only owner can make this change'
+    );
+  });
+
   it('Create client', async () => {
     const result = await instance.createClient(
       accounts[1],
@@ -25,6 +34,13 @@ contract('Client Contracts', accounts => {
     truffleAssert.eventEmitted(result, 'CreateClient', ev => {
       return ev.ContractAddress;
     });
+  });
+
+  it('REVERT: Create duplicate client', async () => {
+    await truffleAssert.reverts(
+      instance.createClient(accounts[1], web3.utils.fromAscii('NA-SA')),
+      'Client already created'
+    );
   });
 
   it('Return client projects', async () => {

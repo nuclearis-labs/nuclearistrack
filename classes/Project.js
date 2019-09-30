@@ -34,22 +34,41 @@ class Project extends Contract {
     }
   }
 
-  async addProcess(_supplierAddress, _processName, _supplierName) {
+  async addProcess(
+    _supplierContractAddress,
+    _supplierAddress,
+    _processName,
+    _supplierName
+  ) {
     try {
       utils.isValidAddress(_supplierAddress);
+      utils.isValidAddress(_supplierContractAddress);
       utils.isString(_processName);
       utils.isString(_supplierName);
 
       const supplierAddress = utils.toChecksumAddress(_supplierAddress);
+      const supplierContractAddress = utils.toChecksumAddress(
+        _supplierContractAddress
+      );
       const processName = utils.toBytes32(_processName);
       const supplierName = utils.toBytes32(_supplierName);
 
       // Prepare data package and estimate gas cost
       this.data = this.instance.methods
-        .addProcess(supplierAddress, processName, supplierName)
+        .addProcess(
+          supplierContractAddress,
+          supplierAddress,
+          processName,
+          supplierName
+        )
         .encodeABI();
       this.gaslimit = await this.instance.methods
-        .addProcess(supplierAddress, processName, supplierName)
+        .addProcess(
+          supplierContractAddress,
+          supplierAddress,
+          processName,
+          supplierName
+        )
         .estimateGas({ from: this.wallet });
       this.result = await this.sendTx(
         'AddProcess',

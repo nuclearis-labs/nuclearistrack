@@ -43,6 +43,7 @@ contract NuclearPoE {
     event CreateClient(address ContractAddress);
     event CreateSupplier(address ContractAddress);
 
+
     function createProject(uint _expediente, bytes32 _projectTitle, address _clientAddress) external onlyOwner() {
         require(projectContracts[_expediente].created == false, "Project already created");
         require(client[_clientAddress].created == true, "Client does not exist");
@@ -63,7 +64,7 @@ contract NuclearPoE {
     function createSupplier(address _supplierAddress, bytes32 _supplierName) external onlyOwner() {
         require(supplier[_supplierAddress].created == false,"Supplier already created");
 
-        address ContractAddress = address(new Supplier(_supplierName));
+        address ContractAddress = address(new Supplier(_supplierName, _supplierAddress));
 
         supplier[_supplierAddress] = SupplierStruct(ContractAddress, true);
         supplierCount++;
@@ -74,12 +75,20 @@ contract NuclearPoE {
     function createClient(address _clientAddress, bytes32 _clientName) external onlyOwner() {
         require(client[_clientAddress].created == false,"Client already created");
 
-        address ContractAddress = address(new Client(_clientName));
+        address ContractAddress = address(new Client(_clientName, _clientAddress));
 
         client[_clientAddress] = ClientStruct(ContractAddress, true);
         clientCount++;
 
         emit CreateClient(ContractAddress);
+    }
+
+    function addProcessToProject(address _supplierAddress, address _projectContractAddress, bytes32 _processName, bytes32 _supplierName) external onlyOwner() {
+        require(supplier[_supplierAddress].created == true,"Supplier does not exist");
+
+         Project project = Project(_projectContractAddress);
+
+        project.addProcess(_supplierAddress, _processName, _supplierName);
     }
 }
 
@@ -102,7 +111,7 @@ contract Project {
     struct Process {
         bytes32 processName;
         bytes32 supplierName;
-        address supplierContractAddress;
+        address supplierAddress;
         bool created;
     }
 
@@ -122,7 +131,6 @@ contract Project {
         expediente = _expediente;
         title = _title;
         clientAddress = _clientAddress;
-        owner = msg.sender; // TEMP
     }
 
     function addDocument (address _supplierAddress, bytes32 _hash, bytes32 _documentName) external {
@@ -145,9 +153,10 @@ contract Project {
             document[_hash].documentTitle
             );
     }
+
     // TEMP
     function kill() public {
-        selfdestruct(owner);
+        selfdestruct(msg.sender);
     }
 
     function approveProject() external {
@@ -157,14 +166,14 @@ contract Project {
         emit ApproveProject();
     }
 
-    function addProcess(address _supplierContractAddress, address _supplierAddress, bytes32 _processName, bytes32 _supplierName) external {
+    function addProcess(address _supplierAddress, bytes32 _processName, bytes32 _supplierName) external {
         require(process[_supplierAddress].created == false,"Process already created");
         require(approved == false,"Project is already approved by client");
 
         supplierCount++;
         supplierAddresses.push(_supplierAddress);
 
-        process[_supplierAddress] = Process(_processName, _supplierName, _supplierContractAddress, true);
+        process[_supplierAddress] = Process(_processName, _supplierName, _supplierAddress, true);
 
         emit AddProcess();
     }
@@ -183,13 +192,14 @@ contract Project {
 contract Client {
 
     bytes32 private name;
+    address private clientAddress;
     address[] private projectAddresses;
     uint private projectCount;
     address payable owner;
 
-    constructor (bytes32 _name) public {
+    constructor (bytes32 _name, address _address) public {
         name = _name;
-        owner = msg.sender; // TEMP
+        clientAddress = _address;
     }
 
     function contractDetails() external view returns (bytes32, address[] memory) {
@@ -198,7 +208,7 @@ contract Client {
 
     // TEMP
     function kill() public {
-        selfdestruct(owner);
+        selfdestruct(msg.sender);
     }
 
     function addProject(address _a) external {
@@ -212,15 +222,23 @@ contract Client {
 contract Supplier {
 
     bytes32 private name;
+    address private supplierAddress;
     address[] private projectAddresses;
     uint private projectCount;
+    address payable owner;
 
-    constructor (bytes32 supplierName) public {
-        name = supplierName;
+    constructor (bytes32 _name, address _address) public {
+        name = _name;
+        supplierAddress = _address;
     }
 
     function contractDetails() external view returns (bytes32, address[] memory) {
         return (name, projectAddresses);
+    }
+
+      // TEMP
+    function kill() public {
+        selfdestruct(msg.sender);
     }
 
     function addProject(address _a) external {

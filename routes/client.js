@@ -72,8 +72,8 @@ router.post(
         .generatePublicKey()
         .generateRSKAddress();
 
-      const validate = wallet.rskAddressFromPublicKey === user.address;
-      if (validate) res.json({ message: 'Estas logueado' });
+      if (wallet.rskAddressFromPublicKey === user.address)
+        res.json({ message: 'Estas logueado' });
       else throw Error();
     } catch (e) {
       res.json({ error: 'Usuario o contraseña incorrecta' });
