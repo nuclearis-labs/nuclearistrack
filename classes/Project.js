@@ -18,13 +18,9 @@ class Project extends Contract {
       this.gaslimit = await this.instance.methods
         .approveProject()
         .estimateGas({ from: this.wallet });
-      this.result = await this.sendTx(
-        'ApproveProject',
-        this.instance.options.address
-      );
+      this.result = await this.sendTx(this.instance.options.address);
 
       return {
-        expediente: this.result.returnValues.expediente,
         contractAddress: this.instance.options.address,
         transactionHash: this.result.transactionHash,
         blockNumber: this.result.blockNumber
@@ -70,10 +66,7 @@ class Project extends Contract {
           supplierName
         )
         .estimateGas({ from: this.wallet });
-      this.result = await this.sendTx(
-        'AddProcess',
-        this.instance.options.address
-      );
+      this.result = await this.sendTx(this.instance.options.address);
       return {
         supplierAddress: _supplierAddress,
         supplierName: _supplierName,

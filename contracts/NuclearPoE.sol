@@ -51,6 +51,10 @@ contract NuclearPoE {
         address ProjectContractAddress = address(new Project(_expediente, _projectTitle, _clientAddress));
         projectContracts[_expediente] = ProjectStruct(ProjectContractAddress, true);
 
+        Client clientContractInstance = Client(client[_clientAddress].contractAddress);
+
+        clientContractInstance.addProject(ProjectContractAddress);
+
         projectContractsArray.push(ProjectContractAddress);
         projectCount++;
 
@@ -86,8 +90,10 @@ contract NuclearPoE {
     function addProcessToProject(address _supplierAddress, address _projectContractAddress, bytes32 _processName, bytes32 _supplierName) external onlyOwner() {
         require(supplier[_supplierAddress].created == true,"Supplier does not exist");
 
-         Project project = Project(_projectContractAddress);
+        Supplier supplierContractInstance = Supplier(supplier[_supplierAddress].contractAddress);
+        supplierContractInstance.addProject(_projectContractAddress);
 
+        Project project = Project(_projectContractAddress);
         project.addProcess(_supplierAddress, _processName, _supplierName);
     }
 }
@@ -172,7 +178,6 @@ contract Project {
 
         supplierCount++;
         supplierAddresses.push(_supplierAddress);
-
         process[_supplierAddress] = Process(_processName, _supplierName, _supplierAddress, true);
 
         emit AddProcess();

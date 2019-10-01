@@ -4,6 +4,7 @@ const Wallet = require('../classes/Wallet');
 const NuclearPoE = require('../classes/NuclearPoE');
 const Client = require('../classes/Client');
 const ClientModel = require('../models/client');
+const { getKeys } = require('../functions/utils');
 
 const router = express.Router({ mergeParams: true });
 
@@ -11,42 +12,41 @@ router.post(
   '/',
   asyncMiddleware(async (req, res) => {
     try {
-      const user = await ClientModel.findOne({ username: req.body.clientName });
+      const user = await ClientModel.findOne({ email: req.body.newEmail });
 
       if (user) {
-        throw Error('A user with the given username is already registered');
+        throw Error('A user with the given email is already registered');
       }
 
-      const wallet = new Wallet(true);
+      const { wallet, privKey } = await getKeys(req.body);
+
+      const walletGen = new Wallet(true);
 
       // Generation of encrypted privatekey and address
-      wallet
+      walletGen
+        .generatePrivateKey()
         .generateWifPrivateKey()
         .generatePublicKey()
         .generateRSKAddress()
-        .encryptBIP38(req.body.passphrase)
+        .encryptBIP38(req.body.newPassphrase)
         .toHex(['rskAddressFromPublicKey']);
 
-      const nuclear = new NuclearPoE(req.body.wallet, req.body.privateKey);
+      const nuclear = new NuclearPoE(wallet, privKey);
 
       const tx = await nuclear.createThirdParty(
-        wallet.rskAddressFromPublicKey,
+        walletGen.rskAddressFromPublicKey,
         req.body.clientName,
-        'createClient',
-        'CreateClient'
+        'createClient'
       );
 
       // Create DB record and hash password
-      const result = await ClientModel.register(
-        new ClientModel({
-          username: req.body.clientName,
-          email: req.body.email,
-          address: wallet.rskAddressFromPublicKey,
-          contract: tx.contractAddress,
-          encryptedPrivateKey: wallet.encryptedKey
-        }),
-        req.body.password
-      );
+      const result = await ClientModel.create({
+        username: req.body.clientName,
+        email: req.body.newEmail,
+        address: walletGen.rskAddressFromPublicKey,
+        contract: tx.contractAddress,
+        encryptedPrivateKey: walletGen.encryptedKey
+      });
 
       res.json({ result });
     } catch (e) {

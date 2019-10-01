@@ -1,12 +1,18 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-await-in-loop */
 const fs = require('fs');
-const web3 = require('web3');
+const Web3 = require('web3');
 const Contract = require('./Contract');
 const Project = require('./Project');
 const utils = require('../functions/utils');
 
-const NuclearPoEBin = fs.readFileSync('temp/__NuclearPoE_sol_NuclearPoE.bin');
+const web3 = new Web3(
+  new Web3.providers.WebsocketProvider('ws://127.0.0.1:8545')
+);
+
+const NuclearPoEBin = JSON.parse(
+  fs.readFileSync('build/contracts/NuclearPoE.json')
+).bytecode;
 const nuclearPoEABI = JSON.parse(
   fs.readFileSync('build/contracts/NuclearPoE.json')
 ).abi;
@@ -34,7 +40,7 @@ class NuclearPoE extends Contract {
       this.gaslimit = await this.instance.methods
         .createProject(expediente, projectTitle, clientAddress)
         .estimateGas({ from: this.wallet });
-      this.result = await this.sendTx('CreateProject');
+      this.result = await this.sendTx();
 
       return {
         expediente,
@@ -49,22 +55,29 @@ class NuclearPoE extends Contract {
   }
 
   // ATENTION! Temporal method for testing..
-  async createNewNuclearPoE() {
+  async createNewNuclearPoE(privKey) {
     try {
       const newContract = new web3.eth.Contract(nuclearPoEABI);
-      newContract
-        .deploy({ data: NuclearPoEBin.toString() })
-        .send({
-          from: '0x59484aA6E2C33B96E541CfC6Ce0d59c18f7b7Bb1',
-          gas: 5000000,
-          gasPrice: 0
-        })
-        .then(newContractInstance => {
-          this.NuclearPoEAddress = newContractInstance.options.address;
-        });
-      return this;
+      const account = web3.eth.accounts.wallet.add(privKey);
+
+      const tx = new Promise((resolve, reject) => {
+        newContract
+          .deploy({ data: NuclearPoEBin.toString() })
+          .send({
+            from: account.address,
+            gas: 9000000,
+            gasPrice: 0
+          })
+          .on('error', error => reject(error))
+          .then(newContractInstance => {
+            resolve(newContractInstance.options.address);
+          });
+      });
+
+      const txResolved = await tx;
+      return txResolved;
     } catch (e) {
-      throw Error('Problem deploying NuclearPoE Contract');
+      throw Error(e);
     }
   }
 
@@ -108,7 +121,7 @@ class NuclearPoE extends Contract {
         clientAddress,
         clientName
       ).estimateGas({ from: this.wallet });
-      this.result = await this.sendTx(_event);
+      this.result = await this.sendTx();
 
       return {
         transactionHash: this.result.transactionHash,

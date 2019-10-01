@@ -43,7 +43,6 @@ class Wallet {
   }
 
   generateWifPrivateKey() {
-    this.generatePrivateKey();
     this.wifPrivKey = wif.encode(this.network, this.privKey, true);
     return this;
   }

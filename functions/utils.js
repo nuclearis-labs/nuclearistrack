@@ -1,4 +1,7 @@
 const web3 = require('web3');
+const UserModel = require('../models/user');
+const ClientModel = require('../models/client');
+const Wallet = require('../classes/Wallet');
 
 module.exports.isValidAddress = address => {
   if (!web3.utils.isAddress(address))
@@ -29,4 +32,22 @@ module.exports.toAscii = bytes32 => {
 module.exports.convertResult = object => {
   const result = Object.values(object.result);
   return result;
+};
+
+module.exports.getKeys = async ({ email, passphrase }) => {
+  const user = await ClientModel.findOne({ email: email });
+
+  const wallet = new Wallet(true);
+
+  wallet.encryptedKey = user.encryptedPrivateKey;
+
+  wallet
+    .decryptBIP38(passphrase)
+    .generatePublicKey()
+    .generateRSKAddress();
+
+  return {
+    wallet: wallet.rskAddressFromPublicKey,
+    privKey: wallet.privKey.toString('hex')
+  };
 };

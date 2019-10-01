@@ -27,7 +27,7 @@ class Contract {
    * @memberof Blockchain
    */
   // eslint-disable-next-line consistent-return
-  async sendTx(eventName, contractAddress = process.env.SCADDRESS) {
+  async sendTx(contractAddress = process.env.SCADDRESS) {
     let rawTx;
     let serializedTx;
     try {

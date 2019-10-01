@@ -5,26 +5,38 @@
 
 const NuclearPoE = artifacts.require('../contracts/NuclearPoE.sol');
 const Project = artifacts.require('../contracts/Project.sol');
+const Client = artifacts.require('../contracts/Client.sol');
+const Supplier = artifacts.require('../contracts/Supplier.sol');
 const { assert } = require('chai');
 const truffleAssert = require('truffle-assertions');
 const web3 = require('web3');
 
 contract('Create Project', accounts => {
   let instance;
+  let clientInstance;
   before(async () => {
     instance = await NuclearPoE.deployed();
   });
-  it('EVENT: Create a new project', async () => {
-    await instance.createClient(accounts[1], web3.utils.fromAscii('NA-SA'));
+  it('EVENT: Create a new project and add to Client Contract', async () => {
+    const client = await instance.createClient(
+      accounts[1],
+      web3.utils.fromAscii('NA-SA')
+    );
+
+    let clientAddress = client.logs[0].args[0];
+    clientInstance = await Client.at(clientAddress);
+
     const result = await instance.createProject(
       41955,
       web3.utils.fromAscii('Conjunto Soporte'),
       accounts[1]
     );
+    let final = await clientInstance.contractDetails();
 
     truffleAssert.eventEmitted(result, 'CreateProject', ev => {
       return ev.newProjectContractAddress;
     });
+    assert.equal(result.logs[0].args[0], final[1][0]);
   });
 
   it('REVERT: Create duplicate project', async () => {
@@ -98,15 +110,19 @@ contract('Add Process', accounts => {
     );
   });
 
-  it('EVENT: Add a process', async () => {
-    truffleAssert.passes(
-      instance.addProcessToProject(
-        accounts[2],
-        projectAddress,
-        web3.utils.fromAscii('Mecanizado'),
-        web3.utils.fromAscii('BGH')
-      )
+  it('EVENT: Add a process and add to Supplier Contract', async () => {
+    const result = await instance.addProcessToProject(
+      accounts[2],
+      projectAddress,
+      web3.utils.fromAscii('Mecanizado'),
+      web3.utils.fromAscii('BGH')
     );
+
+    const supplierAddress = supplier.logs[0].args[0];
+    const supplierContract = await Supplier.at(supplierAddress);
+    let final = await supplierContract.contractDetails();
+
+    assert.equal(final[1][0], projectAddress);
   });
 
   it('REVERT: Add duplicate process', async () => {

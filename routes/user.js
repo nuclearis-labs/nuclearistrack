@@ -1,45 +1,59 @@
 const express = require('express');
-const passport = require('passport');
-const User = require('../classes/User');
 const { asyncMiddleware } = require('../middleware/index');
+const Wallet = require('../classes/Wallet');
+const NuclearPoE = require('../classes/NuclearPoE');
+const UserModel = require('../models/user');
+const { getKeys } = require('../functions/utils');
 
 const router = express.Router({ mergeParams: true });
 
 router.post(
   '/',
   asyncMiddleware(async (req, res) => {
-    await new User(req.body).createUser();
+    try {
+      const user = await UserModel.findOne({ email: req.body.email });
 
-    passport.authenticate('local')(req, res, () => {
-      res.redirect('/');
-    });
-  })
-);
+      if (user) {
+        throw Error('A user with the given email is already registered');
+      }
 
-router.get(
-  '/',
-  asyncMiddleware(async (req, res) => {
-    const userList = await User.listUser(
-      { active: true },
-      { username: 1, mail: 1 }
-    );
-    res.json(userList);
+      const wallet = new Wallet(true);
+      wallet
+        .generatePrivateKey()
+        .generateWifPrivateKey()
+        .generatePublicKey()
+        .generateRSKAddress()
+        .encryptBIP38(req.body.passphrase)
+        .toHex(['rskAddressFromPublicKey']);
+
+      const result = await UserModel.create({
+        username: req.body.clientName,
+        email: req.body.email,
+        address: wallet.rskAddressFromPublicKey,
+        privateKey: wallet.privKey.toString('hex'),
+        encryptedPrivateKey: wallet.encryptedKey
+      });
+
+      res.json({ result });
+    } catch (e) {
+      res.json({ error: e.message });
+    }
   })
 );
 
 router.post(
-  '/delete/:id',
+  '/createNuclear',
   asyncMiddleware(async (req, res) => {
-    const user = await User.deleteUser(req.params.id);
-    res.json({ message: 'User successfully removed', data: user });
-  })
-);
+    try {
+      const { wallet, privKey } = await getKeys(req.body);
 
-router.post(
-  '/update/:id',
-  asyncMiddleware(async (req, res) => {
-    const user = await new User(req.body).updateUser(req.params.id);
-    res.json({ message: 'User successfully updated', data: user });
+      const nuclear = new NuclearPoE();
+      const contractAddress = await nuclear.createNewNuclearPoE('0x' + privKey);
+
+      res.json({ contractAddress, wallet, privKey });
+    } catch (e) {
+      res.json({ error: e.message });
+    }
   })
 );
 
