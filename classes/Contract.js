@@ -8,16 +8,17 @@ const web3 = new Web3C(
 );
 
 class Contract {
-  constructor(wallet, privateKey) {
+  constructor(wallet, privateKey, abi) {
     if (wallet && privateKey) {
       const privateBuffer = Buffer.from(privateKey, 'hex');
       this.wallet = wallet;
       this.private = privateBuffer;
+      this.abi = abi;
     }
   }
 
-  initiateContract(abi, address) {
-    return new web3.eth.Contract(abi, address);
+  initiateContract(address = process.env.SCADDRESS) {
+    return new web3.eth.Contract(this.abi, address);
   }
 
   /**

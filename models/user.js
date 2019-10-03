@@ -5,8 +5,7 @@ const userSchema = new mongoose.Schema({
   email: String,
   address: String,
   contract: String,
-  privateKey: String,
   encryptedPrivateKey: String
 });
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('Client', userSchema);

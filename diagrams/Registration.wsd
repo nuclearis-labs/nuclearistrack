@@ -1,0 +1,82 @@
+@startuml Registration
+title Registration Sequence
+
+actor Administrator
+actor User
+participant User order 5
+participant Administrator order 10
+participant RegistrationForm order 20
+participant RegistrationRoute order 30
+participant "Validator()" order 40
+participant "Wallet()" order 50
+participant Database order 60
+participant Blockchain order 70
+
+Administrator -> RegistrationForm: Enter email and name
+activate RegistrationForm
+RegistrationForm->RegistrationRoute: Send form data
+activate RegistrationRoute
+RegistrationRoute->"Validator()": Validate email and name
+activate "Validator()"
+
+alt if email or name is not correct type
+    return Email or Name is not correct type
+    return Send corresponding type error
+    return Display error
+
+else if email and name is correct type
+    "Validator()"-->RegistrationRoute: Email and Name are correct types
+    activate RegistrationRoute
+    RegistrationRoute->Database: Check if email is duplicate
+    deactivate RegistrationRoute
+    alt if email is duplicate
+
+        Database-->RegistrationRoute: Email is duplicate
+        RegistrationRoute-->RegistrationForm: Send "User already registered"
+        RegistrationForm-->Administrator: Display error
+
+    else if email is new
+
+        Database-->RegistrationRoute: Email is not duplicate
+        activate RegistrationRoute
+        return Create new record with user
+        activate Database
+        return Record successfully created
+        activate RegistrationRoute
+        RegistrationRoute-->User: Send email to user with instructions and token
+        activate User
+        User->RegistrationForm: Complete form generated with token \n with passphrase and email
+        deactivate User
+        activate RegistrationForm
+        RegistrationForm->RegistrationRoute: Send form data
+        deactivate RegistrationForm
+        RegistrationRoute->"Validator()": Validate passphrase type
+        deactivate RegistrationRoute
+
+            alt if passphrase is not correct type
+                "Validator()"-->RegistrationRoute: Passphrase is not correct type
+                RegistrationRoute-->RegistrationForm: Send corresponding type error
+                RegistrationForm-->User: Display error
+            else if passphrase is correct type
+                "Validator()"-->RegistrationRoute: Passphrase is correct type
+                RegistrationRoute->"Wallet()": Create new encrypted private Key and Address
+                "Wallet()"-->RegistrationRoute: Return new Wallet
+
+                RegistrationRoute->Database: Update User record with wallet information
+                Database-->RegistrationRoute: Record successfully updated
+                
+                RegistrationRoute->Blockchain: Create Client in NuclearPoE Contract and \n deploy Client Contract
+                RegistrationRoute-->Administrator: Notify via email of User Creation
+                RegistrationRoute-->RegistrationForm: Send User Data
+                RegistrationForm-->User: Display successfull User Creation
+                deactivate RegistrationForm
+                    ...When Blockchain fires CreateClient Event...
+                Blockchain-->RegistrationRoute: Return transaction hash and event of client creation
+                RegistrationRoute-->User: Notify via email of User Creation on the Blockchain
+                RegistrationRoute-->Administrator: Notify via email of User Creation on the Blockchain
+                deactivate RegistrationRoute
+
+            end
+    end
+end
+@enduml

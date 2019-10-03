@@ -45,7 +45,10 @@ router.post(
   '/createNuclear',
   asyncMiddleware(async (req, res) => {
     try {
-      const { wallet, privKey } = await getKeys(req.body);
+      const email = req.body.email;
+      const passphrase = req.body.passphrase;
+
+      const { wallet, privKey } = await getKeys(email, passphrase);
 
       const nuclear = new NuclearPoE();
       const contractAddress = await nuclear.createNewNuclearPoE('0x' + privKey);

@@ -7,11 +7,12 @@ const router = express.Router({ mergeParams: true });
 
 router.post('/verify/:contract', upload.single('file'), async (req, res) => {
   try {
-    const process = await new Process(
-      req.params.contract,
-      req.body.wallet,
-      req.body.privateKey
-    );
+    const email = req.body.newEmail;
+    const passphrase = req.body.passphrase;
+    const { wallet, privKey } = await getKeys(email, passphrase);
+
+    const process = new Process(wallet, privKey);
+    process.initiateContract(req.params.contract);
 
     const result = await process.verifyDocument(req.file);
 
@@ -23,11 +24,12 @@ router.post('/verify/:contract', upload.single('file'), async (req, res) => {
 
 router.post('/upload/:contract', upload.single('file'), async (req, res) => {
   try {
-    const process = new Process(
-      req.params.contract,
-      req.body.wallet,
-      req.body.privateKey
-    );
+    const email = req.body.newEmail;
+    const passphrase = req.body.passphrase;
+    const { wallet, privKey } = await getKeys(email, passphrase);
+
+    const process = new Process(wallet, privKey);
+    process.initiateContract(req.params.contract);
 
     const result = await process.addDocument(
       req.body.supplierAddress,
@@ -42,16 +44,19 @@ router.post('/upload/:contract', upload.single('file'), async (req, res) => {
 });
 
 router.post('/get/:contract', async (req, res) => {
-  const process = new Process(
-    req.params.contract,
-    req.body.wallet,
-    req.body.privateKey
-  );
   try {
+    const email = req.body.newEmail;
+    const passphrase = req.body.passphrase;
+    const { wallet, privKey } = await getKeys(email, passphrase);
+
+    const process = new Process(wallet, privKey);
+    process.initiateContract(req.params.contract);
+
     const {
       documents,
       projectContractAddress
     } = await process.returnDocuments();
+
     res.json({ projectContractAddress, documents });
   } catch (e) {
     res.json({ error: e.message });

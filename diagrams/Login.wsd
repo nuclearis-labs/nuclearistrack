@@ -1,0 +1,68 @@
+@startuml Login
+title Login Sequence
+
+actor User
+participant User order 10
+participant LoginForm order 20
+participant LoginRoute order 30
+participant "Validator()" order 40
+participant "Wallet()" order 50
+participant Database order 60
+
+User -> LoginForm: Enter email and passphrase
+activate LoginForm
+LoginForm->LoginRoute: Enviar form data
+activate LoginRoute
+LoginRoute->"Validator()": validate email
+activate "Validator()"
+
+"Validator()"->"Validator()": validate email for type
+
+alt if email is not type email
+    "Validator()"-->LoginRoute: Email is not type email
+    LoginRoute-->LoginForm: Send error "Email not type email"
+    LoginForm-->User: Display error
+
+else if email is valid type
+    "Validator()"->Database: check for email existance
+    activate Database
+
+    alt if email exists
+        Database-->"Validator()": email exists
+        "Validator()" --> LoginRoute: return true
+        LoginRoute->"Validator()": send passphrase
+        "Validator()"->"Wallet()": validate passphrase
+
+        activate "Wallet()"
+        "Wallet()"->Database: check for stored address
+
+        activate Database
+        Database-->"Wallet()": returns stored address
+
+        deactivate Database
+        "Wallet()"-->"Validator()": returns generated address \n from decrypted key \n and stored address
+
+        deactivate "Wallet()"
+
+        alt if generated address doesn't match stored address
+            "Validator()"-->LoginRoute: return false
+            LoginRoute-->LoginForm: Send error \n "Email or passphrase incorrect"
+            LoginForm-->User: Display error
+        else if generated address matches stored address
+            "Validator()"-->LoginRoute: return true
+            LoginRoute-->LoginForm: return User
+            LoginForm-->User: confirm successfull Login
+        end 
+
+    else if email doesn't exist
+        Database-->"Validator()": email doesn't exist
+        deactivate Database
+        "Validator()" --> LoginRoute: return false
+        deactivate "Validator()"
+        LoginRoute-->LoginForm: Send error \n "Email or passphrase incorrect"
+        deactivate LoginRoute
+        LoginForm-->User: Display error
+        deactivate LoginForm
+    end
+end
+@enduml

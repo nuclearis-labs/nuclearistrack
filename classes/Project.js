@@ -6,14 +6,12 @@ const projectABI = JSON.parse(fs.readFileSync('build/contracts/Project.json'))
   .abi;
 
 class Project extends Contract {
-  constructor(address, wallet, privateKey) {
-    super(wallet, privateKey);
-    this.instance = this.initiateContract(projectABI, address);
+  constructor(wallet, privateKey) {
+    super(wallet, privateKey, projectABI);
   }
 
   async approve() {
     try {
-      // Prepare data package and estimate gas cost
       this.data = this.instance.methods.approveProject().encodeABI();
       this.gaslimit = await this.instance.methods
         .approveProject()

@@ -2,17 +2,19 @@ const express = require('express');
 const storage = require('multer').memoryStorage();
 const upload = require('multer')({ storage });
 const Project = require('../classes/Project');
-const Process = require('../classes/Process');
+const { getKeys } = require('../functions/utils');
 
 const router = express.Router({ mergeParams: true });
 
 router.post('/create/:contract', async (req, res) => {
-  const process = new Project(
-    req.params.contract,
-    req.body.wallet,
-    req.body.privateKey
-  );
   try {
+    const email = req.body.newEmail;
+    const passphrase = req.body.passphrase;
+    const { wallet, privKey } = await getKeys(email, passphrase);
+
+    const process = new Project(wallet, privKey);
+    process.initiateContract(req.params.contract);
+
     const result = await process.addProcess(
       req.body.projectContractAddress,
       req.body.supplierAddress,
@@ -27,16 +29,19 @@ router.post('/create/:contract', async (req, res) => {
 });
 
 router.post('/get/:contract', async (req, res) => {
-  const process = new Project(
-    req.params.contract,
-    req.body.wallet,
-    req.body.privateKey
-  );
   try {
+    const email = req.body.newEmail;
+    const passphrase = req.body.passphrase;
+    const { wallet, privKey } = await getKeys(email, passphrase);
+
+    const process = new Project(wallet, privKey);
+    process.initiateContract(req.params.contract);
+
     const {
       processList,
       projectContractAddress
     } = await process.getAllProcessByProject(req.body.contractAddress);
+
     res.json({ processList, projectContractAddress });
   } catch (e) {
     res.json({ error: e.message });

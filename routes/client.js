@@ -3,7 +3,7 @@ const { asyncMiddleware } = require('../middleware/index');
 const Wallet = require('../classes/Wallet');
 const NuclearPoE = require('../classes/NuclearPoE');
 const Client = require('../classes/Client');
-const ClientModel = require('../models/client');
+const Validator = require('../classes/Validator');
 const { getKeys } = require('../functions/utils');
 
 const router = express.Router({ mergeParams: true });
@@ -18,11 +18,7 @@ router.post(
         throw Error('A user with the given email is already registered');
       }
 
-      const { wallet, privKey } = await getKeys(req.body);
-
       const walletGen = new Wallet(true);
-
-      // Generation of encrypted privatekey and address
       walletGen
         .generatePrivateKey()
         .generateWifPrivateKey()
@@ -31,11 +27,14 @@ router.post(
         .encryptBIP38(req.body.newPassphrase)
         .toHex(['rskAddressFromPublicKey']);
 
+      const email = req.body.newEmail;
+      const passphrase = req.body.passphrase;
+      const { wallet, privKey } = await getKeys(email, passphrase);
       const nuclear = new NuclearPoE(wallet, privKey);
 
       const tx = await nuclear.createThirdParty(
-        walletGen.rskAddressFromPublicKey,
-        req.body.clientName,
+        Validator.checkAndConvertAddress(walletGen.rskAddressFromPublicKey),
+        Validator.checkAndConvertString(req.body.clientName),
         'createClient'
       );
 
@@ -66,7 +65,6 @@ router.post(
       const wallet = new Wallet(true);
 
       wallet.encryptedKey = user.encryptedPrivateKey;
-      // Generation of encrypted privatekey and address
       wallet
         .decryptBIP38(req.body.passphrase)
         .generatePublicKey()
@@ -85,10 +83,9 @@ router.post(
   '/change',
   asyncMiddleware(async (req, res) => {
     try {
-      const wallet = new Wallet(true);
       const client = await ClientModel.findById('');
 
-      // Generation of encrypted privatekey and address
+      const wallet = new Wallet(true);
       wallet
         .decryptBIP38(client.encryptedPrivateKey, req.body.passphrase)
         .encryptBIP38(req.body.newPassphrase);

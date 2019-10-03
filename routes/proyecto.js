@@ -1,20 +1,26 @@
 const express = require('express');
 const NuclearPoE = require('../classes/NuclearPoE');
 const Project = require('../classes/Project');
+const Validator = require('../classes/Validator');
 const { getKeys } = require('../functions/utils');
 
 const router = express.Router({ mergeParams: true });
 
 router.post('/', async (req, res) => {
   try {
-    const { wallet, privKey } = await getKeys(req.body);
+    const email = req.body.newEmail;
+    const passphrase = req.body.passphrase;
+    const { wallet, privKey } = await getKeys(email, passphrase);
 
     const nuclear = new NuclearPoE(wallet, privKey);
+    nuclear.initiateContract();
+
     const response = await nuclear.addProject(
-      parseInt(req.body.expediente, 10),
-      req.body.proyectoTitle,
-      req.body.clientAddress
+      Validator.checkAndConvertNumber(req.body.expediente),
+      Validator.checkAndConvertString(req.body.proyectoTitle),
+      Validator.checkAndConvertAddress(req.body.clientAddress)
     );
+
     res.json({ response });
   } catch (e) {
     res.json({ error: e.message });
@@ -22,13 +28,20 @@ router.post('/', async (req, res) => {
 });
 
 router.post('/approve/:contract', async (req, res) => {
-  const { wallet, privKey } = await getKeys(req.body);
-  console.log(wallet);
-  console.log(privKey);
-
-  const project = new Project(req.params.contract, wallet, privKey);
   try {
+    const email = req.body.newEmail;
+    const passphrase = req.body.passphrase;
+    const { wallet, privKey } = await getKeys(email, passphrase);
+
+    const contractAddress = Validator.checkAndConvertAddress(
+      req.params.contract
+    );
+
+    const project = new Project(wallet, privKey);
+    project.initiateContract(contractAddress);
+
     const result = await project.approve();
+
     res.json({ result });
   } catch (e) {
     res.json({ error: e.message });
@@ -36,11 +49,17 @@ router.post('/approve/:contract', async (req, res) => {
 });
 
 router.post('/get', async (req, res) => {
-  const { wallet, privKey } = await getKeys(req.body);
-
-  const proyecto = new NuclearPoE(wallet, privKey);
   try {
+    const email = req.body.newEmail;
+    const passphrase = req.body.passphrase;
+
+    const { wallet, privKey } = await getKeys(email, passphrase);
+
+    const proyecto = new NuclearPoE(wallet, privKey);
+    nuclear.initiateContract();
+
     const result = await proyecto.returnAllProjects();
+
     res.json({ result });
   } catch (e) {
     res.json({ error: e.message });
@@ -48,10 +67,14 @@ router.post('/get', async (req, res) => {
 });
 
 router.post('/details/:contract', async (req, res) => {
-  const { wallet, privKey } = await getKeys(req.body);
-
-  const project = new Project(req.params.contract, wallet, privKey);
   try {
+    const email = req.body.newEmail;
+    const passphrase = req.body.passphrase;
+    const { wallet, privKey } = await getKeys(email, passphrase);
+
+    const project = new Project(wallet, privKey);
+    project.initiateContract(req.params.contract);
+
     const result = await project.getDetails();
 
     res.json(result);

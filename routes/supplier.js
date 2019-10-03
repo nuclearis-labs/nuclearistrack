@@ -3,7 +3,6 @@ const { asyncMiddleware } = require('../middleware/index');
 const Wallet = require('../classes/Wallet');
 const NuclearPoE = require('../classes/NuclearPoE');
 const Supplier = require('../classes/Supplier');
-const SupplierModel = require('../models/supplier');
 const { getKeys } = require('../functions/utils');
 
 const router = express.Router({ mergeParams: true });
@@ -12,7 +11,9 @@ router.post(
   '/',
   asyncMiddleware(async (req, res) => {
     try {
-      const { wallet, privKey } = await getKeys(req.body);
+      const email = req.body.newEmail;
+      const passphrase = req.body.passphrase;
+      const { wallet, privKey } = await getKeys(email, passphrase);
 
       const walletGen = new Wallet(true);
       walletGen
@@ -48,11 +49,12 @@ router.post(
 
 router.post('/get/:contract', async (req, res) => {
   try {
-    const supplier = new Supplier(
-      req.params.contract,
-      req.body.wallet,
-      req.body.privateKey
-    );
+    const email = req.body.newEmail;
+    const passphrase = req.body.passphrase;
+    const { wallet, privKey } = await getKeys(email, passphrase);
+
+    const supplier = new Supplier(wallet, privKey);
+    supplier.initiateContract(req.params.contract);
 
     const result = await supplier.getSupplierDetails();
     res.json({ result });

@@ -19,21 +19,11 @@ const nuclearPoEABI = JSON.parse(
 
 class NuclearPoE extends Contract {
   constructor(wallet, privateKey) {
-    super(wallet, privateKey);
-    this.instance = this.initiateContract(nuclearPoEABI, process.env.SCADDRESS);
+    super(wallet, privateKey, nuclearPoEABI);
   }
 
   async addProject(_expediente, _projectTitle, _clientAddress) {
     try {
-      utils.isValidAddress(_clientAddress);
-      utils.isString(_projectTitle);
-
-      // Validate and convert input data
-      const expediente = utils.isNumber(_expediente);
-      const projectTitle = utils.toBytes32(_projectTitle);
-      const clientAddress = utils.toChecksumAddress(_clientAddress);
-
-      // Prepare data package and estimate gas cost
       this.data = this.instance.methods
         .createProject(expediente, projectTitle, clientAddress)
         .encodeABI();
@@ -43,11 +33,7 @@ class NuclearPoE extends Contract {
       this.result = await this.sendTx();
 
       return {
-        expediente,
-        projectTitle: _projectTitle,
-        clientAddress: _clientAddress,
-        transactionHash: this.result.transactionHash,
-        blockNumber: this.result.blockNumber
+        result: this.result
       };
     } catch (e) {
       throw Error(e);
@@ -103,16 +89,8 @@ class NuclearPoE extends Contract {
     return result;
   }
 
-  async createThirdParty(_address, _name, _type, _event) {
+  async createThirdParty(_address, _name, _type) {
     try {
-      utils.isValidAddress(_address);
-      utils.isString(_name);
-
-      // Validate and convert input data
-      const clientAddress = utils.toChecksumAddress(_address);
-      const clientName = utils.toBytes32(_name);
-
-      // Prepare data package and estimate gas cost
       this.data = this.instance.methods[_type](
         clientAddress,
         clientName

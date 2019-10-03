@@ -1,0 +1,51 @@
+@startuml
+
+@startuml Process
+title Adding New Process Sequence
+
+actor Administrator
+participant Administrator order 10
+participant ProcessForm order 20
+participant ProcessRoute order 30
+participant "Validator()" order 40
+participant "Wallet()" order 50
+participant Database order 60
+participant Blockchain order 70
+
+Administrator -> ProcessForm: Enter \n ProcessName \n SupplierAddress
+activate ProcessForm
+ProcessForm->ProcessRoute: Send form data
+activate ProcessRoute
+ProcessRoute->"Validator()": Validate form input
+activate "Validator()"
+
+alt if form input is not correct type
+    return Form Input is not correct type
+    return Send corresponding type error
+    return Display error
+
+else if form input is correct type
+    "Validator()"-->ProcessRoute: Form Input are correct types
+    activate ProcessRoute
+    ProcessRoute->Blockchain: Check if Process is duplicate
+    deactivate ProcessRoute
+    alt if Process is duplicate
+
+        Blockchain-->ProcessRoute: Process is duplicate
+        ProcessRoute-->ProcessForm: Send "Process already created"
+        ProcessForm-->Administrator: Display error
+    else if Process is new
+        Blockchain-->ProcessRoute: Process is not duplicate
+        ProcessRoute->Blockchain: Create new Process with form data
+        return Process successfully created
+        ProcessRoute-->ProcessForm: Send successfull Creation of Process
+        ProcessForm-->Administrator: Show creation of Process
+        ...When Blockchain fires CreateProcess Event...
+        Blockchain-->ProcessRoute: Return transaction hash and event of client creation
+        ProcessRoute-->Administrator: Notify via email of User Creation on the Blockchain
+
+    end
+end
+@enduml
+
+@enduml

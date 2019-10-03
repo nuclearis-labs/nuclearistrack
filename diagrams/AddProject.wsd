@@ -1,0 +1,51 @@
+@startuml
+
+@startuml Project
+title Adding New Project Sequence
+
+actor Administrator
+participant Administrator order 10
+participant ProjectForm order 20
+participant ProjectRoute order 30
+participant "Validator()" order 40
+participant "Wallet()" order 50
+participant Database order 60
+participant Blockchain order 70
+
+Administrator -> ProjectForm: Enter \n Expediente \n Name \n Nº OC \n ClientAddress
+activate ProjectForm
+ProjectForm->ProjectRoute: Send form data
+activate ProjectRoute
+ProjectRoute->"Validator()": Validate form input
+activate "Validator()"
+
+alt if form input is not correct type
+    return Form Input is not correct type
+    return Send corresponding type error
+    return Display error
+
+else if form input is correct type
+    "Validator()"-->ProjectRoute: Form Input are correct types
+    activate ProjectRoute
+    ProjectRoute->Blockchain: Check if project is duplicate
+    deactivate ProjectRoute
+    alt if project is duplicate
+
+        Blockchain-->ProjectRoute: Project is duplicate
+        ProjectRoute-->ProjectForm: Send "Project already created"
+        ProjectForm-->Administrator: Display error
+    else if project is new
+        Blockchain-->ProjectRoute: Project is not duplicate
+        ProjectRoute->Blockchain: Create new project with form data
+        return Project successfully created
+        ProjectRoute-->ProjectForm: Send successfull Creation of Project
+        ProjectForm-->Administrator: Show creation of project
+        ...When Blockchain fires CreateProject Event...
+        Blockchain-->ProjectRoute: Return transaction hash and event of client creation
+        ProjectRoute-->Administrator: Notify via email of User Creation on the Blockchain
+
+    end
+end
+@enduml
+
+@enduml
