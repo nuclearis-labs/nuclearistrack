@@ -3,6 +3,7 @@ const { asyncMiddleware } = require('../middleware/index');
 const Wallet = require('../classes/Wallet');
 const NuclearPoE = require('../classes/NuclearPoE');
 const Client = require('../classes/Client');
+const UserModel = require('../models/user');
 const Validator = require('../classes/Validator');
 const { getKeys } = require('../functions/utils');
 
@@ -12,7 +13,7 @@ router.post(
   '/',
   asyncMiddleware(async (req, res) => {
     try {
-      const user = await ClientModel.findOne({ email: req.body.newEmail });
+      const user = await UserModel.findOne({ email: req.body.newEmail });
 
       if (user) {
         throw Error('A user with the given email is already registered');
@@ -27,28 +28,28 @@ router.post(
         .encryptBIP38(req.body.newPassphrase)
         .toHex(['rskAddressFromPublicKey']);
 
-      const email = req.body.newEmail;
-      const passphrase = req.body.passphrase;
-      const { wallet, privKey } = await getKeys(email, passphrase);
+      const { wallet, privKey } = await getKeys(req.body);
+
       const nuclear = new NuclearPoE(wallet, privKey);
 
       const tx = await nuclear.createThirdParty(
-        Validator.checkAndConvertAddress(walletGen.rskAddressFromPublicKey),
-        Validator.checkAndConvertString(req.body.clientName),
+        walletGen.rskAddressFromPublicKey,
+        req.body.clientName,
         'createClient'
       );
 
       // Create DB record and hash password
-      const result = await ClientModel.create({
+      const result = await UserModel.create({
         username: req.body.clientName,
         email: req.body.newEmail,
         address: walletGen.rskAddressFromPublicKey,
-        contract: tx.contractAddress,
         encryptedPrivateKey: walletGen.encryptedKey
       });
 
       res.json({ result });
     } catch (e) {
+      console.log(e);
+
       res.json({ error: e.message });
     }
   })
@@ -58,7 +59,7 @@ router.post(
   '/validate',
   asyncMiddleware(async (req, res) => {
     try {
-      const user = await ClientModel.findOne({ email: req.body.email });
+      const user = await UserModel.findOne({ email: req.body.email });
 
       if (!user) throw Error();
 
@@ -83,14 +84,14 @@ router.post(
   '/change',
   asyncMiddleware(async (req, res) => {
     try {
-      const client = await ClientModel.findById('');
+      const client = await UserModel.findById('');
 
       const wallet = new Wallet(true);
       wallet
         .decryptBIP38(client.encryptedPrivateKey, req.body.passphrase)
         .encryptBIP38(req.body.newPassphrase);
 
-      const updatedClient = await ClientModel.findByIdAndUpdate('id', {
+      const updatedClient = await UserModel.findByIdAndUpdate('id', {
         encryptedPrivateKey: wallet.encryptedPrivateKey
       });
 

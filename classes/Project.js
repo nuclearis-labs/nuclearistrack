@@ -1,28 +1,27 @@
-const fs = require('fs');
 const Contract = require('./Contract');
+const Transaction = require('./Transaction');
 const utils = require('../functions/utils');
-
-const projectABI = JSON.parse(fs.readFileSync('build/contracts/Project.json'))
-  .abi;
+const projectABI = require('../build/contracts/Project.json').abi;
 
 class Project extends Contract {
-  constructor(wallet, privateKey) {
-    super(wallet, privateKey, projectABI);
+  constructor(address, privateKey, contractAddress) {
+    super(address, privateKey, projectABI, contractAddress);
+    this.initiateContract();
   }
 
   async approve() {
     try {
-      this.data = this.instance.methods.approveProject().encodeABI();
-      this.gaslimit = await this.instance.methods
-        .approveProject()
-        .estimateGas({ from: this.wallet });
-      this.result = await this.sendTx(this.instance.options.address);
+      const transaction = new Transaction('approve');
 
-      return {
-        contractAddress: this.instance.options.address,
-        transactionHash: this.result.transactionHash,
-        blockNumber: this.result.blockNumber
-      };
+      transaction
+        .estimateGas()
+        .estimateGasLimit()
+        .getNonce()
+        .prepareRawTx()
+        .sign(this.privateKey)
+        .serialize();
+
+      return await transaction.send();
     } catch (e) {
       throw Error(e);
     }

@@ -1,49 +1,107 @@
 @startuml Classes
 
+skinparam classAttributeIconSize 0
+
 class Contract {
-    String address
-    String abi
-    array getDetails()
-    web3.eth.Contract initiate()
+    - string address
+    - string abi
+    + array getDetails()
+    + web3.eth.Contract initiate()
 }
 
 class Project {
-    String projectTitle
-    String clientName
-    Number expediente
-    void approve()
-    Process addProcess()
-    array getProcess()
+    - array processList
+    - string projectTitle
+    - string clientName
+    - number expediente
+    + void approve()
+    + Process addProcess()
+    + array getProcess()
     }
 
 class NuclearPoE {
-    array projectList
-    array clientList
-    array supplierList
-    array getProjects()
-    array getClients()
-    array getSuppliers()
+    - array projectList
+    - array clientList
+    - array supplierList
+    + array getProjects()
+    + array getClients()
+    + array getSuppliers()
     }
 
 class Transaction {
-    Number nonce
-    Number gasPrice
-    Number gasLimit
-    String to
-    String value
-    String data
-    object prepare()
-    Transaction send()
+    - number nonce
+    - number gasPrice
+    - number gasLimit
+    - string to
+    - string value
+    - string data
+    + object prepare()
+    + Transaction send()
+}
+
+class User {
+    - string id
+    - string name
+    - string mail
+    + string getName()
+    + string getMail()
+}
+
+class Administrator {
+    + Project createProject()
+    + Client createClient()
+    + Supplier createSupplier()
+}
+
+class Wallet {
+    + string createAddress()
+    + string createPrivateKey()
+    + Wallet validateKeys()
+}
+
+class Document {
+    - string name
+    - string extension
+    - string hash
+    + string getHash()
+    + Document createHash()
+}
+
+class Storage {
+    + void upload()
+    + void download()
+    + void show()
+}
+
+class Event {
+    - string eventName
+    + {method} Event listen(eventName)
 }
 
 class Client {
-    String name
+    - string name
 }
 class Supplier {
-    String name
+    - string name
+}
+class Process {
+    array documentList
+    string processName
+    void add()
+    Document verify()
+    array return()
 }
 
     Contract ^-- Project
     Contract ^-- NuclearPoE
+
+    User ^-- Administrator
+    User ^-- Client
+    User ^-- Supplier
+
+    Project ^-- Process
+
+    Process ^-- Document
+    Document <.. Storage
 
 @enduml

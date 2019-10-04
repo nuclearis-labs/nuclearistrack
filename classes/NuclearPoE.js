@@ -1,40 +1,40 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-await-in-loop */
-const fs = require('fs');
-const Web3 = require('web3');
+const web3 = require('web3');
 const Contract = require('./Contract');
 const Project = require('./Project');
+const Transaction = require('./Transaction');
+const Validator = require('./Validator');
 const utils = require('../functions/utils');
-
-const web3 = new Web3(
-  new Web3.providers.WebsocketProvider('ws://127.0.0.1:8545')
-);
-
-const NuclearPoEBin = JSON.parse(
-  fs.readFileSync('build/contracts/NuclearPoE.json')
-).bytecode;
-const nuclearPoEABI = JSON.parse(
-  fs.readFileSync('build/contracts/NuclearPoE.json')
-).abi;
+const NuclearPoEBin = require('../build/contracts/NuclearPoE.json').bytecode;
+const nuclearPoEABI = require('../build/contracts/NuclearPoE.json').abi;
 
 class NuclearPoE extends Contract {
-  constructor(wallet, privateKey) {
-    super(wallet, privateKey, nuclearPoEABI);
+  constructor(address, privateKey) {
+    super(address, privateKey, nuclearPoEABI);
+    this.address = address;
+    this.privateKey = Buffer.from(privateKey, 'hex');
+    this.instance = this.initiateContract();
   }
 
   async addProject(_expediente, _projectTitle, _clientAddress) {
     try {
-      this.data = this.instance.methods
-        .createProject(expediente, projectTitle, clientAddress)
-        .encodeABI();
-      this.gaslimit = await this.instance.methods
-        .createProject(expediente, projectTitle, clientAddress)
-        .estimateGas({ from: this.wallet });
-      this.result = await this.sendTx();
+      const transaction = new Transaction(
+        this.address,
+        this.instance,
+        'createProject',
+        [_expediente, _projectTitle, _clientAddress]
+      );
 
-      return {
-        result: this.result
-      };
+      await transaction.estimateGas();
+      await transaction.estimateGasLimit();
+      await transaction.getNonce();
+      transaction
+        .prepareRawTx()
+        .sign(this.privateKey)
+        .serialize();
+
+      return await transaction.send();
     } catch (e) {
       throw Error(e);
     }
@@ -43,8 +43,9 @@ class NuclearPoE extends Contract {
   // ATENTION! Temporal method for testing..
   async createNewNuclearPoE(privKey) {
     try {
-      const newContract = new web3.eth.Contract(nuclearPoEABI);
-      const account = web3.eth.accounts.wallet.add(privKey);
+      const newContract = new this.web3.eth.Contract(nuclearPoEABI);
+
+      const account = this.web3.eth.accounts.wallet.add(privKey);
 
       const tx = new Promise((resolve, reject) => {
         newContract
@@ -63,6 +64,8 @@ class NuclearPoE extends Contract {
       const txResolved = await tx;
       return txResolved;
     } catch (e) {
+      console.log(e);
+
       throw Error(e);
     }
   }
@@ -91,20 +94,20 @@ class NuclearPoE extends Contract {
 
   async createThirdParty(_address, _name, _type) {
     try {
-      this.data = this.instance.methods[_type](
-        clientAddress,
-        clientName
-      ).encodeABI();
-      this.gaslimit = await this.instance.methods[_type](
-        clientAddress,
-        clientName
-      ).estimateGas({ from: this.wallet });
-      this.result = await this.sendTx();
+      const transaction = new Transaction(this.address, this.instance, _type, [
+        Validator.checkAndConvertAddress(_address),
+        Validator.checkAndConvertString(_name)
+      ]);
 
-      return {
-        transactionHash: this.result.transactionHash,
-        blockNumber: this.result.blockNumber
-      };
+      await transaction.estimateGas();
+      await transaction.estimateGasLimit();
+      await transaction.getNonce();
+      transaction
+        .prepareRawTx()
+        .sign(this.privateKey)
+        .serialize();
+
+      return await transaction.send();
     } catch (e) {
       throw Error(e);
     }

@@ -8,12 +8,9 @@ const router = express.Router({ mergeParams: true });
 
 router.post('/', async (req, res) => {
   try {
-    const email = req.body.newEmail;
-    const passphrase = req.body.passphrase;
-    const { wallet, privKey } = await getKeys(email, passphrase);
+    const { wallet, privKey } = await getKeys(req.body);
 
     const nuclear = new NuclearPoE(wallet, privKey);
-    nuclear.initiateContract();
 
     const response = await nuclear.addProject(
       Validator.checkAndConvertNumber(req.body.expediente),
@@ -23,6 +20,8 @@ router.post('/', async (req, res) => {
 
     res.json({ response });
   } catch (e) {
+    console.log(e);
+
     res.json({ error: e.message });
   }
 });
@@ -44,6 +43,8 @@ router.post('/approve/:contract', async (req, res) => {
 
     res.json({ result });
   } catch (e) {
+    console.log(e);
+
     res.json({ error: e.message });
   }
 });

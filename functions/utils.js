@@ -33,7 +33,7 @@ module.exports.convertResult = object => {
   return result;
 };
 
-module.exports.getKeys = async (email, passphrase) => {
+module.exports.getKeys = async ({ email, passphrase }) => {
   const user = await UserModel.findOne({ email: email });
 
   const wallet = new Wallet(true);

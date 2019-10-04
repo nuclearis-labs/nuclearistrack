@@ -1,14 +1,12 @@
 const fs = require('fs');
 const Contract = require('./Contract');
 const utils = require('../functions/utils');
-
-const clientABI = JSON.parse(fs.readFileSync('build/contracts/Client.json'))
-  .abi;
+const clientABI = require('../build/contracts/Client.json').abi;
 
 class Client extends Contract {
   constructor(address, wallet, privateKey) {
     super(wallet, privateKey);
-
+    this.address = address;
     this.instance = this.initiateContract(clientABI, address);
   }
 
