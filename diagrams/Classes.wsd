@@ -1,0 +1,49 @@
+@startuml Classes
+
+class Contract {
+    String address
+    String abi
+    array getDetails()
+    web3.eth.Contract initiate()
+}
+
+class Project {
+    String projectTitle
+    String clientName
+    Number expediente
+    void approve()
+    Process addProcess()
+    array getProcess()
+    }
+
+class NuclearPoE {
+    array projectList
+    array clientList
+    array supplierList
+    array getProjects()
+    array getClients()
+    array getSuppliers()
+    }
+
+class Transaction {
+    Number nonce
+    Number gasPrice
+    Number gasLimit
+    String to
+    String value
+    String data
+    object prepare()
+    Transaction send()
+}
+
+class Client {
+    String name
+}
+class Supplier {
+    String name
+}
+
+    Contract ^-- Project
+    Contract ^-- NuclearPoE
+
+@enduml
