@@ -1,22 +1,31 @@
 /* eslint-disable no-await-in-loop */
 require('dotenv').config();
-const web3 = require('web3');
 const Contract = require('./Contract');
 const ethTx = require('ethereumjs-tx');
 
-class Transaction extends Contract {
-  constructor(address, contractInstance, method, arg = []) {
-    super();
+class Transaction {
+  constructor(contract, method, arg = []) {
+    const { instance, web3, address, privateKey } = contract;
+    this.instance = instance;
+    this.web3 = web3;
     this.address = address;
-    this.instance = contractInstance;
+    this.privateKey = privateKey;
+
     this.method = method;
     this.arg = arg;
+
     this.data = this.instance.methods[this.method](...this.arg).encodeABI();
+  }
+
+  async call() {
+    const result = await this.instance.methods[this.method]().call();
+    return {
+      result
+    };
   }
 
   async estimateGas() {
     this.gasprice = await this.web3.eth.getGasPrice();
-    return this;
   }
 
   async estimateGasLimit() {
@@ -25,7 +34,6 @@ class Transaction extends Contract {
     ).estimateGas({
       from: this.address
     });
-    return this;
   }
 
   async getNonce() {
@@ -45,8 +53,8 @@ class Transaction extends Contract {
     return this;
   }
 
-  sign(privateKey) {
-    this.tx.sign(privateKey);
+  sign() {
+    this.tx.sign(this.privateKey);
     return this;
   }
 
@@ -63,7 +71,7 @@ class Transaction extends Contract {
 
   // eslint-disable-next-line consistent-return
   async send() {
-    await new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       this.web3.eth
         .sendSignedTransaction(`0x${this.tx.toString('hex')}`)
         .on('transactionHash', hash => resolve(hash))

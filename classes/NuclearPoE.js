@@ -11,7 +11,7 @@ const nuclearPoEABI = require('../build/contracts/NuclearPoE.json').abi;
 
 class NuclearPoE extends Contract {
   constructor(address, privateKey) {
-    super(address, privateKey, nuclearPoEABI);
+    super(nuclearPoEABI);
     this.address = address;
     this.privateKey = Buffer.from(privateKey, 'hex');
     this.instance = this.initiateContract();
@@ -19,22 +19,22 @@ class NuclearPoE extends Contract {
 
   async addProject(_expediente, _projectTitle, _clientAddress) {
     try {
-      const transaction = new Transaction(
-        this.address,
-        this.instance,
-        'createProject',
-        [_expediente, _projectTitle, _clientAddress]
-      );
+      const transaction = new Transaction(this, 'createProject', [
+        _expediente,
+        _projectTitle,
+        _clientAddress
+      ]);
 
       await transaction.estimateGas();
       await transaction.estimateGasLimit();
       await transaction.getNonce();
       transaction
         .prepareRawTx()
-        .sign(this.privateKey)
+        .sign()
         .serialize();
 
-      return await transaction.send();
+      transaction.txHash = await transaction.send();
+      return transaction.txHash;
     } catch (e) {
       throw Error(e);
     }
@@ -77,24 +77,25 @@ class NuclearPoE extends Contract {
       const contractAddress = await this.instance.methods
         .projectContractsArray(i)
         .call();
-      const project = new Project(contractAddress);
-      const details = utils.convertResult(await project.getDetails());
-      result.push({
-        expediente: details[0],
-        contractAddress: details[1],
-        clientAddress: details[2],
-        projectTitle: details[3],
-        approved: details[4],
-        allDocuments: details[5],
-        allSuppliers: details[6]
-      });
+      result.push(contractAddress);
+      // const project = new Project(contractAddress);
+      // const details = utils.convertResult(await project.getDetails());
+      // result.push({
+      //   expediente: details[0],
+      //   contractAddress: details[1],
+      //   clientAddress: details[2],
+      //   projectTitle: details[3],
+      //   approved: details[4],
+      //   allDocuments: details[5],
+      //   allSuppliers: details[6]
+      // });
     }
     return result;
   }
 
   async createThirdParty(_address, _name, _type) {
     try {
-      const transaction = new Transaction(this.address, this.instance, _type, [
+      const transaction = new Transaction(this, _type, [
         Validator.checkAndConvertAddress(_address),
         Validator.checkAndConvertString(_name)
       ]);
@@ -104,10 +105,12 @@ class NuclearPoE extends Contract {
       await transaction.getNonce();
       transaction
         .prepareRawTx()
-        .sign(this.privateKey)
+        .sign()
         .serialize();
 
-      return await transaction.send();
+      transaction.txHash = await transaction.send();
+
+      return transaction;
     } catch (e) {
       throw Error(e);
     }

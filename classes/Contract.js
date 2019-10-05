@@ -10,12 +10,7 @@ class Contract {
    * @param {string} abi The abi of the child contract.
    */
 
-  constructor(
-    address,
-    privateKey,
-    abi,
-    contractAddress = process.env.SCADDRESS
-  ) {
+  constructor(abi, contractAddress = process.env.SCADDRESS) {
     this.web3 = new Web3(
       new Web3.providers.WebsocketProvider(
         process.env.BLOCKCHAIN || 'ws://127.0.0.1:8545'
@@ -23,10 +18,6 @@ class Contract {
     );
     this.abi = abi;
     this.contractAddress = contractAddress;
-    if (address && privateKey) {
-      this.privateKey = Buffer.from(privateKey, 'hex');
-      this.address = address;
-    }
   }
 
   /**
@@ -37,13 +28,6 @@ class Contract {
 
   initiateContract() {
     return new this.web3.eth.Contract(this.abi, this.contractAddress);
-  }
-
-  async getDetails() {
-    const result = await this.instance.methods.contractDetails().call();
-    return {
-      result
-    };
   }
 }
 

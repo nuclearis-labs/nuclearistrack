@@ -8,4 +8,4 @@ const userSchema = new mongoose.Schema({
   encryptedPrivateKey: String
 });
 
-module.exports = mongoose.model('Client', userSchema);
+module.exports = mongoose.model('User', userSchema);

@@ -5,26 +5,35 @@ const projectABI = require('../build/contracts/Project.json').abi;
 
 class Project extends Contract {
   constructor(address, privateKey, contractAddress) {
-    super(address, privateKey, projectABI, contractAddress);
-    this.initiateContract();
+    super(projectABI, contractAddress);
+    this.address = address;
+    this.privateKey = Buffer.from(privateKey, 'hex');
+    this.instance = this.initiateContract();
   }
 
   async approve() {
     try {
-      const transaction = new Transaction('approve');
+      const transaction = new Transaction(this, 'approve');
 
+      await transaction.estimateGas();
+      await transaction.estimateGasLimit();
+      await transaction.getNonce();
       transaction
-        .estimateGas()
-        .estimateGasLimit()
-        .getNonce()
         .prepareRawTx()
-        .sign(this.privateKey)
+        .sign()
         .serialize();
 
-      return await transaction.send();
+      transaction.txHash = await transaction.send();
+      return transaction.txHash;
     } catch (e) {
       throw Error(e);
     }
+  }
+
+  async getDetails() {
+    const tx = new Transaction(this, 'contractDetails');
+    const result = await tx.call();
+    return result;
   }
 
   async addProcess(

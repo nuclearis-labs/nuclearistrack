@@ -39,14 +39,14 @@ router.post(
       );
 
       // Create DB record and hash password
-      const result = await UserModel.create({
+      const db = await UserModel.create({
         username: req.body.clientName,
         email: req.body.newEmail,
         address: walletGen.rskAddressFromPublicKey,
         encryptedPrivateKey: walletGen.encryptedKey
       });
 
-      res.json({ result });
+      res.json({ db, txHash: tx.txHash });
     } catch (e) {
       console.log(e);
 

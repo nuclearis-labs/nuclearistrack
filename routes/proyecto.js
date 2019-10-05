@@ -1,6 +1,7 @@
 const express = require('express');
 const NuclearPoE = require('../classes/NuclearPoE');
 const Project = require('../classes/Project');
+const Transaction = require('../classes/Transaction');
 const Validator = require('../classes/Validator');
 const { getKeys } = require('../functions/utils');
 
@@ -9,7 +10,6 @@ const router = express.Router({ mergeParams: true });
 router.post('/', async (req, res) => {
   try {
     const { wallet, privKey } = await getKeys(req.body);
-
     const nuclear = new NuclearPoE(wallet, privKey);
 
     const response = await nuclear.addProject(
@@ -28,16 +28,13 @@ router.post('/', async (req, res) => {
 
 router.post('/approve/:contract', async (req, res) => {
   try {
-    const email = req.body.newEmail;
-    const passphrase = req.body.passphrase;
-    const { wallet, privKey } = await getKeys(email, passphrase);
+    const { wallet, privKey } = await getKeys(req.body);
 
-    const contractAddress = Validator.checkAndConvertAddress(
-      req.params.contract
+    const project = new Project(
+      wallet,
+      privKey,
+      Validator.checkAndConvertAddress(req.params.contract)
     );
-
-    const project = new Project(wallet, privKey);
-    project.initiateContract(contractAddress);
 
     const result = await project.approve();
 
@@ -51,13 +48,8 @@ router.post('/approve/:contract', async (req, res) => {
 
 router.post('/get', async (req, res) => {
   try {
-    const email = req.body.newEmail;
-    const passphrase = req.body.passphrase;
-
-    const { wallet, privKey } = await getKeys(email, passphrase);
-
+    const { wallet, privKey } = await getKeys(req.body);
     const proyecto = new NuclearPoE(wallet, privKey);
-    nuclear.initiateContract();
 
     const result = await proyecto.returnAllProjects();
 
@@ -69,17 +61,17 @@ router.post('/get', async (req, res) => {
 
 router.post('/details/:contract', async (req, res) => {
   try {
-    const email = req.body.newEmail;
-    const passphrase = req.body.passphrase;
-    const { wallet, privKey } = await getKeys(email, passphrase);
+    const { wallet, privKey } = await getKeys(req.body);
 
-    const project = new Project(wallet, privKey);
-    project.initiateContract(req.params.contract);
-
+    const project = new Project(wallet, privKey, req.params.contract);
     const result = await project.getDetails();
+
+    // const result = await project.getDetails();
 
     res.json(result);
   } catch (e) {
+    console.log(e);
+
     res.json({ error: e.message });
   }
 });

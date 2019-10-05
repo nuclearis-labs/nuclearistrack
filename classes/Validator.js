@@ -23,7 +23,9 @@ class Validator {
 
   static checkAndConvertNumber(_number) {
     try {
-      utils.isNumber(parseInt(_number, 10));
+      const number = parseInt(_number, 10);
+      utils.isNumber(number);
+      return number;
     } catch (e) {
       throw Error(e);
     }
