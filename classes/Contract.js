@@ -12,9 +12,7 @@ class Contract {
 
   constructor(abi, contractAddress = process.env.SCADDRESS) {
     this.web3 = new Web3(
-      new Web3.providers.WebsocketProvider(
-        process.env.BLOCKCHAIN || 'ws://127.0.0.1:8545'
-      )
+      new Web3.providers.WebsocketProvider('ws://127.0.0.1:8545')
     );
     this.abi = abi;
     this.contractAddress = contractAddress;

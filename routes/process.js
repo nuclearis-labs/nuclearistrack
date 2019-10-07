@@ -1,6 +1,4 @@
 const express = require('express');
-const storage = require('multer').memoryStorage();
-const upload = require('multer')({ storage });
 const Project = require('../classes/Project');
 const { getKeys } = require('../functions/utils');
 

@@ -1,54 +1,21 @@
-const UserModel = require('../models/user');
+const Contract = require('./Contract');
+const utils = require('../functions/utils');
+const userABI = require('../build/contracts/User.json').abi;
+const Transaction = require('../classes/Transaction');
 
-class User {
-  constructor(body) {
-    this.body = body;
+class User extends Contract {
+  constructor(address, privateKey, contractAddress) {
+    super(userABI, contractAddress);
+    this.address = address;
+    this.privateKey = Buffer.from(privateKey, 'hex');
+    this.instance = this.initiateContract();
+    console.log(this.instance);
   }
 
-  async createUser() {
-    try {
-      await UserModel.register(
-        new UserModel({ username: this.body.username, mail: this.body.mail }),
-        this.body.password
-      );
-    } catch (error) {
-      throw new Error(error.message);
-    }
-  }
-
-  static async listUser(filter, project) {
-    try {
-      const data = await UserModel.find(filter, project);
-      return data;
-    } catch (error) {
-      throw new Error(error.message);
-    }
-  }
-
-  async updateUser(id) {
-    try {
-      const user = await UserModel.findOneAndUpdate(
-        { _id: id },
-        { $set: this.body },
-        { new: true }
-      );
-      return user;
-    } catch (error) {
-      throw new Error(error.message);
-    }
-  }
-
-  static async deleteUser(id) {
-    try {
-      const user = await UserModel.findOneAndUpdate(
-        { _id: id },
-        { $set: { active: false } },
-        { new: true }
-      );
-      return user;
-    } catch (error) {
-      throw new Error(error.message);
-    }
+  async getUserDetails() {
+    const transaction = new Transaction(this, 'contractDetails');
+    const result = await transaction.call();
+    return result;
   }
 }
 module.exports = User;

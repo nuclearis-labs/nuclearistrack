@@ -33,8 +33,7 @@ class NuclearPoE extends Contract {
         .sign()
         .serialize();
 
-      transaction.txHash = await transaction.send();
-      return transaction.txHash;
+      return await transaction.send();
     } catch (e) {
       throw Error(e);
     }
@@ -93,11 +92,12 @@ class NuclearPoE extends Contract {
     return result;
   }
 
-  async createThirdParty(_address, _name, _type) {
+  async createUser(_address, _name, _type) {
     try {
-      const transaction = new Transaction(this, _type, [
+      const transaction = new Transaction(this, 'createUser', [
         Validator.checkAndConvertAddress(_address),
-        Validator.checkAndConvertString(_name)
+        Validator.checkAndConvertString(_name),
+        Validator.checkAndConvertNumber(_type)
       ]);
 
       await transaction.estimateGas();

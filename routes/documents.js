@@ -7,9 +7,7 @@ const router = express.Router({ mergeParams: true });
 
 router.post('/verify/:contract', upload.single('file'), async (req, res) => {
   try {
-    const email = req.body.newEmail;
-    const passphrase = req.body.passphrase;
-    const { wallet, privKey } = await getKeys(email, passphrase);
+    const { wallet, privKey } = await getKeys(req.body);
 
     const process = new Process(wallet, privKey);
     process.initiateContract(req.params.contract);
@@ -24,9 +22,7 @@ router.post('/verify/:contract', upload.single('file'), async (req, res) => {
 
 router.post('/upload/:contract', upload.single('file'), async (req, res) => {
   try {
-    const email = req.body.newEmail;
-    const passphrase = req.body.passphrase;
-    const { wallet, privKey } = await getKeys(email, passphrase);
+    const { wallet, privKey } = await getKeys(req.body);
 
     const process = new Process(wallet, privKey);
     process.initiateContract(req.params.contract);
@@ -45,9 +41,7 @@ router.post('/upload/:contract', upload.single('file'), async (req, res) => {
 
 router.post('/get/:contract', async (req, res) => {
   try {
-    const email = req.body.newEmail;
-    const passphrase = req.body.passphrase;
-    const { wallet, privKey } = await getKeys(email, passphrase);
+    const { wallet, privKey } = await getKeys(req.body);
 
     const process = new Process(wallet, privKey);
     process.initiateContract(req.params.contract);

@@ -46,7 +46,6 @@ contract NuclearPoE {
         projectContracts[_expediente] = ProjectStruct(ProjectContractAddress, true);
 
         User userContractInstance = User(user[_userAddress].contractAddress);
-
         userContractInstance.addProject(ProjectContractAddress);
 
         projectContractsArray.push(ProjectContractAddress);
@@ -70,14 +69,14 @@ contract NuclearPoE {
         emit CreateUser(ContractAddress);
     }
 
-    function addProcessToProject(address _address, address _projectContractAddress, bytes32 _processName, bytes32 _userName) external onlyOwner() {
-        require(user[_address].created == true,"User does not exist");
+    function addProcessToProject(address _supplierAddress, address _projectContractAddress, bytes32 _processName) external onlyOwner() {
+        require(user[_supplierAddress].created == true,"User does not exist");
 
-        User userContractInstance = User(user[_address].contractAddress);
+        User userContractInstance = User(user[_supplierAddress].contractAddress);
         userContractInstance.addProject(_projectContractAddress);
 
         Project project = Project(_projectContractAddress);
-        project.addProcess(_address, _processName, _userName);
+        project.addProcess(_supplierAddress, _processName);
     }
 }
 
@@ -102,7 +101,6 @@ contract Project {
 
     struct Process {
         bytes32 processName;
-        bytes32 supplierName;
         address supplierAddress;
         bool created;
     }
@@ -161,13 +159,13 @@ contract Project {
         emit ApproveProject();
     }
 
-    function addProcess(address _supplierAddress, bytes32 _processName, bytes32 _supplierName) external {
+    function addProcess(address _supplierAddress, bytes32 _processName) external {
         require(process[_supplierAddress].created == false,"Process already created");
         require(approved == false,"Project is already approved by client");
 
         supplierCount++;
         supplierAddresses.push(_supplierAddress);
-        process[_supplierAddress] = Process(_processName, _supplierName, _supplierAddress, true);
+        process[_supplierAddress] = Process(_processName, _supplierAddress, true);
 
         emit AddProcess();
     }
@@ -186,7 +184,7 @@ contract Project {
 contract User {
 
     bytes32 private name;
-    address private userAddress;
+    address public userAddress;
     address[] private projectAddresses;
     uint private projectCount;
     address payable owner;

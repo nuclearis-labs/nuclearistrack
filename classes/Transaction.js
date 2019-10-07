@@ -72,10 +72,11 @@ class Transaction {
   // eslint-disable-next-line consistent-return
   async send() {
     return new Promise((resolve, reject) => {
-      this.web3.eth
-        .sendSignedTransaction(`0x${this.tx.toString('hex')}`)
-        .on('transactionHash', hash => resolve(hash))
-        .on('error', error => reject(error));
+      this.web3.eth.sendSignedTransaction(`0x${this.tx.toString('hex')}`);
+      this.instance.events.allEvents({}, (error, event) => {
+        if (error) reject(error);
+        resolve(event);
+      });
     });
   }
 }

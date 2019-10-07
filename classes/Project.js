@@ -13,7 +13,7 @@ class Project extends Contract {
 
   async approve() {
     try {
-      const transaction = new Transaction(this, 'approve');
+      const transaction = new Transaction(this, 'approveProject');
 
       await transaction.estimateGas();
       await transaction.estimateGasLimit();
