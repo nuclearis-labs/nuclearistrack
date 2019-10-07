@@ -3,48 +3,49 @@
 /* eslint-disable node/no-unpublished-require */
 
 const NuclearPoE = artifacts.require('../contracts/NuclearPoE.sol');
-const Client = artifacts.require('../contracts/Client.sol');
+const User = artifacts.require('../contracts/User.sol');
 const { assert } = require('chai');
 const truffleAssert = require('truffle-assertions');
 
 const web3 = require('web3');
 
-contract('Client Contracts', accounts => {
+contract('User Contracts', accounts => {
   let instance;
-  let clientInstance;
+  let userInstance;
   before(async () => {
     instance = await NuclearPoE.deployed();
   });
 
-  it('REVERT: Create new client as non-owner', async () => {
+  it('REVERT: Create new user as non-owner', async () => {
     await truffleAssert.reverts(
-      instance.createClient(accounts[1], web3.utils.fromAscii('NA-SA'), {
+      instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'), 0, {
         from: accounts[1]
       }),
       'Only owner can make this change'
     );
   });
 
-  it('Create client', async () => {
-    const result = await instance.createClient(
+  it('Create user', async () => {
+    const result = await instance.createUser(
       accounts[1],
-      web3.utils.fromAscii('NA-SA')
+      web3.utils.fromAscii('NA-SA'),
+      0
     );
-    clientInstance = await Client.at(result.logs[0].args[0]);
-    truffleAssert.eventEmitted(result, 'CreateClient', ev => {
+    userInstance = await User.at(result.logs[0].args[0]);
+    truffleAssert.eventEmitted(result, 'CreateUser', ev => {
       return ev.ContractAddress;
     });
   });
 
-  it('REVERT: Create duplicate client', async () => {
+  it('REVERT: Create duplicate user', async () => {
     await truffleAssert.reverts(
-      instance.createClient(accounts[1], web3.utils.fromAscii('NA-SA')),
-      'Client already created'
+      instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'), 0),
+      'User already created'
     );
   });
 
-  it('Return client projects', async () => {
-    const contractDetails = await clientInstance.contractDetails();
+  it('Return user projects', async () => {
+    const contractDetails = await userInstance.contractDetails();
     assert.include(contractDetails[0], web3.utils.fromAscii('NA-SA'));
   });
 

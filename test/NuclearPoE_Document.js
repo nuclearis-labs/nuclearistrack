@@ -15,16 +15,17 @@ contract('Add Document', accounts => {
   let projectInstance;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    await instance.createClient(accounts[1], web3.utils.fromAscii('NA-SA'));
+    await instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'), 0);
 
     const result = await instance.createProject(
       41955,
       web3.utils.fromAscii('Conjunto Soporte'),
       accounts[1]
     );
-    supplier = await instance.createSupplier(
+    user = await instance.createUser(
       accounts[2],
-      web3.utils.fromAscii('IMECO')
+      web3.utils.fromAscii('IMECO'),
+      1
     );
     projectAddress = result.logs[0].args[0];
     projectInstance = await Project.at(projectAddress);
@@ -42,6 +43,9 @@ contract('Add Document', accounts => {
         accounts[2],
         web3.utils.fromAscii('Certificado'),
         '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
+        '0x37669b200d7b2b6f5d4ae2bb2e013b495f776791d148f281a6c5e820337ec0f5',
+        12,
+        20,
         {
           from: accounts[2]
         }
@@ -55,6 +59,9 @@ contract('Add Document', accounts => {
       accounts[2],
       web3.utils.fromAscii('Certificado'),
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
+      '0x37669b200d7b2b6f5d4ae2bb2e013b495f776791d148f281a6c5e820337ec0f5',
+      12,
+      20,
       { from: accounts[2] }
     );
 
@@ -66,6 +73,9 @@ contract('Add Document', accounts => {
         accounts[2],
         web3.utils.fromAscii('Certificado'),
         '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
+        '0x37669b200d7b2b6f5d4ae2bb2e013b495f776791d148f281a6c5e820337ec0f5',
+        12,
+        20,
         { from: accounts[2] }
       ),
       'Document already created'
@@ -83,16 +93,17 @@ contract('Find Document', accounts => {
   let projectInstance;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    await instance.createClient(accounts[1], web3.utils.fromAscii('NA-SA'));
+    await instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'), 0);
 
     const result = await instance.createProject(
       41955,
       web3.utils.fromAscii('Conjunto Soporte'),
       accounts[1]
     );
-    supplier = await instance.createSupplier(
+    user = await instance.createUser(
       accounts[2],
-      web3.utils.fromAscii('IMECO')
+      web3.utils.fromAscii('IMECO'),
+      1
     );
     projectAddress = result.logs[0].args[0];
     projectInstance = await Project.at(result.logs[0].args[0]);
@@ -108,6 +119,9 @@ contract('Find Document', accounts => {
       accounts[2],
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
       web3.utils.fromAscii('Certificado'),
+      '0x37669b200d7b2b6f5d4ae2bb2e013b495f776791d148f281a6c5e820337ec0f5',
+      12,
+      20,
       { from: accounts[2] }
     );
   });

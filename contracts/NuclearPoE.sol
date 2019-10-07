@@ -4,6 +4,7 @@ pragma solidity >=0.5.0 <0.7.0;
 contract NuclearPoE {
 
     address payable private owner;
+    enum UserType {Client, Supplier, User}
 
     constructor() public {
       owner = msg.sender;
@@ -14,46 +15,39 @@ contract NuclearPoE {
         bool created;
     }
 
-    struct ClientStruct {
+    struct UserStruct {
         address contractAddress;
+        uint8 userType;
         bool created;
     }
 
-    struct SupplierStruct {
-        address contractAddress;
-        bool created;
-    }
 
     mapping(uint => ProjectStruct) private projectContracts;
-    mapping(address => ClientStruct) private client;
-    mapping(address => SupplierStruct) private supplier;
+    mapping(address => UserStruct) private user;
 
     address[] public projectContractsArray;
-    address[] private supplierContractsArray;
-    address[] private clientContractsArray;
+    address[] private userContractsArray;
     uint8 public projectCount;
-    uint8 private clientCount;
-    uint8 private supplierCount;
+    uint8 private userCount;
 
     modifier onlyOwner() {
     require(msg.sender == owner,"Only owner can make this change");_;
     }
 
     event CreateProject(address newProjectContractAddress);
-    event CreateClient(address ContractAddress);
-    event CreateSupplier(address ContractAddress);
+    event CreateUser(address ContractAddress);
 
 
-    function createProject(uint _expediente, bytes32 _projectTitle, address _clientAddress) external onlyOwner() {
+    function createProject(uint _expediente, bytes32 _projectTitle, address _userAddress) external onlyOwner() {
         require(projectContracts[_expediente].created == false, "Project already created");
-        require(client[_clientAddress].created == true, "Client does not exist");
+        require(user[_userAddress].created == true, "User does not exist");
 
-        address ProjectContractAddress = address(new Project(_expediente, _projectTitle, _clientAddress));
+        address ProjectContractAddress = address(new Project(_expediente, _projectTitle, _userAddress));
         projectContracts[_expediente] = ProjectStruct(ProjectContractAddress, true);
 
-        Client clientContractInstance = Client(client[_clientAddress].contractAddress);
+        User userContractInstance = User(user[_userAddress].contractAddress);
 
-        clientContractInstance.addProject(ProjectContractAddress);
+        userContractInstance.addProject(ProjectContractAddress);
 
         projectContractsArray.push(ProjectContractAddress);
         projectCount++;
@@ -65,36 +59,25 @@ contract NuclearPoE {
         selfdestruct(owner);
     }
 
-    function createSupplier(address _supplierAddress, bytes32 _supplierName) external onlyOwner() {
-        require(supplier[_supplierAddress].created == false,"Supplier already created");
+    function createUser(address _userAddress, bytes32 _userName, uint8 userType) external onlyOwner() {
+        require(user[_userAddress].created == false,"User already created");
 
-        address ContractAddress = address(new Supplier(_supplierName, _supplierAddress));
+        address ContractAddress = address(new User(_userName, _userAddress));
 
-        supplier[_supplierAddress] = SupplierStruct(ContractAddress, true);
-        supplierCount++;
+        user[_userAddress] = UserStruct(ContractAddress, userType, true);
+        userCount++;
 
-        emit CreateSupplier(ContractAddress);
+        emit CreateUser(ContractAddress);
     }
 
-    function createClient(address _clientAddress, bytes32 _clientName) external onlyOwner() {
-        require(client[_clientAddress].created == false,"Client already created");
+    function addProcessToProject(address _address, address _projectContractAddress, bytes32 _processName, bytes32 _userName) external onlyOwner() {
+        require(user[_address].created == true,"User does not exist");
 
-        address ContractAddress = address(new Client(_clientName, _clientAddress));
-
-        client[_clientAddress] = ClientStruct(ContractAddress, true);
-        clientCount++;
-
-        emit CreateClient(ContractAddress);
-    }
-
-    function addProcessToProject(address _supplierAddress, address _projectContractAddress, bytes32 _processName, bytes32 _supplierName) external onlyOwner() {
-        require(supplier[_supplierAddress].created == true,"Supplier does not exist");
-
-        Supplier supplierContractInstance = Supplier(supplier[_supplierAddress].contractAddress);
-        supplierContractInstance.addProject(_projectContractAddress);
+        User userContractInstance = User(user[_address].contractAddress);
+        userContractInstance.addProject(_projectContractAddress);
 
         Project project = Project(_projectContractAddress);
-        project.addProcess(_supplierAddress, _processName, _supplierName);
+        project.addProcess(_address, _processName, _userName);
     }
 }
 
@@ -110,6 +93,9 @@ contract Project {
     struct Document {
         address supplierAddress;
         bytes32 documentTitle;
+        bytes32 storageHash;
+        uint storageFunction;
+        uint storageSize;
         uint mineTime;
         bool created;
     }
@@ -139,24 +125,27 @@ contract Project {
         clientAddress = _clientAddress;
     }
 
-    function addDocument (address _supplierAddress, bytes32 _hash, bytes32 _documentName) external {
+    function addDocument (address _supplierAddress, bytes32 _hash, bytes32 _documentName, bytes32 storageHash, uint storageFunction, uint storageSize) external {
         require(approved == true,"Project is not approved by client");
         require(process[_supplierAddress].created == true, "Process does not exist");
         require(document[_hash].created == false, "Document already created");
 
-        document[_hash] = Document(_supplierAddress, _documentName, now, true);
+        document[_hash] = Document(_supplierAddress, _documentName, storageHash, storageFunction, storageSize, now, true);
         allDocuments.push(_hash);
         documentQty++;
         emit AddDocument();
     }
 
 
-    function findDocument(bytes32 _hash) external view returns (address, uint, bytes32) {
+    function findDocument(bytes32 _hash) external view returns (address, uint, bytes32, bytes32, uint, uint) {
         require(document[_hash].created == true, "Document does not exist");
         return (
             document[_hash].supplierAddress,
             document[_hash].mineTime,
-            document[_hash].documentTitle
+            document[_hash].documentTitle,
+            document[_hash].storageHash,
+            document[_hash].storageFunction,
+            document[_hash].storageSize
             );
     }
 
@@ -194,17 +183,17 @@ contract Project {
 
 
 // Contrato de cliente que se genera para cada cliente nuevo y hace seguimiento a los proyectos nuevos asignados
-contract Client {
+contract User {
 
     bytes32 private name;
-    address private clientAddress;
+    address private userAddress;
     address[] private projectAddresses;
     uint private projectCount;
     address payable owner;
 
     constructor (bytes32 _name, address _address) public {
         name = _name;
-        clientAddress = _address;
+        userAddress = _address;
     }
 
     function contractDetails() external view returns (bytes32, address[] memory) {
@@ -221,33 +210,4 @@ contract Client {
         projectCount++;
     }
 
-}
-
-// Contrato de proveedores que se genera para cada proveedor nuevo y hace seguimiento a los proyectos nuevos asignados
-contract Supplier {
-
-    bytes32 private name;
-    address private supplierAddress;
-    address[] private projectAddresses;
-    uint private projectCount;
-    address payable owner;
-
-    constructor (bytes32 _name, address _address) public {
-        name = _name;
-        supplierAddress = _address;
-    }
-
-    function contractDetails() external view returns (bytes32, address[] memory) {
-        return (name, projectAddresses);
-    }
-
-      // TEMP
-    function kill() public {
-        selfdestruct(msg.sender);
-    }
-
-    function addProject(address _a) external {
-        projectAddresses.push(_a);
-        projectCount++;
-    }
 }

@@ -5,33 +5,33 @@
 
 const NuclearPoE = artifacts.require('../contracts/NuclearPoE.sol');
 const Project = artifacts.require('../contracts/Project.sol');
-const Client = artifacts.require('../contracts/Client.sol');
-const Supplier = artifacts.require('../contracts/Supplier.sol');
+const User = artifacts.require('../contracts/User.sol');
 const { assert } = require('chai');
 const truffleAssert = require('truffle-assertions');
 const web3 = require('web3');
 
 contract('Create Project', accounts => {
   let instance;
-  let clientInstance;
+  let userInstance;
   before(async () => {
     instance = await NuclearPoE.deployed();
   });
-  it('EVENT: Create a new project and add to Client Contract', async () => {
-    const client = await instance.createClient(
+  it('EVENT: Create a new project and add to User Contract', async () => {
+    const user = await instance.createUser(
       accounts[1],
-      web3.utils.fromAscii('NA-SA')
+      web3.utils.fromAscii('NA-SA'),
+      0
     );
 
-    let clientAddress = client.logs[0].args[0];
-    clientInstance = await Client.at(clientAddress);
+    let userAddress = user.logs[0].args[0];
+    userInstance = await User.at(userAddress);
 
     const result = await instance.createProject(
       41955,
       web3.utils.fromAscii('Conjunto Soporte'),
       accounts[1]
     );
-    let final = await clientInstance.contractDetails();
+    let final = await userInstance.contractDetails();
 
     truffleAssert.eventEmitted(result, 'CreateProject', ev => {
       return ev.newProjectContractAddress;
@@ -49,14 +49,14 @@ contract('Create Project', accounts => {
       'Project already created'
     );
   });
-  it('REVERT: Create project with non-existing client', async () => {
+  it('REVERT: Create project with non-existing User', async () => {
     await truffleAssert.reverts(
       instance.createProject(
         56543,
         web3.utils.fromAscii('Conjunto Soporte'),
         accounts[3]
       ),
-      'Client does not exist'
+      'User does not exist'
     );
   });
   it('REVERT: Create new project as non-owner', async () => {
@@ -77,14 +77,15 @@ contract('Create Project', accounts => {
 
 contract('Add Process', accounts => {
   let instance;
-  let supplier;
+  let user;
   let projectAddress;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    await instance.createClient(accounts[1], web3.utils.fromAscii('NA-SA'));
-    supplier = await instance.createSupplier(
+    await instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'), 0);
+    user = await instance.createUser(
       accounts[2],
-      web3.utils.fromAscii('IMECO')
+      web3.utils.fromAscii('IMECO'),
+      1
     );
 
     const result = await instance.createProject(
@@ -110,7 +111,7 @@ contract('Add Process', accounts => {
     );
   });
 
-  it('EVENT: Add a process and add to Supplier Contract', async () => {
+  it('EVENT: Add a process and add to User Contract', async () => {
     const result = await instance.addProcessToProject(
       accounts[2],
       projectAddress,
@@ -118,9 +119,9 @@ contract('Add Process', accounts => {
       web3.utils.fromAscii('BGH')
     );
 
-    const supplierAddress = supplier.logs[0].args[0];
-    const supplierContract = await Supplier.at(supplierAddress);
-    let final = await supplierContract.contractDetails();
+    const userAddress = user.logs[0].args[0];
+    const userContract = await User.at(userAddress);
+    let final = await userContract.contractDetails();
 
     assert.equal(final[1][0], projectAddress);
   });
@@ -137,7 +138,7 @@ contract('Add Process', accounts => {
     );
   });
 
-  it('REVERT: Add a process with non-existing supplier', async () => {
+  it('REVERT: Add a process with non-existing User', async () => {
     truffleAssert.reverts(
       instance.addProcessToProject(
         accounts[3],
@@ -145,12 +146,12 @@ contract('Add Process', accounts => {
         web3.utils.fromAscii('Mecanizado'),
         web3.utils.fromAscii('BGH')
       ),
-      'Supplier does not exist'
+      'User does not exist'
     );
   });
 
   it('REVERT: Add process to already approved project', async () => {
-    await instance.createSupplier(accounts[3], web3.utils.fromAscii('BGH'));
+    await instance.createUser(accounts[3], web3.utils.fromAscii('BGH'), 1);
     await projectInstance.approveProject({ from: accounts[1] });
     await truffleAssert.reverts(
       instance.addProcessToProject(
@@ -172,8 +173,8 @@ contract('Approve Project', accounts => {
   let instance;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    await instance.createClient(accounts[1], web3.utils.fromAscii('NA-SA'));
-    await instance.createSupplier(accounts[2], web3.utils.fromAscii('IMECO'));
+    await instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'), 0);
+    await instance.createUser(accounts[2], web3.utils.fromAscii('IMECO'), 1);
     const result = await instance.createProject(
       41955,
       web3.utils.fromAscii('Conjunto Soporte'),
@@ -193,7 +194,7 @@ contract('Approve Project', accounts => {
     );
   });
 
-  it('REVERT: Approve project as non assigned client', async () => {
+  it('REVERT: Approve project as non assigned User', async () => {
     await truffleAssert.reverts(
       projectInstance.approveProject({ from: accounts[2] }),
       'Only clients of this project can realize this operation'
@@ -214,11 +215,8 @@ contract('Return Projects', accounts => {
   let instance;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    await instance.createClient(accounts[1], web3.utils.fromAscii('NA-SA'));
-    supplier = await instance.createSupplier(
-      accounts[2],
-      web3.utils.fromAscii('IMECO')
-    );
+    await instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'), 0);
+    await instance.createUser(accounts[2], web3.utils.fromAscii('IMECO'), 1);
     await instance.createProject(
       41955,
       web3.utils.fromAscii('Conjunto Soporte'),
