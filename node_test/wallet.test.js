@@ -1,74 +1,72 @@
-const Wallet = require('../classes/Wallet.js');
+const {
+  encryptBIP38,
+  decryptBIP38,
+  generatePrivateKey,
+  generateWifPrivateKey,
+  generatePublicKey,
+  generateRSKAddress,
+  toHex
+} = require('../functions/wallet.js');
 
-let wallet;
-beforeEach(() => {
-  wallet = new Wallet(true);
-  return wallet;
-});
-afterEach(() => {
-  wallet = undefined;
-  return wallet;
+const toBeType = require('jest-tobetype');
+expect.extend(toBeType);
+
+let privKey;
+let wifPrivKey;
+let passphrase = 'Password';
+let encryptedKey;
+let decryptedKey;
+let publicKey;
+let rskAddress;
+
+test('Should generate new private key', () => {
+  privKey = generatePrivateKey();
+  expect(privKey).toBeType('object'); // Checks for buffer existance
+  expect(privKey.toString('hex')).toHaveLength(64);
 });
 
-test('Should generate new private key and RSK address', () => {
-  expect(
-    wallet
-      .generateWifPrivateKey()
-      .generatePublicKey()
-      .generateRSKAddress()
-  ).toBeTruthy();
+test('Should generate a WIF Private Key', () => {
+  wifPrivKey = generateWifPrivateKey(privKey);
+  expect(wifPrivKey).toBeType('string');
+  expect(wifPrivKey).toHaveLength(52);
 });
+
 test('Should encrypt a WIF Private Key', () => {
-  expect(
-    wallet.generateWifPrivateKey().encryptBIP38('passphrase')
-  ).toBeTruthy();
+  encryptedKey = encryptBIP38(wifPrivKey, passphrase);
+  expect(encryptedKey).toBeType('string');
+  expect(encryptedKey).toHaveLength(58);
 });
+
 test('Should decrypt a BIP38 encoded key', () => {
-  expect(
-    wallet
-      .generateWifPrivateKey()
-      .encryptBIP38('passphrase')
-      .decryptBIP38('passphrase')
-  ).toBeTruthy();
+  decryptedKey = decryptBIP38(encryptedKey, passphrase);
+  expect(decryptedKey).toBeType('string');
+  expect(decryptedKey).toHaveLength(52);
 });
+
+test('Should generate a public Key', () => {
+  publicKey = generatePublicKey(privKey);
+  expect(publicKey).toBeType('object');
+  expect(publicKey.toString('hex')).toHaveLength(66);
+});
+
 test('Should generate a new RSK Address', () => {
-  expect(
-    wallet
-      .generateWifPrivateKey()
-      .generatePublicKey()
-      .generateRSKAddress()
-  ).toBeTruthy();
+  rskAddress = generateRSKAddress(publicKey);
+  expect(rskAddress).toBeType('string');
+  expect(rskAddress.toString('hex')).toHaveLength(42);
 });
+
 test('Should fail, because missing public Key', () => {
-  function RSKAddress() {
-    wallet.generateRSKAddress();
-  }
-  expect(RSKAddress).toThrowError(
+  expect(generateRSKAddress).toThrowError(
     'class Wallet => generateRSKAddress() is missing a public key'
   );
 });
 
 test('Should convert a property on the wallet instance to hex', () => {
-  expect(wallet.generatePrivateKey().toHex(['privKey'])).toBeTruthy();
+  expect(toHex(generatePrivateKey())).toBeType('string');
 });
 
-test('Should throw error because variable was not set', () => {
-  function hexError() {
-    wallet.toHex(['privKey']);
-  }
-  expect(hexError).toThrowError('Variable privKey is not set');
-});
-test('Should throw error because variable was not set', () => {
-  function hexError() {
-    wallet.toHex('privKey');
-  }
-  expect(hexError).toThrowError('Type of input must be array');
-});
 test('Should throw error because privateKey was not set', () => {
-  function PublicKeyError() {
-    wallet.generatePublicKey();
-  }
-  expect(PublicKeyError).toThrowError(
+  expect(generatePublicKey).toThrowError(
     'class Wallet => generatePublicKey() is missing a private key'
   );
 });

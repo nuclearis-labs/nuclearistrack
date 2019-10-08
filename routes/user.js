@@ -1,6 +1,10 @@
 const express = require('express');
 const { asyncMiddleware } = require('../middleware/index');
-const Wallet = require('../classes/Wallet');
+const {
+  generatePrivateKey,
+  generatePublicKey,
+  generateRSKAddress
+} = require('../classes/Wallet');
 const NuclearPoE = require('../classes/NuclearPoE');
 const UserModel = require('../models/user');
 const { getKeys } = require('../functions/utils');
@@ -18,14 +22,9 @@ router.post(
         throw Error('A user with the given email is already registered');
       }
 
-      const walletGen = new Wallet(true);
-      walletGen
-        .generatePrivateKey()
-        .generateWifPrivateKey()
-        .generatePublicKey()
-        .generateRSKAddress()
-        .encryptBIP38(req.body.password)
-        .toHex(['rskAddressFromPublicKey']);
+      const privKey = generatePrivateKey();
+      const publicKey = generatePublicKey(privKey);
+      const rskAddress = toHex(generateRSKAddress(publicKey));
 
       // const { wallet, privKey } = await getKeys(req.body);
 
@@ -122,7 +121,14 @@ router.post(
   '/createNuclear',
   asyncMiddleware(async (req, res) => {
     try {
-      // const { wallet, privKey } = await getKeys(req.body);
+      const walletGen = new Wallet(true);
+      walletGen
+        .generatePrivateKey()
+        .generateWifPrivateKey()
+        .generatePublicKey()
+        .generateRSKAddress()
+        .encryptBIP38(req.body.password)
+        .toHex(['rskAddressFromPublicKey']);
 
       const wallet = '0x32871C4e31A72E340b991ebBF5F9AE30239a31Fc';
       const privKey =

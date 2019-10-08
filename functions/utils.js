@@ -1,6 +1,6 @@
 const web3 = require('web3');
 const UserModel = require('../models/user');
-const Wallet = require('../classes/Wallet');
+const Wallet = require('./wallet');
 
 module.exports.isValidAddress = address => {
   if (!web3.utils.isAddress(address))
