@@ -1,5 +1,5 @@
 const Contract = require('./Contract');
-const Transaction = require('./Transaction');
+const Transaction = require('../functions/transaction');
 const utils = require('../functions/utils');
 const projectABI = require('../build/contracts/Project.json').abi;
 

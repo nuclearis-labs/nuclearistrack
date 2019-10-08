@@ -1,8 +1,5 @@
 const { createHash } = require('crypto');
-const ipfs = require('ipfs-http-client')('localhost', '5001', {
-  protocol: 'http'
-});
-const isIPFS = require('is-ipfs');
+const { swarmClient } = require('../services/swarm');
 
 class Document {
   constructor(file) {
@@ -22,17 +19,29 @@ class Document {
 
   async save() {
     try {
-      return await ipfs.add(this.file.buffer);
+      return await swarmClient.bzz.uploadFile(this.file.buffer, {
+        contentType: 'application/pdf'
+      });
     } catch (err) {
       throw Error(err);
     }
   }
 
-  async get(cid) {
+  async get() {
     try {
-      if (!isIPFS.cid(cid)) throw Error('Is not a correct CID format');
-      let buffer = await ipfs.get(cid);
-      return buffer[0].content.toString('base64');
+      const { body } = await swarmClient.bzz.download(this.storageHash);
+      return new Promise((resolve, reject) => {
+        let bufs = [];
+        body.on('data', chunk => {
+          bufs.push(chunk);
+        });
+        body.on('end', () => {
+          resolve(Buffer.concat(bufs));
+        });
+        body.on('error', err => {
+          reject(err);
+        });
+      });
     } catch (err) {
       throw Error(err);
     }

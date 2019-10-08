@@ -1,7 +1,7 @@
 const Contract = require('./Contract');
 const utils = require('../functions/utils');
 const userABI = require('../build/contracts/User.json').abi;
-const Transaction = require('../classes/Transaction');
+const Transaction = require('../functions/transaction');
 
 class User extends Contract {
   constructor(address, privateKey, contractAddress) {
@@ -9,7 +9,6 @@ class User extends Contract {
     this.address = address;
     this.privateKey = Buffer.from(privateKey, 'hex');
     this.instance = this.initiateContract();
-    console.log(this.instance);
   }
 
   async getUserDetails() {

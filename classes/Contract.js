@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 require('dotenv').config();
-const Web3 = require('web3');
+const web3 = require('../services/web3');
 
 class Contract {
   /**
@@ -11,9 +11,7 @@ class Contract {
    */
 
   constructor(abi, contractAddress = process.env.SCADDRESS) {
-    this.web3 = new Web3(
-      new Web3.providers.WebsocketProvider('ws://127.0.0.1:8545')
-    );
+    this.web3 = web3;
     this.abi = abi;
     this.contractAddress = contractAddress;
   }

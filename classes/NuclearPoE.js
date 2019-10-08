@@ -1,9 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-await-in-loop */
-const web3 = require('web3');
+const web3 = require('../services/web3');
 const Contract = require('./Contract');
 const Project = require('./Project');
-const Transaction = require('./Transaction');
+const Transaction = require('../functions/transaction');
 const Validator = require('./Validator');
 const utils = require('../functions/utils');
 const NuclearPoEBin = require('../build/contracts/NuclearPoE.json').bytecode;
@@ -42,9 +42,9 @@ class NuclearPoE extends Contract {
   // ATENTION! Temporal method for testing..
   async createNewNuclearPoE(privKey) {
     try {
-      const newContract = new this.web3.eth.Contract(nuclearPoEABI);
+      const newContract = new web3.eth.Contract(nuclearPoEABI);
 
-      const account = this.web3.eth.accounts.wallet.add(privKey);
+      const account = web3.eth.accounts.wallet.add(privKey);
 
       const tx = new Promise((resolve, reject) => {
         newContract

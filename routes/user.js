@@ -4,7 +4,7 @@ const {
   generatePrivateKey,
   generatePublicKey,
   generateRSKAddress
-} = require('../classes/Wallet');
+} = require('../functions/wallet');
 const NuclearPoE = require('../classes/NuclearPoE');
 const UserModel = require('../models/user');
 const { getKeys } = require('../functions/utils');
@@ -24,7 +24,7 @@ router.post(
 
       const privKey = generatePrivateKey();
       const publicKey = generatePublicKey(privKey);
-      const rskAddress = toHex(generateRSKAddress(publicKey));
+      const rskAddress = generateRSKAddress(publicKey);
 
       // const { wallet, privKey } = await getKeys(req.body);
 
