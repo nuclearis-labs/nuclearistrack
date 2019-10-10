@@ -1,4 +1,7 @@
-/*
+const Process = require('../classes/Process');
+
+new process = new Process()
+
 describe('Add Process', () => {
   test('Project expediente should be number', () => {
     expect(
@@ -31,5 +34,3 @@ describe('Add Process', () => {
     ).rejects.toEqual(TypeError(`Name of supplier is not a string`));
   });
 });
- 
-*/

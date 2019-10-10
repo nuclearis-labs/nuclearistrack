@@ -1,5 +1,5 @@
 const Contract = require('./Contract');
-const Transaction = require('../functions/transaction');
+const Transaction = require('./Transaction');
 const utils = require('../functions/utils');
 const projectABI = require('../build/contracts/Project.json').abi;
 
@@ -13,8 +13,14 @@ class Project extends Contract {
 
   async approve() {
     try {
-      const transaction = new Transaction(this, 'approveProject');
+      const transaction = new Transaction(
+        this,
+        'approveProject',
+        [],
+        this.address
+      );
 
+      transaction.encodeABI();
       await transaction.estimateGas();
       await transaction.estimateGasLimit();
       await transaction.getNonce();
@@ -23,8 +29,7 @@ class Project extends Contract {
         .sign()
         .serialize();
 
-      transaction.txHash = await transaction.send();
-      return transaction.txHash;
+      return await transaction.send();
     } catch (e) {
       throw Error(e);
     }

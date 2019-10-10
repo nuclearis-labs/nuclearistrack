@@ -11,7 +11,6 @@ class Contract {
    */
 
   constructor(abi, contractAddress = process.env.SCADDRESS) {
-    this.web3 = web3;
     this.abi = abi;
     this.contractAddress = contractAddress;
   }
@@ -23,7 +22,7 @@ class Contract {
    */
 
   initiateContract() {
-    return new this.web3.eth.Contract(this.abi, this.contractAddress);
+    return new web3.eth.Contract(this.abi, this.contractAddress);
   }
 }
 

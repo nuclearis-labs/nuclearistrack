@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node app.js",
     "client": "npm start --prefix client",
-    "test": "jest"
+    "test": "jest",
+    "swarm": "swarm --bzzaccount 0x30936E7366806b61629ddC2F77Ef933a4051fE33 --bzznetworkid 255"
   },
   "repository": {
     "type": "git",

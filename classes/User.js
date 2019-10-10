@@ -12,9 +12,8 @@ class User extends Contract {
   }
 
   async getUserDetails() {
-    const transaction = new Transaction(this, 'contractDetails');
-    const result = await transaction.call();
-    return result;
+    const transaction = new Transaction(this, this.address, 'contractDetails');
+    return await transaction.call();
   }
 }
 module.exports = User;

@@ -1,7 +1,6 @@
 const express = require('express');
 const NuclearPoE = require('../classes/NuclearPoE');
 const Project = require('../classes/Project');
-const Transaction = require('../classes/Transaction');
 const Validator = require('../classes/Validator');
 const { getKeys } = require('../functions/utils');
 

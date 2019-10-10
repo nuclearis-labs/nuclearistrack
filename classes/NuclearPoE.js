@@ -3,9 +3,8 @@
 const web3 = require('../services/web3');
 const Contract = require('./Contract');
 const Project = require('./Project');
-const Transaction = require('../functions/transaction');
+const Transaction = require('./Transaction');
 const Validator = require('./Validator');
-const utils = require('../functions/utils');
 const NuclearPoEBin = require('../build/contracts/NuclearPoE.json').bytecode;
 const nuclearPoEABI = require('../build/contracts/NuclearPoE.json').abi;
 
@@ -19,12 +18,14 @@ class NuclearPoE extends Contract {
 
   async addProject(_expediente, _projectTitle, _clientAddress) {
     try {
-      const transaction = new Transaction(this, 'createProject', [
-        _expediente,
-        _projectTitle,
-        _clientAddress
-      ]);
+      const transaction = new Transaction(
+        this,
+        'createProject',
+        [_expediente, _projectTitle, _clientAddress],
+        this.address
+      );
 
+      transaction.encodeABI();
       await transaction.estimateGas();
       await transaction.estimateGasLimit();
       await transaction.getNonce();
@@ -94,12 +95,18 @@ class NuclearPoE extends Contract {
 
   async createUser(_address, _name, _type) {
     try {
-      const transaction = new Transaction(this, 'createUser', [
-        Validator.checkAndConvertAddress(_address),
-        Validator.checkAndConvertString(_name),
-        Validator.checkAndConvertNumber(_type)
-      ]);
+      const address = Validator.checkAndConvertAddress(_address);
+      const name = Validator.checkAndConvertString(_name);
+      const type = Validator.checkAndConvertNumber(_type);
 
+      const transaction = new Transaction(
+        this,
+        'createUser',
+        [address, name, type],
+        this.address
+      );
+
+      transaction.encodeABI();
       await transaction.estimateGas();
       await transaction.estimateGasLimit();
       await transaction.getNonce();
@@ -108,10 +115,9 @@ class NuclearPoE extends Contract {
         .sign()
         .serialize();
 
-      transaction.txHash = await transaction.send();
-
-      return transaction;
+      return await transaction.send();
     } catch (e) {
+      console.log(e);
       throw Error(e);
     }
   }

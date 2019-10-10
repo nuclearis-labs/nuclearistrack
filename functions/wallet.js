@@ -100,3 +100,12 @@ module.exports.generateRSKAddress = publicKey => {
 module.exports.toHex = input => {
   return input.toString('hex');
 };
+
+module.exports.generateNewWallet = passphrase => {
+  const privKey = this.generatePrivateKey();
+  const wifPrivKey = this.generateWifPrivateKey(privKey);
+  const publicKey = this.generatePublicKey(privKey);
+  const rskAddress = this.generateRSKAddress(publicKey);
+  const encryptedPrivKey = this.encryptBIP38(wifPrivKey, passphrase);
+  return { privKey, rskAddress, encryptedPrivKey };
+};
