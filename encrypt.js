@@ -1,12 +1,11 @@
-const Wallet = require('./classes/Wallet.js');
+const {
+  generateWifPrivateKey,
+  encryptBIP38
+} = require('./functions/Wallet.js');
 
-const wallet = new Wallet(true);
-
-wallet.privKey = Buffer.from(
-  'ad48cd5d5f2b0d93f4e190fcdaed5c74c5ba48f1382e255b7ac816dd7946a9a8',
+privKey = Buffer.from(
+  'b79493c56182cffcb710c1e084be41b2c076a59fdff37ffa540e720f28f7e26f',
   'hex'
 );
 
-wallet.generateWifPrivateKey().encryptBIP38('Nuclearis');
-
-console.log(wallet);
+console.log(encryptBIP38(privKey, 'Nuclearis'));

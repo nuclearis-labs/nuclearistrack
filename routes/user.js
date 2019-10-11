@@ -1,6 +1,12 @@
 const express = require('express');
 const { asyncMiddleware } = require('../middleware/index');
-const { generateNewWallet } = require('../functions/wallet');
+const {
+  generatePrivateKey,
+  generatePublicKey,
+  generateRSKAddress,
+  encryptBIP38,
+  decryptBIP38
+} = require('../functions/wallet');
 const NuclearPoE = require('../classes/NuclearPoE');
 const UserModel = require('../models/user');
 const { getKeys } = require('../functions/utils');
@@ -18,17 +24,17 @@ router.post(
         throw Error('A user with the given email is already registered');
       }
 
-      const newWallet = generateNewWallet(req.body.newPassphrase);
+      const newPrivKey = generatePrivateKey();
+      const newPublicKey = generatePublicKey(newPrivKey);
+      const address = generateRSKAddress(newPublicKey);
+      const encryptedKey = encryptBIP38(newPrivKey, req.body.newPassphrase);
 
-      // const { wallet, privKey } = await getKeys(req.body);
+      const { wallet, privKey } = await getKeys(req.body);
 
-      const nuclear = new NuclearPoE(
-        '0xF691198C305eaDc10c2954202eA6b0BB38A76B43',
-        'b79493c56182cffcb710c1e084be41b2c076a59fdff37ffa540e720f28f7e26f'
-      );
+      const nuclear = new NuclearPoE(wallet, privKey);
 
-      const { txHash } = await nuclear.createUser(
-        newWallet.rskAddress,
+      const txResult = await nuclear.createUser(
+        address,
         req.body.newUserName,
         req.body.userType
       );
@@ -36,11 +42,11 @@ router.post(
       const result = await UserModel.create({
         username: req.body.newUserName,
         email: req.body.newUserEmail,
-        address: newWallet.rskAddress,
-        encryptedPrivateKey: newWallet.encryptedPrivKey
+        address: address,
+        encryptedPrivateKey: encryptedKey
       });
 
-      res.json({ result, txHash });
+      res.json({ result, txResult: txResult });
     } catch (e) {
       console.log(e);
 
@@ -57,16 +63,13 @@ router.post(
 
       if (!user) throw Error();
 
-      const wallet = new Wallet(true);
+      const address = generateRSKAddress(
+        generatePublicKey(
+          decryptBIP38(user.encryptedPrivateKey, req.body.passphrase)
+        )
+      );
 
-      wallet.encryptedKey = user.encryptedPrivateKey;
-      wallet
-        .decryptBIP38(req.body.passphrase)
-        .generatePublicKey()
-        .generateRSKAddress();
-
-      if (wallet.rskAddressFromPublicKey === user.address)
-        res.json({ message: 'Estas logueado' });
+      if (address === user.address) res.json({ message: 'Estas logueado' });
       else throw Error();
     } catch (e) {
       res.json({ error: 'Usuario o contraseña incorrecta' });
@@ -96,6 +99,21 @@ router.post(
   })
 );
 
+router.post('/getAll', async (req, res) => {
+  try {
+    const { wallet, privKey } = await getKeys(req.body);
+    const users = new NuclearPoE(wallet, privKey);
+
+    const result = await users.returnAll('userCount', 'userContractsArray');
+
+    res.json({ result });
+  } catch (e) {
+    console.log(e);
+
+    res.json({ error: e.message });
+  }
+});
+
 router.post('/get/:contract', async (req, res) => {
   try {
     const { wallet, privKey } = await getKeys(req.body);
@@ -115,23 +133,18 @@ router.post(
   '/createNuclear',
   asyncMiddleware(async (req, res) => {
     try {
-      const walletGen = new Wallet(true);
-      walletGen
-        .generatePrivateKey()
-        .generateWifPrivateKey()
-        .generatePublicKey()
-        .generateRSKAddress()
-        .encryptBIP38(req.body.password)
-        .toHex(['rskAddressFromPublicKey']);
+      //const { wallet, privKey } = await getKeys(req.body);
 
-      const wallet = '0x32871C4e31A72E340b991ebBF5F9AE30239a31Fc';
+      const address = '0xF691198C305eaDc10c2954202eA6b0BB38A76B43';
       const privKey =
-        'ad48cd5d5f2b0d93f4e190fcdaed5c74c5ba48f1382e255b7ac816dd7946a9a8 ';
+        'b79493c56182cffcb710c1e084be41b2c076a59fdff37ffa540e720f28f7e26f';
 
-      const nuclear = new NuclearPoE(wallet, privKey);
+      const nuclear = new NuclearPoE(address, privKey);
       const contractAddress = await nuclear.createNewNuclearPoE('0x' + privKey);
 
-      res.json({ contractAddress, wallet, privKey });
+      const user = await nuclear.createUser(address, 'NUCLEARIS', 2);
+
+      res.json(contractAddress, privKey, user);
     } catch (e) {
       console.log(e);
       res.json({ error: e.message });

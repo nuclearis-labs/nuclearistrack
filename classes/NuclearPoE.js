@@ -2,27 +2,27 @@
 /* eslint-disable no-await-in-loop */
 const web3 = require('../services/web3');
 const Contract = require('./Contract');
-const Project = require('./Project');
 const Transaction = require('./Transaction');
 const Validator = require('./Validator');
 const NuclearPoEBin = require('../build/contracts/NuclearPoE.json').bytecode;
 const nuclearPoEABI = require('../build/contracts/NuclearPoE.json').abi;
+const projectABI = require('../build/contracts/Project.json').abi;
 
 class NuclearPoE extends Contract {
   constructor(address, privateKey) {
     super(nuclearPoEABI);
     this.address = address;
-    this.privateKey = Buffer.from(privateKey, 'hex');
-    this.instance = this.initiateContract();
+    this.privateKey = privateKey;
+    this.initiateContract();
   }
 
   async addProject(_expediente, _projectTitle, _clientAddress) {
     try {
       const transaction = new Transaction(
-        this,
+        this.instance,
+        this.address,
         'createProject',
-        [_expediente, _projectTitle, _clientAddress],
-        this.address
+        [_expediente, _projectTitle, _clientAddress]
       );
 
       transaction.encodeABI();
@@ -31,7 +31,7 @@ class NuclearPoE extends Contract {
       await transaction.getNonce();
       transaction
         .prepareRawTx()
-        .sign()
+        .sign(this.privateKey)
         .serialize();
 
       return await transaction.send();
@@ -41,11 +41,13 @@ class NuclearPoE extends Contract {
   }
 
   // ATENTION! Temporal method for testing..
-  async createNewNuclearPoE(privKey) {
+  async createNewNuclearPoE() {
     try {
       const newContract = new web3.eth.Contract(nuclearPoEABI);
 
-      const account = web3.eth.accounts.wallet.add(privKey);
+      const account = web3.eth.accounts.wallet.add(
+        this.privateKey.toString('hex')
+      );
 
       const tx = new Promise((resolve, reject) => {
         newContract
@@ -61,8 +63,7 @@ class NuclearPoE extends Contract {
           });
       });
 
-      const txResolved = await tx;
-      return txResolved;
+      return await tx;
     } catch (e) {
       console.log(e);
 
@@ -70,27 +71,63 @@ class NuclearPoE extends Contract {
     }
   }
 
-  async returnAllProjects() {
-    const cantidadProjectos = await this.instance.methods.projectCount().call();
+  async returnAll(count, array) {
+    const tx = new Transaction(this.instance, this.address, count);
+    const cantidad = await tx.call();
+
     const result = [];
-    for (let i = 0; i < cantidadProjectos; i += 1) {
-      const contractAddress = await this.instance.methods
-        .projectContractsArray(i)
-        .call();
+    for (let i = 0; i < cantidad; i += 1) {
+      let txContractAddress = new Transaction(
+        this.instance,
+        this.address,
+        array,
+        [i]
+      );
+
+      let contractAddress = await txContractAddress.call();
       result.push(contractAddress);
-      // const project = new Project(contractAddress);
-      // const details = utils.convertResult(await project.getDetails());
-      // result.push({
-      //   expediente: details[0],
-      //   contractAddress: details[1],
-      //   clientAddress: details[2],
-      //   projectTitle: details[3],
-      //   approved: details[4],
-      //   allDocuments: details[5],
-      //   allSuppliers: details[6]
-      // });
     }
     return result;
+  }
+
+  async addProcessToProject(
+    _supplierAddress,
+    _projectContractAddress,
+    _processTitle
+  ) {
+    try {
+      const supplierAddress = Validator.checkAndConvertAddress(
+        _supplierAddress
+      );
+      const projectContractAddress = Validator.checkAndConvertAddress(
+        _projectContractAddress
+      );
+      const processTitle = Validator.checkAndConvertString(_processTitle);
+
+      const tx = new Transaction(
+        this.instance,
+        this.address,
+        'addProcessToProject',
+        [supplierAddress, projectContractAddress, processTitle]
+      );
+
+      const eventContractInstance = new web3.eth.Contract(
+        projectABI,
+        projectContractAddress
+      );
+
+      tx.encodeABI();
+      await tx.estimateGasLimit();
+      await tx.estimateGas();
+      await tx.getNonce();
+      tx.prepareRawTx()
+        .sign(this.privateKey)
+        .serialize();
+
+      return await tx.send(eventContractInstance);
+    } catch (e) {
+      throw Error(e);
+    }
   }
 
   async createUser(_address, _name, _type) {
@@ -100,10 +137,10 @@ class NuclearPoE extends Contract {
       const type = Validator.checkAndConvertNumber(_type);
 
       const transaction = new Transaction(
-        this,
+        this.instance,
+        this.address,
         'createUser',
-        [address, name, type],
-        this.address
+        [address, name, type]
       );
 
       transaction.encodeABI();
@@ -112,7 +149,7 @@ class NuclearPoE extends Contract {
       await transaction.getNonce();
       transaction
         .prepareRawTx()
-        .sign()
+        .sign(this.privateKey)
         .serialize();
 
       return await transaction.send();

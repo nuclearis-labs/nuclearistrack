@@ -10,26 +10,29 @@ const projectABI = JSON.parse(fs.readFileSync('build/contracts/Project.json'))
   .abi;
 
 class Process extends Contract {
-  constructor(address, wallet, privateKey) {
-    super(wallet, privateKey);
+  constructor(address, privateKey, contractAddress) {
+    super(projectABI, contractAddress);
     this.address = address;
-    this.instance = this.initiateContract(projectABI, address);
+    this.privateKey = privateKey;
+    this.initiateContract(contractAddress, projectABI);
   }
 
-  async addDocument(_supplierAddress, _documentName, file) {
+  async addDocument(_documentName, file) {
     try {
-      const documentName = Validator.checkAndConvertNumber(_documentName);
-      const supplierAddress = Validator.checkAndConvertAddress(
-        _supplierAddress
+      const documentName = Validator.checkAndConvertString(_documentName);
+
+      const document = new Document(file);
+
+      document.createHash();
+      const documentHash = document.getHash;
+
+      const storageHash = await document.save();
+      const transaction = new Transaction(
+        this.instance,
+        this.address,
+        'addDocument',
+        [documentHash, documentName, storageHash]
       );
-
-      const documentHash = new Document(file).createHash().getHash;
-
-      const transaction = new Transaction(this, this.address, 'addDocument', [
-        supplierAddress,
-        documentHash,
-        documentName
-      ]);
 
       transaction.encodeABI();
       await transaction.estimateGas();
@@ -37,7 +40,7 @@ class Process extends Contract {
       await transaction.getNonce();
       transaction
         .prepareRawTx()
-        .sign()
+        .sign(this.privateKey)
         .serialize();
 
       return await transaction.send();
@@ -50,43 +53,58 @@ class Process extends Contract {
     try {
       const documentHash = new Document(file).createHash().getHash;
 
-      const transaction = new Transaction(this, this.address, 'findDocument', [
-        documentHash
-      ]);
+      const transaction = new Transaction(
+        this.instance,
+        this.address,
+        'findDocument',
+        [documentHash]
+      );
 
-      transaction.encodeABI();
-      await transaction.estimateGas();
-      await transaction.estimateGasLimit();
-      await transaction.getNonce();
-      transaction
-        .prepareRawTx()
-        .sign()
-        .serialize();
+      return await transaction.call();
+    } catch (e) {
+      throw Error(e);
+    }
+  }
 
-      return await transaction.send();
+  async downloadDocument(hash) {
+    try {
+      const doc = new Document();
+      return await doc.get(hash);
     } catch (e) {
       throw Error(e);
     }
   }
 
   async returnDocuments() {
-    const txDocQty = new Transaction(this, this.address, 'documentQty');
+    const txDocQty = new Transaction(
+      this.instance,
+      this.address,
+      'documentQty'
+    );
 
     const documentQty = await txDocQty.call();
 
-    this.documents = [];
+    let documents = [];
     for (let i = 0; i < documentQty; i += 1) {
-      const txAllDoc = new Transaction(this, this.address, 'allDocuments', [i]);
+      const txAllDoc = new Transaction(
+        this.instance,
+        this.address,
+        'allDocuments',
+        [i]
+      );
       const document = await txAllDoc.call();
 
-      const txDoc = new Transaction(this, this.address, 'findDocument', [
-        document
-      ]);
+      const txDoc = new Transaction(
+        this.instance,
+        this.address,
+        'findDocument',
+        [document]
+      );
       const documentDetails = await txDoc.call();
 
-      this.documents.push(documentDetails);
+      documents.push(documentDetails);
     }
-    return this;
+    return documents;
   }
 }
 

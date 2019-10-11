@@ -27,9 +27,9 @@ class Document {
     }
   }
 
-  async get() {
+  async get(hash) {
     try {
-      const { body } = await swarmClient.bzz.download(this.storageHash);
+      const { body } = await swarmClient.bzz.download(hash);
       return new Promise((resolve, reject) => {
         let bufs = [];
         body.on('data', chunk => {

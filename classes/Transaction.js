@@ -2,36 +2,40 @@ const ethTx = require('ethereumjs-tx');
 const web3 = require('../services/web3');
 
 class Transaction {
-  constructor(instance, fromAddress, method, arg = []) {
-    this.instance = instance;
+  constructor(contract, fromAddress, method, arg = []) {
+    this.contract = contract;
     this.method = method;
     this.arg = arg;
     this.fromAddress = fromAddress;
   }
 
-  encodeABI = () => {
-    this.data = this.instance.methods[this.method](...this.arg).encodeABI();
-  };
+  encodeABI() {
+    this.data = this.contract.methods[this.method](...this.arg).encodeABI();
+    return this;
+  }
 
-  call = async () => {
-    return await this.instance.methods[this.method]().call();
-  };
+  async call() {
+    return await this.contract.methods[this.method](...this.arg).call();
+  }
 
-  estimateGas = async () => {
+  async estimateGas() {
     this.gasprice = await web3.eth.getGasPrice();
-  };
+    return this;
+  }
 
-  estimateGasLimit = async () => {
-    this.gaslimit = await this.instance.methods[this.method](
+  async estimateGasLimit() {
+    this.gaslimit = await this.contract.methods[this.method](
       ...this.arg
     ).estimateGas({
       from: this.fromAddress
     });
-  };
+    return this;
+  }
 
-  getNonce = async () => {
+  async getNonce() {
     this.nonce = await web3.eth.getTransactionCount(this.fromAddress);
-  };
+    return this;
+  }
 
   /**
    * Prepares
@@ -39,16 +43,24 @@ class Transaction {
    * @param {Buffer} privateKey Private Key of user
    * @returns {ethTx} Signed Transaction Instance
    */
-  prepareRawTx = () => {
+  prepareRawTx() {
     this.tx = new ethTx({
       nonce: web3.utils.toHex(this.nonce),
       gasPrice: web3.utils.toHex(this.gasprice),
       gasLimit: web3.utils.toHex(this.gaslimit),
-      to: this.instance.options.address,
+      to: this.contract.options.address,
       value: '0x00',
-      data: this.data
+      data: this.data,
+      chainId: web3.utils.toHex(5777)
     });
-  };
+    // console.log(this.nonce);
+    // console.log(this.gasprice);
+    // console.log(this.gaslimit);
+    // console.log(this.contract.options.address);
+    // console.log(this.data);
+
+    return this;
+  }
 
   /**
    * Sign Transaction Instance
@@ -56,32 +68,43 @@ class Transaction {
    * @param {Buffer} privateKey Private Key of user
    * @returns {ethTx} Signed Transaction Instance
    */
-  sign = privateKey => {
-    return this.tx.sign(privateKey);
-  };
+  sign(privateKey) {
+    // console.log(privateKey.toString('hex'));
+
+    this.tx.sign(privateKey);
+    return this;
+  }
 
   /**
    * Serialize transaction data
    * @param {ethTx} tx Instance of ethTx Class
    * @returns {ethTx} Serialized Transaction Instance
    */
-  serialize = () => {
-    return this.tx.serialize();
-  };
+  serialize() {
+    this.serializedTx = this.tx.serialize();
+    return this;
+  }
 
   /**
    * Send a serialized transaction
    * @returns {Promise<string>} Hash of transaction
    */
-  send = async () => {
+  async send(eventContractInstance = this.contract) {
     return new Promise((resolve, reject) => {
-      web3.eth.sendSignedTransaction(`0x${this.tx.toString('hex')}`);
-      this.instance.events.allEvents({}, (error, event) => {
-        if (error) reject(error);
-        resolve(event);
-      });
+      web3.eth.sendSignedTransaction(
+        `0x${this.serializedTx.toString('hex')}`,
+        (err, result) => {
+          console.log(result);
+
+          if (err) reject(err);
+          eventContractInstance.events.allEvents({}, (err, event) => {
+            if (err) reject(err);
+            resolve(event);
+          });
+        }
+      );
     });
-  };
+  }
 }
 
 module.exports = Transaction;

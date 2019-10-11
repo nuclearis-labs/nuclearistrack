@@ -26,9 +26,9 @@ contract NuclearPoE {
     mapping(address => UserStruct) private user;
 
     address[] public projectContractsArray;
-    address[] private userContractsArray;
+    address[] public userContractsArray;
     uint8 public projectCount;
-    uint8 private userCount;
+    uint8 public userCount;
 
     modifier onlyOwner() {
     require(msg.sender == owner,"Only owner can make this change");_;
@@ -61,12 +61,13 @@ contract NuclearPoE {
     function createUser(address _userAddress, bytes32 _userName, uint8 userType) external onlyOwner() {
         require(user[_userAddress].created == false,"User already created");
 
-        address ContractAddress = address(new User(_userName, _userAddress));
+        address UserContractAddress = address(new User(_userName, _userAddress));
 
-        user[_userAddress] = UserStruct(ContractAddress, userType, true);
+        user[_userAddress] = UserStruct(UserContractAddress, userType, true);
+        userContractsArray.push(UserContractAddress);
         userCount++;
 
-        emit CreateUser(ContractAddress);
+        emit CreateUser(UserContractAddress);
     }
 
     function addProcessToProject(address _supplierAddress, address _projectContractAddress, bytes32 _processName) external onlyOwner() {
@@ -92,9 +93,7 @@ contract Project {
     struct Document {
         address supplierAddress;
         bytes32 documentTitle;
-        bytes32 storageHash;
-        uint storageFunction;
-        uint storageSize;
+        string storageHash;
         uint mineTime;
         bool created;
     }
@@ -105,10 +104,10 @@ contract Project {
         bool created;
     }
 
-    uint private supplierCount;
-    uint private documentQty;
-    address[] private supplierAddresses;
-    bytes32[] private allDocuments;
+    uint public supplierCount;
+    uint public documentQty;
+    address[] public supplierAddresses;
+    bytes32[] public allDocuments;
 
     mapping(address => Process) private process;
     mapping(bytes32 => Document) private document;
@@ -123,27 +122,26 @@ contract Project {
         clientAddress = _clientAddress;
     }
 
-    function addDocument (address _supplierAddress, bytes32 _hash, bytes32 _documentName, bytes32 storageHash, uint storageFunction, uint storageSize) external {
+    function addDocument (bytes32 _hash, bytes32 _documentName, string calldata storageHash) external {
         require(approved == true,"Project is not approved by client");
-        require(process[_supplierAddress].created == true, "Process does not exist");
+        require(process[msg.sender].created == true, "Process does not exist");
         require(document[_hash].created == false, "Document already created");
 
-        document[_hash] = Document(_supplierAddress, _documentName, storageHash, storageFunction, storageSize, now, true);
+        document[_hash] = Document(msg.sender, _documentName, storageHash, now, true);
         allDocuments.push(_hash);
         documentQty++;
         emit AddDocument();
     }
 
 
-    function findDocument(bytes32 _hash) external view returns (address, uint, bytes32, bytes32, uint, uint) {
+    function findDocument(bytes32 _hash) external view returns (address, uint, bytes32, string memory) {
         require(document[_hash].created == true, "Document does not exist");
         return (
             document[_hash].supplierAddress,
             document[_hash].mineTime,
             document[_hash].documentTitle,
-            document[_hash].storageHash,
-            document[_hash].storageFunction,
-            document[_hash].storageSize
+            document[_hash].storageHash
+        
             );
     }
 

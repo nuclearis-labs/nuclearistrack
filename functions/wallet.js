@@ -9,12 +9,22 @@ const { networks } = require('bitcoinjs-lib');
 
 /**
  * Encrypts a WIF Format PrivateKey using the BIP-38 Implementation
+ * @param {Buffer} privKey Private Key
+ * @param {number} network Network ID
+ * @returns {string} Private Key in WIF format
+ */
+generateWifPrivateKey = (privKey, network = networks.testnet.wif) => {
+  return wif.encode(network, privKey, true);
+};
+
+/**
+ * Encrypts a WIF Format PrivateKey using the BIP-38 Implementation
  * @param {string} wifPrivKey Private Key in WIF format
  * @param {string} passphrase Passphrase to encrypt Key
  * @returns {string} Encrypted BIP-38 Key
  */
-module.exports.encryptBIP38 = (wifPrivKey, passphrase) => {
-  const decoded = wif.decode(wifPrivKey);
+module.exports.encryptBIP38 = (privKey, passphrase) => {
+  const decoded = wif.decode(generateWifPrivateKey(privKey));
   return bip38.encrypt(decoded.privateKey, decoded.compressed, passphrase);
 };
 
@@ -23,15 +33,15 @@ module.exports.encryptBIP38 = (wifPrivKey, passphrase) => {
  * @param {string} encryptedKey Private Key in WIF format
  * @param {string} passphrase Passphrase to encrypt Key
  * @param {number} network Network ID
- * @returns {string} Decrypted Private Key in WIF format
+ * @returns {Buffer} Decrypted Private Key in Buffer
  */
 module.exports.decryptBIP38 = (
   encryptedKey,
   passphrase,
   network = networks.testnet.wif
 ) => {
-  const key = bip38.decrypt(encryptedKey, passphrase);
-  return wif.encode(network, key.privateKey, key.compressed);
+  const { privateKey } = bip38.decrypt(encryptedKey, passphrase);
+  return privateKey;
 };
 
 /**
@@ -44,19 +54,6 @@ module.exports.generatePrivateKey = () => {
     privKey = crypto.randomBytes(32);
   } while (!ecc.isPrivate(privKey));
   return privKey;
-};
-
-/**
- * Encrypts a WIF Format PrivateKey using the BIP-38 Implementation
- * @param {Buffer} privKey Private Key
- * @param {number} network Network ID
- * @returns {string} Private Key in WIF format
- */
-module.exports.generateWifPrivateKey = (
-  privKey,
-  network = networks.testnet.wif
-) => {
-  return wif.encode(network, privKey, true);
 };
 
 /**
@@ -82,11 +79,6 @@ module.exports.generatePublicKey = privKey => {
  * @returns {string} Wallet Address
  */
 module.exports.generateRSKAddress = publicKey => {
-  if (publicKey == null) {
-    throw new Error(
-      'class Wallet => generateRSKAddress() is missing a public key'
-    );
-  }
   return utils.toChecksumAddress(
     ethereumjs.pubToAddress(publicKey, true).toString('hex')
   );
@@ -99,13 +91,4 @@ module.exports.generateRSKAddress = publicKey => {
  */
 module.exports.toHex = input => {
   return input.toString('hex');
-};
-
-module.exports.generateNewWallet = passphrase => {
-  const privKey = this.generatePrivateKey();
-  const wifPrivKey = this.generateWifPrivateKey(privKey);
-  const publicKey = this.generatePublicKey(privKey);
-  const rskAddress = this.generateRSKAddress(publicKey);
-  const encryptedPrivKey = this.encryptBIP38(wifPrivKey, passphrase);
-  return { privKey, rskAddress, encryptedPrivKey };
 };

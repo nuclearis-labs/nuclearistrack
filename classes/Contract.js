@@ -21,8 +21,8 @@ class Contract {
    * @returns {Contract Instance}
    */
 
-  initiateContract() {
-    return new web3.eth.Contract(this.abi, this.contractAddress);
+  initiateContract(contractAddress = this.contractAddress, abi = this.abi) {
+    this.instance = new web3.eth.Contract(abi, contractAddress);
   }
 }
 
