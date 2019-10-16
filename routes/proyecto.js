@@ -41,15 +41,12 @@ router.post('/approve/:contract', async (req, res) => {
   }
 });
 
-router.post('/get', async (req, res) => {
+router.post('/getAll', async (req, res) => {
   try {
     const { wallet, privKey } = await getKeys(req.body);
     const proyecto = new NuclearPoE(wallet, privKey);
 
-    const result = await proyecto.returnAll(
-      'projectCount',
-      'projectContractsArray'
-    );
+    const result = await proyecto.returnAll('getAllProjectContract');
 
     res.json({ result });
   } catch (e) {

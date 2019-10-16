@@ -15,7 +15,7 @@ contract('Add Document', accounts => {
   let projectInstance;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    await instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'), 0);
+    await instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'));
 
     const result = await instance.createProject(
       41955,
@@ -24,28 +24,23 @@ contract('Add Document', accounts => {
     );
     user = await instance.createUser(
       accounts[2],
-      web3.utils.fromAscii('IMECO'),
-      1
+      web3.utils.fromAscii('IMECO')
     );
+
     projectAddress = result.logs[0].args[0];
     projectInstance = await Project.at(projectAddress);
 
-    await instance.addProcessToProject(
+    await projectInstance.addProcess(
       accounts[2],
-      projectAddress,
-      web3.utils.fromAscii('Mecanizado'),
-      web3.utils.fromAscii('BGH')
+      web3.utils.fromAscii('Mecanizado')
     );
   });
   it('REVERT: Add a document before approval of project', async () => {
     await truffleAssert.reverts(
       projectInstance.addDocument(
-        accounts[2],
-        web3.utils.fromAscii('Certificado'),
         '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
-        '0x37669b200d7b2b6f5d4ae2bb2e013b495f776791d148f281a6c5e820337ec0f5',
-        12,
-        20,
+        web3.utils.fromAscii('Certificado'),
+        'storageHash',
         {
           from: accounts[2]
         }
@@ -56,26 +51,31 @@ contract('Add Document', accounts => {
   it('EVENT: Add a document', async () => {
     await projectInstance.approveProject({ from: accounts[1] });
     const result = await projectInstance.addDocument(
-      accounts[2],
-      web3.utils.fromAscii('Certificado'),
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
-      '0x37669b200d7b2b6f5d4ae2bb2e013b495f776791d148f281a6c5e820337ec0f5',
-      12,
-      20,
+      web3.utils.fromAscii('Certificado'),
+      'storageHash',
       { from: accounts[2] }
     );
 
     truffleAssert.eventEmitted(result, 'AddDocument');
   });
+  it('EVENT: Add a document as non-supplier', async () => {
+    await truffleAssert.reverts(
+      projectInstance.addDocument(
+        '0x508dbc09b01b35942fb4535008b28112595b9b578daba6d8a1b1cf30f73d4186',
+        web3.utils.fromAscii('Certificado'),
+        'storageHash',
+        { from: accounts[0] }
+      ),
+      'Has to be supplier of project'
+    );
+  });
   it('REVERT: Add a duplicate document (same hash)', async () => {
     await truffleAssert.reverts(
       projectInstance.addDocument(
-        accounts[2],
-        web3.utils.fromAscii('Certificado'),
         '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
-        '0x37669b200d7b2b6f5d4ae2bb2e013b495f776791d148f281a6c5e820337ec0f5',
-        12,
-        20,
+        web3.utils.fromAscii('Certificado'),
+        'storageHash',
         { from: accounts[2] }
       ),
       'Document already created'
@@ -93,7 +93,7 @@ contract('Find Document', accounts => {
   let projectInstance;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    await instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'), 0);
+    await instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'));
 
     const result = await instance.createProject(
       41955,
@@ -102,26 +102,20 @@ contract('Find Document', accounts => {
     );
     user = await instance.createUser(
       accounts[2],
-      web3.utils.fromAscii('IMECO'),
-      1
+      web3.utils.fromAscii('IMECO')
     );
     projectAddress = result.logs[0].args[0];
-    projectInstance = await Project.at(result.logs[0].args[0]);
+    projectInstance = await Project.at(projectAddress);
 
-    await instance.addProcessToProject(
+    await projectInstance.addProcess(
       accounts[2],
-      projectAddress,
-      web3.utils.fromAscii('Mecanizado'),
-      web3.utils.fromAscii('BGH')
+      web3.utils.fromAscii('Mecanizado')
     );
     await projectInstance.approveProject({ from: accounts[1] });
     await projectInstance.addDocument(
-      accounts[2],
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
       web3.utils.fromAscii('Certificado'),
-      '0x37669b200d7b2b6f5d4ae2bb2e013b495f776791d148f281a6c5e820337ec0f5',
-      12,
-      20,
+      'storageHash',
       { from: accounts[2] }
     );
   });
@@ -130,8 +124,8 @@ contract('Find Document', accounts => {
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd'
     );
     assert.equal(
-      result[0],
-      accounts[2],
+      result[2],
+      'storageHash',
       'Document record does not match requested document'
     );
   });

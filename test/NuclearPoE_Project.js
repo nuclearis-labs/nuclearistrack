@@ -12,31 +12,20 @@ const web3 = require('web3');
 
 contract('Create Project', accounts => {
   let instance;
-  let userInstance;
   before(async () => {
     instance = await NuclearPoE.deployed();
   });
-  it('EVENT: Create a new project and add to User Contract', async () => {
-    const user = await instance.createUser(
-      accounts[1],
-      web3.utils.fromAscii('NA-SA'),
-      0
-    );
-
-    let userAddress = user.logs[0].args[0];
-    userInstance = await User.at(userAddress);
-
+  it('EVENT: Create a new project', async () => {
+    await instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'));
     const result = await instance.createProject(
       41955,
       web3.utils.fromAscii('Conjunto Soporte'),
       accounts[1]
     );
-    let final = await userInstance.contractDetails();
 
     truffleAssert.eventEmitted(result, 'CreateProject', ev => {
       return ev.newProjectContractAddress;
     });
-    assert.equal(result.logs[0].args[0], final[1][0]);
   });
 
   it('REVERT: Create duplicate project', async () => {
@@ -67,7 +56,7 @@ contract('Create Project', accounts => {
         accounts[1],
         { from: accounts[1] }
       ),
-      'Only owner can make this change'
+      'Ownable: caller is not the owner.'
     );
   });
   after(async () => {
@@ -77,15 +66,13 @@ contract('Create Project', accounts => {
 
 contract('Add Process', accounts => {
   let instance;
-  let user;
   let projectAddress;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    await instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'), 0);
+    await instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'));
     user = await instance.createUser(
       accounts[2],
-      web3.utils.fromAscii('IMECO'),
-      1
+      web3.utils.fromAscii('IMECO')
     );
 
     const result = await instance.createProject(
@@ -100,39 +87,31 @@ contract('Add Process', accounts => {
 
   it('REVERT: Create new process as non-owner', async () => {
     await truffleAssert.reverts(
-      instance.addProcessToProject(
+      projectInstance.addProcess(
         accounts[2],
-        projectAddress,
         web3.utils.fromAscii('Mecanizado'),
-        web3.utils.fromAscii('BGH'),
-        { from: accounts[1] }
+        {
+          from: accounts[1]
+        }
       ),
-      'Only owner can make this change'
+      'Has to be Material Organization.'
     );
   });
 
-  it('EVENT: Add a process and add to User Contract', async () => {
-    const result = await instance.addProcessToProject(
+  it('EVENT: Add a process', async () => {
+    const result = await projectInstance.addProcess(
       accounts[2],
-      projectAddress,
-      web3.utils.fromAscii('Mecanizado'),
-      web3.utils.fromAscii('BGH')
+      web3.utils.fromAscii('Mecanizado')
     );
 
-    const userAddress = user.logs[0].args[0];
-    const userContract = await User.at(userAddress);
-    let final = await userContract.contractDetails();
-
-    assert.equal(final[1][0], projectAddress);
+    truffleAssert.eventEmitted(result, 'AddProcess');
   });
 
   it('REVERT: Add duplicate process', async () => {
     await truffleAssert.reverts(
-      instance.addProcessToProject(
+      projectInstance.addProcess(
         accounts[2],
-        projectAddress,
-        web3.utils.fromAscii('Mecanizado'),
-        web3.utils.fromAscii('BGH')
+        web3.utils.fromAscii('Mecanizado')
       ),
       'Process already created'
     );
@@ -140,26 +119,19 @@ contract('Add Process', accounts => {
 
   it('REVERT: Add a process with non-existing User', async () => {
     truffleAssert.reverts(
-      instance.addProcessToProject(
+      projectInstance.addProcess(
         accounts[3],
-        projectAddress,
-        web3.utils.fromAscii('Mecanizado'),
-        web3.utils.fromAscii('BGH')
+        web3.utils.fromAscii('Mecanizado')
       ),
       'User does not exist'
     );
   });
 
   it('REVERT: Add process to already approved project', async () => {
-    await instance.createUser(accounts[3], web3.utils.fromAscii('BGH'), 1);
+    await instance.createUser(accounts[3], web3.utils.fromAscii('BGH'));
     await projectInstance.approveProject({ from: accounts[1] });
     await truffleAssert.reverts(
-      instance.addProcessToProject(
-        accounts[3],
-        projectAddress,
-        web3.utils.fromAscii('Plateado'),
-        web3.utils.fromAscii('NRS')
-      ),
+      projectInstance.addProcess(accounts[3], web3.utils.fromAscii('Plateado')),
       'Project is already approved by client'
     );
   });
@@ -173,8 +145,8 @@ contract('Approve Project', accounts => {
   let instance;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    await instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'), 0);
-    await instance.createUser(accounts[2], web3.utils.fromAscii('IMECO'), 1);
+    await instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'));
+    await instance.createUser(accounts[2], web3.utils.fromAscii('IMECO'));
     const result = await instance.createProject(
       41955,
       web3.utils.fromAscii('Conjunto Soporte'),
@@ -208,6 +180,7 @@ contract('Approve Project', accounts => {
   });
   after(async () => {
     await instance.kill({ from: accounts[0] });
+    await projectInstance.kill({ from: accounts[0] });
   });
 });
 
@@ -215,8 +188,8 @@ contract('Return Projects', accounts => {
   let instance;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    await instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'), 0);
-    await instance.createUser(accounts[2], web3.utils.fromAscii('IMECO'), 1);
+    await instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'));
+    await instance.createUser(accounts[2], web3.utils.fromAscii('IMECO'));
     await instance.createProject(
       41955,
       web3.utils.fromAscii('Conjunto Soporte'),
@@ -229,17 +202,7 @@ contract('Return Projects', accounts => {
     );
   });
   it('Return projects contracts', async () => {
-    const projectCount = await instance.projectCount();
-    const result = [];
-    for (let i = 0; i < projectCount; i += 1) {
-      const res = await instance.projectContractsArray(i);
-      const projectInstance = await Project.at(res);
-      const contractDetails = await projectInstance.contractDetails();
-      result.push({
-        expediente: contractDetails[0],
-        title: contractDetails[1]
-      });
-    }
+    const result = await instance.getAllProjectContract();
     assert.lengthOf(result, 2, 'Result should be array of 2 projects');
   });
   after(async () => {

@@ -71,76 +71,23 @@ class NuclearPoE extends Contract {
     }
   }
 
-  async returnAll(count, array) {
-    const tx = new Transaction(this.instance, this.address, count);
-    const cantidad = await tx.call();
+  async returnAll(method) {
+    const tx = new Transaction(this.instance, this.address, method);
+    const result = await tx.call();
 
-    const result = [];
-    for (let i = 0; i < cantidad; i += 1) {
-      let txContractAddress = new Transaction(
-        this.instance,
-        this.address,
-        array,
-        [i]
-      );
-
-      let contractAddress = await txContractAddress.call();
-      result.push(contractAddress);
-    }
     return result;
   }
 
-  async addProcessToProject(
-    _supplierAddress,
-    _projectContractAddress,
-    _processTitle
-  ) {
-    try {
-      const supplierAddress = Validator.checkAndConvertAddress(
-        _supplierAddress
-      );
-      const projectContractAddress = Validator.checkAndConvertAddress(
-        _projectContractAddress
-      );
-      const processTitle = Validator.checkAndConvertString(_processTitle);
-
-      const tx = new Transaction(
-        this.instance,
-        this.address,
-        'addProcessToProject',
-        [supplierAddress, projectContractAddress, processTitle]
-      );
-
-      const eventContractInstance = new web3.eth.Contract(
-        projectABI,
-        projectContractAddress
-      );
-
-      tx.encodeABI();
-      await tx.estimateGasLimit();
-      await tx.estimateGas();
-      await tx.getNonce();
-      tx.prepareRawTx()
-        .sign(this.privateKey)
-        .serialize();
-
-      return await tx.send(eventContractInstance);
-    } catch (e) {
-      throw Error(e);
-    }
-  }
-
-  async createUser(_address, _name, _type) {
+  async createUser(_address, _name) {
     try {
       const address = Validator.checkAndConvertAddress(_address);
       const name = Validator.checkAndConvertString(_name);
-      const type = Validator.checkAndConvertNumber(_type);
 
       const transaction = new Transaction(
         this.instance,
         this.address,
         'createUser',
-        [address, name, type]
+        [address, name]
       );
 
       transaction.encodeABI();

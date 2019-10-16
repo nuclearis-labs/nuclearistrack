@@ -33,11 +33,7 @@ router.post(
 
       const nuclear = new NuclearPoE(wallet, privKey);
 
-      const txResult = await nuclear.createUser(
-        address,
-        req.body.newUserName,
-        req.body.userType
-      );
+      const txResult = await nuclear.createUser(address, req.body.newUserName);
 
       const result = await UserModel.create({
         username: req.body.newUserName,
@@ -104,7 +100,7 @@ router.post('/getAll', async (req, res) => {
     const { wallet, privKey } = await getKeys(req.body);
     const users = new NuclearPoE(wallet, privKey);
 
-    const result = await users.returnAll('userCount', 'userContractsArray');
+    const result = await users.returnAll('getAllUsers');
 
     res.json({ result });
   } catch (e) {

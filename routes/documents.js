@@ -28,7 +28,7 @@ router.post('/download/:contract/:hash', async (req, res) => {
 
     const result = await process.downloadDocument(req.params.hash);
 
-    res.json(result);
+    res.json(result.toString('base64'));
   } catch (e) {
     console.log(e);
     res.json({ error: e.message });

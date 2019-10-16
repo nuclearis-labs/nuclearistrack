@@ -94,7 +94,7 @@ class Transaction {
       web3.eth.sendSignedTransaction(
         `0x${this.serializedTx.toString('hex')}`,
         (err, result) => {
-          console.log(result);
+          console.log('Transaction Hash ' + result);
 
           if (err) reject(err);
           eventContractInstance.events.allEvents({}, (err, event) => {

@@ -75,36 +75,24 @@ class Process extends Contract {
     }
   }
 
-  async returnDocuments() {
-    const txDocQty = new Transaction(
+  async returnProcessDetailsByOwner(_supplierAddress) {
+    const txSuppliers = new Transaction(
       this.instance,
       this.address,
-      'documentQty'
+      'returnProcessByOwner',
+      [_supplierAddress]
     );
 
-    const documentQty = await txDocQty.call();
+    return await txSuppliers.call();
+  }
+  async returnDocuments() {
+    const txSuppliers = new Transaction(
+      this.instance,
+      this.address,
+      'returnAllDocuments'
+    );
 
-    let documents = [];
-    for (let i = 0; i < documentQty; i += 1) {
-      const txAllDoc = new Transaction(
-        this.instance,
-        this.address,
-        'allDocuments',
-        [i]
-      );
-      const document = await txAllDoc.call();
-
-      const txDoc = new Transaction(
-        this.instance,
-        this.address,
-        'findDocument',
-        [document]
-      );
-      const documentDetails = await txDoc.call();
-
-      documents.push(documentDetails);
-    }
-    return documents;
+    return await txSuppliers.call();
   }
 }
 

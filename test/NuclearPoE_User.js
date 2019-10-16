@@ -18,35 +18,30 @@ contract('User Contracts', accounts => {
 
   it('REVERT: Create new user as non-owner', async () => {
     await truffleAssert.reverts(
-      instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'), 0, {
+      instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'), {
         from: accounts[1]
       }),
-      'Only owner can make this change'
+      'Ownable: caller is not the owner.'
     );
   });
 
   it('Create user', async () => {
     const result = await instance.createUser(
       accounts[1],
-      web3.utils.fromAscii('NA-SA'),
-      0
+      web3.utils.fromAscii('NA-SA')
     );
-    userInstance = await User.at(result.logs[0].args[0]);
-    truffleAssert.eventEmitted(result, 'CreateUser', ev => {
-      return ev.ContractAddress;
-    });
+    truffleAssert.eventEmitted(result, 'CreateUser');
   });
 
   it('REVERT: Create duplicate user', async () => {
     await truffleAssert.reverts(
-      instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'), 0),
+      instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA')),
       'User already created'
     );
   });
 
   it('Return user projects', async () => {
-    const contractDetails = await userInstance.contractDetails();
-    assert.include(contractDetails[0], web3.utils.fromAscii('NA-SA'));
+    await truffleAssert.passes(instance.user(accounts[1]));
   });
 
   after(async () => {

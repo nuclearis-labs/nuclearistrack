@@ -10,11 +10,10 @@ router.post('/create/:contract', async (req, res) => {
   try {
     const { wallet, privKey } = await getKeys(req.body);
 
-    const process = new NuclearPoE(wallet, privKey);
+    const process = new Project(wallet, privKey, req.params.contract);
 
-    const result = await process.addProcessToProject(
+    const result = await process.addProcess(
       req.body.supplierAddress,
-      req.params.contract,
       req.body.processTitle
     );
 
@@ -29,7 +28,9 @@ router.post('/get/:contract/:process', async (req, res) => {
     const { wallet, privKey } = await getKeys(req.body);
     const process = new Process(wallet, privKey, req.params.contract);
 
-    const result = await process.returnDocuments();
+    const result = await process.returnProcessDetailsByOwner(
+      req.params.process
+    );
 
     res.json(result);
   } catch (e) {
@@ -44,10 +45,7 @@ router.post('/getAll/:contract', async (req, res) => {
     const { wallet, privKey } = await getKeys(req.body);
     const process = new Project(wallet, privKey, req.params.contract);
 
-    const result = await process.returnAll(
-      'supplierCount',
-      'supplierAddresses'
-    );
+    const result = await process.returnAll('returnAllProcess');
 
     res.json({ result });
   } catch (e) {

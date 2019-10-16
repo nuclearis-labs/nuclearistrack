@@ -2,6 +2,7 @@ const Contract = require('./Contract');
 const Transaction = require('./Transaction');
 const utils = require('../functions/utils');
 const Validator = require('./Validator');
+const web3 = require('../services/web3');
 const projectABI = require('../build/contracts/Project.json').abi;
 
 class Project extends Contract {
@@ -35,13 +36,44 @@ class Project extends Contract {
     }
   }
 
+  async addProcess(_supplierAddress, _processTitle) {
+    try {
+      const supplierAddress = Validator.checkAndConvertAddress(
+        _supplierAddress
+      );
+      const processTitle = Validator.checkAndConvertString(_processTitle);
+
+      const tx = new Transaction(this.instance, this.address, 'addProcess', [
+        supplierAddress,
+        processTitle
+      ]);
+
+      const eventContractInstance = new web3.eth.Contract(
+        projectABI,
+        this.instance.options.address
+      );
+
+      tx.encodeABI();
+      await tx.estimateGasLimit();
+      await tx.estimateGas();
+      await tx.getNonce();
+      tx.prepareRawTx()
+        .sign(this.privateKey)
+        .serialize();
+
+      return await tx.send(eventContractInstance);
+    } catch (e) {
+      throw Error(e);
+    }
+  }
+
   async getDetails() {
     const tx = new Transaction(this.instance, this.address, 'contractDetails');
     const result = await tx.call();
     return result;
   }
 
-  async getAllProcessByProject() {
+  /*   async getAllProcessByProject() {
     const txProcessCount = new Transaction(
       this.instance,
       this.address,
@@ -71,24 +103,12 @@ class Project extends Contract {
       this.processList.push(process);
     }
     return this;
-  }
+  } */
 
-  async returnAll(count, array) {
-    const tx = new Transaction(this.instance, this.address, count);
-    const cantidad = await tx.call();
+  async returnAll(method) {
+    const tx = new Transaction(this.instance, this.address, method);
+    const result = await tx.call();
 
-    const result = [];
-    for (let i = 0; i < cantidad; i += 1) {
-      let txContractAddress = new Transaction(
-        this.instance,
-        this.address,
-        array,
-        [i]
-      );
-
-      let contractAddress = await txContractAddress.call();
-      result.push(contractAddress);
-    }
     return result;
   }
 }
