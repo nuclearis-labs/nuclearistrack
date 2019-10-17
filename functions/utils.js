@@ -33,8 +33,7 @@ module.exports.toAscii = bytes32 => {
 };
 
 module.exports.convertResult = object => {
-  const result = Object.values(object.result);
-  return result;
+  return Object.values(object);
 };
 
 module.exports.getKeys = async ({ email, passphrase }) => {

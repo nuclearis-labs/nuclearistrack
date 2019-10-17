@@ -10,6 +10,7 @@ contract Project {
     address private NuclearPoEAddress;
     address private moAddress;
     bytes32 private title;
+    bytes32 private oc;
 
     struct Document {
         bytes32 documentTitle;
@@ -54,12 +55,13 @@ contract Project {
         selfdestruct(_owner);
     }
 
-    constructor (uint _expediente, bytes32 _title, address _clientAddress, address _moAddress) public {
+    constructor (uint _expediente, bytes32 _title, address _clientAddress, address _moAddress, bytes32 _oc) public {
         expediente = _expediente;
         title = _title;
         clientAddress = _clientAddress;
         NuclearPoEAddress = msg.sender;
         moAddress = _moAddress;
+        oc = _oc;
     }
 
     function addDocument (bytes32 _hash, bytes32 _documentName, string calldata storageHash) external onlySupplier() {
@@ -105,8 +107,8 @@ contract Project {
         emit AddProcess();
     }
 
-    function contractDetails() external view returns (uint, address, address, bytes32, bool, bytes32[] memory, address[] memory) {
-        return (expediente, address(this), clientAddress, title, approved, allDocuments, supplierAddresses);
+    function contractDetails() external view returns (bytes32, address, uint, bytes32, bool, bytes32[] memory, address[] memory,address) {
+        return (title, clientAddress, expediente, oc, approved, allDocuments, supplierAddresses, address(this));
     }
 
     function returnAllDocuments() external view returns(bytes32[] memory) {

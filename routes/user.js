@@ -110,13 +110,13 @@ router.post('/getAll', async (req, res) => {
   }
 });
 
-router.post('/get/:contract', async (req, res) => {
+router.post('/get/:address', async (req, res) => {
   try {
     const { wallet, privKey } = await getKeys(req.body);
 
-    const user = new User(wallet, privKey, req.params.contract);
+    const user = new User(wallet, privKey);
 
-    const result = await user.getUserDetails();
+    const result = await user.getUserDetails(req.params.address);
     res.json({ result });
   } catch (e) {
     console.log(e);
@@ -124,28 +124,5 @@ router.post('/get/:contract', async (req, res) => {
     res.json({ error: e.message });
   }
 });
-
-router.post(
-  '/createNuclear',
-  asyncMiddleware(async (req, res) => {
-    try {
-      //const { wallet, privKey } = await getKeys(req.body);
-
-      const address = '0xF691198C305eaDc10c2954202eA6b0BB38A76B43';
-      const privKey =
-        'b79493c56182cffcb710c1e084be41b2c076a59fdff37ffa540e720f28f7e26f';
-
-      const nuclear = new NuclearPoE(address, privKey);
-      const contractAddress = await nuclear.createNewNuclearPoE('0x' + privKey);
-
-      const user = await nuclear.createUser(address, 'NUCLEARIS', 2);
-
-      res.json(contractAddress, privKey, user);
-    } catch (e) {
-      console.log(e);
-      res.json({ error: e.message });
-    }
-  })
-);
 
 module.exports = router;

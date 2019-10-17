@@ -1,0 +1,141 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+
+function AddProjectForm() {
+  const [form, setForm] = useState([]);
+  const [event, setEvent] = useState();
+  const [error, setError] = useState(false);
+  const [isSending, setSending] = useState(false);
+
+  function handleInput(e) {
+    e.persist();
+    setForm(form => ({ ...form, [e.target.name]: e.target.value }));
+  }
+
+  function resetState() {
+    setEvent();
+    setForm([]);
+    setError(false);
+    setSending(false);
+  }
+
+  function handleSubmit(e) {
+    setSending(true);
+    e.preventDefault();
+    axios
+      .post('/api/project/', {
+        ...form,
+        email: 'info@nuclearis.com',
+        passphrase: 'Nuclearis'
+      })
+      .then(result => {
+        console.log(result);
+        setSending(false);
+        if (result.data.error) {
+          setError(result.data.error);
+        } else {
+          setEvent(result.data.response);
+        }
+      });
+  }
+
+  return (
+    <div className="container">
+      <h1>Add Project</h1>
+      {isSending ? (
+        <div className="d-flex justify-content-center mt-5">
+          <div
+            className="spinner-border"
+            role="status"
+            style={{ width: '3rem', height: '3rem' }}
+          >
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      ) : event ? (
+        <div style={{ marginTop: '100px', textAlign: 'center' }}>
+          <h2>Project successfully saved on the Blockchain!</h2>
+          {/*    <div>Project Contract Address: {event.returnValues[0]}</div>
+          <div>Transaction Hash: {event.transactionHash}</div> */}
+          <button className="btn btn-primary" onClick={resetState}>
+            Create another project
+          </button>
+          <Link to="project-list" className="btn btn-primary">
+            Go to Project List
+          </Link>
+        </div>
+      ) : error ? (
+        <div style={{ marginTop: '100px', textAlign: 'center' }}>
+          <h2>Error saving project to Blockchain</h2>
+          <div>
+            {error !== 'Error: Returned error: execution error: revert' &&
+              error}
+          </div>
+          <button className="btn btn-primary" onClick={resetState}>
+            Create another project
+          </button>
+          <Link to="project-list" className="btn btn-primary">
+            Go to Project List
+          </Link>
+        </div>
+      ) : (
+        <form>
+          <div className="form-group">
+            <label htmlFor="expediente">Expediente</label>
+            <input
+              onChange={handleInput}
+              type="number"
+              name="expediente"
+              className="form-control"
+              id="expediente"
+              placeholder="Enter Expediente"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="">Purchase Order</label>
+            <input
+              onChange={handleInput}
+              type="text"
+              name="oc"
+              className="form-control"
+              id="oc"
+              placeholder="Enter Purchase Order"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="">Title</label>
+            <input
+              onChange={handleInput}
+              type="text"
+              name="proyectoTitle"
+              className="form-control"
+              id="title"
+              placeholder="Enter Title"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="">Client Address</label>
+            <input
+              onChange={handleInput}
+              type="text"
+              name="clientAddress"
+              className="form-control"
+              id="client"
+              placeholder="Enter Client Address"
+            />
+          </div>
+          <button
+            type="submit"
+            className="btn btn-primary"
+            onClick={handleSubmit}
+          >
+            Create Project
+          </button>
+        </form>
+      )}
+    </div>
+  );
+}
+
+export default AddProjectForm;

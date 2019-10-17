@@ -1,18 +1,20 @@
 const Contract = require('./Contract');
 const utils = require('../functions/utils');
-const userABI = require('../build/contracts/User.json').abi;
+const nuclearPoEABI = require('../build/contracts/NuclearPoE.json').abi;
 const Transaction = require('./Transaction');
 
 class User extends Contract {
-  constructor(address, privateKey, contractAddress) {
-    super(userABI, contractAddress);
+  constructor(address, privateKey) {
+    super(nuclearPoEABI);
     this.address = address;
     this.privateKey = privateKey;
     this.initiateContract();
   }
 
-  async getUserDetails() {
-    const tx = new Transaction(this.instance, this.address, 'contractDetails');
+  async getUserDetails(address) {
+    const tx = new Transaction(this.instance, this.address, 'getUserDetails', [
+      address
+    ]);
     return await tx.call();
   }
 }

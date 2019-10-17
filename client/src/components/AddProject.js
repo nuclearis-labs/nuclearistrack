@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import NuclearPoE from '../contracts/NuclearPoE';
 import Web3 from 'web3';
 import axios from 'axios';
 
@@ -9,9 +8,6 @@ function AddProject() {
   const [project, setProject] = useState([]);
   const [inProgress, setInProgress] = useState();
   const [form, setForm] = useState([]);
-  const web3 = new Web3(
-    new Web3.providers.WebsocketProvider('ws://127.0.0.1:8545')
-  );
 
   const contract = new web3.eth.Contract(
     NuclearPoE.abi,

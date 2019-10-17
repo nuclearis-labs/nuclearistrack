@@ -25,11 +25,11 @@ contract NuclearPoE is Ownable {
     event CreateProject(address newProjectContractAddress);
     event CreateUser();
 
-    function createProject(uint _expediente, bytes32 _projectTitle, address _userAddress) external onlyOwner() {
+    function createProject(uint _expediente, bytes32 _projectTitle, address _userAddress, bytes32 _oc) external onlyOwner() {
         require(projectContract[_expediente] == address(0), "Project already created");
         require(user[_userAddress].created == true, "User does not exist");
 
-        address ProjectContractAddress = address(new Project(_expediente, _projectTitle, _userAddress, msg.sender));
+        address ProjectContractAddress = address(new Project(_expediente, _projectTitle, _userAddress, msg.sender, _oc));
         projectContract[_expediente] = ProjectContractAddress;
         projectContractsArray.push(ProjectContractAddress);
 
@@ -63,6 +63,10 @@ contract NuclearPoE is Ownable {
 
     function getAllUsers() external view returns(address[] memory) {
         return userArray;
+    }
+
+    function getUserDetails(address _address) external view returns(bytes32, address[] memory) {
+        return (user[_address].name, userProjectContracts[_address]);
     }
 
 }

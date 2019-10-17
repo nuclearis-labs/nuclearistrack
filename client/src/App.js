@@ -1,31 +1,32 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import AddProject from './components/AddProject';
-import ProjectList from './components/ProjectList';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import ProjectList from './views/ProjectList';
+import Navbar from './components/Navbar';
+import AddDocumentForm from './views/AddDocumentForm';
+import AddProjectForm from './views/AddProjectForm';
+import ProjectDetails from './views/ProjectDetails';
 
 function App() {
   return (
     <Router>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/addProject">AddProject</Link>
-            </li>
-            <li>
-              <Link to="/projectList">ProjectList</Link>
-            </li>
-          </ul>
-        </nav>
-        <Switch>
-          <Route path="/addProject">
-            <AddProject />
-          </Route>
-          <Route path="/projectList">
-            <ProjectList />
-          </Route>
-        </Switch>
-      </div>
+      <Navbar />
+      <Switch>
+        <Route path="/project-list">
+          <ProjectList />
+        </Route>
+        <Route exact path="/project-detail/:contract">
+          <ProjectDetails />
+        </Route>
+        <Route path="/add-document">
+          <AddDocumentForm />
+        </Route>
+        <Route path="/add-project">
+          <AddProjectForm />
+        </Route>
+        <Route path="/">
+          <h1>Bienvenido al Proof of Concept NRS PoE</h1>
+        </Route>
+      </Switch>
     </Router>
   );
 }

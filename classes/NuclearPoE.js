@@ -16,13 +16,13 @@ class NuclearPoE extends Contract {
     this.initiateContract();
   }
 
-  async addProject(_expediente, _projectTitle, _clientAddress) {
+  async addProject(_expediente, _oc, _projectTitle, _clientAddress) {
     try {
       const transaction = new Transaction(
         this.instance,
         this.address,
         'createProject',
-        [_expediente, _projectTitle, _clientAddress]
+        [_expediente, _projectTitle, _clientAddress, _oc]
       );
 
       transaction.encodeABI();
@@ -40,36 +40,36 @@ class NuclearPoE extends Contract {
     }
   }
 
-  // ATENTION! Temporal method for testing..
-  async createNewNuclearPoE() {
-    try {
-      const newContract = new web3.eth.Contract(nuclearPoEABI);
+  // ATTENTION! Temporal method for testing..
+  // async createNewNuclearPoE() {
+  //   try {
+  //     const newContract = new web3.eth.Contract(nuclearPoEABI);
 
-      const account = web3.eth.accounts.wallet.add(
-        this.privateKey.toString('hex')
-      );
+  //     const account = web3.eth.accounts.wallet.add(
+  //       this.privateKey.toString('hex')
+  //     );
 
-      const tx = new Promise((resolve, reject) => {
-        newContract
-          .deploy({ data: NuclearPoEBin.toString() })
-          .send({
-            from: account.address,
-            gas: 9000000,
-            gasPrice: 0
-          })
-          .on('error', error => reject(error))
-          .then(newContractInstance => {
-            resolve(newContractInstance.options.address);
-          });
-      });
+  //     const tx = new Promise((resolve, reject) => {
+  //       newContract
+  //         .deploy({ data: NuclearPoEBin.toString() })
+  //         .send({
+  //           from: account.address,
+  //           gas: 9000000,
+  //           gasPrice: 0
+  //         })
+  //         .on('error', error => reject(error))
+  //         .then(newContractInstance => {
+  //           resolve(newContractInstance.options.address);
+  //         });
+  //     });
 
-      return await tx;
-    } catch (e) {
-      console.log(e);
+  //     return await tx;
+  //   } catch (e) {
+  //     console.log(e);
 
-      throw Error(e);
-    }
-  }
+  //     throw Error(e);
+  //   }
+  // }
 
   async returnAll(method) {
     const tx = new Transaction(this.instance, this.address, method);
