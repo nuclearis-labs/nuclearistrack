@@ -1,0 +1,134 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+
+function AddUser() {
+  const [form, setForm] = useState([]);
+  const [event, setEvent] = useState();
+  const [error, setError] = useState(false);
+  const [isSending, setSending] = useState(false);
+
+  function handleInput(e) {
+    e.persist();
+    setForm(form => ({ ...form, [e.target.name]: e.target.value }));
+  }
+
+  function resetState() {
+    setEvent();
+    setForm([]);
+    setError(false);
+    setSending(false);
+  }
+
+  function handleSubmit(e) {
+    setSending(true);
+    e.preventDefault();
+    axios
+      .post('/api/user/', {
+        ...form,
+        email: 'info@nuclearis.com',
+        passphrase: 'Nuclearis'
+      })
+      .then(result => {
+        console.log(result);
+
+        setSending(false);
+        if (result.data.error) {
+          setError(result.data.error);
+        } else {
+          setEvent(result.data);
+        }
+      });
+  }
+
+  return (
+    <div className="container">
+      <h1>Add User</h1>
+      {isSending ? (
+        <div className="d-flex justify-content-center mt-5">
+          <div
+            className="spinner-border"
+            role="status"
+            style={{ width: '3rem', height: '3rem' }}
+          >
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      ) : event ? (
+        <div style={{ marginTop: '100px', textAlign: 'center' }}>
+          <h2>User successfully saved on the Blockchain!</h2>
+          <div>Email: {event.result.email}</div>
+          <div>Generated Address: {event.result.address}</div>
+          <div>Encrypted Private Key: {event.result.encryptedPrivateKey}</div>
+          <div>Transaction Hash: {event.txResult}</div>
+          <button className="btn btn-primary" onClick={resetState}>
+            Create another user
+          </button>
+        </div>
+      ) : error ? (
+        <div style={{ marginTop: '100px', textAlign: 'center' }}>
+          <h2>Error saving user to Blockchain</h2>
+          <div>
+            {error !== 'Error: Returned error: execution error: revert' &&
+              error}
+          </div>
+          <button className="btn btn-primary" onClick={resetState}>
+            Try again
+          </button>
+        </div>
+      ) : (
+        <form>
+          <div className="form-group">
+            <label htmlFor="name">Name</label>
+            <input
+              onChange={handleInput}
+              type="text"
+              name="newUserName"
+              className="form-control"
+              id="name"
+              placeholder="Enter Name"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              onChange={handleInput}
+              type="email"
+              name="newUserEmail"
+              className="form-control"
+              id="email"
+              placeholder="Enter Email"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              onChange={handleInput}
+              type="password"
+              name="newPassphrase"
+              className="form-control"
+              id="password"
+              placeholder="Enter Password"
+            />
+          </div>
+          <div class="form-group">
+            <label for="exampleFormControlSelect1">Type</label>
+            <select class="form-control" id="type">
+              <option selected>Choose...</option>
+              <option>Client</option>
+              <option>Supplier</option>
+            </select>
+          </div>
+          <button
+            type="submit"
+            className="btn btn-primary"
+            onClick={handleSubmit}
+          >
+            Create User
+          </button>
+        </form>
+      )}
+    </div>
+  );
+}
+
+export default AddUser;

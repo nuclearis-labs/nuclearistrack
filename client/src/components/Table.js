@@ -1,15 +1,10 @@
 import React from 'react';
 import { chunk } from '../utils/array.js';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-import './table.css';
+// import './table.css';
 
-function Table({ data = [], columns, options }) {
-  let history = useHistory();
-
-  function goToDetails(contrato) {
-    history.push('project-detail/' + contrato);
-  }
+function Table({ data = [], columns, options, additionalFields = [] }) {
   const chunkedArray = chunk(data, 100);
   return (
     <table className="table mt-5">
@@ -30,14 +25,16 @@ function Table({ data = [], columns, options }) {
         ) : (
           chunkedArray[options.currentPage - 1].map((proyectos, i) => {
             return (
-              <tr
-                key={i}
-                onClick={() => {
-                  goToDetails(proyectos[4]);
-                }}
-              >
+              <tr key={i}>
                 {Object.values(proyectos).map((values, j) => {
                   return <td key={j}>{values}</td>;
+                })}
+                {additionalFields.map((values, j) => {
+                  return (
+                    <td>
+                      <Link to={`/${values}/` + proyectos[4]}>{values}</Link>
+                    </td>
+                  );
                 })}
               </tr>
             );

@@ -47,10 +47,6 @@ contract NuclearPoE is Ownable {
         emit CreateUser();
     }
 
-    function kill() public {
-        selfdestruct(msg.sender);
-    }
-
     function addSupplierToProject(address _supplierAddress, address _projectAddress) external onlyProjectContract(_projectAddress) {
         require(user[_supplierAddress].created == true, "User does not exist");
 

@@ -4,7 +4,12 @@ import ProjectList from './views/ProjectList';
 import Navbar from './components/Navbar';
 import AddDocumentForm from './views/AddDocumentForm';
 import AddProjectForm from './views/AddProjectForm';
-import ProjectDetails from './views/ProjectDetails';
+import ProjectDetail from './views/ProjectDetail';
+import AddProcessForm from './views/AddProcessForm';
+import AddUser from './views/AddUser';
+import DocumentDetail from './views/DocumentDetail';
+import ClientDetail from './views/ClientDetail';
+import UserList from './views/UserList';
 
 function App() {
   return (
@@ -15,13 +20,24 @@ function App() {
           <ProjectList />
         </Route>
         <Route exact path="/project-detail/:contract">
-          <ProjectDetails />
+          <ProjectDetail />
         </Route>
-        <Route path="/add-document">
-          <AddDocumentForm />
+        <Route path="/add-document/:contract" component={AddDocumentForm} />
+        <Route path="/add-process/:contract" component={AddProcessForm} />
+        <Route path="/add-user">
+          <AddUser />
         </Route>
         <Route path="/add-project">
           <AddProjectForm />
+        </Route>
+        <Route path="/client-detail/:address">
+          <ClientDetail />
+        </Route>
+        <Route path="/user-list">
+          <UserList />
+        </Route>
+        <Route path="/document-detail/">
+          <DocumentDetail />
         </Route>
         <Route path="/">
           <h1>Bienvenido al Proof of Concept NRS PoE</h1>

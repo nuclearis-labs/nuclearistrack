@@ -49,11 +49,6 @@ contract Project {
                 require(msg.sender == moAddress,  'Has to be Material Organization');
         _;
     }
-    
-    function kill() public {
-        address payable _owner = address(0xF691198C305eaDc10c2954202eA6b0BB38A76B43);
-        selfdestruct(_owner);
-    }
 
     constructor (uint _expediente, bytes32 _title, address _clientAddress, address _moAddress, bytes32 _oc) public {
         expediente = _expediente;
@@ -86,8 +81,7 @@ contract Project {
     }
 
     function approveProject() external onlyClient() {
-        require(msg.sender == clientAddress,"Only clients of this project can realize this operation");
-        require(approved == false,"Project already approved");
+        require(approved == false, "Project already approved");
         approved = true;
 
         emit ApproveProject();

@@ -1,5 +1,7 @@
 const { createHash } = require('crypto');
-const { swarmClient } = require('../services/swarm');
+const ipfs = require('ipfs-http-client')('localhost', '5001', {
+  protocol: 'http'
+});
 
 class Document {
   constructor(file) {
@@ -19,9 +21,7 @@ class Document {
 
   async save() {
     try {
-      return await swarmClient.bzz.uploadFile(this.file.buffer, {
-        contentType: 'application/pdf'
-      });
+      return await ipfs.add(this.file.buffer);
     } catch (err) {
       throw Error(err);
     }
@@ -29,19 +29,7 @@ class Document {
 
   async get(hash) {
     try {
-      const { body } = await swarmClient.bzz.download(hash);
-      return new Promise((resolve, reject) => {
-        let bufs = [];
-        body.on('data', chunk => {
-          bufs.push(chunk);
-        });
-        body.on('end', () => {
-          resolve(Buffer.concat(bufs));
-        });
-        body.on('error', err => {
-          reject(err);
-        });
-      });
+      return await ipfs.get(hash);
     } catch (err) {
       throw Error(err);
     }

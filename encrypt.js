@@ -1,8 +1,5 @@
-const { encryptBIP38 } = require('./functions/Wallet.js');
+const { decryptBIP38 } = require('./functions/Wallet.js');
 
-privKey = Buffer.from(
-  'b79493c56182cffcb710c1e084be41b2c076a59fdff37ffa540e720f28f7e26f',
-  'hex'
-);
+privKey = '6PYU11Dvnd6JrEBSeHUtcDzDWbST3U31EipEemzVnXTdTd9ptUYVpHYUh8';
 
-console.log(encryptBIP38(privKey, 'Nuclearis'));
+console.log(decryptBIP38(privKey, 'imeco').toString('hex'));

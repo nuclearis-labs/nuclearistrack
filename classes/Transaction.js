@@ -15,7 +15,11 @@ class Transaction {
   }
 
   async call() {
-    return await this.contract.methods[this.method](...this.arg).call();
+    try {
+      return await this.contract.methods[this.method](...this.arg).call();
+    } catch (e) {
+      console.log('Error in Call(): ' + e.message);
+    }
   }
 
   async estimateGas() {
@@ -53,11 +57,11 @@ class Transaction {
       data: this.data,
       chainId: web3.utils.toHex(5777)
     });
-    // console.log(this.nonce);
-    // console.log(this.gasprice);
-    // console.log(this.gaslimit);
-    // console.log(this.contract.options.address);
-    // console.log(this.data);
+    console.log(this.nonce);
+    console.log(this.gasprice);
+    console.log(this.gaslimit);
+    console.log(this.contract.options.address);
+    console.log(this.data);
 
     return this;
   }
@@ -95,12 +99,13 @@ class Transaction {
         `0x${this.serializedTx.toString('hex')}`,
         (err, result) => {
           console.log('Transaction Hash ' + result);
-
           if (err) reject(err);
-          eventContractInstance.events.allEvents({}, (err, event) => {
-            if (err) reject(err);
-            resolve(event);
-          });
+          resolve(result);
+          // Only works with a websocket connection.. Not available on RSK Public Nodes
+          // eventContractInstance.events.allEvents({}, (err, event) => {
+          //   if (err) reject(err);
+          //   resolve(event);
+          // });
         }
       );
     });

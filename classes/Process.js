@@ -1,5 +1,6 @@
 /* eslint-disable no-await-in-loop */
 const fs = require('fs');
+
 const Contract = require('./Contract');
 const Document = require('./Document');
 const utils = require('../functions/utils');
@@ -14,7 +15,7 @@ class Process extends Contract {
     super(projectABI, contractAddress);
     this.address = address;
     this.privateKey = privateKey;
-    this.initiateContract(contractAddress, projectABI);
+    this.initiateContract();
   }
 
   async addDocument(_documentName, file) {
@@ -27,11 +28,13 @@ class Process extends Contract {
       const documentHash = document.getHash;
 
       const storageHash = await document.save();
+      console.log(storageHash);
+
       const transaction = new Transaction(
         this.instance,
         this.address,
         'addDocument',
-        [documentHash, documentName, storageHash]
+        [documentHash, documentName, storageHash[0].hash]
       );
 
       transaction.encodeABI();

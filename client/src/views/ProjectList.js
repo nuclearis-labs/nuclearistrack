@@ -6,10 +6,17 @@ function ProjectList() {
   const [projects, setProjects] = useState({});
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
-    axios.post('/api/project/getAll').then(({ data }) => {
-      setProjects(data);
-      setLoading(false);
-    });
+    axios
+      .post('/api/project/getAll')
+      .then(({ data }) => {
+        console.log(data);
+
+        setProjects(data);
+        setLoading(false);
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }, []);
 
   return (
@@ -28,7 +35,16 @@ function ProjectList() {
       ) : (
         <Table
           data={projects}
-          columns={['Nombre', 'Cliente', 'Expediente', 'Nº de OC', 'Contrato']}
+          columns={[
+            'Nombre',
+            'Cliente',
+            'Expediente',
+            'Nº de OC',
+            'Contrato',
+            '',
+            ''
+          ]}
+          additionalFields={['project-detail', 'add-process']}
           options={{ currentPage: 1 }}
         ></Table>
       )}

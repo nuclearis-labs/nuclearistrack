@@ -45,14 +45,19 @@ router.post('/approve/:contract', async (req, res) => {
 router.post('/getAll', async (req, res) => {
   try {
     const nuclear = new NuclearPoE();
-    const result = await nuclear.returnAll('getAllProjectContract');
-    const projectDetails = result.map(async contractAddress => {
+    const returnAll = await nuclear.return('getAllProjectContract');
+    const projectDetails = returnAll.map(async contractAddress => {
       const project = new Project(undefined, undefined, contractAddress);
       const result = await project.getDetails();
+
       const convertedResult = convertResult(result);
+      const userName = await nuclear.return('getUserDetails', [
+        convertedResult[1]
+      ]);
+
       return [
         web3.utils.toAscii(convertedResult[0]),
-        convertedResult[1],
+        web3.utils.toAscii(userName[0]),
         convertedResult[2],
         web3.utils.toAscii(convertedResult[3]),
         convertedResult[7]
@@ -64,17 +69,24 @@ router.post('/getAll', async (req, res) => {
   } catch (e) {
     console.log(e);
 
-    res.json({ error: e.message });
+    res.json({ message: 'Here?', error: e.message });
   }
 });
 
 router.post('/get/:contract', async (req, res) => {
   try {
+    const nuclear = new NuclearPoE();
+
     const project = new Project(undefined, undefined, req.params.contract);
-    const result = await project.getDetails();
+    const resultRaw = await project.getDetails();
+
+    const result = convertResult(resultRaw);
+
+    const userName = await nuclear.return('getUserDetails', [result[1]]);
 
     res.json([
       web3.utils.toAscii(result[0]),
+      web3.utils.toAscii(userName[0]),
       result[1],
       result[2],
       web3.utils.toAscii(result[3]),

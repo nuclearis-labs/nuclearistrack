@@ -69,8 +69,7 @@ class Project extends Contract {
 
   async getDetails() {
     const tx = new Transaction(this.instance, this.address, 'contractDetails');
-    const result = await tx.call();
-    return result;
+    return await tx.call();
   }
 
   /*   async getAllProcessByProject() {
@@ -105,11 +104,9 @@ class Project extends Contract {
     return this;
   } */
 
-  async returnAll(method) {
-    const tx = new Transaction(this.instance, this.address, method);
-    const result = await tx.call();
-
-    return result;
+  async return(method, arg) {
+    const tx = new Transaction(this.instance, this.address, method, arg);
+    return await tx.call();
   }
 }
 

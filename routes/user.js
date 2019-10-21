@@ -1,4 +1,6 @@
 const express = require('express');
+const web3 = require('web3');
+
 const { asyncMiddleware } = require('../middleware/index');
 const {
   generatePrivateKey,
@@ -8,8 +10,9 @@ const {
   decryptBIP38
 } = require('../functions/wallet');
 const NuclearPoE = require('../classes/NuclearPoE');
+const Project = require('../classes/Project');
 const UserModel = require('../models/user');
-const { getKeys } = require('../functions/utils');
+const { getKeys, convertResult } = require('../functions/utils');
 const User = require('../classes/User');
 
 const router = express.Router({ mergeParams: true });
@@ -97,12 +100,17 @@ router.post(
 
 router.post('/getAll', async (req, res) => {
   try {
-    const { wallet, privKey } = await getKeys(req.body);
-    const users = new NuclearPoE(wallet, privKey);
+    const users = new NuclearPoE();
+    const result = await users.return('getAllUsers');
+    response = [];
+    for (let i = 0; i < result.length; i++) {
+      const user = new User();
+      let details = await user.getUserDetails(result[i]);
+      let [nombre] = convertResult(details);
 
-    const result = await users.returnAll('getAllUsers');
-
-    res.json({ result });
+      response[i] = [web3.utils.toAscii(nombre), result[i]];
+    }
+    res.json(response);
   } catch (e) {
     console.log(e);
 
@@ -112,12 +120,35 @@ router.post('/getAll', async (req, res) => {
 
 router.post('/get/:address', async (req, res) => {
   try {
-    const { wallet, privKey } = await getKeys(req.body);
+    const user = new User();
+    let result = await user.getUserDetails(req.params.address);
+    result = convertResult(result);
+    let response = [];
+    for (let i = 0; i < result[1].length; i++) {
+      let proyecto = new Project(undefined, undefined, result[1][i]);
+      let detailsResponse = await proyecto.getDetails();
+      let [
+        title,
+        client,
+        expediente,
+        oc,
+        approved,
+        documents,
+        suppliers,
+        contrato
+      ] = convertResult(detailsResponse);
+      response.push([
+        web3.utils.toAscii(title),
+        expediente,
+        web3.utils.toAscii(oc),
+        contrato
+      ]);
+    }
 
-    const user = new User(wallet, privKey);
-
-    const result = await user.getUserDetails(req.params.address);
-    res.json({ result });
+    res.json({
+      userName: web3.utils.toAscii(result[0]),
+      proyectos: response
+    });
   } catch (e) {
     console.log(e);
 

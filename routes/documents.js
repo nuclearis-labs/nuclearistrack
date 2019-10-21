@@ -42,6 +42,7 @@ router.post('/upload/:contract', upload.single('file'), async (req, res) => {
     const process = new Process(wallet, privKey, req.params.contract);
 
     const result = await process.addDocument(req.body.documentTitle, req.file);
+    console.log(result);
 
     res.json({ result });
   } catch (e) {
@@ -53,11 +54,10 @@ router.post('/upload/:contract', upload.single('file'), async (req, res) => {
 
 router.post('/get/:contract', async (req, res) => {
   try {
-    const { wallet, privKey } = await getKeys(req.body);
-
-    const process = new Process(wallet, privKey, req.params.contract);
+    const process = new Process(undefined, undefined, req.params.contract);
 
     const result = await process.returnDocuments();
+    console.log(result);
 
     res.json(result);
   } catch (e) {
