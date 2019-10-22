@@ -47,22 +47,22 @@ class Transaction {
    * @param {Buffer} privateKey Private Key of user
    * @returns {ethTx} Signed Transaction Instance
    */
-  prepareRawTx() {
+  prepareRawTx(
+    value = '0',
+    to = this.contract.options.address,
+    gaslimit = this.gaslimit
+  ) {
+    let weiValue = web3.utils.toWei(value, 'ether');
+
     this.tx = new ethTx({
       nonce: web3.utils.toHex(this.nonce),
       gasPrice: web3.utils.toHex(this.gasprice),
-      gasLimit: web3.utils.toHex(this.gaslimit),
-      to: this.contract.options.address,
-      value: '0x00',
-      data: this.data,
-      chainId: web3.utils.toHex(5777)
+      gasLimit: web3.utils.toHex(gaslimit),
+      to: to,
+      value: web3.utils.toHex(weiValue),
+      data: this.data
+      // chainId: web3.utils.numberToHex(5777)
     });
-    console.log(this.nonce);
-    console.log(this.gasprice);
-    console.log(this.gaslimit);
-    console.log(this.contract.options.address);
-    console.log(this.data);
-
     return this;
   }
 
@@ -98,8 +98,8 @@ class Transaction {
       web3.eth.sendSignedTransaction(
         `0x${this.serializedTx.toString('hex')}`,
         (err, result) => {
-          console.log('Transaction Hash ' + result);
           if (err) reject(err);
+          console.log('Transaction Hash ' + result);
           resolve(result);
           // Only works with a websocket connection.. Not available on RSK Public Nodes
           // eventContractInstance.events.allEvents({}, (err, event) => {

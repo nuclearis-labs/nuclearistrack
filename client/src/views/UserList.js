@@ -1,17 +1,42 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Table from '../components/Table';
+import Loader from '../components/Loader';
+
+function UserTableBody({ users }) {
+  return (
+    <>
+      {users &&
+        users.map(([nombre, direccion, balance]) => {
+          return (
+            <tr>
+              <td>
+                <Link to={'/client-detail/' + direccion}>{nombre}</Link>
+              </td>
+              <td>
+                <a
+                  href={`https://explorer.testnet.rsk.co/address/${direccion}`}
+                >
+                  {direccion}
+                </a>
+              </td>
+              <td>{balance}</td>
+            </tr>
+          );
+        })}
+    </>
+  );
+}
 
 function UserList() {
-  const [projects, setProjects] = useState({});
+  const [users, setUsers] = useState({});
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
     axios
       .post('/api/user/getAll')
       .then(({ data }) => {
-        console.log(data);
-
-        setProjects(data);
+        setUsers(data);
         setLoading(false);
       })
       .catch(e => {
@@ -23,19 +48,11 @@ function UserList() {
     <div className="container-fluid">
       <h1>Lista de Usuarios</h1>
       {isLoading ? (
-        <div className="d-flex justify-content-center mt-5">
-          <div
-            className="spinner-border"
-            role="status"
-            style={{ width: '3rem', height: '3rem' }}
-          >
-            <span className="sr-only">Loading...</span>
-          </div>
-        </div>
+        <Loader />
       ) : (
         <Table
-          data={projects}
-          columns={['Nombre', 'Dirección']}
+          body={<UserTableBody users={users} />}
+          columns={['Nombre', 'Dirección', 'Balance (RBTC)']}
           options={{ currentPage: 1 }}
         ></Table>
       )}

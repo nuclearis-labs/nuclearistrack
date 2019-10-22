@@ -1,6 +1,5 @@
 const express = require('express');
-const web3 = require('web3');
-
+const web3 = require('../services/web3');
 const { asyncMiddleware } = require('../middleware/index');
 const {
   generatePrivateKey,
@@ -108,7 +107,13 @@ router.post('/getAll', async (req, res) => {
       let details = await user.getUserDetails(result[i]);
       let [nombre] = convertResult(details);
 
-      response[i] = [web3.utils.toAscii(nombre), result[i]];
+      let balance = await web3.eth.getBalance(result[i]);
+
+      response[i] = [
+        web3.utils.toAscii(nombre),
+        result[i],
+        web3.utils.fromWei(balance)
+      ];
     }
     res.json(response);
   } catch (e) {

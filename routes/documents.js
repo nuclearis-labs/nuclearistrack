@@ -9,13 +9,15 @@ const router = express.Router({ mergeParams: true });
 
 router.post('/verify/:contract', upload.single('file'), async (req, res) => {
   try {
-    const { wallet, privKey } = await getKeys(req.body);
-
-    const process = new Process(wallet, privKey, req.params.contract);
+    const process = new Process(undefined, undefined, req.params.contract);
 
     const result = await process.verifyDocument(req.file);
 
-    res.json({ result });
+    if (result === undefined) {
+      res.json(false);
+    } else {
+      res.json(process.documentHash);
+    }
   } catch (e) {
     res.json({ error: e.message });
   }

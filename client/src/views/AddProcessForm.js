@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import Loader from '../components/Loader';
 
 function AddProcessForm() {
   let { contract } = useParams();
@@ -59,15 +60,7 @@ function AddProcessForm() {
     <div className="container">
       <h1>Add Process {contractState && 'to ' + contractState[0]}</h1>
       {isSending ? (
-        <div className="d-flex justify-content-center mt-5">
-          <div
-            className="spinner-border"
-            role="status"
-            style={{ width: '3rem', height: '3rem' }}
-          >
-            <span className="sr-only">Loading...</span>
-          </div>
-        </div>
+        <Loader />
       ) : event ? (
         <div style={{ marginTop: '100px', textAlign: 'center' }}>
           <h2>Project successfully saved on the Blockchain!</h2>

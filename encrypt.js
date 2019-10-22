@@ -5,7 +5,7 @@ privKey = '6PYRdD8mKiFbayDmpN6ntga1kUnd1ZzMmhsQgd6pcVN4RNSUNZocFzzRwU';
 console.log(decryptBIP38(privKey, 'imeco').toString('hex'));
 
 privKey = Buffer.from(
-  '53dce971e68aa3422fc0f7dc3387612f69555ffa9946642be80c184cd591ea5f',
+  '7a0824e86e5c362c523d7f4991de30b56a9c04f653c33573b0a1e3b8850b23c6',
   'hex'
 );
 

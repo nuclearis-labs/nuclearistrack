@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Loader from '../components/Loader';
 
 function AddUser() {
   const [form, setForm] = useState([]);
@@ -44,15 +45,7 @@ function AddUser() {
     <div className="container">
       <h1>Add User</h1>
       {isSending ? (
-        <div className="d-flex justify-content-center mt-5">
-          <div
-            className="spinner-border"
-            role="status"
-            style={{ width: '3rem', height: '3rem' }}
-          >
-            <span className="sr-only">Loading...</span>
-          </div>
-        </div>
+        <Loader />
       ) : event ? (
         <div style={{ marginTop: '100px', textAlign: 'center' }}>
           <h2>User successfully saved on the Blockchain!</h2>

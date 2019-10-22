@@ -54,13 +54,13 @@ class Process extends Contract {
 
   async verifyDocument(file) {
     try {
-      const documentHash = new Document(file).createHash().getHash;
+      this.documentHash = new Document(file).createHash().getHash;
 
       const transaction = new Transaction(
         this.instance,
         this.address,
         'findDocument',
-        [documentHash]
+        [this.documentHash]
       );
 
       return await transaction.call();

@@ -1,6 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Table from '../components/Table';
+import Loader from '../components/Loader';
+import { Link } from 'react-router-dom';
+
+function ProjectListTableBody({ projects }) {
+  return (
+    <>
+      {projects &&
+        projects.map(
+          ([nombre, cliente, expediente, oc, contrato, clientAddress]) => {
+            return (
+              <tr>
+                <td>{nombre}</td>
+                <td>
+                  <Link to={'/client-detail/' + clientAddress}>{cliente}</Link>
+                </td>
+                <td>{expediente}</td>
+                <td>{oc}</td>
+                <td>
+                  <a
+                    href={`https://explorer.testnet.rsk.co/address/${contrato}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {contrato}
+                  </a>
+                </td>
+                <td>
+                  <Link to={'/project-detail/' + contrato}>Ver</Link>
+                </td>
+                <td>
+                  <Link to={'/add-process/' + contrato}>Agregar</Link>
+                </td>
+              </tr>
+            );
+          }
+        )}
+    </>
+  );
+}
 
 function ProjectList() {
   const [projects, setProjects] = useState({});
@@ -9,8 +48,6 @@ function ProjectList() {
     axios
       .post('/api/project/getAll')
       .then(({ data }) => {
-        console.log(data);
-
         setProjects(data);
         setLoading(false);
       })
@@ -23,30 +60,19 @@ function ProjectList() {
     <div className="container-fluid">
       <h1>Lista de Proyectos</h1>
       {isLoading ? (
-        <div className="d-flex justify-content-center mt-5">
-          <div
-            className="spinner-border"
-            role="status"
-            style={{ width: '3rem', height: '3rem' }}
-          >
-            <span className="sr-only">Loading...</span>
-          </div>
-        </div>
+        <Loader />
       ) : (
         <Table
-          data={projects}
+          body={<ProjectListTableBody projects={projects} />}
           columns={[
             'Nombre',
             'Cliente',
             'Expediente',
             'Nº de OC',
             'Contrato',
-            '',
-            '',
-            ''
+            'Detalles',
+            'Procesos'
           ]}
-          additionalFields={['project-detail', 'add-process']}
-          options={{ currentPage: 1 }}
         ></Table>
       )}
     </div>

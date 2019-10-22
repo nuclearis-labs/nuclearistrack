@@ -60,7 +60,8 @@ router.post('/getAll', async (req, res) => {
         web3.utils.toAscii(userName[0]),
         convertedResult[2],
         web3.utils.toAscii(convertedResult[3]),
-        convertedResult[7]
+        convertedResult[7],
+        convertedResult[1]
       ];
     });
     Promise.all(projectDetails).then(result => {

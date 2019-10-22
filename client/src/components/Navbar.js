@@ -28,19 +28,24 @@ function Navbar() {
               User List <span className="sr-only">(current)</span>
             </Link>
           </li>
-          <li className="nav-item active">
-            <Link className="nav-link" to="/document-detail">
-              Document Detail <span className="sr-only">(current)</span>
-            </Link>
-          </li>
           <li className="nav-item">
             <Link className="nav-link" to="/add-document">
               Add Document
             </Link>
           </li>
           <li className="nav-item">
+            <Link className="nav-link" to="/verify-document">
+              Verify Document
+            </Link>
+          </li>
+          <li className="nav-item">
             <Link className="nav-link" to="/add-user">
               Add User
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/transfer">
+              Transfer
             </Link>
           </li>
         </ul>

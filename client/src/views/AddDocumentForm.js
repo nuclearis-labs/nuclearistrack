@@ -22,14 +22,12 @@ class AddDocumentForm extends Component {
     this.setState({ file: e });
   }
   handleInputChange(e) {
-    this.setState({ [e.target.name]: e.target.value }, () => {
-      console.log(this.state);
-    });
+    this.setState({ [e.target.name]: e.target.value }, () => {});
   }
 
   componentDidMount() {
     axios
-      .post('/api/user/get/0xCc71660E9Ad36d0275d27A8687407B75aD9cB02d')
+      .post('/api/user/get/0x42F9F3fA9B3fAd8C6AeBB795e6Cd2DDf2CdFf990')
       .then(({ data }) => this.setState({ projects: data.proyectos }));
     navigator.geolocation.getCurrentPosition(({ coords }) =>
       this.setState({
@@ -44,8 +42,8 @@ class AddDocumentForm extends Component {
 
     formData.append('file', this.state.file);
     formData.append('documentTitle', this.state.documentTitle);
-    formData.append('email', 'info@imeco.com');
-    formData.append('passphrase', 'imeco');
+    formData.append('email', 'info@bgh.com');
+    formData.append('passphrase', 'bgh');
     axios
       .post(`/api/doc/upload/${this.state.contract}`, formData, {
         'Content-Type': 'multipart/form-data'
@@ -75,6 +73,7 @@ class AddDocumentForm extends Component {
               onChange={this.handleInputChange}
               name="contract"
             >
+              <option>Choose one...</option>
               {this.state.projects.length > 0 &&
                 this.state.projects.map(project => (
                   <option value={project[3]}>
