@@ -54,28 +54,6 @@ router.post(
 );
 
 router.post(
-  '/validate',
-  asyncMiddleware(async (req, res) => {
-    try {
-      const user = await UserModel.findOne({ email: req.body.email });
-
-      if (!user) throw Error();
-
-      const address = generateRSKAddress(
-        generatePublicKey(
-          decryptBIP38(user.encryptedPrivateKey, req.body.passphrase)
-        )
-      );
-
-      if (address === user.address) res.json({ message: 'Estas logueado' });
-      else throw Error();
-    } catch (e) {
-      res.json({ error: 'Usuario o contraseña incorrecta' });
-    }
-  })
-);
-
-router.post(
   '/change',
   asyncMiddleware(async (req, res) => {
     try {

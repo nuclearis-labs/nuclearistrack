@@ -40,8 +40,12 @@ module.exports.decryptBIP38 = (
   passphrase,
   network = networks.testnet.wif
 ) => {
-  const { privateKey } = bip38.decrypt(encryptedKey, passphrase);
-  return privateKey;
+  try {
+    const { privateKey } = bip38.decrypt(encryptedKey, passphrase);
+    return privateKey;
+  } catch (e) {
+    return false;
+  }
 };
 
 /**

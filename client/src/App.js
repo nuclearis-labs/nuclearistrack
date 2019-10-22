@@ -13,32 +13,35 @@ import ClientDetail from './views/ClientDetail';
 import UserList from './views/UserList';
 import Home from './views/Home';
 import TransferView from './views/TransferView';
+import { UserProvider } from './context/UserContext';
 
 function App() {
   return (
     <Router>
-      <Navbar />
-      <Switch>
-        <Route path="/project-list" component={ProjectList} />
-        <Route
-          exact
-          path="/project-detail/:contract"
-          component={ProjectDetail}
-        />
-        <Route path="/add-document/" component={AddDocumentForm} />
-        <Route path="/verify-document/" component={VerifyDocumentForm} />
-        <Route path="/add-process/:contract" component={AddProcessForm} />
-        <Route path="/add-user" component={AddUser} />
-        <Route path="/add-project" component={AddProjectForm} />
-        <Route path="/client-detail/:address" component={ClientDetail} />
-        <Route path="/user-list" component={UserList} />
-        <Route path="/transfer" component={TransferView} />
-        <Route
-          path="/document-detail/:contract/:hash"
-          component={DocumentDetail}
-        />
-        <Route path="/" component={Home} />
-      </Switch>
+      <UserProvider>
+        <Navbar />
+        <Switch>
+          <Route path="/project-list" component={ProjectList} />
+          <Route
+            exact
+            path="/project-detail/:contract"
+            component={ProjectDetail}
+          />
+          <Route path="/add-document/" component={AddDocumentForm} />
+          <Route path="/verify-document/" component={VerifyDocumentForm} />
+          <Route path="/add-process/:contract" component={AddProcessForm} />
+          <Route path="/add-user" component={AddUser} />
+          <Route path="/add-project" component={AddProjectForm} />
+          <Route path="/client-detail/:address" component={ClientDetail} />
+          <Route path="/user-list" component={UserList} />
+          <Route path="/transfer" component={TransferView} />
+          <Route
+            path="/document-detail/:contract/:hash"
+            component={DocumentDetail}
+          />
+          <Route path="/" component={Home} />
+        </Switch>
+      </UserProvider>
     </Router>
   );
 }

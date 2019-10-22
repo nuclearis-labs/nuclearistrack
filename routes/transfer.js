@@ -2,8 +2,9 @@ const express = require('express');
 const Transaction = require('../classes/Transaction');
 const router = express.Router({ mergeParams: true });
 const { getKeys } = require('../functions/utils');
+const { verifyToken } = require('../middleware/index');
 
-router.post('/to/:to/:value', async (req, res) => {
+router.post('/to/:to/:value', verifyToken, async (req, res) => {
   const { wallet, privKey } = await getKeys(req.body);
 
   const tx = new Transaction(req.params.to, wallet);

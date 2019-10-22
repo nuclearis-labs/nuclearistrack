@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import FileSelector from '../components/FileSelector';
 import axios from 'axios';
-import { UserContext } from '../context/userContext';
+import { UserContext } from '../context/UserContext';
 
 class AddDocumentForm extends Component {
   constructor(props) {
