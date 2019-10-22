@@ -2,8 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 
-require('./services/passport_web3');
-
 const app = express();
 
 require('./services/mongoose_connect');
@@ -19,7 +17,7 @@ app.use('/api/project', require('./routes/proyecto'));
 app.use('/api/process', require('./routes/process'));
 app.use('/api/user', require('./routes/user'));
 app.use('/api/transfer', require('./routes/transfer'));
-app.use('/api/auth', require('./routes/auth'));
+app.use('/auth', require('./routes/auth'));
 
 app.listen(process.env.PORT, () =>
   // eslint-disable-next-line no-console

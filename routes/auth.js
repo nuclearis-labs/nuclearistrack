@@ -9,7 +9,7 @@ const {
   decryptBIP38
 } = require('../functions/wallet');
 
-router.post('/login', (req, res) => {
+router.post('/', (req, res) => {
   UserModel.findOne({ email: req.body.email }).then((user, err) => {
     try {
       let address;

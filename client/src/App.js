@@ -14,6 +14,7 @@ import UserList from './views/UserList';
 import Home from './views/Home';
 import TransferView from './views/TransferView';
 import { UserProvider } from './context/UserContext';
+import LoginForm from './views/LoginForm';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="/add-process/:contract" component={AddProcessForm} />
           <Route path="/add-user" component={AddUser} />
           <Route path="/add-project" component={AddProjectForm} />
+          <Route path="/login" component={LoginForm} />
           <Route path="/client-detail/:address" component={ClientDetail} />
           <Route path="/user-list" component={UserList} />
           <Route path="/transfer" component={TransferView} />

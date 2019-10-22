@@ -45,8 +45,13 @@ function ProjectList() {
   const [projects, setProjects] = useState({});
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
-    axios
-      .post('/api/project/getAll')
+    axios({
+      method: 'post',
+      url: '/api/project/getAll',
+      headers: {
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+      }
+    })
       .then(({ data }) => {
         setProjects(data);
         setLoading(false);

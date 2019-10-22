@@ -6,14 +6,14 @@ export const UserContext = createContext();
 export function UserProvider(props) {
   const [contextUser, setCurrentUser] = useState({});
   const logoutUser = props => {
-    axios.get('/api/user/logout').then(response => {
-      setCurrentUser();
-    });
+    // axios.get('/api/user/logout').then(response => {
+    //   setCurrentUser();
+    // });
   };
 
   const loginUser = form => {
     return new Promise((resolve, reject) => {
-      axios.post('/auth', form).then(response => {
+      axios.post('/api/auth', form).then(response => {
         console.log(response.data);
 
         if (response.data.hasOwnProperty('success')) {
@@ -27,9 +27,9 @@ export function UserProvider(props) {
   };
 
   useEffect(() => {
-    axios.get('/api/user').then(response => {
-      setCurrentUser(response.data);
-    });
+    // axios.get('/api/user').then(response => {
+    //   setCurrentUser(response.data);
+    // });
   }, []);
 
   return (

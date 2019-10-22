@@ -5,6 +5,7 @@ const Validator = require('../classes/Validator');
 const web3 = require('web3');
 const { convertResult } = require('../functions/utils');
 const { getKeys } = require('../functions/utils');
+const { verifyToken } = require('../middleware/index');
 
 const router = express.Router({ mergeParams: true });
 
@@ -42,7 +43,7 @@ router.post('/approve/:contract', async (req, res) => {
   }
 });
 
-router.post('/getAll', async (req, res) => {
+router.post('/getAll', verifyToken, async (req, res) => {
   try {
     const nuclear = new NuclearPoE();
     const returnAll = await nuclear.return('getAllProjectContract');
