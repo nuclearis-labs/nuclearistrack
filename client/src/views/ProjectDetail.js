@@ -20,6 +20,15 @@ function ProjectDetail() {
     });
   }, []);
 
+  function approve() {
+    axios
+      .post(`/api/project/approve/${contract}`, {
+        email: 'info@nasa.com',
+        passphrase: 'nasa'
+      })
+      .then(result => console.log(result));
+  }
+
   return (
     <div className="container-fluid">
       <h1>Detalle de Proyecto</h1>
@@ -49,7 +58,12 @@ function ProjectDetail() {
             <b>Nº de OC</b> {projects[4]}
           </p>
           <p>
-            <b>Aprobado</b> {projects[5] ? 'Aprobado' : 'No aprobado'}
+            <b>Aprobado</b>{' '}
+            {projects[5] ? (
+              'Aprobado'
+            ) : (
+              <button onClick={approve}>Aprobar como NA-SA</button>
+            )}
           </p>
           <p>
             <b>Contrato</b> {projects[8]}

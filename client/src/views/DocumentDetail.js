@@ -1,54 +1,82 @@
-import React from 'react';
-import certificado from './cert.pdf';
+import React, { Component } from 'react';
+import axios from 'axios';
 
-function DocumentDetail() {
-  return (
-    <div>
-      <div style={{ display: 'flex', flexDirection: 'right' }}>
-        <iframe src={certificado} width="50%" height="700"></iframe>
-        <div style={{ marginLeft: '50px' }}>
-          <h1>Document Detail</h1>
+class DocumentDetail extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { doc: '' };
+  }
+  componentDidMount() {
+    console.log(this.props.match.params);
 
-          <div>
-            <b>Name:</b> Certificado de barra
-          </div>
-          <div>
-            <b>Supplier:</b> BGH.rsk
-          </div>
-          <div>
-            <b>Hash:</b> 0x9afba1fB824a7e523D666665D4fA8D59FFDDdd87
-          </div>
-          <div style={{ marginTop: '40px' }}>
-            <b>Proceso de certificación</b>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between'
-              }}
-            >
-              <div>Documento subido</div>
-              <div>Transferencia emitida</div>
-              <div>Guardado en Blockchain</div>
-            </div>
-          </div>
-          <div style={{ marginTop: '40px' }}>
-            <b>Notas</b>
+    axios
+      .post(
+        `/api/doc/download/${this.props.match.params.contract}/${this.props.match.params.hash}`
+      )
+      .then(result => {
+        console.log(result);
+
+        this.setState({ doc: result.data });
+      });
+  }
+
+  render() {
+    return (
+      <div>
+        <div style={{ display: 'flex', flexDirection: 'right' }}>
+          <iframe
+            src={`data:application/pdf;base64,${this.state.doc.buffer}`}
+            width="50%"
+            height="700"
+          ></iframe>
+          <div style={{ marginLeft: '50px' }}>
+            <h1>Document Detail</h1>
+
             <div>
-              <div>
-                Se encontró una fe de erratas en la composición química...
+              <b>Name:</b> {this.state.doc.name}
+            </div>
+
+            <div>
+              <b>Hash:</b> {this.state.doc.hash}
+            </div>
+            <div>
+              <b>Mine Time:</b> {Date(this.state.doc.mineTime)}
+            </div>
+            <div>
+              <b>StorageHash:</b> {this.state.doc.storageHash}
+            </div>
+            <div style={{ marginTop: '40px' }}>
+              <b>Proceso de certificación</b>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <div>Documento subido</div>
+                <div>Transferencia emitida</div>
+                <div>Guardado en Blockchain</div>
               </div>
-              <div>11/09/2019 BGH</div>
             </div>
-            <div>
-              <div>No cumple con norma</div>
-              <div>11/09/2019 NA-SA</div>
+            <div style={{ marginTop: '40px' }}>
+              <b>Notas</b>
+              <div>
+                <div>
+                  Se encontró una fe de erratas en la composición química...
+                </div>
+                <div>11/09/2019 BGH</div>
+              </div>
+              <div>
+                <div>No cumple con norma</div>
+                <div>11/09/2019 NA-SA</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default DocumentDetail;

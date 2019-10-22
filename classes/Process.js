@@ -3,7 +3,7 @@ const fs = require('fs');
 
 const Contract = require('./Contract');
 const Document = require('./Document');
-const utils = require('../functions/utils');
+const { convertResult } = require('../functions/utils');
 const Validator = require('./Validator');
 const Transaction = require('./Transaction');
 
@@ -71,8 +71,16 @@ class Process extends Contract {
 
   async downloadDocument(hash) {
     try {
+      const transaction = new Transaction(
+        this.instance,
+        this.address,
+        'findDocument',
+        [hash]
+      );
+      const data = await transaction.call();
       const doc = new Document();
-      return await doc.get(hash);
+      const buffer = await doc.get(data[2]);
+      return { data: convertResult(data), buffer };
     } catch (e) {
       throw Error(e);
     }

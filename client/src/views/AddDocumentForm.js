@@ -1,30 +1,36 @@
 import React, { Component } from 'react';
 import FileSelector from '../components/FileSelector';
 import axios from 'axios';
+import { UserContext } from '../context/userContext';
 
 class AddDocumentForm extends Component {
   constructor(props) {
     super(props);
 
-    this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
     this.handleFileChange = this.handleFileChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.state = {
       documentTitle: '',
       file: '',
       location: {},
-      contract: this.props.match.params.contract
+      projects: {}
     };
   }
 
   handleFileChange(e) {
     this.setState({ file: e });
   }
-  handleNameChange(e) {
-    this.setState({ documentTitle: e.target.value });
+  handleInputChange(e) {
+    this.setState({ [e.target.name]: e.target.value }, () => {
+      console.log(this.state);
+    });
   }
 
   componentDidMount() {
+    axios
+      .post('/api/user/get/0xCc71660E9Ad36d0275d27A8687407B75aD9cB02d')
+      .then(({ data }) => this.setState({ projects: data.proyectos }));
     navigator.geolocation.getCurrentPosition(({ coords }) =>
       this.setState({
         location: coords
@@ -48,6 +54,7 @@ class AddDocumentForm extends Component {
   }
 
   render() {
+    let user = this.context;
     return (
       <div className="container">
         <h1>Add Document</h1>
@@ -56,10 +63,25 @@ class AddDocumentForm extends Component {
             <label htmlFor="name">Name</label>
             <input
               className="form-control"
-              onChange={this.handleNameChange}
+              onChange={this.handleInputChange}
               type="text"
               name="documentTitle"
             />
+          </div>
+          <div className="form-group">
+            <label htmlFor="project">Project</label>
+            <select
+              className="form-control"
+              onChange={this.handleInputChange}
+              name="contract"
+            >
+              {this.state.projects.length > 0 &&
+                this.state.projects.map(project => (
+                  <option value={project[3]}>
+                    {project[1] + ' / ' + project[0]}
+                  </option>
+                ))}
+            </select>
           </div>
           <FileSelector onFileChange={this.handleFileChange} />
           <div className="form-group">
@@ -97,5 +119,6 @@ class AddDocumentForm extends Component {
     );
   }
 }
+AddDocumentForm.contextType = UserContext;
 
 export default AddDocumentForm;

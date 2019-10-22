@@ -42,6 +42,7 @@ function ProjectList() {
             'Nº de OC',
             'Contrato',
             '',
+            '',
             ''
           ]}
           additionalFields={['project-detail', 'add-process']}

@@ -10,38 +10,30 @@ import AddUser from './views/AddUser';
 import DocumentDetail from './views/DocumentDetail';
 import ClientDetail from './views/ClientDetail';
 import UserList from './views/UserList';
+import Home from './views/Home';
 
 function App() {
   return (
     <Router>
       <Navbar />
       <Switch>
-        <Route path="/project-list">
-          <ProjectList />
-        </Route>
-        <Route exact path="/project-detail/:contract">
-          <ProjectDetail />
-        </Route>
-        <Route path="/add-document/:contract" component={AddDocumentForm} />
+        <Route path="/project-list" component={ProjectList} />
+        <Route
+          exact
+          path="/project-detail/:contract"
+          component={ProjectDetail}
+        />
+        <Route path="/add-document/" component={AddDocumentForm} />
         <Route path="/add-process/:contract" component={AddProcessForm} />
-        <Route path="/add-user">
-          <AddUser />
-        </Route>
-        <Route path="/add-project">
-          <AddProjectForm />
-        </Route>
-        <Route path="/client-detail/:address">
-          <ClientDetail />
-        </Route>
-        <Route path="/user-list">
-          <UserList />
-        </Route>
-        <Route path="/document-detail/">
-          <DocumentDetail />
-        </Route>
-        <Route path="/">
-          <h1>Bienvenido al Proof of Concept NRS PoE</h1>
-        </Route>
+        <Route path="/add-user" component={AddUser} />
+        <Route path="/add-project" component={AddProjectForm} />
+        <Route path="/client-detail/:address" component={ClientDetail} />
+        <Route path="/user-list" component={UserList} />
+        <Route
+          path="/document-detail/:contract/:hash"
+          component={DocumentDetail}
+        />
+        <Route path="/" component={Home} />
       </Switch>
     </Router>
   );
