@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 
 function Navbar() {
+  const { contextUser, logoutUser } = useContext(UserContext);
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light mb-5">
       <Link className="navbar-brand" to="/">
@@ -11,7 +14,11 @@ function Navbar() {
         <span className="navbar-toggler-icon"></span>
       </button>
 
-      <div className="collapse navbar-collapse" id="navbarSupportedContent">
+      <div
+        className="collapse navbar-collapse"
+        style={{ justifyContent: 'spaceBetween' }}
+        id="navbarSupportedContent"
+      >
         <ul className="navbar-nav mr-auto">
           <li className="nav-item active">
             <Link className="nav-link" to="/project-list">
@@ -48,12 +55,25 @@ function Navbar() {
               Transfer
             </Link>
           </li>
-          <li className="nav-item">
-            <Link className="nav-link" to="/login">
-              Login
-            </Link>
-          </li>
+          {contextUser && contextUser.userName ? (
+            <li className="nav-item">
+              <span className="nav-link" onClick={logoutUser}>
+                Logout
+              </span>
+            </li>
+          ) : (
+            <li className="nav-item">
+              <Link className="nav-link" to="/login">
+                Login
+              </Link>
+            </li>
+          )}
         </ul>
+        {contextUser && (
+          <div className="nav-item" style={{ alignContent: 'flexEnd' }}>
+            {contextUser.userName}
+          </div>
+        )}
       </div>
     </nav>
   );

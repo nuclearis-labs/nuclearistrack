@@ -43,7 +43,7 @@ router.post('/approve/:contract', async (req, res) => {
   }
 });
 
-router.post('/getAll', verifyToken, async (req, res) => {
+router.post('/getAll', async (req, res) => {
   try {
     const nuclear = new NuclearPoE();
     const returnAll = await nuclear.return('getAllProjectContract');

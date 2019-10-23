@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const UserModel = require('../models/user');
-
+const { verifyToken } = require('../middleware/index');
 const {
   generatePublicKey,
   generateRSKAddress,
@@ -44,6 +44,24 @@ router.post('/', (req, res) => {
       res.sendStatus(403);
     }
   });
+});
+
+router.post('/current', (req, res) => {
+  const bearerHeader = req.headers['authorization'];
+  const bearer = bearerHeader.split(' ');
+  if (typeof bearerHeader !== 'undefined') {
+    const bearer = bearerHeader.split(' ');
+    const bearerToken = bearer[1];
+    req.token = bearerToken;
+    try {
+      const authData = jwt.verify(req.token, process.env.JWT_SECRET);
+      res.json(authData);
+    } catch (e) {
+      res.json({});
+    }
+  } else {
+    res.json({});
+  }
 });
 
 module.exports = router;

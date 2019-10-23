@@ -6,30 +6,41 @@ export const UserContext = createContext();
 export function UserProvider(props) {
   const [contextUser, setCurrentUser] = useState({});
   const logoutUser = props => {
-    // axios.get('/api/user/logout').then(response => {
-    //   setCurrentUser();
-    // });
+    localStorage.removeItem('token');
+    setCurrentUser();
   };
 
   const loginUser = form => {
     return new Promise((resolve, reject) => {
-      axios.post('/api/auth', form).then(response => {
-        console.log(response.data);
-
-        if (response.data.hasOwnProperty('success')) {
-          setCurrentUser(response.data);
-          resolve(true);
-        } else if (response.data.hasOwnProperty('error')) {
-          resolve(false);
-        }
-      });
+      axios
+        .post('/auth', form)
+        .then(response => {
+          if (response.status === 200) {
+            localStorage.setItem('token', JSON.stringify(response.data.token));
+            setCurrentUser(response.data);
+            resolve(true);
+          } else {
+            reject();
+          }
+        })
+        .catch(e => {
+          reject();
+        });
     });
   };
 
   useEffect(() => {
-    // axios.get('/api/user').then(response => {
-    //   setCurrentUser(response.data);
-    // });
+    axios({
+      method: 'post',
+      url: '/auth/current',
+      headers: {
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+      }
+    }).then(({ data }) => {
+      console.log(data);
+
+      setCurrentUser(data);
+    });
   }, []);
 
   return (
