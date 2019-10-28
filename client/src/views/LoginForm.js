@@ -1,12 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { UserContext } from '../context/UserContext';
 
-function LoginForm() {
+function LoginForm(props) {
   const [form, setForm] = useState({});
   const [error, setError] = useState();
   const [loginIn, setLogin] = useState(false);
-  const [formState, setFormState] = useState();
-  const { contextUser, logoutUser, loginUser } = useContext(UserContext);
+  const { loginUser } = useContext(UserContext);
   function handleInput(e) {
     e.persist();
     setForm(form => ({ ...form, [e.target.name]: e.target.value }));
@@ -18,6 +17,7 @@ function LoginForm() {
       .then(() => {
         setError();
         setLogin(false);
+        props.history.push('/');
       })
       .catch(e => {
         setLogin(false);
@@ -29,7 +29,7 @@ function LoginForm() {
     <div className="container">
       <h1>Login</h1>
       {error && (
-        <div class="alert alert-warning" role="alert">
+        <div className="alert alert-warning" role="alert">
           {error}
         </div>
       )}
@@ -40,6 +40,7 @@ function LoginForm() {
             <input
               className="form-control"
               type="email"
+              autoComplete="username"
               onChange={handleInput}
               name="email"
               id="email"
@@ -50,6 +51,7 @@ function LoginForm() {
             <input
               className="form-control"
               type="password"
+              autoComplete="current-password"
               onChange={handleInput}
               name="passphrase"
               id="password"

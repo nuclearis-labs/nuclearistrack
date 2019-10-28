@@ -10,7 +10,7 @@ function UserTableBody({ users }) {
       {users &&
         users.map(([nombre, direccion, balance]) => {
           return (
-            <tr>
+            <tr key={direccion}>
               <td>
                 <Link to={'/client-detail/' + direccion}>{nombre}</Link>
               </td>

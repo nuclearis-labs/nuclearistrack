@@ -1,9 +1,23 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
+import axios from 'axios';
 
 function Navbar() {
   const { contextUser, logoutUser } = useContext(UserContext);
+  const [data, setData] = useState();
+  const [isLoading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (contextUser && contextUser.hasOwnProperty('address')) {
+      axios
+        .post('/api/user/getBalance/' + contextUser.address)
+        .then(({ data }) => {
+          setData(data);
+          setLoading(false);
+        });
+    }
+  }, [contextUser]);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light mb-5">
@@ -69,9 +83,12 @@ function Navbar() {
             </li>
           )}
         </ul>
-        {contextUser && (
+        {contextUser && contextUser.hasOwnProperty('address') && (
           <div className="nav-item" style={{ alignContent: 'flexEnd' }}>
-            {contextUser.userName}
+            <span style={{ marginRight: '50px' }}>
+              Balance: {data && data.slice(0, 7)} RBTC
+            </span>
+            <span>{contextUser.userName}</span>
           </div>
         )}
       </div>

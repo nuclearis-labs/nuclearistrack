@@ -24,7 +24,7 @@ function AddProcessForm() {
       setContract(data);
       setLoading(false);
     });
-  }, []);
+  }, [contract, setLoading]);
 
   function resetState() {
     setEvent();

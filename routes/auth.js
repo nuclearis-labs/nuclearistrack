@@ -31,7 +31,8 @@ router.post('/', (req, res) => {
         jwt.sign(
           {
             userName: user.username,
-            userEmail: user.email
+            userEmail: user.email,
+            address: user.address
           },
           process.env.JWT_SECRET,
           (err, token) => {

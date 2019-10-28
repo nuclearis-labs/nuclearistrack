@@ -4,10 +4,11 @@ import axios from 'axios';
 export const UserContext = createContext();
 
 export function UserProvider(props) {
+  const [change, setChange] = useState();
   const [contextUser, setCurrentUser] = useState({});
   const logoutUser = props => {
     localStorage.removeItem('token');
-    setCurrentUser();
+    setChange(false);
   };
 
   const loginUser = form => {
@@ -17,7 +18,7 @@ export function UserProvider(props) {
         .then(response => {
           if (response.status === 200) {
             localStorage.setItem('token', JSON.stringify(response.data.token));
-            setCurrentUser(response.data);
+            setChange(true);
             resolve(true);
           } else {
             reject();
@@ -37,11 +38,9 @@ export function UserProvider(props) {
         Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
       }
     }).then(({ data }) => {
-      console.log(data);
-
       setCurrentUser(data);
     });
-  }, []);
+  }, [change]);
 
   return (
     <UserContext.Provider value={{ contextUser, logoutUser, loginUser }}>

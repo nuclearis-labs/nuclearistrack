@@ -54,7 +54,7 @@ function ProjectDetail() {
       setProcess(data[0]);
       setLoading(false);
     });
-  }, []);
+  }, [contract]);
 
   return (
     <div className="container-fluid">

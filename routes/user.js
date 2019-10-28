@@ -101,12 +101,19 @@ router.post('/getAll', async (req, res) => {
   }
 });
 
+router.post('/getBalance/:address', (req, res) => {
+  web3.eth.getBalance(req.params.address).then(balance => {
+    res.json(web3.utils.fromWei(balance));
+  });
+});
+
 router.post('/get/:address', async (req, res) => {
   try {
     const user = new User();
     let result = await user.getUserDetails(req.params.address);
     result = convertResult(result);
     let response = [];
+    let balance = await web3.eth.getBalance(req.params.address);
     for (let i = 0; i < result[1].length; i++) {
       let proyecto = new Project(undefined, undefined, result[1][i]);
       let detailsResponse = await proyecto.getDetails();
@@ -130,6 +137,7 @@ router.post('/get/:address', async (req, res) => {
 
     res.json({
       userName: web3.utils.toAscii(result[0]),
+      balance: web3.utils.fromWei(balance),
       proyectos: response
     });
   } catch (e) {

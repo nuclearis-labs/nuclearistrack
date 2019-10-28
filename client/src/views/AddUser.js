@@ -78,6 +78,7 @@ function AddUser() {
               name="newUserName"
               className="form-control"
               id="name"
+              autoComplete="username"
               placeholder="Enter Name"
             />
           </div>
@@ -87,6 +88,7 @@ function AddUser() {
               onChange={handleInput}
               type="email"
               name="newUserEmail"
+              autoComplete="email"
               className="form-control"
               id="email"
               placeholder="Enter Email"
@@ -97,16 +99,23 @@ function AddUser() {
             <input
               onChange={handleInput}
               type="password"
+              autoComplete="current-password"
               name="newPassphrase"
               className="form-control"
               id="password"
               placeholder="Enter Password"
             />
           </div>
-          <div class="form-group">
-            <label for="exampleFormControlSelect1">Type</label>
-            <select class="form-control" id="type">
-              <option selected>Choose...</option>
+          <div className="form-group">
+            <label htmlFor="exampleFormControlSelect1">Type</label>
+            <select
+              className="form-control"
+              value="Choose..."
+              name="userType"
+              onChange={handleInput}
+              id="type"
+            >
+              <option>Choose...</option>
               <option>Client</option>
               <option>Supplier</option>
             </select>

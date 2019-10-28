@@ -31,7 +31,6 @@ function AddProjectForm() {
         passphrase: 'Nuclearis'
       })
       .then(result => {
-        console.log(result);
         setSending(false);
         if (result.data.error) {
           setError(result.data.error);
@@ -49,8 +48,7 @@ function AddProjectForm() {
       ) : event ? (
         <div style={{ marginTop: '100px', textAlign: 'center' }}>
           <h2>Project successfully saved on the Blockchain!</h2>
-          {/*    <div>Project Contract Address: {event.returnValues[0]}</div>
-          <div>Transaction Hash: {event.transactionHash}</div> */}
+          {<div>Transaction Hash: {event.transactionHash}</div>}
           <button className="btn btn-primary" onClick={resetState}>
             Create another project
           </button>

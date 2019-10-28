@@ -27,6 +27,7 @@ class DocumentDetail extends Component {
           <iframe
             src={`data:application/pdf;base64,${this.state.doc.buffer}`}
             width="50%"
+            title="documentView"
             height="700"
           ></iframe>
           <div style={{ marginLeft: '50px' }}>

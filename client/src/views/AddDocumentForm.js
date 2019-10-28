@@ -52,7 +52,6 @@ class AddDocumentForm extends Component {
   }
 
   render() {
-    let user = this.context;
     return (
       <div className="container">
         <h1>Add Document</h1>
@@ -76,7 +75,7 @@ class AddDocumentForm extends Component {
               <option>Choose one...</option>
               {this.state.projects.length > 0 &&
                 this.state.projects.map(project => (
-                  <option value={project[3]}>
+                  <option key={project[1]} value={project[3]}>
                     {project[1] + ' / ' + project[0]}
                   </option>
                 ))}
@@ -110,7 +109,7 @@ class AddDocumentForm extends Component {
               readOnly
             />
           </div>
-          <button onClick={this.handleSubmit} class="btn btn-primary">
+          <button onClick={this.handleSubmit} className="btn btn-primary">
             Upload
           </button>
         </form>

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import FileSelector from '../components/FileSelector';
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
 
 class VerifyDocumentForm extends Component {
   constructor(props) {
@@ -78,7 +77,7 @@ class VerifyDocumentForm extends Component {
                 <option>Choose one...</option>
                 {this.state.projects.length > 0 &&
                   this.state.projects.map(project => (
-                    <option value={project[3]}>
+                    <option key={project[1]} value={project[3]}>
                       {project[1] + ' / ' + project[0]}
                     </option>
                   ))}
@@ -86,7 +85,7 @@ class VerifyDocumentForm extends Component {
             </div>
             <FileSelector onFileChange={this.handleFileChange} />
 
-            <button onClick={this.handleSubmit} class="btn btn-primary">
+            <button onClick={this.handleSubmit} className="btn btn-primary">
               Upload
             </button>
           </>

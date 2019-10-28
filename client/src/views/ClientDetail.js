@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Table from '../components/Table';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Loader from '../components/Loader';
 
 function Details({ data }) {
@@ -10,19 +10,20 @@ function Details({ data }) {
       <p>
         <b>Name</b> {data.userName}
       </p>
+      <p>
+        <b>Balance</b> {data.balance} RBTC
+      </p>
     </div>
   );
 }
 
 function UserDetailTableBody({ projects }) {
-  console.log(projects);
-
   return (
     <>
       {projects &&
         projects.map(([nombre, expediente, oc, contrato]) => {
           return (
-            <tr>
+            <tr key={expediente}>
               <td>{nombre}</td>
               <td>{expediente}</td>
               <td>{oc}</td>
@@ -44,11 +45,12 @@ function ClientDetail() {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log(address);
     axios.post('/api/user/get/' + address).then(({ data }) => {
       setData(data);
       setLoading(false);
     });
-  }, []);
+  }, [address]);
 
   return (
     <div className="container-fluid">

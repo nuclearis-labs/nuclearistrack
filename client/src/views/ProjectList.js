@@ -1,18 +1,17 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Table from '../components/Table';
 import Loader from '../components/Loader';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../context/UserContext';
 
 function ProjectListTableBody({ projects }) {
   return (
     <>
       {projects &&
         projects.map(
-          ([nombre, cliente, expediente, oc, contrato, clientAddress]) => {
+          ([nombre, cliente, expediente, oc, contrato, clientAddress], i) => {
             return (
-              <tr>
+              <tr key={i}>
                 <td>{nombre}</td>
                 <td>
                   <Link to={'/client-detail/' + clientAddress}>{cliente}</Link>
