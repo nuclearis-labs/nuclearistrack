@@ -8,20 +8,30 @@ function UserTableBody({ users }) {
   return (
     <>
       {users &&
-        users.map(([nombre, direccion, balance]) => {
+        users.map(([nombre, direccion, balance, status]) => {
           return (
             <tr key={direccion}>
               <td>
-                <Link to={'/client-detail/' + direccion}>{nombre}</Link>
+                {status === 'pending' ? (
+                  <>{nombre}</>
+                ) : (
+                  <Link to={'/client-detail/' + direccion}>{nombre}</Link>
+                )}
               </td>
               <td>
-                <a
-                  href={`https://explorer.testnet.rsk.co/address/${direccion}`}
-                >
-                  {direccion}
-                </a>
+                {status === 'pending' ? (
+                  <a href={`https://explorer.testnet.rsk.co/tx/${direccion}`}>
+                    Pendiente: Ver estado de transacción
+                  </a>
+                ) : (
+                  <a
+                    href={`https://explorer.testnet.rsk.co/address/${direccion}`}
+                  >
+                    {direccion}
+                  </a>
+                )}
               </td>
-              <td>{balance}</td>
+              <td>{balance || 0}</td>
             </tr>
           );
         })}
@@ -36,6 +46,8 @@ function UserList() {
     axios
       .post('/api/user/getAll')
       .then(({ data }) => {
+        console.log(data);
+
         setUsers(data);
         setLoading(false);
       })

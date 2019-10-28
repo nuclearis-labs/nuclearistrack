@@ -34,7 +34,7 @@ class NuclearPoE extends Contract {
         .sign(this.privateKey)
         .serialize();
 
-      return await transaction.send();
+      return await transaction.send('add-project');
     } catch (e) {
       throw Error(e);
     }
@@ -97,7 +97,7 @@ class NuclearPoE extends Contract {
         .sign(this.privateKey)
         .serialize();
 
-      return await transaction.send();
+      return await transaction.send('create-user', [_name, address]);
     } catch (e) {
       console.log(e);
       throw Error(e);

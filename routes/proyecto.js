@@ -6,6 +6,7 @@ const web3 = require('web3');
 const { convertResult } = require('../functions/utils');
 const { getKeys } = require('../functions/utils');
 const { verifyToken } = require('../middleware/index');
+const txModel = require('../models/transaction');
 
 const router = express.Router({ mergeParams: true });
 

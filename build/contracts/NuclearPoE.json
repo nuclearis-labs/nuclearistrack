@@ -396,9 +396,9 @@
           }
         ],
         "contractDependencies": [
-          26,
+          760,
           371,
-          760
+          26
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -3329,9 +3329,9 @@
           }
         ],
         "contractDependencies": [
-          26,
+          760,
           371,
-          760
+          26
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -6286,8 +6286,8 @@
         }
       },
       "links": {},
-      "address": "0x57585F50A5F5dC493656eD680ED62779B92Db946",
-      "transactionHash": "0x6f6b23b3be5ab241aea6935f14422d9a1fe537e3ce35b76aeeb0d143e3849d5d"
+      "address": "0xF61F6D0c183D705e4A182a867769A0D8F5F3fC31",
+      "transactionHash": "0xc8646931adcfdb9d55cf21175234aae2cc230dcbcc1dcff47bfa35c003272087"
     },
     "1571253090675": {
       "events": {
@@ -6336,7 +6336,7 @@
     }
   },
   "schemaVersion": "3.0.5",
-  "updatedAt": "2019-10-22T13:40:58.998Z",
+  "updatedAt": "2019-10-28T19:48:13.780Z",
   "devdoc": {
     "methods": {
       "isOwner()": {

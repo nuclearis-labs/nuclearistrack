@@ -11,6 +11,7 @@ const {
 const NuclearPoE = require('../classes/NuclearPoE');
 const Project = require('../classes/Project');
 const UserModel = require('../models/user');
+const txModel = require('../models/transaction');
 const { getKeys, convertResult } = require('../functions/utils');
 const User = require('../classes/User');
 
@@ -80,12 +81,14 @@ router.post('/getAll', async (req, res) => {
     const users = new NuclearPoE();
     const result = await users.return('getAllUsers');
     response = [];
-    for (let i = 0; i < result.length; i++) {
-      const user = new User();
-      let details = await user.getUserDetails(result[i]);
-      let [nombre] = convertResult(details);
 
-      let balance = await web3.eth.getBalance(result[i]);
+    for (let i = 0; i < result.length; i++) {
+      const pendingTx = await txModel.findOne({ data: { $in: result[i] } });
+      if (pendingTx !== null) await txModel.deleteOne(pendingTx);
+      const user = new User();
+      const details = await user.getUserDetails(result[i]);
+      const [nombre] = convertResult(details);
+      const balance = await web3.eth.getBalance(result[i]);
 
       response[i] = [
         web3.utils.toAscii(nombre),
@@ -93,6 +96,11 @@ router.post('/getAll', async (req, res) => {
         web3.utils.fromWei(balance)
       ];
     }
+    const pendingTx = await txModel.find({});
+    for (let y = 0; y < pendingTx.length; y++) {
+      response.push([pendingTx[y].data[0], pendingTx[y].hash, '', 'pending']);
+    }
+
     res.json(response);
   } catch (e) {
     console.log(e);

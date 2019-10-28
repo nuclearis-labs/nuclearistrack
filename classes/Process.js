@@ -46,7 +46,7 @@ class Process extends Contract {
         .sign(this.privateKey)
         .serialize();
 
-      return await transaction.send();
+      return await transaction.send('add-document');
     } catch (e) {
       throw Error(e);
     }
