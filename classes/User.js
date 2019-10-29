@@ -8,7 +8,6 @@ class User extends Contract {
     super(nuclearPoEABI);
     this.address = address;
     this.privateKey = privateKey;
-    this.initiateContract();
   }
 
   async getUserDetails(address) {

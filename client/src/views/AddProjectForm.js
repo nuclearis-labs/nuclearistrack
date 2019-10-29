@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Loader from '../components/Loader';
@@ -6,6 +6,7 @@ import Loader from '../components/Loader';
 function AddProjectForm() {
   const [form, setForm] = useState([]);
   const [event, setEvent] = useState();
+  const [users, setUsers] = useState();
   const [error, setError] = useState(false);
   const [isSending, setSending] = useState(false);
 
@@ -20,6 +21,12 @@ function AddProjectForm() {
     setError(false);
     setSending(false);
   }
+
+  useEffect(() => {
+    axios.post('/api/user/getAll').then(({ data }) => {
+      setUsers(data);
+    });
+  }, []);
 
   function handleSubmit(e) {
     setSending(true);
@@ -107,14 +114,16 @@ function AddProjectForm() {
           </div>
           <div className="form-group">
             <label htmlFor="">Client Address</label>
-            <input
+            <select
               onChange={handleInput}
-              type="text"
               name="clientAddress"
               className="form-control"
               id="client"
               placeholder="Enter Client Address"
-            />
+            >
+              {users &&
+                users.map(user => <option value={user[1]}>{user[0]}</option>)}
+            </select>
           </div>
           <button
             type="submit"

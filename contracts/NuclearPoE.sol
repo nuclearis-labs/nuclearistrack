@@ -5,8 +5,11 @@ import "./Project.sol";
 
 contract NuclearPoE is Ownable {
 
+    uint public docNumber = 0;
+
     struct User {
         bytes32 name;
+        uint userType;
         bool created;
     }
 
@@ -38,13 +41,18 @@ contract NuclearPoE is Ownable {
         emit CreateProject(ProjectContractAddress);
     }
 
-    function createUser(address _userAddress, bytes32 _userName) external onlyOwner() {
+    function createUser(address _userAddress, uint _userType, bytes32 _userName) external onlyOwner() {
         require(user[_userAddress].created == false, "User already created");
 
-        user[_userAddress] = User(_userName, true);
+        user[_userAddress] = User(_userName, _userType, true);
         userArray.push(_userAddress);
 
         emit CreateUser();
+    }
+
+    function incrementDocNumber(address _projectAddress) external onlyProjectContract(_projectAddress) returns(uint) {
+        docNumber++;
+        return docNumber;
     }
 
     function addSupplierToProject(address _supplierAddress, address _projectAddress) external onlyProjectContract(_projectAddress) {
@@ -61,8 +69,8 @@ contract NuclearPoE is Ownable {
         return userArray;
     }
 
-    function getUserDetails(address _address) external view returns(bytes32, address[] memory) {
-        return (user[_address].name, userProjectContracts[_address]);
+    function getUserDetails(address _address) external view returns(bytes32, uint, address[] memory) {
+        return (user[_address].name, user[_address].userType, userProjectContracts[_address]);
     }
 
 }

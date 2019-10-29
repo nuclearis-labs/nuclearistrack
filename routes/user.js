@@ -36,7 +36,11 @@ router.post(
 
       const nuclear = new NuclearPoE(wallet, privKey);
 
-      const txResult = await nuclear.createUser(address, req.body.newUserName);
+      const txResult = await nuclear.createUser(
+        address,
+        req.body.userType,
+        req.body.newUserName
+      );
 
       const result = await UserModel.create({
         username: req.body.newUserName,
@@ -87,12 +91,17 @@ router.post('/getAll', async (req, res) => {
       if (pendingTx !== null) await txModel.deleteOne(pendingTx);
       const user = new User();
       const details = await user.getUserDetails(result[i]);
-      const [nombre] = convertResult(details);
+
+      let [nombre, userType] = convertResult(details);
       const balance = await web3.eth.getBalance(result[i]);
+
+      if (userType === '0') userType = 'client';
+      else userType = 'supplier';
 
       response[i] = [
         web3.utils.toAscii(nombre),
         result[i],
+        userType,
         web3.utils.fromWei(balance)
       ];
     }

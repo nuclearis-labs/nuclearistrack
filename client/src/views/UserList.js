@@ -8,7 +8,7 @@ function UserTableBody({ users }) {
   return (
     <>
       {users &&
-        users.map(([nombre, direccion, balance, status]) => {
+        users.map(([nombre, direccion, type, balance, status]) => {
           return (
             <tr key={direccion}>
               <td>
@@ -31,6 +31,7 @@ function UserTableBody({ users }) {
                   </a>
                 )}
               </td>
+              <td>{type}</td>
               <td>{balance || 0}</td>
             </tr>
           );
@@ -64,7 +65,7 @@ function UserList() {
       ) : (
         <Table
           body={<UserTableBody users={users} />}
-          columns={['Nombre', 'Dirección', 'Balance (RBTC)']}
+          columns={['Nombre', 'Dirección', 'Tipo', 'Balance (RBTC)']}
           options={{ currentPage: 1 }}
         ></Table>
       )}

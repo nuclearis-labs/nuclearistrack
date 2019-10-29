@@ -110,14 +110,14 @@ function AddUser() {
             <label htmlFor="exampleFormControlSelect1">Type</label>
             <select
               className="form-control"
-              value="Choose..."
+              value={form.userType ? form.userType : 'Choose...'}
               name="userType"
               onChange={handleInput}
               id="type"
             >
               <option>Choose...</option>
-              <option>Client</option>
-              <option>Supplier</option>
+              <option value={0}>Client</option>
+              <option value={1}>Supplier</option>
             </select>
           </div>
           <button

@@ -15,7 +15,6 @@ class Process extends Contract {
     super(projectABI, contractAddress);
     this.address = address;
     this.privateKey = privateKey;
-    this.initiateContract();
   }
 
   async addDocument(_documentName, file) {

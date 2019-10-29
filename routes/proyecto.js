@@ -15,12 +15,21 @@ router.post('/', async (req, res) => {
     const { wallet, privKey } = await getKeys(req.body);
     const nuclear = new NuclearPoE(wallet, privKey);
 
-    const response = await nuclear.addProject(
-      Validator.checkAndConvertNumber(req.body.expediente),
-      Validator.checkAndConvertString(req.body.oc),
-      Validator.checkAndConvertString(req.body.proyectoTitle),
-      Validator.checkAndConvertAddress(req.body.clientAddress)
+    const expediente = Validator.checkAndConvertNumber(req.body.expediente);
+    const oc = Validator.checkAndConvertString(req.body.oc);
+    const projectTitle = Validator.checkAndConvertString(
+      req.body.proyectoTitle
     );
+    const cientAddress = Validator.checkAndConvertAddress(
+      req.body.clientAddress
+    );
+
+    const response = await nuclear.addProject({
+      expediente,
+      oc,
+      projectTitle,
+      cientAddress
+    });
 
     res.json({ response });
   } catch (e) {

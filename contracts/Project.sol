@@ -15,6 +15,7 @@ contract Project {
     struct Document {
         bytes32 documentTitle;
         string storageHash;
+        uint docNumber;
         uint mineTime;
     }
 
@@ -63,7 +64,10 @@ contract Project {
         require(approved == true,"Project is not approved by client");
         require(document[_hash].mineTime == 0, "Document already created");
 
-        document[_hash] = Document(_documentName, storageHash, now);
+        NuclearPoE main = NuclearPoE(NuclearPoEAddress);
+        uint docNumber = main.incrementDocNumber(address(this));
+
+        document[_hash] = Document(_documentName, storageHash, docNumber, now);
         allDocuments.push(_hash);
         process[msg.sender].documentsToOwner.push(_hash);
 
@@ -112,7 +116,7 @@ contract Project {
     function returnAllProcess() external view returns(address[] memory) {
         return supplierAddresses;
     }
-    
+
     function returnProcessByOwner(address _supplierAddress) external view returns(bytes32, bytes32[] memory) {
         return (process[_supplierAddress].processName, process[_supplierAddress].documentsToOwner);
     }
