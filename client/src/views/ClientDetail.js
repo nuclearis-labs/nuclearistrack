@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Table from '../components/Table';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import Loader from '../components/Loader';
 
 function Details({ data }) {
@@ -9,6 +9,9 @@ function Details({ data }) {
     <div style={{ marginTop: '30px' }}>
       <p>
         <b>Name</b> {data.userName}
+      </p>
+      <p>
+        <b>Address</b> {data.address}
       </p>
       <p>
         <b>Balance</b> {data.balance} RBTC
@@ -21,15 +24,17 @@ function UserDetailTableBody({ projects }) {
   return (
     <>
       {projects &&
-        projects.map(([nombre, expediente, oc, contrato]) => {
+        projects.map(([name, expediente, oc, contract]) => {
           return (
             <tr key={expediente}>
-              <td>{nombre}</td>
+              <td>
+                <Link to={`/project-detail/${contract}`}>{name}</Link>
+              </td>
               <td>{expediente}</td>
               <td>{oc}</td>
               <td>
-                <a href={`https://explorer.testnet.rsk.co/address/${contrato}`}>
-                  {contrato}
+                <a href={`https://explorer.testnet.rsk.co/address/${contract}`}>
+                  {contract}
                 </a>
               </td>
             </tr>
@@ -45,8 +50,8 @@ function ClientDetail() {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log(address);
     axios.post('/api/user/get/' + address).then(({ data }) => {
+      data.address = address;
       setData(data);
       setLoading(false);
     });
@@ -54,16 +59,21 @@ function ClientDetail() {
 
   return (
     <div className="container-fluid">
-      <h1>Resumen de Cliente</h1>
+      <h1>Client Details</h1>
       {isLoading ? (
         <Loader />
       ) : (
         <>
           <Details data={data} />
-          <h3 style={{ margin: '5px 0' }}>Proyectos</h3>
+          <h3>Proyectos</h3>
           <Table
             body={<UserDetailTableBody projects={data.proyectos} />}
-            columns={['Nombre', 'Expediente', 'Nº de OC', 'Contrato']}
+            columns={[
+              'Name',
+              'Expediente',
+              'Purchase Order',
+              'Contract Address'
+            ]}
             options={{ currentPage: 1 }}
           ></Table>
         </>

@@ -12,7 +12,15 @@ const NuclearPoE = require('../classes/NuclearPoE');
 const Project = require('../classes/Project');
 const UserModel = require('../models/user');
 const txModel = require('../models/transaction');
-const { getKeys, convertResult } = require('../functions/utils');
+const {
+  getKeys,
+  web3ArrayToJSArray,
+  isEmail,
+  toChecksumAddress,
+  isNumber,
+  asciiToHex,
+  isString
+} = require('../functions/utils');
 const User = require('../classes/User');
 
 const router = express.Router({ mergeParams: true });
@@ -21,7 +29,14 @@ router.post(
   '/',
   asyncMiddleware(async (req, res) => {
     try {
-      const user = await UserModel.findOne({ email: req.body.newUserEmail });
+      const newUsername = asciiToHex(req.body.newUserName);
+      const newUserEmail = isEmail(req.body.newUserEmail);
+      const userType = isNumber(Number(req.body.userType));
+      const newPassphrase = isString(req.body.newPassphrase);
+      const email = isEmail(req.body.email);
+      const passphrase = isString(req.body.passphrase);
+
+      const user = await UserModel.findOne({ newUserEmail });
 
       if (user) {
         throw Error('A user with the given email is already registered');
@@ -30,30 +45,36 @@ router.post(
       const newPrivKey = generatePrivateKey();
       const newPublicKey = generatePublicKey(newPrivKey);
       const address = generateRSKAddress(newPublicKey);
-      const encryptedKey = encryptBIP38(newPrivKey, req.body.newPassphrase);
+      const encryptedPrivateKey = encryptBIP38(newPrivKey, newPassphrase);
 
-      const { wallet, privKey } = await getKeys(req.body);
+      const { wallet, privKey } = await getKeys({ email, passphrase });
 
       const nuclear = new NuclearPoE(wallet, privKey);
+      const txHash = await nuclear.createUser(address, userType, newUsername);
 
-      const txResult = await nuclear.createUser(
-        address,
-        req.body.userType,
-        req.body.newUserName
-      );
-
-      const result = await UserModel.create({
-        username: req.body.newUserName,
-        email: req.body.newUserEmail,
-        address: address,
-        encryptedPrivateKey: encryptedKey
+      await txModel.create({
+        hash: txHash,
+        proyecto: nuclear.instance.options.address,
+        subject: 'add-user',
+        data: [req.body.newUserName, address]
       });
 
-      res.json({ result, txResult: txResult });
+      const db = await UserModel.create({
+        username: req.body.newUserName,
+        email: newUserEmail,
+        address,
+        encryptedPrivateKey
+      });
+
+      res.json({
+        username: db.username,
+        email: db.email,
+        address: db.address,
+        txHash
+      });
     } catch (e) {
       console.log(e);
-
-      res.json({ error: e.message });
+      res.status(500).json({ error: e.message });
     }
   })
 );
@@ -62,15 +83,17 @@ router.post(
   '/change',
   asyncMiddleware(async (req, res) => {
     try {
-      const client = await UserModel.findById('');
+      const passphrase = isString(req.body.passphrase);
+      const newPassphrase = isString(req.body.newPassphrase);
+      const email = isEmail(req.body.email);
 
-      const wallet = new Wallet(true);
-      wallet
-        .decryptBIP38(client.encryptedPrivateKey, req.body.passphrase)
-        .encryptBIP38(req.body.newPassphrase);
+      const user = await UserModel.findOne({ email: email });
 
-      const updatedClient = await UserModel.findByIdAndUpdate('id', {
-        encryptedPrivateKey: wallet.encryptedPrivateKey
+      const decryptedKey = decryptBIP38(user.encryptedPrivateKey, passphrase);
+      const encryptedPrivateKey = encryptBIP38(decryptedKey, newPassphrase);
+
+      const updatedClient = await UserModel.findByIdAndUpdate(user._id, {
+        encryptedPrivateKey
       });
 
       res.json(updatedClient);
@@ -83,42 +106,44 @@ router.post(
 router.post('/getAll', async (req, res) => {
   try {
     const users = new NuclearPoE();
-    const result = await users.return('getAllUsers');
+    const allUsers = await users.return('getAllUsers');
     response = [];
 
-    for (let i = 0; i < result.length; i++) {
-      const pendingTx = await txModel.findOne({ data: { $in: result[i] } });
-      if (pendingTx !== null) await txModel.deleteOne(pendingTx);
+    for (let i = 0; i < allUsers.length; i++) {
+      await txModel.findOneAndRemove({
+        data: { $in: allUsers[i] }
+      });
       const user = new User();
-      const details = await user.getUserDetails(result[i]);
+      const details = await user.getUserDetails(allUsers[i]);
 
-      let [nombre, userType] = convertResult(details);
-      const balance = await web3.eth.getBalance(result[i]);
-
-      if (userType === '0') userType = 'client';
-      else userType = 'supplier';
+      let [nombre, userType] = web3ArrayToJSArray(details);
+      const balance = await web3.eth.getBalance(allUsers[i]);
 
       response[i] = [
         web3.utils.toAscii(nombre),
-        result[i],
+        allUsers[i],
         userType,
         web3.utils.fromWei(balance)
       ];
     }
     const pendingTx = await txModel.find({});
     for (let y = 0; y < pendingTx.length; y++) {
-      response.push([pendingTx[y].data[0], pendingTx[y].hash, '', 'pending']);
+      response.push([
+        pendingTx[y].data[0],
+        pendingTx[y].hash,
+        '',
+        '0',
+        'pending'
+      ]);
     }
 
     res.json(response);
   } catch (e) {
-    console.log(e);
-
     res.json({ error: e.message });
   }
 });
 
-router.post('/getBalance/:address', (req, res) => {
+router.get('/getBalance/:address', (req, res) => {
   web3.eth.getBalance(req.params.address).then(balance => {
     res.json(web3.utils.fromWei(balance));
   });
@@ -126,13 +151,14 @@ router.post('/getBalance/:address', (req, res) => {
 
 router.post('/get/:address', async (req, res) => {
   try {
+    const address = toChecksumAddress(req.params.address);
     const user = new User();
-    let result = await user.getUserDetails(req.params.address);
-    result = convertResult(result);
+    const result = await user.getUserDetails(address);
+    const [userName, userType, userProjects] = web3ArrayToJSArray(result);
     let response = [];
-    let balance = await web3.eth.getBalance(req.params.address);
-    for (let i = 0; i < result[1].length; i++) {
-      let proyecto = new Project(undefined, undefined, result[1][i]);
+    let balance = await web3.eth.getBalance(address);
+    for (let i = 0; i < userProjects.length; i++) {
+      let proyecto = new Project(undefined, undefined, userProjects[i]);
       let detailsResponse = await proyecto.getDetails();
       let [
         title,
@@ -143,7 +169,7 @@ router.post('/get/:address', async (req, res) => {
         documents,
         suppliers,
         contrato
-      ] = convertResult(detailsResponse);
+      ] = web3ArrayToJSArray(detailsResponse);
       response.push([
         web3.utils.toAscii(title),
         expediente,
@@ -160,7 +186,7 @@ router.post('/get/:address', async (req, res) => {
   } catch (e) {
     console.log(e);
 
-    res.json({ error: e.message });
+    res.status(500).json({ error: e.message });
   }
 });
 

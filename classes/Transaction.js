@@ -1,6 +1,5 @@
 const ethTx = require('ethereumjs-tx');
 const web3 = require('../services/web3');
-const txModel = require('../models/transaction');
 
 class Transaction {
   constructor(contract, fromAddress, method, arg = []) {
@@ -91,25 +90,13 @@ class Transaction {
    * Send a serialized transaction
    * @returns {Promise<string>} Hash of transaction
    */
-  async send(subject, data, eventContractInstance = this.contract) {
+  async send() {
     return new Promise((resolve, reject) => {
       web3.eth.sendSignedTransaction(
         `0x${this.serializedTx.toString('hex')}`,
         (err, result) => {
           if (err) reject(err);
-          txModel
-            .create({
-              hash: result,
-              proyecto: this.contract.options.address,
-              subject: subject,
-              data: data
-            })
-            .then(resolve(result));
-          // Only works with a websocket connection.. Not available on RSK Public Nodes
-          // eventContractInstance.events.allEvents({}, (err, event) => {
-          //   if (err) reject(err);
-          //   resolve(event);
-          // });
+          resolve(result);
         }
       );
     });

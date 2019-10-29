@@ -11,8 +11,10 @@ function Navbar() {
   useEffect(() => {
     if (contextUser && contextUser.hasOwnProperty('address')) {
       axios
-        .post('/api/user/getBalance/' + contextUser.address)
+        .get('/api/user/getBalance/' + contextUser.address)
         .then(({ data }) => {
+          console.log(data);
+
           setData(data);
           setLoading(false);
         });
@@ -52,6 +54,11 @@ function Navbar() {
           <li className="nav-item">
             <Link className="nav-link" to="/add-document">
               Add Document
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/add-process">
+              Add Process
             </Link>
           </li>
           <li className="nav-item">

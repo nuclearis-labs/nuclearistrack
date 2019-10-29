@@ -53,8 +53,12 @@ class VerifyDocumentForm extends Component {
 
   componentDidMount() {
     axios
-      .post('/api/user/get/0x42F9F3fA9B3fAd8C6AeBB795e6Cd2DDf2CdFf990')
-      .then(({ data }) => this.setState({ projects: data.proyectos }));
+      .post('/api/user/get/0xF691198C305eaDc10c2954202eA6b0BB38A76B43')
+      .then(({ data }) => {
+        console.log(data);
+        this.setState({ projects: data.proyectos });
+      })
+      .catch(e => console.log(e));
   }
 
   render() {

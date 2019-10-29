@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 import Loader from '../components/Loader';
+import ConfirmTx from '../components/ConfirmTx';
 
 function AddProjectForm() {
+  const { contextUser } = useContext(UserContext);
   const [form, setForm] = useState([]);
   const [event, setEvent] = useState();
   const [users, setUsers] = useState();
@@ -24,7 +27,8 @@ function AddProjectForm() {
 
   useEffect(() => {
     axios.post('/api/user/getAll').then(({ data }) => {
-      setUsers(data);
+      const clients = data.filter(client => client[2] === '0');
+      setUsers(clients);
     });
   }, []);
 
@@ -34,8 +38,7 @@ function AddProjectForm() {
     axios
       .post('/api/project/', {
         ...form,
-        email: 'info@nuclearis.com',
-        passphrase: 'Nuclearis'
+        email: contextUser.userEmail
       })
       .then(result => {
         setSending(false);
@@ -121,17 +124,21 @@ function AddProjectForm() {
               id="client"
               placeholder="Enter Client Address"
             >
+              <option>Choose one...</option>
+
               {users &&
-                users.map(user => <option value={user[1]}>{user[0]}</option>)}
+                users.map(user => (
+                  <option value={user[1]}>{user[0] + ' / ' + user[1]}</option>
+                ))}
             </select>
           </div>
-          <button
-            type="submit"
-            className="btn btn-primary"
-            onClick={handleSubmit}
-          >
-            Create Project
-          </button>
+          <hr />
+          <ConfirmTx
+            contextUser={contextUser}
+            type="Project"
+            handleSubmit={handleSubmit}
+            handleInput={handleInput}
+          />
         </form>
       )}
     </div>

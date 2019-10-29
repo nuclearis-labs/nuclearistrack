@@ -3,36 +3,61 @@ import axios from 'axios';
 import Table from '../components/Table';
 import Loader from '../components/Loader';
 import { Link } from 'react-router-dom';
+import CogIcon from '../components/CogIcon';
+import CheckIcon from '../components/CheckIcon';
 
 function ProjectListTableBody({ projects }) {
+  if (projects.length === 0) {
+    return (
+      <tr>
+        <td colSpan="5" className="text-center">
+          No projects available
+        </td>
+      </tr>
+    );
+  }
   return (
     <>
       {projects &&
         projects.map(
-          ([nombre, cliente, expediente, oc, contrato, clientAddress], i) => {
+          (
+            [nombre, cliente, expediente, oc, contrato, clientAddress, status],
+            i
+          ) => {
             return (
               <tr key={i}>
-                <td>{nombre}</td>
+                <td>
+                  {status === 'pending' ? (
+                    <>{nombre}</>
+                  ) : (
+                    <Link to={'/project-detail/' + contrato}>{nombre}</Link>
+                  )}
+                </td>
                 <td>
                   <Link to={'/client-detail/' + clientAddress}>{cliente}</Link>
                 </td>
                 <td>{expediente}</td>
                 <td>{oc}</td>
                 <td>
-                  <a
-                    href={`https://explorer.testnet.rsk.co/address/${contrato}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {contrato}
-                  </a>
+                  {status === 'pending' ? (
+                    <a
+                      href={`https://explorer.testnet.rsk.co/tx/${contrato}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {contrato}
+                    </a>
+                  ) : (
+                    <a
+                      href={`https://explorer.testnet.rsk.co/address/${contrato}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {contrato}
+                    </a>
+                  )}
                 </td>
-                <td>
-                  <Link to={'/project-detail/' + contrato}>Ver</Link>
-                </td>
-                <td>
-                  <Link to={'/add-process/' + contrato}>Agregar</Link>
-                </td>
+                <td>{status === 'pending' ? <CogIcon /> : <CheckIcon />}</td>
               </tr>
             );
           }
@@ -63,21 +88,20 @@ function ProjectList() {
   }, []);
 
   return (
-    <div className="container-fluid">
-      <h1>Lista de Proyectos</h1>
+    <div className="container">
+      <h1>Project List</h1>
       {isLoading ? (
         <Loader />
       ) : (
         <Table
           body={<ProjectListTableBody projects={projects} />}
           columns={[
-            'Nombre',
-            'Cliente',
-            'Expediente',
-            'Nº de OC',
-            'Contrato',
-            'Detalles',
-            'Procesos'
+            'Name',
+            'Client',
+            'Expedient',
+            'Purchase Order',
+            'Contract Address',
+            'Status'
           ]}
         ></Table>
       )}

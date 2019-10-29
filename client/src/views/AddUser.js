@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import Loader from '../components/Loader';
+import { UserContext } from '../context/UserContext';
+import ConfirmTx from '../components/ConfirmTx';
 
 function AddUser() {
+  const { contextUser } = useContext(UserContext);
   const [form, setForm] = useState([]);
   const [event, setEvent] = useState();
   const [error, setError] = useState(false);
@@ -26,18 +29,21 @@ function AddUser() {
     axios
       .post('/api/user/', {
         ...form,
-        email: 'info@nuclearis.com',
-        passphrase: 'Nuclearis'
+        email: contextUser.userEmail,
+        passphrase: form.passphrase
       })
       .then(result => {
-        console.log(result);
-
         setSending(false);
         if (result.data.error) {
           setError(result.data.error);
         } else {
           setEvent(result.data);
         }
+      })
+      .catch(e => {
+        setEvent();
+        setSending(false);
+        setError('Not able to save User to the Blockchain, try later again');
       });
   }
 
@@ -49,10 +55,10 @@ function AddUser() {
       ) : event ? (
         <div style={{ marginTop: '100px', textAlign: 'center' }}>
           <h2>User successfully saved on the Blockchain!</h2>
-          <div>Email: {event.result.email}</div>
-          <div>Generated Address: {event.result.address}</div>
-          <div>Encrypted Private Key: {event.result.encryptedPrivateKey}</div>
-          <div>Transaction Hash: {event.txResult}</div>
+          <div>Username: {event.username}</div>
+          <div>Email: {event.email}</div>
+          <div>Generated Address: {event.address}</div>
+          <div>Transaction Hash: {event.txHash}</div>
           <button className="btn btn-primary" onClick={resetState}>
             Create another user
           </button>
@@ -120,13 +126,13 @@ function AddUser() {
               <option value={1}>Supplier</option>
             </select>
           </div>
-          <button
-            type="submit"
-            className="btn btn-primary"
-            onClick={handleSubmit}
-          >
-            Create User
-          </button>
+          <hr />
+          <ConfirmTx
+            contextUser={contextUser}
+            type="User"
+            handleSubmit={handleSubmit}
+            handleInput={handleInput}
+          />
         </form>
       )}
     </div>

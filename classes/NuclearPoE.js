@@ -1,12 +1,10 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-await-in-loop */
-const web3 = require('../services/web3');
 const Contract = require('./Contract');
 const Transaction = require('./Transaction');
-const Validator = require('./Validator');
 const NuclearPoEBin = require('../build/contracts/NuclearPoE.json').bytecode;
 const nuclearPoEABI = require('../build/contracts/NuclearPoE.json').abi;
-const projectABI = require('../build/contracts/Project.json').abi;
+const txModel = require('../models/transaction');
 
 class NuclearPoE extends Contract {
   /**
@@ -46,28 +44,36 @@ class NuclearPoE extends Contract {
         .sign(this.privateKey)
         .serialize();
 
-      return await transaction.send('add-project', [expediente, projectTitle]);
+      return await transaction.send();
     } catch (e) {
       throw Error(e);
     }
   }
 
+  /**
+   * Creates a new Transaction Instance and invokes a call method on the contract.
+   * @param  {String} method External View Contract Method to be called
+   * @param  {String} arg Arguments to provide for call
+   * @returns {Object} Result of contract method call
+   */
   async return(method, arg) {
     const tx = new Transaction(this.instance, this.address, method, arg);
     return await tx.call();
   }
 
+  /**
+   * Creates a new user on the contract
+   * @param  {} _address
+   * @param  {} _userType
+   * @param  {} _name
+   */
   async createUser(_address, _userType, _name) {
     try {
-      const address = Validator.checkAndConvertAddress(_address);
-      const name = Validator.checkAndConvertString(_name);
-      const userType = Validator.checkAndConvertNumber(_userType);
-
       const transaction = new Transaction(
         this.instance,
         this.address,
         'createUser',
-        [address, userType, name]
+        [_address, _userType, _name]
       );
 
       transaction.encodeABI();
@@ -79,7 +85,7 @@ class NuclearPoE extends Contract {
         .sign(this.privateKey)
         .serialize();
 
-      return await transaction.send('create-user', [_name, address]);
+      return await transaction.send();
     } catch (e) {
       console.log(e);
       throw Error(e);

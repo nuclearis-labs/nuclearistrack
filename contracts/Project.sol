@@ -6,6 +6,7 @@ contract Project {
 
     uint private expediente;
     bool private approved;
+    bool private active;
     address private clientAddress;
     address private NuclearPoEAddress;
     address private moAddress;
@@ -13,8 +14,11 @@ contract Project {
     bytes32 private oc;
 
     struct Document {
-        bytes32 documentTitle;
-        string storageHash;
+        bytes32 latitude;
+        bytes32 longitude;
+        bytes32 storageHash;
+        uint8 storageFunction;
+        uint8 storageSize;
         uint docNumber;
         uint mineTime;
     }
@@ -35,6 +39,7 @@ contract Project {
     event AddDocument();
     event AddProcess();
     event ApproveProject();
+    event CloseProject();
 
     modifier onlyClient() {
         require(msg.sender == clientAddress, "Only clients of this project can realize this operation");
@@ -58,16 +63,17 @@ contract Project {
         NuclearPoEAddress = msg.sender;
         moAddress = _moAddress;
         oc = _oc;
+        active = true;
     }
 
-    function addDocument (bytes32 _hash, bytes32 _documentName, string calldata storageHash) external onlySupplier() {
+    function addDocument (bytes32 _hash, uint8 storageFunction, uint8 storageSize, bytes32 storageHash, bytes32 latitude, bytes32 longitude) external onlySupplier() {
         require(approved == true,"Project is not approved by client");
         require(document[_hash].mineTime == 0, "Document already created");
 
         NuclearPoE main = NuclearPoE(NuclearPoEAddress);
         uint docNumber = main.incrementDocNumber(address(this));
 
-        document[_hash] = Document(_documentName, storageHash, docNumber, now);
+        document[_hash] = Document(latitude, longitude, storageHash, storageFunction, storageSize, docNumber, now);
         allDocuments.push(_hash);
         process[msg.sender].documentsToOwner.push(_hash);
 
@@ -75,12 +81,16 @@ contract Project {
     }
 
 
-    function findDocument(bytes32 _hash) external view returns (uint, bytes32, string memory) {
+    function findDocument(bytes32 _hash) external view returns (bytes32, bytes32, bytes32, uint8, uint8, uint, uint) {
         require(document[_hash].mineTime != 0, "Document does not exist");
         return (
-            document[_hash].mineTime,
-            document[_hash].documentTitle,
-            document[_hash].storageHash
+            document[_hash].latitude,
+            document[_hash].longitude,
+            document[_hash].storageHash,
+            document[_hash].storageFunction,
+            document[_hash].storageSize,
+            document[_hash].docNumber,
+            document[_hash].mineTime
             );
     }
 
@@ -107,6 +117,11 @@ contract Project {
 
     function contractDetails() external view returns (bytes32, address, uint, bytes32, bool, bytes32[] memory, address[] memory,address) {
         return (title, clientAddress, expediente, oc, approved, allDocuments, supplierAddresses, address(this));
+    }
+    
+    function closeContract() external onlyMO() {
+        active = false;
+        emit CloseProject();
     }
 
     function returnAllDocuments() external view returns(bytes32[] memory) {

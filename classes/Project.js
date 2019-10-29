@@ -1,7 +1,5 @@
 const Contract = require('./Contract');
 const Transaction = require('./Transaction');
-const utils = require('../functions/utils');
-const Validator = require('./Validator');
 const web3 = require('../services/web3');
 const projectABI = require('../build/contracts/Project.json').abi;
 
@@ -11,7 +9,10 @@ class Project extends Contract {
     this.address = address;
     this.privateKey = privateKey;
   }
-
+  /**
+   * Approves a Project by Client
+   * @returns Result of Transaction
+   */
   async approve() {
     try {
       const transaction = new Transaction(
@@ -29,28 +30,33 @@ class Project extends Contract {
         .sign(this.privateKey)
         .serialize();
 
-      return await transaction.send();
+      const txHash = await transaction.send();
+
+      return await txModel.create({
+        hash: txHash,
+        proyecto: this.instance.options.address,
+        subject: 'approve',
+        data: []
+      });
     } catch (e) {
       throw Error(e);
     }
   }
-
+  /**
+   * Adds a new process to the main contract
+   * @param  {} _supplierAddress
+   * @param  {} _processTitle
+   * @returns Result of Transaction
+   */
   async addProcess(_supplierAddress, _processTitle) {
     try {
-      const supplierAddress = Validator.checkAndConvertAddress(
-        _supplierAddress
-      );
-      const processTitle = Validator.checkAndConvertString(_processTitle);
+      const supplierAddress = web3.utils.toChecksumAddress(_supplierAddress);
+      const processTitle = web3.utils.asciiToHex(_processTitle);
 
       const tx = new Transaction(this.instance, this.address, 'addProcess', [
         supplierAddress,
         processTitle
       ]);
-
-      const eventContractInstance = new web3.eth.Contract(
-        projectABI,
-        this.instance.options.address
-      );
 
       tx.encodeABI();
       await tx.estimateGasLimit();
@@ -60,7 +66,7 @@ class Project extends Contract {
         .sign(this.privateKey)
         .serialize();
 
-      return await tx.send(eventContractInstance);
+      return await tx.send();
     } catch (e) {
       throw Error(e);
     }

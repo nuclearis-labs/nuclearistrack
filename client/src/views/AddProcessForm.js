@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import Loader from '../components/Loader';
+import { UserContext } from '../context/UserContext';
+import ConfirmTx from '../components/ConfirmTx';
 
 function AddProcessForm() {
   let { contract } = useParams();
-
+  const { contextUser } = useContext(UserContext);
   const [contractState, setContract] = useState();
+  const [users, setUsers] = useState();
   const [form, setForm] = useState([]);
   const [event, setEvent] = useState();
   const [isLoading, setLoading] = useState(true);
@@ -20,9 +23,13 @@ function AddProcessForm() {
   }
 
   useEffect(() => {
-    axios.post('/api/project/get/' + contract).then(({ data }) => {
+    axios.post(`/api/project/getAll`).then(({ data }) => {
       setContract(data);
-      setLoading(false);
+      axios.post('/api/user/getAll').then(({ data }) => {
+        const suppliers = data.filter(user => user[2] === '1');
+        setUsers(suppliers);
+        setLoading(false);
+      });
     });
   }, [contract, setLoading]);
 
@@ -36,13 +43,10 @@ function AddProcessForm() {
   function handleSubmit(e) {
     setSending(true);
     e.preventDefault();
-    console.log(contract);
-
     axios
-      .post('/api/process/create/' + contract, {
+      .post('/api/process/create/' + form.contract, {
         ...form,
-        email: 'info@nuclearis.com',
-        passphrase: 'Nuclearis'
+        email: contextUser.userEmail
       })
       .then(result => {
         console.log(result);
@@ -58,7 +62,7 @@ function AddProcessForm() {
 
   return (
     <div className="container">
-      <h1>Add Process {contractState && 'to ' + contractState[0]}</h1>
+      <h1>Add Process</h1>
       {isSending ? (
         <Loader />
       ) : event ? (
@@ -102,22 +106,47 @@ function AddProcessForm() {
           </div>
           <div className="form-group">
             <label htmlFor="supplierAddress">Supplier Address</label>
-            <input
-              onChange={handleInput}
-              type="text"
-              name="supplierAddress"
+
+            <select
               className="form-control"
+              onChange={handleInput}
+              name="supplierAddress"
               id="supplierAddress"
-              placeholder="Enter Supplier Address"
-            />
+            >
+              <option>Choose one...</option>
+              {users &&
+                users.length > 0 &&
+                users.map(user => (
+                  <option key={user[1]} value={user[1]}>
+                    {user[0] + ' / ' + user[1]}
+                  </option>
+                ))}
+            </select>
           </div>
-          <button
-            type="submit"
-            className="btn btn-primary"
-            onClick={handleSubmit}
-          >
-            Create Project
-          </button>
+          <div className="form-group">
+            <label htmlFor="project">Project</label>
+            <select
+              className="form-control"
+              onChange={handleInput}
+              name="contract"
+            >
+              <option>Choose one...</option>
+              {contractState &&
+                contractState.length > 0 &&
+                contractState.map(project => (
+                  <option key={project[4]} value={project[4]}>
+                    {project[0] + ' / ' + project[4]}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <hr />
+          <ConfirmTx
+            contextUser={contextUser}
+            type="Process"
+            handleSubmit={handleSubmit}
+            handleInput={handleInput}
+          />
         </form>
       )}
     </div>

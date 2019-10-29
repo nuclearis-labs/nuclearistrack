@@ -1,10 +1,15 @@
 const express = require('express');
 const NuclearPoE = require('../classes/NuclearPoE');
 const Project = require('../classes/Project');
-const Validator = require('../classes/Validator');
 const web3 = require('web3');
-const { convertResult } = require('../functions/utils');
-const { getKeys } = require('../functions/utils');
+const { web3ArrayToJSArray } = require('../functions/utils');
+const {
+  getKeys,
+  toChecksumAddress,
+  isNumber,
+  asciiToHex,
+  hexToAscii
+} = require('../functions/utils');
 const { verifyToken } = require('../middleware/index');
 const txModel = require('../models/transaction');
 
@@ -15,25 +20,30 @@ router.post('/', async (req, res) => {
     const { wallet, privKey } = await getKeys(req.body);
     const nuclear = new NuclearPoE(wallet, privKey);
 
-    const expediente = Validator.checkAndConvertNumber(req.body.expediente);
-    const oc = Validator.checkAndConvertString(req.body.oc);
-    const projectTitle = Validator.checkAndConvertString(
-      req.body.proyectoTitle
-    );
-    const cientAddress = Validator.checkAndConvertAddress(
-      req.body.clientAddress
-    );
+    const expediente = isNumber(Number(req.body.expediente));
+    const oc = asciiToHex(req.body.oc);
+    const projectTitle = asciiToHex(req.body.proyectoTitle);
+    const clientAddress = toChecksumAddress(req.body.clientAddress);
 
-    const response = await nuclear.addProject({
+    const txHash = await nuclear.addProject({
       expediente,
       oc,
       projectTitle,
-      cientAddress
+      clientAddress
     });
 
-    res.json({ response });
+    await txModel.create({
+      hash: txHash,
+      proyecto: nuclear.address,
+      subject: 'add-project',
+      data: [req.body.proyectoTitle, clientAddress, expediente, req.body.oc]
+    });
+
+    res.json({ txHash });
   } catch (e) {
-    res.json({ error: e.message });
+    console.log(e);
+
+    res.status(500).json({ error: e.message });
   }
 });
 
@@ -56,32 +66,60 @@ router.post('/approve/:contract', async (req, res) => {
 router.post('/getAll', async (req, res) => {
   try {
     const nuclear = new NuclearPoE();
-    const returnAll = await nuclear.return('getAllProjectContract');
-    const projectDetails = returnAll.map(async contractAddress => {
-      const project = new Project(undefined, undefined, contractAddress);
-      const result = await project.getDetails();
+    const allProjectContracts = await nuclear.return('getAllProjectContract');
+    response = [];
 
-      const convertedResult = convertResult(result);
+    for (let i = 0; i < allProjectContracts.length; i++) {
+      const project = new Project(undefined, undefined, allProjectContracts[i]);
+      const projectContractDetails = await project.getDetails();
+      const [
+        title,
+        clientAddress,
+        expediente,
+        oc,
+        approved,
+        allDocuments,
+        supplierAddresses,
+        contractAddress
+      ] = web3ArrayToJSArray(projectContractDetails);
+
+      await txModel.findOneAndRemove({
+        data: { $in: expediente }
+      });
+
+      const userName = await nuclear.return('getUserDetails', [clientAddress]);
+
+      response.push([
+        hexToAscii(title),
+        hexToAscii(userName[0]),
+        expediente,
+        hexToAscii(oc),
+        contractAddress,
+        clientAddress
+      ]);
+    }
+
+    const pendingTx = await txModel.find({});
+    for (let y = 0; y < pendingTx.length; y++) {
       const userName = await nuclear.return('getUserDetails', [
-        convertedResult[1]
+        pendingTx[y].data[1]
       ]);
 
-      return [
-        web3.utils.toAscii(convertedResult[0]),
-        web3.utils.toAscii(userName[0]),
-        convertedResult[2],
-        web3.utils.toAscii(convertedResult[3]),
-        convertedResult[7],
-        convertedResult[1]
-      ];
-    });
-    Promise.all(projectDetails).then(result => {
-      res.json(result);
-    });
+      response.push([
+        pendingTx[y].data[0],
+        hexToAscii(userName[0]),
+        pendingTx[y].data[2],
+        pendingTx[y].data[3],
+        pendingTx[y].hash,
+        pendingTx[y].data[1],
+        'pending'
+      ]);
+    }
+
+    res.json(response);
   } catch (e) {
     console.log(e);
-
-    res.json({ message: 'Here?', error: e.message });
+    res.status(500).json({ error: e.message });
   }
 });
 
@@ -92,7 +130,7 @@ router.post('/get/:contract', async (req, res) => {
     const project = new Project(undefined, undefined, req.params.contract);
     const resultRaw = await project.getDetails();
 
-    const result = convertResult(resultRaw);
+    const result = web3ArrayToJSArray(resultRaw);
 
     const userName = await nuclear.return('getUserDetails', [result[1]]);
 

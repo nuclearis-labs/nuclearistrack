@@ -1,5 +1,4 @@
 const Contract = require('./Contract');
-const utils = require('../functions/utils');
 const nuclearPoEABI = require('../build/contracts/NuclearPoE.json').abi;
 const Transaction = require('./Transaction');
 

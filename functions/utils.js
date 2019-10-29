@@ -6,13 +6,9 @@ const {
   generateRSKAddress
 } = require('./wallet');
 
-module.exports.isValidAddress = address => {
-  if (!web3.utils.isAddress(address))
-    throw TypeError(`Address is not a valid Ethereum address`);
-};
-
 module.exports.isString = string => {
   if (typeof string !== 'string') throw TypeError(`${string} is not a string`);
+  return string;
 };
 
 module.exports.isNumber = number => {
@@ -20,19 +16,34 @@ module.exports.isNumber = number => {
   return number;
 };
 
-module.exports.toBytes32 = string => {
-  return web3.utils.fromAscii(string);
+module.exports.asciiToHex = string => {
+  return web3.utils.asciiToHex(string);
 };
 
 module.exports.toChecksumAddress = address => {
   return web3.utils.toChecksumAddress(address);
 };
 
-module.exports.toAscii = bytes32 => {
-  return web3.utils.toAscii(bytes32);
+module.exports.isSHA256 = hash => {
+  if (/\b[A-Fa-f0-9]{64}\b/.test(hash) === true) return hash;
+  throw Error(`Given hash "${hash}" is not a valid SHA256 hash`);
 };
 
-module.exports.convertResult = object => {
+module.exports.hexToAscii = bytes32 => {
+  return web3.utils.hexToAscii(bytes32);
+};
+
+module.exports.isEmail = email => {
+  if (
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(
+      email
+    ) === true
+  )
+    return email;
+  throw Error(`Given email "${email}" is not a valid email`);
+};
+
+module.exports.web3ArrayToJSArray = object => {
   return Object.values(object);
 };
 

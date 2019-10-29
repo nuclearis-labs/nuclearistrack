@@ -3,8 +3,19 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Table from '../components/Table';
 import Loader from '../components/Loader';
+import CogIcon from '../components/CogIcon';
+import CheckIcon from '../components/CheckIcon';
 
 function UserTableBody({ users }) {
+  if (users.length === 0) {
+    return (
+      <tr>
+        <td colSpan="5" className="text-center">
+          No users available
+        </td>
+      </tr>
+    );
+  }
   return (
     <>
       {users &&
@@ -31,8 +42,9 @@ function UserTableBody({ users }) {
                   </a>
                 )}
               </td>
-              <td>{type}</td>
+              <td>{type === '0' ? 'Client' : 'Supplier'}</td>
               <td>{balance || 0}</td>
+              <td>{status === 'pending' ? <CogIcon /> : <CheckIcon />}</td>
             </tr>
           );
         })}
@@ -58,14 +70,14 @@ function UserList() {
   }, []);
 
   return (
-    <div className="container-fluid">
-      <h1>Lista de Usuarios</h1>
+    <div className="container">
+      <h1>User List</h1>
       {isLoading ? (
         <Loader />
       ) : (
         <Table
           body={<UserTableBody users={users} />}
-          columns={['Nombre', 'Dirección', 'Tipo', 'Balance (RBTC)']}
+          columns={['Nombre', 'Address', 'Type', 'Balance (RBTC)', 'Status']}
           options={{ currentPage: 1 }}
         ></Table>
       )}

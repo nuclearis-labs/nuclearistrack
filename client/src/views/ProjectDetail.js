@@ -1,22 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import Table from '../components/Table';
 import Loader from '../components/Loader';
 import { useParams, Link } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 
 function ProjectDetailTableBody({ process }) {
   let { contract } = useParams();
-
+  if (process.length === 0) {
+    return (
+      <tr>
+        <td colSpan="3" className="text-center">
+          No processes available
+        </td>
+      </tr>
+    );
+  }
   return (
     <>
       {process &&
-        process.map(([nombre, proveedor, documentos], i) => {
+        process.map(([name, supplier, documents], i) => {
           return (
             <tr key={i}>
-              <td>{nombre}</td>
-              <td>{proveedor}</td>
+              <td>{name}</td>
+              <td>{supplier}</td>
               <td>
-                {documentos.map(documento => (
+                {documents.map(documento => (
                   <div>
                     <Link to={`/document-detail/${contract}/${documento}`}>
                       {documento}
@@ -64,10 +73,10 @@ function ProjectDetail() {
       ) : (
         <>
           <Details projects={projects} />
-          <h3 style={{ margin: '5px 0' }}>Procesos</h3>
+          <h3 style={{ margin: '5px 0' }}>Process</h3>
           <Table
             body={<ProjectDetailTableBody process={process} />}
-            columns={['Nombre', 'Proveedor', 'Documentos']}
+            columns={['Name', 'Supplier', 'Documents']}
             options={{ currentPage: 1 }}
           ></Table>
         </>
@@ -77,7 +86,7 @@ function ProjectDetail() {
 }
 
 function Details(projects) {
-  console.log(projects);
+  const { contextUser } = useContext(UserContext);
 
   if (projects.projects !== undefined) {
     const [
@@ -95,34 +104,34 @@ function Details(projects) {
     return (
       <div style={{ marginTop: '30px' }}>
         <p>
-          <b>Title</b> {nombre}
+          <b>Name</b> {nombre}
         </p>
         <p>
-          <b>Cliente</b>{' '}
+          <b>Client</b>{' '}
           <Link to={'/client-detail/' + clientAddress}>{clientName}</Link>
         </p>
         <p>
           <b>Expediente</b> {expediente}
         </p>
         <p>
-          <b>Nº de OC</b> {oc}
+          <b>Purchase Order</b> {oc}
         </p>
         <p>
-          <b>Aprobado</b>{' '}
-          {approved ? (
-            'Aprobado'
-          ) : (
+          <b>Estado</b> {approved ? 'Aprobado' : 'No aprobado'}
+        </p>
+        <p>
+          {contextUser.address === clientAddress && (
             <button
               onClick={() => {
                 approve(contrato);
               }}
             >
-              Aprobar como NA-SA
+              Aprobar
             </button>
           )}
         </p>
         <p>
-          <b>Contrato</b>{' '}
+          <b>Contract</b>{' '}
           <a
             href={`https://explorer.testnet.rsk.co/address/${contrato}`}
             target="_blank"

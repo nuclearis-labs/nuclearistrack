@@ -1,10 +1,8 @@
 /* eslint-disable no-await-in-loop */
 const fs = require('fs');
-
+const web3 = require('../services/web3');
 const Contract = require('./Contract');
-const Document = require('./Document');
-const { convertResult } = require('../functions/utils');
-const Validator = require('./Validator');
+const { web3ArrayToJSArray } = require('../functions/utils');
 const Transaction = require('./Transaction');
 
 const projectABI = JSON.parse(fs.readFileSync('build/contracts/Project.json'))
@@ -17,23 +15,13 @@ class Process extends Contract {
     this.privateKey = privateKey;
   }
 
-  async addDocument(_documentName, file) {
+  async addDocument(documentInformation) {
     try {
-      const documentName = Validator.checkAndConvertString(_documentName);
-
-      const document = new Document(file);
-
-      document.createHash();
-      const documentHash = document.getHash;
-
-      const storageHash = await document.save();
-      console.log(storageHash);
-
       const transaction = new Transaction(
         this.instance,
         this.address,
         'addDocument',
-        [documentHash, documentName, storageHash[0].hash]
+        documentInformation
       );
 
       transaction.encodeABI();
@@ -45,21 +33,26 @@ class Process extends Contract {
         .sign(this.privateKey)
         .serialize();
 
-      return await transaction.send('add-document');
+      const txHash = await transaction.send();
+
+      return await txModel.create({
+        hash: txHash,
+        proyecto: this.instance.options.address,
+        subject: 'add-document',
+        data: [_documentHash]
+      });
     } catch (e) {
       throw Error(e);
     }
   }
 
-  async verifyDocument(file) {
+  async verifyDocument(_hash) {
     try {
-      this.documentHash = new Document(file).createHash().getHash;
-
       const transaction = new Transaction(
         this.instance,
         this.address,
         'findDocument',
-        [this.documentHash]
+        [_hash]
       );
 
       return await transaction.call();
@@ -68,33 +61,38 @@ class Process extends Contract {
     }
   }
 
-  async downloadDocument(hash) {
+  async downloadDocument(_hash) {
     try {
       const transaction = new Transaction(
         this.instance,
         this.address,
         'findDocument',
-        [hash]
+        [_hash]
       );
       const data = await transaction.call();
-      const doc = new Document();
-      const buffer = await doc.get(data[2]);
-      return { data: convertResult(data), buffer };
+
+      return web3ArrayToJSArray(data);
     } catch (e) {
       throw Error(e);
     }
   }
-
+  /**
+   *
+   * @param  {} _supplierAddress
+   */
   async returnProcessDetailsByOwner(_supplierAddress) {
+    const supplierAddress = web3.utils.toChecksumAddress(_supplierAddress);
+
     const txSuppliers = new Transaction(
       this.instance,
       this.address,
       'returnProcessByOwner',
-      [_supplierAddress]
+      [supplierAddress]
     );
 
     return await txSuppliers.call();
   }
+
   async returnDocuments() {
     const txSuppliers = new Transaction(
       this.instance,

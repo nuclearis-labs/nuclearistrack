@@ -1,7 +1,7 @@
 const utils = require('../functions/utils');
 
 class Validator {
-  static checkAndConvertAddress(_address) {
+  static toCheckSumAddress(_address) {
     try {
       utils.isValidAddress(_address);
       const address = utils.toChecksumAddress(_address);
@@ -11,7 +11,7 @@ class Validator {
     }
   }
 
-  static checkAndConvertString(_string) {
+  static asciiToHex(_string) {
     try {
       utils.isString(_string);
       const string = utils.toBytes32(_string);

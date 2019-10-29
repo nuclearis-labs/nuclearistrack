@@ -30,7 +30,7 @@ function App() {
           />
           <Route path="/add-document/" component={AddDocumentForm} />
           <Route path="/verify-document/" component={VerifyDocumentForm} />
-          <Route path="/add-process/:contract" component={AddProcessForm} />
+          <Route path="/add-process" component={AddProcessForm} />
           <Route path="/add-user" component={AddUser} />
           <Route path="/add-project" component={AddProjectForm} />
           <Route path="/login" component={LoginForm} />
