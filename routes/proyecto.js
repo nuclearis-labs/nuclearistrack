@@ -1,14 +1,17 @@
 const express = require('express');
-const NuclearPoE = require('../classes/NuclearPoE');
-const Project = require('../classes/Project');
+const Contract = require('../classes/Contract');
 const web3 = require('web3');
+const nuclearPoEABI = JSON.parse(
+  fs.readFileSync('build/contracts/NuclearPoE.json')
+).abi;
 const { web3ArrayToJSArray } = require('../functions/utils');
 const {
   getKeys,
   toChecksumAddress,
   isNumber,
   asciiToHex,
-  hexToAscii
+  hexToAscii,
+  createPendingTx
 } = require('../functions/utils');
 const { verifyToken } = require('../middleware/index');
 const txModel = require('../models/transaction');
@@ -17,24 +20,22 @@ const router = express.Router({ mergeParams: true });
 
 router.post('/', async (req, res) => {
   try {
-    const { wallet, privKey } = await getKeys(req.body);
-    const nuclear = new NuclearPoE(wallet, privKey);
+    const { wallet, privateKey } = await getKeys(req.body);
+    const nuclear = new Contract({ privateKey });
 
     const expediente = isNumber(Number(req.body.expediente));
     const oc = asciiToHex(req.body.oc);
     const projectTitle = asciiToHex(req.body.proyectoTitle);
     const clientAddress = toChecksumAddress(req.body.clientAddress);
 
-    const txHash = await nuclear.addProject({
-      expediente,
-      oc,
-      projectTitle,
-      clientAddress
+    const txHash = await nuclear.sendDataToContract({
+      fromAddress: wallet,
+      method: 'createProject',
+      data: [expediente, oc, projectTitle, clientAddress]
     });
 
-    await txModel.create({
-      hash: txHash,
-      proyecto: nuclear.address,
+    await createPendingTx({
+      txHash,
       subject: 'add-project',
       data: [req.body.proyectoTitle, clientAddress, expediente, req.body.oc]
     });
@@ -42,39 +43,14 @@ router.post('/', async (req, res) => {
     res.json(txHash);
   } catch (e) {
     console.log(e);
-
     res.status(500).json({ error: e.message });
-  }
-});
-
-router.post('/approve/:contract', async (req, res) => {
-  try {
-    const { wallet, privKey } = await getKeys(req.body);
-
-    const project = new Project(wallet, privKey, req.params.contract);
-
-    const txHash = await project.approve();
-
-    await txModel.create({
-      hash: txHash,
-      proyecto: req.params.contract,
-      subject: 'approve-project',
-      data: []
-    });
-
-    res.json(txHash);
-  } catch (e) {
-    console.log(e);
-
-    res.json({ error: e.message });
   }
 });
 
 router.get('/docNumber', async (req, res) => {
   try {
-    const project = new NuclearPoE();
-
-    const result = await project.return('docNumber', []);
+    const contract = new Contract();
+    const result = await contract.getDataFromContract({ method: 'docNumber' });
 
     res.json(result);
   } catch (e) {
@@ -86,13 +62,18 @@ router.get('/docNumber', async (req, res) => {
 
 router.post('/getAll', async (req, res) => {
   try {
-    const nuclear = new NuclearPoE();
-    const allProjectContracts = await nuclear.return('getAllProjectContract');
+    const contract = new Contract();
+    const allProjects = await contract.getDataFromContract({
+      method: 'getAllProjects'
+    });
+
     response = [];
 
-    for (let i = 0; i < allProjectContracts.length; i++) {
-      const project = new Project(undefined, undefined, allProjectContracts[i]);
-      const projectContractDetails = await project.getDetails();
+    for (let i = 0; i < allProjects.length; i++) {
+      const projectDetails = await contract.getDataFromContract({
+        method: 'getProjectDetails',
+        data: [allProjects[i]]
+      });
       const [
         title,
         clientAddress,
@@ -102,14 +83,17 @@ router.post('/getAll', async (req, res) => {
         allDocuments,
         supplierAddresses,
         contractAddress
-      ] = web3ArrayToJSArray(projectContractDetails);
+      ] = web3ArrayToJSArray(projectDetails);
 
       await txModel.findOneAndRemove({
         subject: 'add-project',
         data: { $in: expediente }
       });
 
-      const userName = await nuclear.return('getUserDetails', [clientAddress]);
+      const userName = await contract.getDataFromContract({
+        method: 'getUserDetails',
+        data: [clientAddress]
+      });
 
       response.push([
         hexToAscii(title),
@@ -123,9 +107,10 @@ router.post('/getAll', async (req, res) => {
 
     const pendingTx = await txModel.find({ subject: 'add-project' });
     for (let y = 0; y < pendingTx.length; y++) {
-      const userName = await nuclear.return('getUserDetails', [
-        pendingTx[y].data[1]
-      ]);
+      const userName = await contract.getDataFromContract({
+        method: 'getUserDetails',
+        data: [pendingTx[y].data[1]]
+      });
 
       response.push([
         pendingTx[y].data[0],

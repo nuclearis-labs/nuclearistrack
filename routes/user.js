@@ -8,8 +8,7 @@ const {
   encryptBIP38,
   decryptBIP38
 } = require('../functions/wallet');
-const NuclearPoE = require('../classes/NuclearPoE');
-const Project = require('../classes/Project');
+const Contract = require('../classes/Contract');
 const UserModel = require('../models/user');
 const txModel = require('../models/transaction');
 const {
@@ -19,7 +18,8 @@ const {
   toChecksumAddress,
   isNumber,
   asciiToHex,
-  isString
+  isString,
+  createPendingTx
 } = require('../functions/utils');
 const User = require('../classes/User');
 
@@ -47,14 +47,17 @@ router.post(
       const address = generateRSKAddress(newPublicKey);
       const encryptedPrivateKey = encryptBIP38(newPrivKey, newPassphrase);
 
-      const { wallet, privKey } = await getKeys({ email, passphrase });
+      const { wallet, privateKey } = await getKeys({ email, passphrase });
 
-      const nuclear = new NuclearPoE(wallet, privKey);
-      const txHash = await nuclear.createUser(address, userType, newUsername);
+      const contract = new Contract({ privateKey });
+      const txHash = await contract.sendDataToContract({
+        fromAddress: wallet,
+        method: 'createUser',
+        data: [address, userType, newUsername]
+      });
 
-      await txModel.create({
+      await createPendingTx({
         hash: txHash,
-        proyecto: nuclear.instance.options.address,
         subject: 'add-user',
         data: [req.body.newUserName, address]
       });
@@ -105,8 +108,10 @@ router.post(
 
 router.post('/getAll', async (req, res) => {
   try {
-    const users = new NuclearPoE();
-    const allUsers = await users.return('getAllUsers');
+    const contract = new Contract();
+    const allUsers = await contract.getDataFromContract({
+      method: 'getAllUsers'
+    });
     response = [];
 
     for (let i = 0; i < allUsers.length; i++) {
@@ -114,8 +119,10 @@ router.post('/getAll', async (req, res) => {
         subject: 'add-user',
         data: { $in: allUsers[i] }
       });
-      const user = new User();
-      const details = await user.getUserDetails(allUsers[i]);
+      const details = await contract.getDataFromContract({
+        method: 'getUserDetails',
+        arg: [allUsers[i]]
+      });
 
       let [nombre, userType] = web3ArrayToJSArray(details);
       const balance = await web3.eth.getBalance(allUsers[i]);
@@ -153,34 +160,33 @@ router.get('/getBalance/:address', (req, res) => {
 router.post('/get/:address', async (req, res) => {
   try {
     const address = toChecksumAddress(req.params.address);
-    const user = new User();
-    const result = await user.getUserDetails(address);
-    const [userName, userType, userProjects] = web3ArrayToJSArray(result);
+    const contract = new Contract();
+
+    const details = await contract.getDataFromContract({
+      method: 'getUserDetails',
+      arg: [address]
+    });
+
+    const [userName, userType, userProjects] = web3ArrayToJSArray(details);
     let response = [];
     let balance = await web3.eth.getBalance(address);
     for (let i = 0; i < userProjects.length; i++) {
-      let proyecto = new Project(undefined, undefined, userProjects[i]);
-      let detailsResponse = await proyecto.getDetails();
-      let [
-        title,
-        client,
-        expediente,
-        oc,
-        approved,
-        documents,
-        suppliers,
-        contrato
-      ] = web3ArrayToJSArray(detailsResponse);
+      let detailsResponse = await contract.getDataFromContract({
+        method: 'getProjectDetails',
+        arg: [userProjects[i]]
+      });
+      let [active, clientAddress, title, oc] = web3ArrayToJSArray(
+        detailsResponse
+      );
       response.push([
         web3.utils.toAscii(title),
-        expediente,
-        web3.utils.toAscii(oc),
-        contrato
+        userProjects[i],
+        web3.utils.toAscii(oc)
       ]);
     }
 
     res.json({
-      userName: web3.utils.toAscii(result[0]),
+      userName: web3.utils.toAscii(userName),
       balance: web3.utils.fromWei(balance),
       proyectos: response
     });

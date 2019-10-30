@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const txSchema = new mongoose.Schema({
-  hash: String,
+  txHash: String,
   proyecto: String,
   subject: String,
   data: [String]

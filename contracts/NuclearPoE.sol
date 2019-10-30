@@ -18,6 +18,7 @@ contract NuclearPoE is Ownable {
         address clientAddress;
         bytes32 title;
         bytes32 oc;
+        address[] processContracts;
     }
 
     address[] public processContractsArray;
@@ -47,7 +48,8 @@ contract NuclearPoE is Ownable {
         require(project[_expediente].active == false, "Project already created");
         require(user[_clientAddress].created == true, "User does not exist");
 
-        project[_expediente] = Project(true, _clientAddress, title, oc);
+        address[] memory processContracts = new address[](0);
+        project[_expediente] = Project(true, _clientAddress, title, oc, processContracts);
         userProjectContracts[_clientAddress].push(_expediente);
         projectsArray.push(_expediente);
 
@@ -74,6 +76,10 @@ contract NuclearPoE is Ownable {
         processContractsArray.push(ProcessContractAddress);
 
         emit CreateProcess(ProcessContractAddress);
+    }
+
+    function addProcessToProject(uint _expediente, address _processContract) external onlyOwner() {
+        project[_expediente].processContracts.push(_processContract);
     }
 
     function closeProject(uint _expediente) external onlyOwner() {

@@ -1,27 +1,32 @@
 const express = require('express');
-const Project = require('../classes/Project');
-const Process = require('../classes/Process');
+const Contract = require('../classes/Contract');
 const web3 = require('web3');
-const NuclearPoE = require('../classes/NuclearPoE');
-const { getKeys, web3ArrayToJSArray } = require('../functions/utils');
-const txModel = require('../models/transaction');
+const processABI = JSON.parse(fs.readFileSync('build/contracts/Process.json'))
+  .abi;
+const {
+  getKeys,
+  web3ArrayToJSArray,
+  createPendingTx
+} = require('../functions/utils');
 
 const router = express.Router({ mergeParams: true });
 
 router.post('/create/:contract', async (req, res) => {
   try {
-    const { wallet, privKey } = await getKeys(req.body);
+    const { wallet, privateKey } = await getKeys(req.body);
+    const contract = new Contract({
+      privateKey,
+      abi: processABI,
+      contractAddress: req.params.contract
+    });
+    const txHash = await contract.sendDataToContract({
+      fromAddress: wallet,
+      method: 'createProcess',
+      data: [req.body.supplierAddress, req.body.processTitle]
+    });
 
-    const process = new Project(wallet, privKey, req.params.contract);
-
-    const txHash = await process.addProcess(
-      req.body.supplierAddress,
-      req.body.processTitle
-    );
-
-    await txModel.create({
-      hash: txHash,
-      proyecto: req.params.contract,
+    await createPendingTx({
+      txHash,
       subject: 'add-process',
       data: [req.body.processTitle, req.body.supplierAddress]
     });
@@ -29,19 +34,18 @@ router.post('/create/:contract', async (req, res) => {
     res.json(txHash);
   } catch (e) {
     console.log(e);
-
     res.status(500).json({ error: e.message });
   }
 });
 
 router.post('/get/:contract/:process', async (req, res) => {
   try {
-    const { wallet, privKey } = await getKeys(req.body);
-    const process = new Process(wallet, privKey, req.params.contract);
+    const contract = new Contract({ abi: processABI });
 
-    const result = await process.returnProcessDetailsByOwner(
-      req.params.process
-    );
+    const result = await contract.getDataFromContract({
+      method: 'returnProcessByOwner',
+      arg: req.params.process
+    });
 
     res.json(result);
   } catch (e) {
@@ -53,15 +57,25 @@ router.post('/get/:contract/:process', async (req, res) => {
 
 router.post('/getAll/:contract', async (req, res) => {
   try {
-    const process = new Project(undefined, undefined, req.params.contract);
-    const nuclear = new NuclearPoE();
+    const contract = new Contract({
+      abi: processABI,
+      contractAddress: req.params.contract
+    });
 
-    const result = await process.return('returnAllProcess');
+    const result = await contract.getDataFromContract({
+      method: 'returnAllProcess'
+    });
 
     let resultProcessed = [];
     for (let i = 0; i < result.length; i++) {
-      const userName = await nuclear.return('getUserDetails', [result[i]]);
-      const details = await process.return('returnProcessByOwner', [result[i]]);
+      const userName = await contract.getDataFromContract({
+        method: 'getUserDetails',
+        data: [result[i]]
+      });
+      const details = await contract.getDataFromContract({
+        method: 'returnProcessByOwner',
+        data: [result[i]]
+      });
       const convertedResult = web3ArrayToJSArray(details);
       resultProcessed.push([
         web3.utils.toAscii(convertedResult[0]),

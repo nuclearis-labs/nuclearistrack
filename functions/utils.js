@@ -5,6 +5,7 @@ const {
   generatePublicKey,
   generateRSKAddress
 } = require('./wallet');
+const txModel = require('../models/transaction');
 
 module.exports.isString = string => {
   if (typeof string !== 'string') throw TypeError(`${string} is not a string`);
@@ -14,6 +15,14 @@ module.exports.isString = string => {
 module.exports.isNumber = number => {
   if (!Number.isInteger(number)) throw TypeError(`${number} is not a number`);
   return number;
+};
+
+module.exports.createPendingTx = async ({ txHash, subject, data }) => {
+  return await txModel.create({
+    txHash,
+    subject: subject,
+    data
+  });
 };
 
 module.exports.asciiToHex = string => {

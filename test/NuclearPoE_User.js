@@ -3,7 +3,6 @@
 /* eslint-disable node/no-unpublished-require */
 
 const NuclearPoE = artifacts.require('../contracts/NuclearPoE.sol');
-const { assert } = require('chai');
 const truffleAssert = require('truffle-assertions');
 
 const web3 = require('web3');
