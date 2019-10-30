@@ -2,9 +2,7 @@
 /* eslint-disable no-await-in-loop */
 const Contract = require('./Contract');
 const Transaction = require('./Transaction');
-const NuclearPoEBin = require('../build/contracts/NuclearPoE.json').bytecode;
 const nuclearPoEABI = require('../build/contracts/NuclearPoE.json').abi;
-const txModel = require('../models/transaction');
 
 class NuclearPoE extends Contract {
   /**

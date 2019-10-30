@@ -23,12 +23,14 @@ router.post('/create/:contract', async (req, res) => {
       hash: txHash,
       proyecto: req.params.contract,
       subject: 'add-process',
-      data: [_processTitle, supplierAddress]
+      data: [req.body.processTitle, req.body.supplierAddress]
     });
 
-    res.json({ result });
+    res.json(txHash);
   } catch (e) {
-    res.json({ error: e.message });
+    console.log(e);
+
+    res.status(500).json({ error: e.message });
   }
 });
 

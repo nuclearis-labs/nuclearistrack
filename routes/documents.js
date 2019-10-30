@@ -35,12 +35,17 @@ router.post('/verify/:contract', upload.single('file'), async (req, res) => {
 
 router.post('/download/:contract/:hash', async (req, res) => {
   try {
-    const hash = isSHA256(req.params.hash);
+    const hash = req.params.hash;
     const contract = toChecksumAddress(req.params.contract);
 
     const process = new Process(undefined, undefined, contract);
 
+    const foundDoc = await process.downloadDocument(req.params.hash);
+    console.log(foundDoc);
+
     const doc = new Document();
+    console.log(hash);
+
     const [{ content }] = await doc.getFromIPFS(hash);
 
     const [mineTime, name, storageHash] = await process.downloadDocument(hash);
@@ -65,25 +70,32 @@ router.post('/upload/:contract', upload.single('file'), async (req, res) => {
     const longitude = asciiToHex(req.body.longitude);
     const contract = toChecksumAddress(req.params.contract);
 
-    const document = new Document(file);
+    const document = new Document(req.file);
     document.createHash();
 
     const storage = await document.saveToIPFS();
-    const hexStorage = bs58.decode(storage);
+    const hexStorage = bs58.decode(storage).toString('hex');
 
     const storageFunction = hexStorage.substr(0, 2);
-    const storageSize = hexStorage.substr(2, 4);
-    const storageHash = hexStorage.substr(4);
+    const storageSize = hexStorage.substr(2, 3);
+    const storageHash = hexStorage.substr(3);
 
     const process = new Process(wallet, privKey, contract);
     const result = await process.addDocument([
-      document.getHash,
-      storageFunction,
-      storageSize,
-      storageHash,
+      '0x' + document.getHash,
+      Number(storageFunction),
+      Number(storageSize),
+      '0x' + storageHash,
       latitude,
       longitude
     ]);
+
+    return await txModel.create({
+      hash: txHash,
+      proyecto: contract,
+      subject: 'add-document',
+      data: ['0x' + document.getHash]
+    });
 
     res.json({ result });
   } catch (e) {

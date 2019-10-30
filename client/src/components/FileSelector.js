@@ -8,7 +8,7 @@ class FileSelector extends Component {
   }
 
   handleChange(e) {
-    this.props.onFileChange(e.target.files[0]);
+    this.props.onFileChange(e);
   }
 
   render() {

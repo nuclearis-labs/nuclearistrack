@@ -5,6 +5,7 @@ import Table from '../components/Table';
 import Loader from '../components/Loader';
 import CogIcon from '../components/CogIcon';
 import CheckIcon from '../components/CheckIcon';
+import RSKLink from '../components/RSKLink';
 
 function UserTableBody({ users }) {
   if (users.length === 0) {
@@ -31,15 +32,19 @@ function UserTableBody({ users }) {
               </td>
               <td>
                 {status === 'pending' ? (
-                  <a href={`https://explorer.testnet.rsk.co/tx/${direccion}`}>
-                    Pendiente: Ver estado de transacción
-                  </a>
+                  <RSKLink
+                    hash={direccion}
+                    type="tx"
+                    testnet={true}
+                    text={direccion}
+                  />
                 ) : (
-                  <a
-                    href={`https://explorer.testnet.rsk.co/address/${direccion}`}
-                  >
-                    {direccion}
-                  </a>
+                  <RSKLink
+                    hash={direccion}
+                    type="address"
+                    testnet={true}
+                    text={direccion}
+                  />
                 )}
               </td>
               <td>{type === '0' ? 'Client' : 'Supplier'}</td>

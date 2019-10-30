@@ -111,6 +111,7 @@ router.post('/getAll', async (req, res) => {
 
     for (let i = 0; i < allUsers.length; i++) {
       await txModel.findOneAndRemove({
+        subject: 'add-user',
         data: { $in: allUsers[i] }
       });
       const user = new User();
@@ -126,7 +127,7 @@ router.post('/getAll', async (req, res) => {
         web3.utils.fromWei(balance)
       ];
     }
-    const pendingTx = await txModel.find({});
+    const pendingTx = await txModel.find({ subject: 'add-user' });
     for (let y = 0; y < pendingTx.length; y++) {
       response.push([
         pendingTx[y].data[0],

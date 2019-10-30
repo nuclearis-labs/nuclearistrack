@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import Loader from '../components/Loader';
 import { UserContext } from '../context/UserContext';
 import ConfirmTx from '../components/ConfirmTx';
+import RSKLink from '../components/RSKLink';
 
 function AddProcessForm() {
   let { contract } = useParams();
@@ -48,15 +49,13 @@ function AddProcessForm() {
         ...form,
         email: contextUser.userEmail
       })
-      .then(result => {
-        console.log(result);
-
+      .then(({ data }) => {
+        console.log(data);
         setSending(false);
-        if (result.data.error) {
-          setError(result.data.error);
-        } else {
-          setEvent(result.data.response);
-        }
+        setEvent(data);
+      })
+      .catch(e => {
+        setError();
       });
   }
 
@@ -68,8 +67,10 @@ function AddProcessForm() {
       ) : event ? (
         <div style={{ marginTop: '100px', textAlign: 'center' }}>
           <h2>Project successfully saved on the Blockchain!</h2>
-          {/*    <div>Project Contract Address: {event.returnValues[0]}</div>
-          <div>Transaction Hash: {event.transactionHash}</div> */}
+          <div>
+            Transaction Hash:{' '}
+            <RSKLink hash={event} type="tx" testnet={true} text={event} />
+          </div>
           <button className="btn btn-primary" onClick={resetState}>
             Create another project
           </button>

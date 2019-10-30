@@ -33,14 +33,7 @@ class Process extends Contract {
         .sign(this.privateKey)
         .serialize();
 
-      const txHash = await transaction.send();
-
-      return await txModel.create({
-        hash: txHash,
-        proyecto: this.instance.options.address,
-        subject: 'add-document',
-        data: [_documentHash]
-      });
+      return await transaction.send();
     } catch (e) {
       throw Error(e);
     }

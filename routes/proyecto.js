@@ -39,7 +39,7 @@ router.post('/', async (req, res) => {
       data: [req.body.proyectoTitle, clientAddress, expediente, req.body.oc]
     });
 
-    res.json({ txHash });
+    res.json(txHash);
   } catch (e) {
     console.log(e);
 
@@ -53,9 +53,30 @@ router.post('/approve/:contract', async (req, res) => {
 
     const project = new Project(wallet, privKey, req.params.contract);
 
-    const result = await project.approve();
+    const txHash = await project.approve();
 
-    res.json({ result });
+    await txModel.create({
+      hash: txHash,
+      proyecto: req.params.contract,
+      subject: 'approve-project',
+      data: []
+    });
+
+    res.json(txHash);
+  } catch (e) {
+    console.log(e);
+
+    res.json({ error: e.message });
+  }
+});
+
+router.get('/docNumber', async (req, res) => {
+  try {
+    const project = new NuclearPoE();
+
+    const result = await project.return('docNumber', []);
+
+    res.json(result);
   } catch (e) {
     console.log(e);
 
@@ -84,6 +105,7 @@ router.post('/getAll', async (req, res) => {
       ] = web3ArrayToJSArray(projectContractDetails);
 
       await txModel.findOneAndRemove({
+        subject: 'add-project',
         data: { $in: expediente }
       });
 
@@ -99,7 +121,7 @@ router.post('/getAll', async (req, res) => {
       ]);
     }
 
-    const pendingTx = await txModel.find({});
+    const pendingTx = await txModel.find({ subject: 'add-project' });
     for (let y = 0; y < pendingTx.length; y++) {
       const userName = await nuclear.return('getUserDetails', [
         pendingTx[y].data[1]

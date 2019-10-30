@@ -5,6 +5,7 @@ import Loader from '../components/Loader';
 import { Link } from 'react-router-dom';
 import CogIcon from '../components/CogIcon';
 import CheckIcon from '../components/CheckIcon';
+import RSKLink from '../components/RSKLink';
 
 function ProjectListTableBody({ projects }) {
   if (projects.length === 0) {
@@ -40,21 +41,19 @@ function ProjectListTableBody({ projects }) {
                 <td>{oc}</td>
                 <td>
                   {status === 'pending' ? (
-                    <a
-                      href={`https://explorer.testnet.rsk.co/tx/${contrato}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {contrato}
-                    </a>
+                    <RSKLink
+                      hash={contrato}
+                      type="tx"
+                      testnet={true}
+                      text={contrato}
+                    />
                   ) : (
-                    <a
-                      href={`https://explorer.testnet.rsk.co/address/${contrato}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {contrato}
-                    </a>
+                    <RSKLink
+                      hash={contrato}
+                      type="address"
+                      testnet={true}
+                      text={contrato}
+                    />
                   )}
                 </td>
                 <td>{status === 'pending' ? <CogIcon /> : <CheckIcon />}</td>

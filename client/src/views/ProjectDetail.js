@@ -2,8 +2,10 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import Table from '../components/Table';
 import Loader from '../components/Loader';
+import ConfirmTx from '../components/ConfirmTx';
 import { useParams, Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
+import { format } from 'url';
 
 function ProjectDetailTableBody({ process }) {
   let { contract } = useParams();
@@ -40,20 +42,12 @@ function ProjectDetailTableBody({ process }) {
   );
 }
 
-function approve(contract) {
-  axios
-    .post(`/api/project/approve/${contract}`, {
-      email: 'info@nasa.com',
-      passphrase: 'nasa'
-    })
-    .then(result => console.log(result));
-}
-
 function ProjectDetail() {
   let { contract } = useParams();
 
   const [projects, setProjects] = useState();
   const [process, setProcess] = useState({});
+  const [approving, setApproving] = useState(false);
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
     axios.post('/api/project/get/' + contract).then(({ data }) => {
@@ -87,7 +81,21 @@ function ProjectDetail() {
 
 function Details(projects) {
   const { contextUser } = useContext(UserContext);
+  const [form, setForm] = useState({});
 
+  function handleInput(e) {
+    e.persist();
+    setForm(form => ({ ...form, [e.target.name]: e.target.value }));
+  }
+
+  function handleSubmit(contrato) {
+    axios
+      .post(`/api/project/approve/${contrato}`, {
+        email: contextUser.userEmail,
+        passphrase: form.passphrase
+      })
+      .then(result => console.log(result));
+  }
   if (projects.projects !== undefined) {
     const [
       nombre,
@@ -120,14 +128,13 @@ function Details(projects) {
           <b>Estado</b> {approved ? 'Aprobado' : 'No aprobado'}
         </p>
         <p>
-          {contextUser.address === clientAddress && (
-            <button
-              onClick={() => {
-                approve(contrato);
-              }}
-            >
-              Aprobar
-            </button>
+          {contextUser.address === clientAddress && approved === false && (
+            <ConfirmTx
+              contextUser={contextUser}
+              type="Approve"
+              handleSubmit={() => handleSubmit(contrato)}
+              handleInput={handleInput}
+            />
           )}
         </p>
         <p>

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import Loader from '../components/Loader';
 import ConfirmTx from '../components/ConfirmTx';
+import RSKLink from '../components/RSKLink';
 
 function AddProjectForm() {
   const { contextUser } = useContext(UserContext);
@@ -40,13 +41,14 @@ function AddProjectForm() {
         ...form,
         email: contextUser.userEmail
       })
-      .then(result => {
+      .then(({ data }) => {
+        console.log(data);
+
+        setEvent(data);
         setSending(false);
-        if (result.data.error) {
-          setError(result.data.error);
-        } else {
-          setEvent(result.data.response);
-        }
+      })
+      .catch(e => {
+        setError();
       });
   }
 
@@ -58,7 +60,9 @@ function AddProjectForm() {
       ) : event ? (
         <div style={{ marginTop: '100px', textAlign: 'center' }}>
           <h2>Project successfully saved on the Blockchain!</h2>
-          {<div>Transaction Hash: {event.transactionHash}</div>}
+          <div>
+            Transaction Hash: <RSKLink hash={event} type="tx" testnet={true} />
+          </div>
           <button className="btn btn-primary" onClick={resetState}>
             Create another project
           </button>
