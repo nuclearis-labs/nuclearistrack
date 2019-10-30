@@ -3,7 +3,6 @@
 /* eslint-disable node/no-unpublished-require */
 
 const NuclearPoE = artifacts.require('../contracts/NuclearPoE.sol');
-const User = artifacts.require('../contracts/User.sol');
 const { assert } = require('chai');
 const truffleAssert = require('truffle-assertions');
 
@@ -18,7 +17,7 @@ contract('User Contracts', accounts => {
 
   it('REVERT: Create new user as non-owner', async () => {
     await truffleAssert.reverts(
-      instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA'), {
+      instance.createUser(accounts[1], 0, web3.utils.fromAscii('NA-SA'), {
         from: accounts[1]
       }),
       'Ownable: caller is not the owner.'
@@ -28,6 +27,7 @@ contract('User Contracts', accounts => {
   it('Create user', async () => {
     const result = await instance.createUser(
       accounts[1],
+      0,
       web3.utils.fromAscii('NA-SA')
     );
     truffleAssert.eventEmitted(result, 'CreateUser');
@@ -35,7 +35,7 @@ contract('User Contracts', accounts => {
 
   it('REVERT: Create duplicate user', async () => {
     await truffleAssert.reverts(
-      instance.createUser(accounts[1], web3.utils.fromAscii('NA-SA')),
+      instance.createUser(accounts[1], 0, web3.utils.fromAscii('NA-SA')),
       'User already created'
     );
   });

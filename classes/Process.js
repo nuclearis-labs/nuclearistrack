@@ -74,8 +74,6 @@ class Process extends Contract {
    * @param  {} _supplierAddress
    */
   async returnProcessDetailsByOwner(_supplierAddress) {
-    const supplierAddress = web3.utils.toChecksumAddress(_supplierAddress);
-
     const txSuppliers = new Transaction(
       this.instance,
       this.address,

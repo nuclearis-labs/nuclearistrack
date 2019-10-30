@@ -1,7 +1,7 @@
 pragma solidity >=0.5.0 <0.7.0;
 
 import "./Ownable.sol";
-import "./Project.sol";
+import "./Process.sol";
 
 contract NuclearPoE is Ownable {
 
@@ -9,68 +9,101 @@ contract NuclearPoE is Ownable {
 
     struct User {
         bytes32 name;
-        uint userType;
+        uint8 userType;
         bool created;
     }
 
-    address[] public projectContractsArray;
-    address[] public userArray;
+    struct Project {
+        bool active;
+        address clientAddress;
+        bytes32 title;
+        bytes32 oc;
+    }
 
-    mapping(uint => address) public projectContract;
-    mapping(address => address[]) public userProjectContracts;
-    mapping(address => User) public user;
+    address[] public processContractsArray;
+    uint[] public projectsArray;
+    address[] public usersArray;
 
-    modifier onlyProjectContract(address _projectAddress) {
-        require(msg.sender == _projectAddress, "Sender has to be project Contract");
+    mapping (address => uint[]) public userProjectContracts;
+    mapping (address => User) public user;
+    mapping (uint => Project) private project;
+
+    modifier onlyProcessContract(address _processAddress) {
+        require(msg.sender == _processAddress, "Sender has to be project Contract");
     _;
     }
 
-    event CreateProject(address newProjectContractAddress);
-    event CreateUser();
-
-    function createProject(uint _expediente, bytes32 _projectTitle, address _userAddress, bytes32 _oc) external onlyOwner() {
-        require(projectContract[_expediente] == address(0), "Project already created");
-        require(user[_userAddress].created == true, "User does not exist");
-
-        address ProjectContractAddress = address(new Project(_expediente, _projectTitle, _userAddress, msg.sender, _oc));
-        projectContract[_expediente] = ProjectContractAddress;
-        projectContractsArray.push(ProjectContractAddress);
-
-        userProjectContracts[_userAddress].push(ProjectContractAddress);
-
-        emit CreateProject(ProjectContractAddress);
+    modifier onlyClient(address _clientAddress) {
+        require(msg.sender == _clientAddress, "Only clients of this project can realize this operation");
+        _;
     }
 
-    function createUser(address _userAddress, uint _userType, bytes32 _userName) external onlyOwner() {
+    event CreateProject();
+    event CreateUser();
+    event CreateProcess(address ProcessContractAddress);
+    event CloseProject();
+
+    function createProject(uint _expediente, address _clientAddress, bytes32 title, bytes32 oc) external onlyOwner() {
+        require(project[_expediente].active == false, "Project already created");
+        require(user[_clientAddress].created == true, "User does not exist");
+
+        project[_expediente] = Project(true, _clientAddress, title, oc);
+        userProjectContracts[_clientAddress].push(_expediente);
+        projectsArray.push(_expediente);
+
+        emit CreateProject();
+    }
+
+    function createUser(address _userAddress, uint8 _userType, bytes32 _userName) external onlyOwner() {
         require(user[_userAddress].created == false, "User already created");
 
         user[_userAddress] = User(_userName, _userType, true);
-        userArray.push(_userAddress);
+        usersArray.push(_userAddress);
 
         emit CreateUser();
     }
 
-    function incrementDocNumber(address _projectAddress) external onlyProjectContract(_projectAddress) returns(uint) {
+    function kill() public onlyOwner() {
+        selfdestruct(msg.sender);
+    }
+
+    function createProcess(address _supplierAddress, bytes32 _processName) external onlyOwner() {
+        require(user[_supplierAddress].created == true, "User does not exist");
+
+        address ProcessContractAddress = address(new Process(msg.sender, _supplierAddress, _processName));
+        processContractsArray.push(ProcessContractAddress);
+
+        emit CreateProcess(ProcessContractAddress);
+    }
+
+    function closeProject(uint _expediente) external onlyOwner() {
+        project[_expediente].active = false;
+        emit CloseProject();
+    }
+
+    function incrementDocNumber(address _processAddress) external onlyProcessContract(_processAddress) returns(uint) {
         docNumber++;
         return docNumber;
     }
 
-    function addSupplierToProject(address _supplierAddress, address _projectAddress) external onlyProjectContract(_projectAddress) {
-        require(user[_supplierAddress].created == true, "User does not exist");
-
-        userProjectContracts[_supplierAddress].push(_projectAddress);
+    function getAllProcessContracts() external view returns(address[] memory) {
+        return processContractsArray;
     }
 
-    function getAllProjectContract() external view returns(address[] memory) {
-        return projectContractsArray;
+    function getAllProjects() external view returns(uint[] memory) {
+        return projectsArray;
     }
 
     function getAllUsers() external view returns(address[] memory) {
-        return userArray;
+        return usersArray;
     }
 
-    function getUserDetails(address _address) external view returns(bytes32, uint, address[] memory) {
+    function getUserDetails(address _address) external view returns(bytes32, uint8, uint[] memory) {
         return (user[_address].name, user[_address].userType, userProjectContracts[_address]);
+    }
+
+    function getProjectDetails(uint _expediente) external view returns(bool, address, bytes32, bytes32) {
+        return (project[_expediente].active, project[_expediente].clientAddress, project[_expediente].title, project[_expediente].oc);
     }
 
 }
