@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import ProjectList from './views/ProjectList';
 import Navbar from './components/Navbar';
 import AddDocumentForm from './views/AddDocumentForm';
-import VerifyDocumentForm from './views/VerifyDocumentForm';
 import AddProjectForm from './views/AddProjectForm';
 import ProjectDetail from './views/ProjectDetail';
 import AddProcessForm from './views/AddProcessForm';
@@ -15,6 +14,8 @@ import Home from './views/Home';
 import TransferView from './views/TransferView';
 import { UserProvider } from './context/UserContext';
 import LoginForm from './views/LoginForm';
+import AssignProcess from './views/AssignProcess';
+import ProcessList from './views/ProcessList';
 
 function App() {
   return (
@@ -23,14 +24,15 @@ function App() {
         <Navbar />
         <Switch>
           <Route path="/project-list" component={ProjectList} />
+          <Route path="/process-list" component={ProcessList} />
           <Route
             exact
             path="/project-detail/:contract"
             component={ProjectDetail}
           />
           <Route path="/add-document/" component={AddDocumentForm} />
-          <Route path="/verify-document/" component={VerifyDocumentForm} />
           <Route path="/add-process" component={AddProcessForm} />
+          <Route path="/assign-process" component={AssignProcess} />
           <Route path="/add-user" component={AddUser} />
           <Route path="/add-project" component={AddProjectForm} />
           <Route path="/login" component={LoginForm} />

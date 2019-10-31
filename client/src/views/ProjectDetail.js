@@ -6,9 +6,12 @@ import ConfirmTx from '../components/ConfirmTx';
 import { useParams, Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import { format } from 'url';
+import Hash from '../components/Hash';
 
 function ProjectDetailTableBody({ process }) {
   let { contract } = useParams();
+  console.log(process);
+
   if (process.length === 0) {
     return (
       <tr>
@@ -21,23 +24,27 @@ function ProjectDetailTableBody({ process }) {
   return (
     <>
       {process &&
-        process.map(({ name, supplier, documents }, i) => {
-          return (
-            <tr key={i}>
-              <td>{name}</td>
-              <td>{supplier}</td>
-              <td>
-                {documents.map(documento => (
-                  <div>
-                    <Link to={`/document-detail/${contract}/${documento}`}>
-                      {documento}
-                    </Link>
-                  </div>
-                ))}
-              </td>
-            </tr>
-          );
-        })}
+        process.map(
+          ({ processName, supplierName, allDocuments, contractAddress }, i) => {
+            return (
+              <tr key={i}>
+                <td>{processName}</td>
+                <td>{supplierName}</td>
+                <td>
+                  {allDocuments.map(documento => (
+                    <div>
+                      <Link
+                        to={`/document-detail/${contractAddress}/${documento}`}
+                      >
+                        <Hash hash={documento} lengthBothSides={6} />
+                      </Link>
+                    </div>
+                  ))}
+                </td>
+              </tr>
+            );
+          }
+        )}
     </>
   );
 }
@@ -46,19 +53,25 @@ function ProjectDetail() {
   let { contract } = useParams();
 
   const [projects, setProjects] = useState();
-  const [process, setProcess] = useState({});
-  const [approving, setApproving] = useState(false);
+  const [processes, setProcesses] = useState();
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
     axios.get('/api/project/get/' + contract).then(({ data }) => {
       console.log(data);
       setProjects(data);
-      setLoading(false);
+      axios
+        .get('/api/process/getByExpediente/' + data.expediente)
+        .then(({ data }) => {
+          console.log(data);
+
+          setProcesses(data);
+          setLoading(false);
+        });
     });
   }, [contract]);
 
   return (
-    <div className="container-fluid">
+    <div className="container">
       <h1>Detalle de Proyecto</h1>
       {isLoading ? (
         <Loader />
@@ -67,9 +80,7 @@ function ProjectDetail() {
           <Details projects={projects} />
           <h3 style={{ margin: '5px 0' }}>Process</h3>
           <Table
-            body={
-              <ProjectDetailTableBody process={projects.processContracts} />
-            }
+            body={<ProjectDetailTableBody process={processes} />}
             columns={['Name', 'Supplier', 'Documents']}
             options={{ currentPage: 1 }}
           ></Table>
@@ -80,32 +91,18 @@ function ProjectDetail() {
 }
 
 function Details({ projects }) {
-  const { contextUser } = useContext(UserContext);
-  const [form, setForm] = useState({});
+  console.log(projects);
 
-  function handleInput(e) {
-    e.persist();
-    setForm(form => ({ ...form, [e.target.name]: e.target.value }));
-  }
-
-  function handleSubmit(contrato) {
-    axios
-      .post(`/api/project/approve/${contrato}`, {
-        email: contextUser.userEmail,
-        passphrase: form.passphrase
-      })
-      .then(result => console.log(result));
-  }
-  if (projects.lengt > 0) {
+  if (projects.hasOwnProperty('active')) {
     const {
       title,
       active,
       clientName,
       clientAddress,
       expediente,
-      oc,
-      processContracts
+      oc
     } = projects;
+    console.log(projects);
 
     return (
       <div style={{ marginTop: '30px' }}>
@@ -123,7 +120,7 @@ function Details({ projects }) {
           <b>Purchase Order</b> {oc}
         </p>
         <p>
-          <b>Estado</b> {active ? 'Active' : 'Closed'}
+          <b>Status</b> {active ? 'Active' : 'Closed'}
         </p>
       </div>
     );

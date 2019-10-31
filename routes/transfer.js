@@ -18,7 +18,11 @@ router.post('/', async (req, res) => {
     const tx = new Transaction({ fromAddress: wallet });
     await tx.estimateGas();
     await tx.getNonce();
-    tx.prepareRawTx(req.body.value, req.body.to, 4000000)
+    tx.prepareRawTx({
+      value: req.body.value,
+      to: req.body.to,
+      gaslimit: 4000000
+    })
       .sign(Buffer.from(privateKey, 'hex'))
       .serialize();
 

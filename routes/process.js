@@ -78,6 +78,46 @@ router.get('/get/:contract', async (req, res) => {
   }
 });
 
+router.get('/getByExpediente/:expediente', async (req, res) => {
+  try {
+    const contract = new Contract();
+
+    const details = await contract.getDataFromContract({
+      method: 'getAllProcessContracts'
+    });
+
+    let response = [];
+    for (let i = 0; i < details.length; i++) {
+      const process = new Contract({
+        abi: processABI,
+        contractAddress: details[i]
+      });
+      let result = await process.getDataFromContract({
+        method: 'getDetails'
+      });
+      const userName = await contract.getDataFromContract({
+        method: 'getUserDetails',
+        data: [result[2]]
+      });
+      response.push({
+        NuclearPoEAddress: result[0],
+        MOAddress: result[1],
+        supplierAddress: result[2],
+        supplierName: hexToAscii(userName[0]),
+        processName: hexToAscii(result[3]),
+        allDocuments: result[4],
+        contractAddress: result[5]
+      });
+    }
+
+    res.json(response);
+  } catch (e) {
+    console.log(e);
+
+    res.json({ error: e.message });
+  }
+});
+
 router.get('/get', async (req, res) => {
   try {
     const contract = new Contract();
@@ -92,12 +132,10 @@ router.get('/get', async (req, res) => {
         abi: processABI,
         contractAddress: result[i]
       });
-      console.log(result[i]);
 
       const details = await process.getDataFromContract({
         method: 'getDetails'
       });
-      console.log(details);
 
       const userName = await contract.getDataFromContract({
         method: 'getUserDetails',

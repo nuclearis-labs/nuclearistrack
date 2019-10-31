@@ -17,7 +17,7 @@ function TransferView() {
   }
 
   useEffect(() => {
-    axios.post('/api/user/getAll').then(({ data }) => {
+    axios.get('/api/user/get').then(({ data }) => {
       setUsers(data);
     });
   }, []);
@@ -26,10 +26,7 @@ function TransferView() {
     setStatus('sending');
     e.preventDefault();
     axios
-      .post(`/api/transfer/to/${form.address}/${form.value}`, {
-        email: contextUser.userEmail,
-        passphrase: form.passphrase
-      })
+      .post(`/api/transfer`, { ...form, email: contextUser.userEmail })
       .then(({ data }) => {
         setResponse(data);
         setStatus('success');
@@ -79,19 +76,19 @@ function TransferView() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="address">Address to send to</label>
+              <label htmlFor="to">Address to send to</label>
               <select
                 className="form-control"
                 onChange={handleInput}
-                name="address"
-                id="address"
+                name="to"
+                id="to"
               >
                 <option>Choose one...</option>
                 {users &&
                   users.length > 0 &&
                   users.map(user => (
-                    <option key={user[1]} value={user[1]}>
-                      {user[0] + ' / ' + user[1]}
+                    <option key={user.address} value={user.address}>
+                      {user.username + ' / ' + user.address}
                     </option>
                   ))}
               </select>

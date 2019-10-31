@@ -1,6 +1,6 @@
 const express = require('express');
 const web3 = require('../services/web3');
-const { asyncMiddleware } = require('../middleware/index');
+const { asyncMiddleware, verifyToken } = require('../middleware/index');
 const {
   generatePrivateKey,
   generatePublicKey,
@@ -27,6 +27,7 @@ const router = express.Router({ mergeParams: true });
 
 router.post(
   '/',
+  verifyToken,
   asyncMiddleware(async (req, res) => {
     try {
       const newUsername = asciiToHex(req.body.newUserName);

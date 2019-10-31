@@ -47,11 +47,11 @@ class Transaction {
    * @param {Buffer} privateKey Private Key of user
    * @returns {ethTx} Signed Transaction Instance
    */
-  prepareRawTx(
+  prepareRawTx({
     value = '0',
     to = this.contract.options.address,
     gaslimit = this.gaslimit
-  ) {
+  } = {}) {
     let weiValue = web3.utils.toWei(value, 'ether');
 
     this.tx = new ethTx({

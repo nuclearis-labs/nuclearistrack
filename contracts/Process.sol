@@ -42,10 +42,6 @@ contract Process {
         processName = _processName;
     }
 
-    function kill() public onlyMO() {
-        selfdestruct(msg.sender);
-    }
-
     function addDocument (bytes32 _hash, uint8 storageFunction, uint8 storageSize, bytes32 storageHash, bytes32 latitude, bytes32 longitude) external onlySupplier() {
         require(document[_hash].mineTime == 0, "Document already created");
 

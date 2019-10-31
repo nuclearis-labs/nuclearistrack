@@ -21,18 +21,7 @@ function ProjectListTableBody({ projects }) {
     <>
       {projects &&
         projects.map(
-          (
-            {
-              title,
-              clientName,
-              clientAddress,
-              expediente,
-              oc,
-              processContracts,
-              status
-            },
-            i
-          ) => {
+          ({ title, clientName, clientAddress, expediente, oc, status }, i) => {
             return (
               <tr key={i}>
                 <td>
@@ -49,23 +38,6 @@ function ProjectListTableBody({ projects }) {
                 </td>
                 <td>{expediente}</td>
                 <td>{oc}</td>
-                <td>
-                  {status === 'pending' ? (
-                    <RSKLink
-                      hash={expediente}
-                      type="tx"
-                      testnet={true}
-                      text={expediente}
-                    />
-                  ) : (
-                    <RSKLink
-                      hash={expediente}
-                      type="address"
-                      testnet={true}
-                      text={expediente}
-                    />
-                  )}
-                </td>
                 <td>{status === 'pending' ? <CogIcon /> : <CheckIcon />}</td>
               </tr>
             );
@@ -88,8 +60,6 @@ function ProjectList() {
       }
     })
       .then(({ data }) => {
-        console.log(data);
-
         setProjects(data);
         setLoading(false);
       })
@@ -106,14 +76,7 @@ function ProjectList() {
       ) : (
         <Table
           body={<ProjectListTableBody projects={projects} />}
-          columns={[
-            'Name',
-            'Client',
-            'Expedient',
-            'Purchase Order',
-            'Contract Address',
-            'Status'
-          ]}
+          columns={['Name', 'Client', 'Expedient', 'Purchase Order', 'Status']}
         ></Table>
       )}
     </div>

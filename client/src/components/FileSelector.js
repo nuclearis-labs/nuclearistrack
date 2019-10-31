@@ -1,29 +1,33 @@
-import React, { Component } from 'react';
+import React, { useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
 
-class FileSelector extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { file: '' };
-    this.handleChange = this.handleChange.bind(this);
-  }
+const style = {
+  margin: '20px 0',
+  border: '1px dashed black',
+  padding: '15px',
+  lineHeight: '40px',
+  backgroundColor: 'aliceblue'
+};
 
-  handleChange(e) {
-    this.props.onFileChange(e);
-  }
+function FileSelector({ onFileChange, message }) {
+  const onDrop = useCallback(acceptedFiles => {
+    onFileChange(acceptedFiles);
+  }, []);
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-  render() {
-    return (
-      <div className="form-group">
-        <label htmlFor="file">File to upload</label>
-        <input
-          className="form-control-file"
-          onChange={this.handleChange}
-          id="file"
-          type="file"
-          name="file"
-        />
-      </div>
-    );
-  }
+  return (
+    <div style={style} {...getRootProps()}>
+      <input {...getInputProps()} />
+
+      {message ? (
+        <p>{message}</p>
+      ) : isDragActive ? (
+        <p>Drop the files here</p>
+      ) : (
+        <p>Drop or select file</p>
+      )}
+    </div>
+  );
 }
+
 export default FileSelector;

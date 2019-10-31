@@ -2,8 +2,10 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 function Navbar() {
+  const { t, i18n } = useTranslation();
   const { contextUser, logoutUser } = useContext(UserContext);
   const [data, setData] = useState();
   const [isLoading, setLoading] = useState(true);
@@ -38,7 +40,12 @@ function Navbar() {
         <ul className="navbar-nav mr-auto">
           <li className="nav-item active">
             <Link className="nav-link" to="/project-list">
-              Project List <span className="sr-only">(current)</span>
+              {t('ProjectList')} <span className="sr-only">(current)</span>
+            </Link>
+          </li>
+          <li className="nav-item active">
+            <Link className="nav-link" to="/process-list">
+              Process List <span className="sr-only">(current)</span>
             </Link>
           </li>
           <li className="nav-item active">
@@ -58,12 +65,12 @@ function Navbar() {
           </li>
           <li className="nav-item">
             <Link className="nav-link" to="/add-process">
-              Add Process
+              Create Process
             </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/verify-document">
-              Verify Document
+            <Link className="nav-link" to="/assign-process">
+              Assign Process
             </Link>
           </li>
           <li className="nav-item">

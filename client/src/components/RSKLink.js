@@ -1,4 +1,5 @@
 import React from 'react';
+import Hash from './Hash';
 
 function RSKLink({ hash, type, testnet, text }) {
   return (
@@ -6,7 +7,7 @@ function RSKLink({ hash, type, testnet, text }) {
       href={`https://explorer${testnet === true &&
         '.testnet'}.rsk.co/${type}/${hash}`}
     >
-      {text}
+      <Hash hash={text} lengthBothSides={6} />
     </a>
   );
 }

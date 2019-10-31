@@ -69,14 +69,12 @@ router.get('/get', async (req, res) => {
       method: 'getAllProjects'
     });
 
-    console.log(allProjects);
     response = [];
     for (let i = 0; i < allProjects.length; i++) {
       const projectDetails = await contract.getDataFromContract({
         method: 'getProjectDetails',
         data: [allProjects[i]]
       });
-      console.log(projectDetails);
 
       const [
         active,
@@ -150,10 +148,26 @@ router.get('/get/:expediente', async (req, res) => {
       active: result[0],
       clientName: hexToAscii(userName[0]),
       clientAddress: result[1],
+      expediente: req.params.expediente,
       title: hexToAscii(result[2]),
       oc: hexToAscii(result[3]),
       processContracts: result[4]
     });
+  } catch (e) {
+    console.log(e);
+    res.json({ error: e.message });
+  }
+});
+
+router.post('/close/:expediente', async (req, res) => {
+  try {
+    const contract = new Contract();
+    const txHash = await contract.getDataFromContract({
+      method: 'closeProject',
+      data: [req.params.expediente]
+    });
+
+    res.json(txHash);
   } catch (e) {
     console.log(e);
     res.json({ error: e.message });
@@ -167,7 +181,7 @@ router.post('/assignProcess', async (req, res) => {
     const txHash = await contract.sendDataToContract({
       fromAddress: wallet,
       method: 'addProcessToProject',
-      data: [req.body.expediente, req.body.processContract]
+      data: [Number(req.body.expediente), req.body.processContract]
     });
 
     await createPendingTx({

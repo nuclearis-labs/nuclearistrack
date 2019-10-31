@@ -7,12 +7,12 @@ import { UserContext } from '../context/UserContext';
 import ConfirmTx from '../components/ConfirmTx';
 import RSKLink from '../components/RSKLink';
 
-function AddProcessForm() {
-  let { contract } = useParams();
+function AssignProcess() {
   const { contextUser } = useContext(UserContext);
-  const [users, setUsers] = useState();
   const [form, setForm] = useState([]);
   const [event, setEvent] = useState();
+  const [processes, setProcesses] = useState();
+  const [projects, setProjects] = useState();
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [isSending, setSending] = useState(false);
@@ -23,10 +23,12 @@ function AddProcessForm() {
   }
 
   useEffect(() => {
-    axios.get('/api/user/get').then(({ data }) => {
-      const suppliers = data.filter(user => user.type === '1');
-      setUsers(suppliers);
-      setLoading(false);
+    axios.get('/api/project/get').then(({ data }) => {
+      setProjects(data);
+      axios.get('/api/process/get').then(({ data }) => {
+        setProcesses(data);
+        setLoading(false);
+      });
     });
   }, [setLoading]);
 
@@ -41,7 +43,7 @@ function AddProcessForm() {
     setSending(true);
     e.preventDefault();
     axios
-      .post('/api/process/create/', {
+      .post('/api/project/assignProcess/', {
         ...form,
         email: contextUser.userEmail
       })
@@ -57,7 +59,7 @@ function AddProcessForm() {
 
   return (
     <div className="container">
-      <h1>Add Process</h1>
+      <h1>Assign Process To Project</h1>
       {isSending ? (
         <Loader />
       ) : event ? (
@@ -88,31 +90,44 @@ function AddProcessForm() {
       ) : (
         <form>
           <div className="form-group">
-            <label htmlFor="processTitle">Title</label>
-            <input
-              onChange={handleInput}
-              type="text"
-              name="processTitle"
-              className="form-control"
-              id="processTitle"
-              placeholder="Enter Title"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="supplierAddress">Supplier Address</label>
-
+            <label htmlFor="expediente">Project</label>
             <select
               className="form-control"
               onChange={handleInput}
-              name="supplierAddress"
-              id="supplierAddress"
+              name="expediente"
+              id="expediente"
             >
               <option>Choose one...</option>
-              {users &&
-                users.length > 0 &&
-                users.map(user => (
-                  <option key={user.address} value={user.address}>
-                    {user.username + ' / ' + user.address}
+              {projects &&
+                projects.length > 0 &&
+                projects.map(project => (
+                  <option key={project.expediente} value={project.expediente}>
+                    {project.title + ' / ' + project.expediente}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <div className="form-group">
+            <label htmlFor="processContract">Process</label>
+            <select
+              className="form-control"
+              onChange={handleInput}
+              name="processContract"
+              id="processContract"
+            >
+              <option>Choose one...</option>
+              {processes &&
+                processes.length > 0 &&
+                processes.map(process => (
+                  <option
+                    key={process.contractAddress}
+                    value={process.contractAddress}
+                  >
+                    {process.processName +
+                      ' / ' +
+                      process.supplierName +
+                      ' / ' +
+                      process.contractAddress}
                   </option>
                 ))}
             </select>
@@ -120,7 +135,7 @@ function AddProcessForm() {
           <hr />
           <ConfirmTx
             contextUser={contextUser}
-            type="Process"
+            type="Assign"
             handleSubmit={handleSubmit}
             handleInput={handleInput}
           />
@@ -130,4 +145,4 @@ function AddProcessForm() {
   );
 }
 
-export default AddProcessForm;
+export default AssignProcess;

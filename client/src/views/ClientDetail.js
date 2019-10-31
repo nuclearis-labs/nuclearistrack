@@ -24,19 +24,14 @@ function UserDetailTableBody({ projects }) {
   return (
     <>
       {projects &&
-        projects.map(([name, expediente, oc, contract]) => {
+        projects.map(({ title, expediente, oc }) => {
           return (
             <tr key={expediente}>
               <td>
-                <Link to={`/project-detail/${contract}`}>{name}</Link>
+                <Link to={'/project-detail/' + expediente}>{title}</Link>
               </td>
               <td>{expediente}</td>
               <td>{oc}</td>
-              <td>
-                <a href={`https://explorer.testnet.rsk.co/address/${contract}`}>
-                  {contract}
-                </a>
-              </td>
             </tr>
           );
         })}
@@ -50,15 +45,17 @@ function ClientDetail() {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.post('/api/user/get/' + address).then(({ data }) => {
+    axios.get('/api/user/get/' + address).then(({ data }) => {
       data.address = address;
+      console.log(data);
+
       setData(data);
       setLoading(false);
     });
-  }, [address]);
+  }, []);
 
   return (
-    <div className="container-fluid">
+    <div className="container">
       <h1>Client Details</h1>
       {isLoading ? (
         <Loader />
@@ -68,12 +65,7 @@ function ClientDetail() {
           <h3>Proyectos</h3>
           <Table
             body={<UserDetailTableBody projects={data.proyectos} />}
-            columns={[
-              'Name',
-              'Expediente',
-              'Purchase Order',
-              'Contract Address'
-            ]}
+            columns={['Name', 'Expediente', 'Purchase Order']}
             options={{ currentPage: 1 }}
           ></Table>
         </>
