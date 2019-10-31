@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const UserModel = require('../models/user');
-const { verifyToken } = require('../middleware/index');
 const {
   generatePublicKey,
   generateRSKAddress,
@@ -32,6 +31,7 @@ router.post('/', (req, res) => {
           {
             userName: user.username,
             userEmail: user.email,
+            userType: user.type,
             address: user.address
           },
           process.env.JWT_SECRET,

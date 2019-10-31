@@ -2,16 +2,11 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import Table from '../components/Table';
 import Loader from '../components/Loader';
-import ConfirmTx from '../components/ConfirmTx';
 import { useParams, Link } from 'react-router-dom';
-import { UserContext } from '../context/UserContext';
-import { format } from 'url';
 import Hash from '../components/Hash';
+import { UserContext } from '../context/UserContext';
 
 function ProjectDetailTableBody({ process }) {
-  let { contract } = useParams();
-  console.log(process);
-
   if (process.length === 0) {
     return (
       <tr>
@@ -57,13 +52,10 @@ function ProjectDetail() {
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
     axios.get('/api/project/get/' + contract).then(({ data }) => {
-      console.log(data);
       setProjects(data);
       axios
         .get('/api/process/getByExpediente/' + data.expediente)
         .then(({ data }) => {
-          console.log(data);
-
           setProcesses(data);
           setLoading(false);
         });
@@ -91,42 +83,64 @@ function ProjectDetail() {
 }
 
 function Details({ projects }) {
-  console.log(projects);
+  const { title, active, clientName, clientAddress, expediente, oc } = projects;
+  const [form, setForm] = useState({});
+  const { contextUser } = useContext(UserContext);
 
-  if (projects.hasOwnProperty('active')) {
-    const {
-      title,
-      active,
-      clientName,
-      clientAddress,
-      expediente,
-      oc
-    } = projects;
-    console.log(projects);
-
-    return (
-      <div style={{ marginTop: '30px' }}>
-        <p>
-          <b>Name</b> {title}
-        </p>
-        <p>
-          <b>Client</b>{' '}
-          <Link to={'/client-detail/' + clientAddress}>{clientName}</Link>
-        </p>
-        <p>
-          <b>Expediente</b> {expediente}
-        </p>
-        <p>
-          <b>Purchase Order</b> {oc}
-        </p>
-        <p>
-          <b>Status</b> {active ? 'Active' : 'Closed'}
-        </p>
-      </div>
-    );
-  } else {
-    return <Loader />;
+  function handleInput(e) {
+    e.persist();
+    setForm(form => ({ ...form, [e.target.name]: e.target.value }));
   }
+
+  function closeProject(e) {
+    e.preventDefault();
+    axios({
+      method: 'post',
+      url: '/api/project/close/' + expediente,
+      data: { ...form, email: contextUser.userEmail },
+      headers: {
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+      }
+    }).then(result => console.log(result));
+  }
+
+  return (
+    <div style={{ marginTop: '30px' }}>
+      <p>
+        <b>Name</b> {title}
+      </p>
+      <p>
+        <b>Client</b>{' '}
+        <Link to={'/client-detail/' + clientAddress}>{clientName}</Link>
+      </p>
+      <p>
+        <b>Expediente</b> {expediente}
+      </p>
+      <p>
+        <b>Purchase Order</b> {oc}
+      </p>
+      <p>
+        <b>Status</b> {active ? 'Active' : 'Closed'}
+      </p>
+      {active && (
+        <div className="form-row">
+          <div className="col">
+            <button onClick={closeProject} className="btn btn-primary">
+              Close Project
+            </button>
+          </div>
+          <div className="col">
+            <input
+              className="form-control"
+              onChange={handleInput}
+              type="password"
+              name="passphrase"
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default ProjectDetail;

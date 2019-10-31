@@ -1,6 +1,6 @@
 const express = require('express');
-const storage = require('multer').memoryStorage();
 const fs = require('fs');
+const storage = require('multer').memoryStorage();
 const upload = require('multer')({ storage });
 const { createSHA256 } = require('../functions/hash');
 const Contract = require('../classes/Contract');
@@ -13,7 +13,6 @@ const {
   getKeys,
   isSHA256,
   toChecksumAddress,
-  hexToAscii,
   asciiToHex,
   createPendingTx
 } = require('../functions/utils');
@@ -49,7 +48,7 @@ router.post('/verify/:contract', upload.single('file'), async (req, res) => {
 
 router.get('/download/:contract/:hash', async (req, res) => {
   try {
-    const hash = req.params.hash;
+    const hash = isSHA256(req.params.hash);
     const contractAddress = toChecksumAddress(req.params.contract);
 
     const contract = new Contract({ abi: processABI, contractAddress });
@@ -146,12 +145,13 @@ router.get('/get/:contract/', async (req, res) => {
 
 router.get('/get/:contract/:hash', async (req, res) => {
   try {
+    const hash = isSHA256(req.params.hash);
     const contractAddress = toChecksumAddress(req.params.contract);
     const contract = new Contract({ abi: processABI, contractAddress });
 
     const result = await contract.getDataFromContract({
       method: 'findDocument',
-      data: [req.params.hash]
+      data: [hash]
     });
 
     const storageHash = result[3] + result[4] + result[2].substr(2);

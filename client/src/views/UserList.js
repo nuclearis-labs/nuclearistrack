@@ -64,8 +64,6 @@ function UserList() {
     axios
       .get('/api/user/get')
       .then(({ data }) => {
-        console.log(data);
-
         setUsers(data);
         setLoading(false);
       })

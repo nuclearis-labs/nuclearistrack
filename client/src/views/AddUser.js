@@ -26,12 +26,18 @@ function AddUser() {
   function handleSubmit(e) {
     setSending(true);
     e.preventDefault();
-    axios
-      .post('/api/user/', {
+
+    axios({
+      method: 'post',
+      url: '/api/user/',
+      data: {
         ...form,
-        email: contextUser.userEmail,
-        passphrase: form.passphrase
-      })
+        email: contextUser.userEmail
+      },
+      headers: {
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+      }
+    })
       .then(result => {
         setSending(false);
         if (result.data.error) {
@@ -96,7 +102,7 @@ function AddUser() {
               name="newUserEmail"
               autoComplete="email"
               className="form-control"
-              id="email"
+              id="newEmail"
               placeholder="Enter Email"
             />
           </div>

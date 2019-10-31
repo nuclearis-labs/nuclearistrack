@@ -84,8 +84,6 @@ function ProcessList() {
       }
     })
       .then(({ data }) => {
-        console.log(data);
-
         setProcesses(data);
         setLoading(false);
       })

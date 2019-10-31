@@ -5,7 +5,7 @@ const { getKeys } = require('../functions/utils');
 const web3 = require('../services/web3');
 const { verifyToken } = require('../middleware/index');
 
-router.post('/', async (req, res) => {
+router.post('/', verifyToken, async (req, res) => {
   try {
     const { wallet, privateKey } = await getKeys(req.body);
 

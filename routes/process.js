@@ -1,12 +1,11 @@
 const express = require('express');
 const Contract = require('../classes/Contract');
-const web3 = require('web3');
 const fs = require('fs');
+const { verifyToken } = require('../middleware/index');
 const processABI = JSON.parse(fs.readFileSync('build/contracts/Process.json'))
   .abi;
 const {
   getKeys,
-  web3ArrayToJSArray,
   createPendingTx,
   asciiToHex,
   hexToAscii,
@@ -15,7 +14,7 @@ const {
 
 const router = express.Router({ mergeParams: true });
 
-router.post('/create/', async (req, res) => {
+router.post('/create/', verifyToken, async (req, res) => {
   try {
     const { wallet, privateKey } = await getKeys(req.body);
 

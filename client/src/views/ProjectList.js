@@ -5,7 +5,6 @@ import Loader from '../components/Loader';
 import { Link } from 'react-router-dom';
 import CogIcon from '../components/CogIcon';
 import CheckIcon from '../components/CheckIcon';
-import RSKLink from '../components/RSKLink';
 
 function ProjectListTableBody({ projects }) {
   if (projects.length === 0) {

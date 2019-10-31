@@ -47,12 +47,10 @@ function ClientDetail() {
   useEffect(() => {
     axios.get('/api/user/get/' + address).then(({ data }) => {
       data.address = address;
-      console.log(data);
-
       setData(data);
       setLoading(false);
     });
-  }, []);
+  }, [address]);
 
   return (
     <div className="container">

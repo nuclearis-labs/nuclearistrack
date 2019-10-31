@@ -1,8 +1,18 @@
 const nodeMailer = require('nodemailer');
 
-module.exports.sendMail = function sendMail(to, id, cc, user) {
-  const subject = 'Se guardo un archivo nuevo en la Blockchain';
-  const html = `Estimado,<br><br>Le avisamos que se genero un archivo nuevo en la Blockchain con los siguientes datos:<br><br>Nombre de archivo: ${user}-${cc}-${id}<br><br>Le pedimos de revisar el archivo y modificar su codificación<br><br>Muchas gracias<br>Saludos<br>La Blockchain`;
+module.exports.sendMail = function sendMail({ to, data }) {
+  const subject = 'Confirmación de tu usuario';
+  const html = `
+  Estimado,<br><br>
+  Le avisamos que se genero una cuenta en la plataforma NuclearPoE<br><br>
+  
+  Le pedimos que haga click en el siguiente enlace para confirmar la inscripción y definir su clave<br><br>
+  
+  <a href="http://localhost:3000/user-form/${data}">Confirmar Cuenta</a><br><br>
+
+  Muchas gracias<br>
+  Saludos<br>
+  La Blockchain`;
 
   const transporter = nodeMailer.createTransport({
     host: 'smtp.gmail.com',

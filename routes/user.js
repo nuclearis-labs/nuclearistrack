@@ -1,6 +1,6 @@
 const express = require('express');
 const web3 = require('../services/web3');
-const { asyncMiddleware, verifyToken } = require('../middleware/index');
+const { verifyToken } = require('../middleware/index');
 const {
   generatePrivateKey,
   generatePublicKey,
@@ -11,6 +11,7 @@ const {
 const Contract = require('../classes/Contract');
 const UserModel = require('../models/user');
 const txModel = require('../models/transaction');
+const { sendMail } = require('../functions/mail');
 const {
   getKeys,
   web3ArrayToJSArray,
@@ -25,90 +26,107 @@ const {
 
 const router = express.Router({ mergeParams: true });
 
-router.post(
-  '/',
-  verifyToken,
-  asyncMiddleware(async (req, res) => {
-    try {
-      const newUsername = asciiToHex(req.body.newUserName);
-      const newUserEmail = isEmail(req.body.newUserEmail);
-      const userType = isNumber(Number(req.body.userType));
-      const newPassphrase = isString(req.body.newPassphrase);
-      const email = isEmail(req.body.email);
-      const passphrase = isString(req.body.passphrase);
+router.post('/', verifyToken, async (req, res) => {
+  try {
+    const newUserName = asciiToHex(req.body.newUserName);
+    const newUserEmail = isEmail(req.body.newUserEmail);
+    const userType = isNumber(Number(req.body.userType));
 
-      const user = await UserModel.findOne({ newUserEmail });
+    const user = await UserModel.findOne({ newUserEmail });
 
-      if (user) {
-        throw Error('A user with the given email is already registered');
-      }
-
-      const newPrivKey = generatePrivateKey();
-      const newPublicKey = generatePublicKey(newPrivKey);
-      const address = generateRSKAddress(newPublicKey);
-      const encryptedPrivateKey = encryptBIP38(newPrivKey, newPassphrase);
-
-      const { wallet, privateKey } = await getKeys({ email, passphrase });
-
-      const contract = new Contract({ privateKey });
-      const txHash = await contract.sendDataToContract({
-        fromAddress: wallet,
-        method: 'createUser',
-        data: [address, userType, newUsername]
-      });
-
-      await createPendingTx({
-        hash: txHash,
-        subject: 'add-user',
-        data: [req.body.newUserName, address]
-      });
-
-      const db = await UserModel.create({
-        username: req.body.newUserName,
-        email: newUserEmail,
-        address,
-        encryptedPrivateKey
-      });
-
-      res.json({
-        username: db.username,
-        email: db.email,
-        address: db.address,
-        txHash
-      });
-    } catch (e) {
-      console.log(e);
-      res.status(500).json({ error: e.message });
+    if (user) {
+      throw Error('A user with the given email is already registered');
     }
-  })
-);
 
-router.post(
-  '/change',
-  asyncMiddleware(async (req, res) => {
-    try {
-      const passphrase = isString(req.body.passphrase);
-      const newPassphrase = isString(req.body.newPassphrase);
-      const email = isEmail(req.body.email);
+    const db = await UserModel.create({
+      username: req.body.newUserName,
+      email: newUserEmail,
+      type: userType
+    });
 
-      const user = await UserModel.findOne({ email: email });
+    sendMail({ to: 'smartinez@nuclearis.com', data: db._id });
 
-      console.log(user);
-      const decryptedKey = decryptBIP38(user.encryptedPrivateKey, passphrase);
-      const encryptedPrivateKey = encryptBIP38(decryptedKey, newPassphrase);
+    res.status(200).json({ userID: db._id });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e.message });
+  }
+});
 
-      const updatedClient = await UserModel.findByIdAndUpdate(user._id, {
-        encryptedPrivateKey
-      });
+router.post('/confirm/:id', async (req, res) => {
+  try {
+    const newPassphrase = isString(req.body.newPassphrase);
 
-      res.json(updatedClient);
-    } catch (e) {
-      console.log(e);
+    const user = await UserModel.findById(req.params.id);
 
-      res.json({ error: e.message });
+    if (user.hasOwnProperty('address')) {
+      throw Error('A user with the given id has an address');
     }
-  })
-);
+
+    const newPrivKey = generatePrivateKey();
+    const newPublicKey = generatePublicKey(newPrivKey);
+    const address = generateRSKAddress(newPublicKey);
+    const encryptedPrivateKey = encryptBIP38(newPrivKey, newPassphrase);
+
+    const { wallet, privateKey } = await getKeys({
+      email: 'info@nuclearis.com',
+      passphrase: 'Nuclearis'
+    });
+
+    const contract = new Contract({ privateKey });
+    const txHash = await contract.sendDataToContract({
+      fromAddress: wallet,
+      method: 'createUser',
+      data: [address, user.type, asciiToHex(user.username)]
+    });
+
+    await createPendingTx({
+      hash: txHash,
+      subject: 'add-user',
+      data: [user.username, user.type, address]
+    });
+
+    const db = await UserModel.findByIdAndUpdate(req.params.id, {
+      address,
+      encryptedPrivateKey
+    });
+
+    res.json({
+      username: db.username,
+      email: db.email,
+      address: db.address,
+      encryptedPrivateKey: db.encryptedPrivateKey,
+      txHash
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+router.post('/change', verifyToken, async (req, res) => {
+  try {
+    const passphrase = isString(req.body.passphrase);
+    const newPassphrase = isString(req.body.newPassphrase);
+    const email = isEmail(req.body.email);
+
+    const user = await UserModel.findOne({ email: email });
+
+    console.log(user);
+    const decryptedKey = decryptBIP38(user.encryptedPrivateKey, passphrase);
+    const encryptedPrivateKey = encryptBIP38(decryptedKey, newPassphrase);
+
+    const updatedClient = await UserModel.findByIdAndUpdate(user._id, {
+      encryptedPrivateKey
+    });
+
+    res.json(updatedClient);
+  } catch (e) {
+    console.log(e);
+
+    res.json({ error: e.message });
+  }
+});
 
 router.get('/get', async (req, res) => {
   try {

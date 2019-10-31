@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
 import Loader from '../components/Loader';
 import { UserContext } from '../context/UserContext';
 import ConfirmTx from '../components/ConfirmTx';
@@ -13,7 +12,6 @@ function AssignProcess() {
   const [event, setEvent] = useState();
   const [processes, setProcesses] = useState();
   const [projects, setProjects] = useState();
-  const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [isSending, setSending] = useState(false);
 
@@ -23,14 +21,25 @@ function AssignProcess() {
   }
 
   useEffect(() => {
-    axios.get('/api/project/get').then(({ data }) => {
+    axios({
+      method: 'get',
+      url: '/api/project/get',
+      headers: {
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+      }
+    }).then(({ data }) => {
       setProjects(data);
-      axios.get('/api/process/get').then(({ data }) => {
+      axios({
+        method: 'get',
+        url: '/api/process/get',
+        headers: {
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+        }
+      }).then(({ data }) => {
         setProcesses(data);
-        setLoading(false);
       });
     });
-  }, [setLoading]);
+  }, []);
 
   function resetState() {
     setEvent();
@@ -48,7 +57,6 @@ function AssignProcess() {
         email: contextUser.userEmail
       })
       .then(({ data }) => {
-        console.log(data);
         setSending(false);
         setEvent(data);
       })

@@ -35,7 +35,7 @@ function DocumentDetail({ match }) {
         setDoc(data);
         setLoading(false);
       });
-  }, []);
+  }, [match.params.contract, match.params.hash]);
 
   let mineTime = new Date(Number(doc.mineTime * 1000));
   let date = `${mineTime.getDate()}/${mineTime.getMonth()}/${mineTime.getFullYear()} ${mineTime.getHours()}:${mineTime.getMinutes()}`;

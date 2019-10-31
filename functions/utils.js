@@ -34,7 +34,7 @@ module.exports.toChecksumAddress = address => {
 };
 
 module.exports.isSHA256 = hash => {
-  if (/\b[A-Fa-f0-9]{64}\b/.test(hash) === true) return hash;
+  if (/\b0x[A-Fa-f0-9]{64}\b/.test(hash) === true) return hash;
   throw Error(`Given hash "${hash}" is not a valid SHA256 hash`);
 };
 

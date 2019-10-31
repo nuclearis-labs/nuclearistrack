@@ -36,19 +36,24 @@ function AddProjectForm() {
   function handleSubmit(e) {
     setSending(true);
     e.preventDefault();
-    axios
-      .post('/api/project/', {
+    axios({
+      method: 'post',
+      url: '/api/project/',
+      data: {
         ...form,
         email: contextUser.userEmail
-      })
+      },
+      headers: {
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+      }
+    })
       .then(({ data }) => {
-        console.log(data);
-
         setEvent(data);
         setSending(false);
       })
       .catch(e => {
-        setError();
+        setSending(false);
+        setError(e.message);
       });
   }
 
@@ -132,8 +137,8 @@ function AddProjectForm() {
               <option>Choose one...</option>
 
               {users &&
-                users.map(user => (
-                  <option value={user.address}>
+                users.map((user, i) => (
+                  <option key={i} value={user.address}>
                     {user.username + ' / ' + user.address}
                   </option>
                 ))}

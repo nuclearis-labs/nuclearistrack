@@ -1,14 +1,17 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import FileSelector from '../components/FileSelector';
 import axios from 'axios';
 import { UserContext } from '../context/UserContext';
 import ConfirmTx from '../components/ConfirmTx';
 import Loader from '../components/Loader';
+import RSKLink from '../components/RSKLink';
 
 function AddDocumentForm() {
   const { contextUser } = useContext(UserContext);
   const [form, setForm] = useState({});
   const [isLoading, setLoading] = useState(true);
+  const [tx, setTx] = useState(false);
   const [processes, setProcesses] = useState({});
 
   function handleInput(e) {
@@ -44,6 +47,7 @@ function AddDocumentForm() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    setTx(false);
     let formData = new FormData();
 
     formData.append('file', form.file);
@@ -56,13 +60,24 @@ function AddDocumentForm() {
       .post(`/api/doc/upload/${form.contract}`, formData, {
         'Content-Type': 'multipart/form-data'
       })
-      .then(result => console.log(result));
+      .then(result => setTx(result));
   }
 
   return (
     <div className="container">
-      <h1>Add Document {}</h1>
-      {isLoading ? (
+      <h1>Add Document</h1>
+      {tx ? (
+        <div style={{ marginTop: '100px', textAlign: 'center' }}>
+          <h2>Document successfully saved on the Blockchain!</h2>
+          <div>
+            Transaction Hash:{' '}
+            <RSKLink hash={tx} type="tx" testnet={true} text={tx} />
+          </div>
+          <Link to="project-list" className="btn btn-primary">
+            Go to Project List
+          </Link>
+        </div>
+      ) : isLoading ? (
         <Loader />
       ) : (
         <form>

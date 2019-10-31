@@ -5,20 +5,16 @@ import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 
 function Navbar() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { contextUser, logoutUser } = useContext(UserContext);
   const [data, setData] = useState();
-  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     if (contextUser && contextUser.hasOwnProperty('address')) {
       axios
         .get('/api/user/getBalance/' + contextUser.address)
         .then(({ data }) => {
-          console.log(data);
-
           setData(data);
-          setLoading(false);
         });
     }
   }, [contextUser]);

@@ -10,9 +10,12 @@ const style = {
 };
 
 function FileSelector({ onFileChange, message }) {
-  const onDrop = useCallback(acceptedFiles => {
-    onFileChange(acceptedFiles);
-  }, []);
+  const onDrop = useCallback(
+    acceptedFiles => {
+      onFileChange(acceptedFiles);
+    },
+    [onFileChange]
+  );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (

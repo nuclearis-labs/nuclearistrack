@@ -123,6 +123,8 @@ function TransferView() {
           <ErrorTx />
         </div>
       );
+    default:
+      return <div className="container"></div>;
   }
 }
 

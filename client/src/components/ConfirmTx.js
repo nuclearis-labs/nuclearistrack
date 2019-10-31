@@ -11,6 +11,7 @@ function ConfirmTx({ contextUser, type, handleSubmit, handleInput }) {
           type="text"
           className="form-control-plaintext"
           id="email"
+          autoComplete="username"
           value={contextUser.userEmail || ''}
           readOnly
         />
@@ -24,6 +25,7 @@ function ConfirmTx({ contextUser, type, handleSubmit, handleInput }) {
           className="form-control"
           onChange={handleInput}
           type="password"
+          autoComplete="current-password"
           name="passphrase"
           required={true}
           placeholder="Confirm passphrase"

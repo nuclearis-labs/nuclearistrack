@@ -1,19 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
 import Loader from '../components/Loader';
 import { UserContext } from '../context/UserContext';
 import ConfirmTx from '../components/ConfirmTx';
 import RSKLink from '../components/RSKLink';
 
 function AddProcessForm() {
-  let { contract } = useParams();
   const { contextUser } = useContext(UserContext);
   const [users, setUsers] = useState();
   const [form, setForm] = useState([]);
   const [event, setEvent] = useState();
-  const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [isSending, setSending] = useState(false);
 
@@ -26,9 +23,8 @@ function AddProcessForm() {
     axios.get('/api/user/get').then(({ data }) => {
       const suppliers = data.filter(user => user.type === '1');
       setUsers(suppliers);
-      setLoading(false);
     });
-  }, [setLoading]);
+  }, []);
 
   function resetState() {
     setEvent();
@@ -46,7 +42,6 @@ function AddProcessForm() {
         email: contextUser.userEmail
       })
       .then(({ data }) => {
-        console.log(data);
         setSending(false);
         setEvent(data);
       })
