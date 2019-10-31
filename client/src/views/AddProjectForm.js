@@ -27,8 +27,8 @@ function AddProjectForm() {
   }
 
   useEffect(() => {
-    axios.post('/api/user/getAll').then(({ data }) => {
-      const clients = data.filter(client => client[2] === '0');
+    axios.get('/api/user/get').then(({ data }) => {
+      const clients = data.filter(client => client.type === '0');
       setUsers(clients);
     });
   }, []);
@@ -61,7 +61,8 @@ function AddProjectForm() {
         <div style={{ marginTop: '100px', textAlign: 'center' }}>
           <h2>Project successfully saved on the Blockchain!</h2>
           <div>
-            Transaction Hash: <RSKLink hash={event} type="tx" testnet={true} />
+            Transaction Hash:{' '}
+            <RSKLink hash={event} type="tx" testnet={true} text={event} />
           </div>
           <button className="btn btn-primary" onClick={resetState}>
             Create another project
@@ -132,7 +133,9 @@ function AddProjectForm() {
 
               {users &&
                 users.map(user => (
-                  <option value={user[1]}>{user[0] + ' / ' + user[1]}</option>
+                  <option value={user.address}>
+                    {user.username + ' / ' + user.address}
+                  </option>
                 ))}
             </select>
           </div>

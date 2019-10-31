@@ -21,7 +21,7 @@ function ProjectDetailTableBody({ process }) {
   return (
     <>
       {process &&
-        process.map(([name, supplier, documents], i) => {
+        process.map(({ name, supplier, documents }, i) => {
           return (
             <tr key={i}>
               <td>{name}</td>
@@ -50,11 +50,9 @@ function ProjectDetail() {
   const [approving, setApproving] = useState(false);
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
-    axios.post('/api/project/get/' + contract).then(({ data }) => {
+    axios.get('/api/project/get/' + contract).then(({ data }) => {
+      console.log(data);
       setProjects(data);
-    });
-    axios.post(`/api/process/getAll/${contract}`).then(({ data }) => {
-      setProcess(data[0]);
       setLoading(false);
     });
   }, [contract]);
@@ -69,7 +67,9 @@ function ProjectDetail() {
           <Details projects={projects} />
           <h3 style={{ margin: '5px 0' }}>Process</h3>
           <Table
-            body={<ProjectDetailTableBody process={process} />}
+            body={
+              <ProjectDetailTableBody process={projects.processContracts} />
+            }
             columns={['Name', 'Supplier', 'Documents']}
             options={{ currentPage: 1 }}
           ></Table>
@@ -79,7 +79,7 @@ function ProjectDetail() {
   );
 }
 
-function Details(projects) {
+function Details({ projects }) {
   const { contextUser } = useContext(UserContext);
   const [form, setForm] = useState({});
 
@@ -96,23 +96,21 @@ function Details(projects) {
       })
       .then(result => console.log(result));
   }
-  if (projects.projects !== undefined) {
-    const [
-      nombre,
+  if (projects.lengt > 0) {
+    const {
+      title,
+      active,
       clientName,
       clientAddress,
       expediente,
       oc,
-      approved,
-      ,
-      ,
-      contrato
-    ] = projects.projects;
+      processContracts
+    } = projects;
 
     return (
       <div style={{ marginTop: '30px' }}>
         <p>
-          <b>Name</b> {nombre}
+          <b>Name</b> {title}
         </p>
         <p>
           <b>Client</b>{' '}
@@ -125,27 +123,7 @@ function Details(projects) {
           <b>Purchase Order</b> {oc}
         </p>
         <p>
-          <b>Estado</b> {approved ? 'Aprobado' : 'No aprobado'}
-        </p>
-        <p>
-          {contextUser.address === clientAddress && approved === false && (
-            <ConfirmTx
-              contextUser={contextUser}
-              type="Approve"
-              handleSubmit={() => handleSubmit(contrato)}
-              handleInput={handleInput}
-            />
-          )}
-        </p>
-        <p>
-          <b>Contract</b>{' '}
-          <a
-            href={`https://explorer.testnet.rsk.co/address/${contrato}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {contrato}
-          </a>
+          <b>Estado</b> {active ? 'Active' : 'Closed'}
         </p>
       </div>
     );

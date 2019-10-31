@@ -27,7 +27,7 @@ function AddDocumentForm() {
         .post(`/api/user/get/${contextUser.address}`)
         .then(({ data }) => {
           setProyectos(data.proyectos);
-          axios.get('/api/project/docNumber').then(({ data }) => {
+          axios.get('/api/project/getDocNumber').then(({ data }) => {
             setForm(form => ({ ...form, docNumber: data }));
           });
         })

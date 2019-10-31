@@ -22,37 +22,47 @@ function ProjectListTableBody({ projects }) {
       {projects &&
         projects.map(
           (
-            [nombre, cliente, expediente, oc, contrato, clientAddress, status],
+            {
+              title,
+              clientName,
+              clientAddress,
+              expediente,
+              oc,
+              processContracts,
+              status
+            },
             i
           ) => {
             return (
               <tr key={i}>
                 <td>
                   {status === 'pending' ? (
-                    <>{nombre}</>
+                    <>{title}</>
                   ) : (
-                    <Link to={'/project-detail/' + contrato}>{nombre}</Link>
+                    <Link to={'/project-detail/' + expediente}>{title}</Link>
                   )}
                 </td>
                 <td>
-                  <Link to={'/client-detail/' + clientAddress}>{cliente}</Link>
+                  <Link to={'/client-detail/' + clientAddress}>
+                    {clientName}
+                  </Link>
                 </td>
                 <td>{expediente}</td>
                 <td>{oc}</td>
                 <td>
                   {status === 'pending' ? (
                     <RSKLink
-                      hash={contrato}
+                      hash={expediente}
                       type="tx"
                       testnet={true}
-                      text={contrato}
+                      text={expediente}
                     />
                   ) : (
                     <RSKLink
-                      hash={contrato}
+                      hash={expediente}
                       type="address"
                       testnet={true}
-                      text={contrato}
+                      text={expediente}
                     />
                   )}
                 </td>
@@ -71,13 +81,15 @@ function ProjectList() {
 
   useEffect(() => {
     axios({
-      method: 'post',
-      url: '/api/project/getAll',
+      method: 'get',
+      url: '/api/project/get',
       headers: {
         Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
       }
     })
       .then(({ data }) => {
+        console.log(data);
+
         setProjects(data);
         setLoading(false);
       })

@@ -85,11 +85,8 @@ function AddProcessForm() {
             {error !== 'Error: Returned error: execution error: revert' &&
               error}
           </div>
-          <button className="btn btn-primary" onClick={resetState}>
-            Create another project
-          </button>
-          <Link to="project-list" className="btn btn-primary">
-            Go to Project List
+          <Link to="/" className="btn btn-primary">
+            Continue
           </Link>
         </div>
       ) : (
@@ -120,23 +117,6 @@ function AddProcessForm() {
                 users.map(user => (
                   <option key={user[1]} value={user[1]}>
                     {user[0] + ' / ' + user[1]}
-                  </option>
-                ))}
-            </select>
-          </div>
-          <div className="form-group">
-            <label htmlFor="project">Project</label>
-            <select
-              className="form-control"
-              onChange={handleInput}
-              name="contract"
-            >
-              <option>Choose one...</option>
-              {contractState &&
-                contractState.length > 0 &&
-                contractState.map(project => (
-                  <option key={project[4]} value={project[4]}>
-                    {project[0] + ' / ' + project[4]}
                   </option>
                 ))}
             </select>

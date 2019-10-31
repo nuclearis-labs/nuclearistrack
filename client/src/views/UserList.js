@@ -20,30 +20,30 @@ function UserTableBody({ users }) {
   return (
     <>
       {users &&
-        users.map(([nombre, direccion, type, balance, status]) => {
+        users.map(({ address, balance, type, username, status }) => {
           return (
-            <tr key={direccion}>
+            <tr key={address}>
               <td>
                 {status === 'pending' ? (
-                  <>{nombre}</>
+                  <>{username}</>
                 ) : (
-                  <Link to={'/client-detail/' + direccion}>{nombre}</Link>
+                  <Link to={'/client-detail/' + address}>{username}</Link>
                 )}
               </td>
               <td>
                 {status === 'pending' ? (
                   <RSKLink
-                    hash={direccion}
+                    hash={address}
                     type="tx"
                     testnet={true}
-                    text={direccion}
+                    text={address}
                   />
                 ) : (
                   <RSKLink
-                    hash={direccion}
+                    hash={address}
                     type="address"
                     testnet={true}
-                    text={direccion}
+                    text={address}
                   />
                 )}
               </td>
@@ -62,7 +62,7 @@ function UserList() {
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
     axios
-      .post('/api/user/getAll')
+      .get('/api/user/get')
       .then(({ data }) => {
         console.log(data);
 
