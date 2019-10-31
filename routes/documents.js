@@ -1,5 +1,6 @@
 const express = require('express');
 const storage = require('multer').memoryStorage();
+const fs = require('fs');
 const upload = require('multer')({ storage });
 const { createSHA256 } = require('../functions/hash');
 const Contract = require('../classes/Contract');
@@ -13,7 +14,6 @@ const {
   toChecksumAddress,
   hexToAscii,
   asciiToHex,
-  createSHA256,
   createPendingTx
 } = require('../functions/utils');
 
@@ -24,10 +24,11 @@ router.post('/verify/:contract', upload.single('file'), async (req, res) => {
     const contractAddress = toChecksumAddress(req.params.contract);
     const documentHash = createSHA256(req.file.buffer);
     const contract = new Contract({ abi: processABI, contractAddress });
-    const result = await contract.getDataFromContract(
-      'findDocument',
-      documentHash
-    );
+    const result = await contract.getDataFromContract({
+      method: 'findDocument',
+      data: [documentHash]
+    });
+
     res.json(result);
   } catch (e) {
     res.status(404).json({ error: e.message });
@@ -42,15 +43,11 @@ router.post('/download/:contract/:hash', async (req, res) => {
     const contract = new Contract({ abi: processABI, contractAddress });
     const foundDoc = await contract.getDataFromContract({
       method: 'findDocument',
-      arg: hash
+      data: [hash]
     });
 
     const storageHash = bs58.encode(foundDoc[3] + foundDoc[4] + foundDoc[2]);
     const [{ content }] = await getFromIPFS(storageHash);
-    const [mineTime, name, storageHash] = await contract.getDataFromContract({
-      method: 'findDocument',
-      data: [hash]
-    });
 
     res.json({
       mineTime,
@@ -113,13 +110,31 @@ router.post('/upload/:contract', upload.single('file'), async (req, res) => {
   }
 });
 
-router.post('/get/:contract', async (req, res) => {
+router.get('/getAll/:contract/', async (req, res) => {
   try {
     const contractAddress = toChecksumAddress(req.params.contract);
-    const contract = new Contract({ contractAddress });
+    const contract = new Contract({ abi: processABI, contractAddress });
+
     const result = await contract.getDataFromContract({
-      method: 'returnAllDocuments'
+      method: 'getAllDocuments'
     });
+
+    res.json(result);
+  } catch (e) {
+    res.json({ error: e.message });
+  }
+});
+
+router.get('/get/:contract/:hash', async (req, res) => {
+  try {
+    const contractAddress = toChecksumAddress(req.params.contract);
+    const contract = new Contract({ abi: processABI, contractAddress });
+
+    const result = await contract.getDataFromContract({
+      method: 'findDocument',
+      data: [req.params.hash]
+    });
+
     res.json(result);
   } catch (e) {
     res.json({ error: e.message });

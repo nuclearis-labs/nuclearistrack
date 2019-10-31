@@ -2,10 +2,10 @@ const ethTx = require('ethereumjs-tx');
 const web3 = require('../services/web3');
 
 class Transaction {
-  constructor(contract, method, arg = [], fromAddress) {
+  constructor({ contract, method, data = [], fromAddress }) {
     this.contract = contract;
     this.method = method;
-    this.arg = arg;
+    this.arg = data;
     this.fromAddress = fromAddress;
   }
 

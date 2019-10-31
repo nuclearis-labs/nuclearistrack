@@ -1,6 +1,7 @@
 const express = require('express');
 const Contract = require('../classes/Contract');
 const web3 = require('web3');
+const fs = require('fs');
 const nuclearPoEABI = JSON.parse(
   fs.readFileSync('build/contracts/NuclearPoE.json')
 ).abi;
@@ -27,11 +28,12 @@ router.post('/', async (req, res) => {
     const oc = asciiToHex(req.body.oc);
     const projectTitle = asciiToHex(req.body.proyectoTitle);
     const clientAddress = toChecksumAddress(req.body.clientAddress);
+    console.log(clientAddress);
 
     const txHash = await nuclear.sendDataToContract({
       fromAddress: wallet,
       method: 'createProject',
-      data: [expediente, oc, projectTitle, clientAddress]
+      data: [expediente, clientAddress, projectTitle, oc]
     });
 
     await createPendingTx({
@@ -47,7 +49,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.get('/docNumber', async (req, res) => {
+router.get('/getDocNumber', async (req, res) => {
   try {
     const contract = new Contract();
     const result = await contract.getDataFromContract({ method: 'docNumber' });
@@ -60,7 +62,7 @@ router.get('/docNumber', async (req, res) => {
   }
 });
 
-router.post('/getAll', async (req, res) => {
+router.get('/getAll', async (req, res) => {
   try {
     const contract = new Contract();
     const allProjects = await contract.getDataFromContract({
@@ -68,26 +70,20 @@ router.post('/getAll', async (req, res) => {
     });
 
     response = [];
-
     for (let i = 0; i < allProjects.length; i++) {
       const projectDetails = await contract.getDataFromContract({
         method: 'getProjectDetails',
         data: [allProjects[i]]
       });
-      const [
-        title,
-        clientAddress,
-        expediente,
-        oc,
-        approved,
-        allDocuments,
-        supplierAddresses,
-        contractAddress
-      ] = web3ArrayToJSArray(projectDetails);
+      console.log(projectDetails);
+
+      const [active, clientAddress, title, oc] = web3ArrayToJSArray(
+        projectDetails
+      );
 
       await txModel.findOneAndRemove({
         subject: 'add-project',
-        data: { $in: expediente }
+        data: { $in: allProjects[i] }
       });
 
       const userName = await contract.getDataFromContract({
@@ -95,14 +91,13 @@ router.post('/getAll', async (req, res) => {
         data: [clientAddress]
       });
 
-      response.push([
-        hexToAscii(title),
-        hexToAscii(userName[0]),
-        expediente,
-        hexToAscii(oc),
-        contractAddress,
-        clientAddress
-      ]);
+      response.push({
+        title: hexToAscii(title),
+        clientAddress,
+        clientName: hexToAscii(userName[0]),
+        expediente: allProjects[i],
+        oc: hexToAscii(oc)
+      });
     }
 
     const pendingTx = await txModel.find({ subject: 'add-project' });
@@ -112,15 +107,15 @@ router.post('/getAll', async (req, res) => {
         data: [pendingTx[y].data[1]]
       });
 
-      response.push([
-        pendingTx[y].data[0],
-        hexToAscii(userName[0]),
-        pendingTx[y].data[2],
-        pendingTx[y].data[3],
-        pendingTx[y].hash,
-        pendingTx[y].data[1],
-        'pending'
-      ]);
+      response.push({
+        title: pendingTx[y].data[0],
+        clientName: hexToAscii(userName[0]),
+        clientAddress: pendingTx[y].data[1],
+        expediente: pendingTx[y].data[2],
+        tx: pendingTx[y].txHash,
+        oc: pendingTx[y].data[3],
+        status: 'pending'
+      });
     }
 
     res.json(response);
@@ -130,31 +125,30 @@ router.post('/getAll', async (req, res) => {
   }
 });
 
-router.post('/get/:contract', async (req, res) => {
+router.get('/get/:expediente', async (req, res) => {
   try {
-    const nuclear = new NuclearPoE();
+    const contract = new Contract();
+    const result = await contract.getDataFromContract({
+      method: 'getProjectDetails',
+      data: [req.params.expediente]
+    });
 
-    const project = new Project(undefined, undefined, req.params.contract);
-    const resultRaw = await project.getDetails();
+    console.log(result);
 
-    const result = web3ArrayToJSArray(resultRaw);
+    const userName = await contract.getDataFromContract({
+      method: 'getUserDetails',
+      data: [result[1]]
+    });
 
-    const userName = await nuclear.return('getUserDetails', [result[1]]);
-
-    res.json([
-      web3.utils.toAscii(result[0]),
-      web3.utils.toAscii(userName[0]),
-      result[1],
-      result[2],
-      web3.utils.toAscii(result[3]),
-      result[4],
-      result[5],
-      result[6],
-      result[7]
-    ]);
+    res.json({
+      active: result[0],
+      clientName: hexToAscii(userName[0]),
+      clientAddress: result[1],
+      title: hexToAscii(result[2]),
+      oc: hexToAscii(result[3])
+    });
   } catch (e) {
     console.log(e);
-
     res.json({ error: e.message });
   }
 });

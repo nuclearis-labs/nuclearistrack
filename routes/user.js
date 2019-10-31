@@ -18,10 +18,10 @@ const {
   toChecksumAddress,
   isNumber,
   asciiToHex,
+  hexToAscii,
   isString,
   createPendingTx
 } = require('../functions/utils');
-const User = require('../classes/User');
 
 const router = express.Router({ mergeParams: true });
 
@@ -92,6 +92,7 @@ router.post(
 
       const user = await UserModel.findOne({ email: email });
 
+      console.log(user);
       const decryptedKey = decryptBIP38(user.encryptedPrivateKey, passphrase);
       const encryptedPrivateKey = encryptBIP38(decryptedKey, newPassphrase);
 
@@ -101,12 +102,14 @@ router.post(
 
       res.json(updatedClient);
     } catch (e) {
+      console.log(e);
+
       res.json({ error: e.message });
     }
   })
 );
 
-router.post('/getAll', async (req, res) => {
+router.get('/getAll', async (req, res) => {
   try {
     const contract = new Contract();
     const allUsers = await contract.getDataFromContract({
@@ -121,32 +124,34 @@ router.post('/getAll', async (req, res) => {
       });
       const details = await contract.getDataFromContract({
         method: 'getUserDetails',
-        arg: [allUsers[i]]
+        data: [allUsers[i]]
       });
 
       let [nombre, userType] = web3ArrayToJSArray(details);
       const balance = await web3.eth.getBalance(allUsers[i]);
 
-      response[i] = [
-        web3.utils.toAscii(nombre),
-        allUsers[i],
-        userType,
-        web3.utils.fromWei(balance)
-      ];
+      response.push({
+        username: hexToAscii(nombre),
+        address: allUsers[i],
+        type: userType,
+        balance: web3.utils.fromWei(balance)
+      });
     }
     const pendingTx = await txModel.find({ subject: 'add-user' });
     for (let y = 0; y < pendingTx.length; y++) {
-      response.push([
-        pendingTx[y].data[0],
-        pendingTx[y].hash,
-        '',
-        '0',
-        'pending'
-      ]);
+      response.push({
+        userName: removeNullBytes(pendingTx[y].data[0]),
+        tx: pendingTx[y].hash,
+        type: '',
+        balance: '0',
+        status: 'pending'
+      });
     }
 
     res.json(response);
   } catch (e) {
+    console.log(e);
+
     res.json({ error: e.message });
   }
 });
@@ -157,14 +162,14 @@ router.get('/getBalance/:address', (req, res) => {
   });
 });
 
-router.post('/get/:address', async (req, res) => {
+router.get('/get/:address', async (req, res) => {
   try {
     const address = toChecksumAddress(req.params.address);
     const contract = new Contract();
 
     const details = await contract.getDataFromContract({
       method: 'getUserDetails',
-      arg: [address]
+      data: [address]
     });
 
     const [userName, userType, userProjects] = web3ArrayToJSArray(details);
@@ -173,20 +178,20 @@ router.post('/get/:address', async (req, res) => {
     for (let i = 0; i < userProjects.length; i++) {
       let detailsResponse = await contract.getDataFromContract({
         method: 'getProjectDetails',
-        arg: [userProjects[i]]
+        data: [userProjects[i]]
       });
       let [active, clientAddress, title, oc] = web3ArrayToJSArray(
         detailsResponse
       );
-      response.push([
-        web3.utils.toAscii(title),
-        userProjects[i],
-        web3.utils.toAscii(oc)
-      ]);
+      response.push({
+        title: hexToAscii(title),
+        expediente: userProjects[i],
+        oc: hexToAscii(oc)
+      });
     }
 
     res.json({
-      userName: web3.utils.toAscii(userName),
+      userName: hexToAscii(userName),
       balance: web3.utils.fromWei(balance),
       proyectos: response
     });

@@ -1,34 +1,40 @@
 const express = require('express');
 const Contract = require('../classes/Contract');
 const web3 = require('web3');
+const fs = require('fs');
 const processABI = JSON.parse(fs.readFileSync('build/contracts/Process.json'))
   .abi;
 const {
   getKeys,
   web3ArrayToJSArray,
-  createPendingTx
+  createPendingTx,
+  asciiToHex,
+  hexToAscii,
+  toChecksumAddress
 } = require('../functions/utils');
 
 const router = express.Router({ mergeParams: true });
 
-router.post('/create/:contract', async (req, res) => {
+router.post('/create/', async (req, res) => {
   try {
     const { wallet, privateKey } = await getKeys(req.body);
+
+    const processTitle = asciiToHex(req.body.processTitle);
+    const supplierAddress = toChecksumAddress(req.body.supplierAddress);
+
     const contract = new Contract({
-      privateKey,
-      abi: processABI,
-      contractAddress: req.params.contract
+      privateKey
     });
     const txHash = await contract.sendDataToContract({
       fromAddress: wallet,
       method: 'createProcess',
-      data: [req.body.supplierAddress, req.body.processTitle]
+      data: [supplierAddress, processTitle]
     });
 
     await createPendingTx({
       txHash,
       subject: 'add-process',
-      data: [req.body.processTitle, req.body.supplierAddress]
+      data: [req.body.processTitle, supplierAddress]
     });
 
     res.json(txHash);
@@ -38,16 +44,33 @@ router.post('/create/:contract', async (req, res) => {
   }
 });
 
-router.post('/get/:contract/:process', async (req, res) => {
+router.get('/get/:contract', async (req, res) => {
   try {
-    const contract = new Contract({ abi: processABI });
+    const contract = new Contract();
 
-    const result = await contract.getDataFromContract({
-      method: 'returnProcessByOwner',
-      arg: req.params.process
+    const process = new Contract({
+      abi: processABI,
+      contractAddress: req.params.contract
     });
 
-    res.json(result);
+    const details = await process.getDataFromContract({
+      method: 'getDetails'
+    });
+
+    const userName = await contract.getDataFromContract({
+      method: 'getUserDetails',
+      data: [details[2]]
+    });
+
+    res.json({
+      NuclearPoEAddress: details[0],
+      MOAddress: details[1],
+      supplierAddress: details[2],
+      supplierName: hexToAscii(userName[0]),
+      processName: details[3],
+      allDocuments: details[4],
+      contractAddress: details[5]
+    });
   } catch (e) {
     console.log(e);
 
@@ -55,35 +78,42 @@ router.post('/get/:contract/:process', async (req, res) => {
   }
 });
 
-router.post('/getAll/:contract', async (req, res) => {
+router.get('/getAll/', async (req, res) => {
   try {
-    const contract = new Contract({
-      abi: processABI,
-      contractAddress: req.params.contract
-    });
+    const contract = new Contract();
 
     const result = await contract.getDataFromContract({
-      method: 'returnAllProcess'
+      method: 'getAllProcessContracts'
     });
 
     let resultProcessed = [];
     for (let i = 0; i < result.length; i++) {
+      const process = new Contract({
+        abi: processABI,
+        contractAddress: result[i]
+      });
+      console.log(result[i]);
+
+      const details = await process.getDataFromContract({
+        method: 'getDetails'
+      });
+      console.log(details);
+
       const userName = await contract.getDataFromContract({
         method: 'getUserDetails',
-        data: [result[i]]
+        data: [details[2]]
       });
-      const details = await contract.getDataFromContract({
-        method: 'returnProcessByOwner',
-        data: [result[i]]
+      resultProcessed.push({
+        NuclearPoEAddress: details[0],
+        MOAddress: details[1],
+        supplierAddress: details[2],
+        supplierName: hexToAscii(userName[0]),
+        processName: details[3],
+        allDocuments: details[4],
+        contractAddress: details[5]
       });
-      const convertedResult = web3ArrayToJSArray(details);
-      resultProcessed.push([
-        web3.utils.toAscii(convertedResult[0]),
-        web3.utils.toAscii(userName[0]),
-        convertedResult[1]
-      ]);
     }
-    res.json([resultProcessed]);
+    res.json(resultProcessed);
   } catch (e) {
     console.log(e);
 

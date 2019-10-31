@@ -39,7 +39,7 @@ module.exports.isSHA256 = hash => {
 };
 
 module.exports.hexToAscii = bytes32 => {
-  return web3.utils.hexToAscii(bytes32);
+  return this.removeNullBytes(web3.utils.hexToAscii(bytes32));
 };
 
 module.exports.isEmail = email => {
@@ -56,14 +56,18 @@ module.exports.web3ArrayToJSArray = object => {
   return Object.values(object);
 };
 
+module.exports.removeNullBytes = string => {
+  return string.replace(/\0/g, '');
+};
+
 module.exports.getKeys = async ({ email, passphrase }) => {
   const user = await UserModel.findOne({ email: email });
 
-  const privKey = decryptBIP38(user.encryptedPrivateKey, passphrase);
-  const wallet = generateRSKAddress(generatePublicKey(privKey));
+  const privateKey = decryptBIP38(user.encryptedPrivateKey, passphrase);
+  const wallet = generateRSKAddress(generatePublicKey(privateKey));
 
   return {
     wallet,
-    privKey
+    privateKey
   };
 };
