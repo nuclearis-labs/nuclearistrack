@@ -108,8 +108,13 @@ contract NuclearPoE is Ownable {
         return (user[_address].name, user[_address].userType, userProjectContracts[_address]);
     }
 
-    function getProjectDetails(uint _expediente) external view returns(bool, address, bytes32, bytes32) {
-        return (project[_expediente].active, project[_expediente].clientAddress, project[_expediente].title, project[_expediente].oc);
+    function getProjectDetails(uint _expediente) external view returns(bool, address, bytes32, bytes32, address[] memory) {
+        return (
+            project[_expediente].active,
+            project[_expediente].clientAddress,
+            project[_expediente].title,
+            project[_expediente].oc,
+            project[_expediente].processContracts);
     }
 
 }

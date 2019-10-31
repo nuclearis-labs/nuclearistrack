@@ -62,13 +62,14 @@ router.get('/getDocNumber', async (req, res) => {
   }
 });
 
-router.get('/getAll', async (req, res) => {
+router.get('/get', async (req, res) => {
   try {
     const contract = new Contract();
     const allProjects = await contract.getDataFromContract({
       method: 'getAllProjects'
     });
 
+    console.log(allProjects);
     response = [];
     for (let i = 0; i < allProjects.length; i++) {
       const projectDetails = await contract.getDataFromContract({
@@ -77,9 +78,13 @@ router.get('/getAll', async (req, res) => {
       });
       console.log(projectDetails);
 
-      const [active, clientAddress, title, oc] = web3ArrayToJSArray(
-        projectDetails
-      );
+      const [
+        active,
+        clientAddress,
+        title,
+        oc,
+        processContracts
+      ] = web3ArrayToJSArray(projectDetails);
 
       await txModel.findOneAndRemove({
         subject: 'add-project',
@@ -96,7 +101,8 @@ router.get('/getAll', async (req, res) => {
         clientAddress,
         clientName: hexToAscii(userName[0]),
         expediente: allProjects[i],
-        oc: hexToAscii(oc)
+        oc: hexToAscii(oc),
+        processContracts
       });
     }
 
@@ -145,8 +151,32 @@ router.get('/get/:expediente', async (req, res) => {
       clientName: hexToAscii(userName[0]),
       clientAddress: result[1],
       title: hexToAscii(result[2]),
-      oc: hexToAscii(result[3])
+      oc: hexToAscii(result[3]),
+      processContracts: result[4]
     });
+  } catch (e) {
+    console.log(e);
+    res.json({ error: e.message });
+  }
+});
+
+router.post('/assignProcess', async (req, res) => {
+  try {
+    const { wallet, privateKey } = await getKeys(req.body);
+    const contract = new Contract({ privateKey });
+    const txHash = await contract.sendDataToContract({
+      fromAddress: wallet,
+      method: 'addProcessToProject',
+      data: [req.body.expediente, req.body.processContract]
+    });
+
+    await createPendingTx({
+      txHash,
+      subject: 'assign-process',
+      data: [req.body.expediente, req.body.processContract]
+    });
+
+    res.json(txHash);
   } catch (e) {
     console.log(e);
     res.json({ error: e.message });

@@ -67,7 +67,7 @@ router.get('/get/:contract', async (req, res) => {
       MOAddress: details[1],
       supplierAddress: details[2],
       supplierName: hexToAscii(userName[0]),
-      processName: details[3],
+      processName: hexToAscii(details[3]),
       allDocuments: details[4],
       contractAddress: details[5]
     });
@@ -78,7 +78,7 @@ router.get('/get/:contract', async (req, res) => {
   }
 });
 
-router.get('/getAll/', async (req, res) => {
+router.get('/get', async (req, res) => {
   try {
     const contract = new Contract();
 
@@ -108,7 +108,7 @@ router.get('/getAll/', async (req, res) => {
         MOAddress: details[1],
         supplierAddress: details[2],
         supplierName: hexToAscii(userName[0]),
-        processName: details[3],
+        processName: hexToAscii(details[3]),
         allDocuments: details[4],
         contractAddress: details[5]
       });

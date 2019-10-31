@@ -4,7 +4,7 @@ module.exports.ipfs = require('ipfs-http-client')('localhost', '5001', {
 
 module.exports.saveToIPFS = async buffer => {
   try {
-    const [{ hash }] = await ipfs.add(buffer);
+    const [{ hash }] = await this.ipfs.add(buffer);
     return hash;
   } catch (err) {
     throw Error(err);
@@ -13,7 +13,7 @@ module.exports.saveToIPFS = async buffer => {
 
 module.exports.getFromIPFS = async hash => {
   try {
-    return await ipfs.get(hash);
+    return await this.ipfs.get(hash);
   } catch (err) {
     throw Error(err);
   }

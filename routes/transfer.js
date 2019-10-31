@@ -5,24 +5,21 @@ const { getKeys } = require('../functions/utils');
 const web3 = require('../services/web3');
 const { verifyToken } = require('../middleware/index');
 
-router.post('/to/:to/:value', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    const { wallet, privKey } = await getKeys(req.body);
+    const { wallet, privateKey } = await getKeys(req.body);
 
     const balance = await web3.eth.getBalance(wallet);
 
-    console.log(req.params.value);
-    console.log(web3.utils.fromWei(balance));
-
-    if (Number(web3.utils.fromWei(balance)) < Number(req.params.value)) {
+    if (Number(web3.utils.fromWei(balance)) < Number(req.body.value)) {
       throw Error('Not sufficient funds..');
     }
 
-    const tx = new Transaction(req.params.to, wallet);
+    const tx = new Transaction({ fromAddress: wallet });
     await tx.estimateGas();
     await tx.getNonce();
-    tx.prepareRawTx(req.params.value, req.params.to, 4000000)
-      .sign(privKey)
+    tx.prepareRawTx(req.body.value, req.body.to, 4000000)
+      .sign(Buffer.from(privateKey, 'hex'))
       .serialize();
 
     const txHash = await tx.send();

@@ -109,7 +109,7 @@ router.post(
   })
 );
 
-router.get('/getAll', async (req, res) => {
+router.get('/get', async (req, res) => {
   try {
     const contract = new Contract();
     const allUsers = await contract.getDataFromContract({
@@ -117,38 +117,42 @@ router.get('/getAll', async (req, res) => {
     });
     response = [];
 
-    for (let i = 0; i < allUsers.length; i++) {
-      await txModel.findOneAndRemove({
-        subject: 'add-user',
-        data: { $in: allUsers[i] }
-      });
-      const details = await contract.getDataFromContract({
-        method: 'getUserDetails',
-        data: [allUsers[i]]
-      });
+    if (allUsers.length !== 0) {
+      for (let i = 0; i < allUsers.length; i++) {
+        await txModel.findOneAndRemove({
+          subject: 'add-user',
+          data: { $in: allUsers[i] }
+        });
+        const details = await contract.getDataFromContract({
+          method: 'getUserDetails',
+          data: [allUsers[i]]
+        });
 
-      let [nombre, userType] = web3ArrayToJSArray(details);
-      const balance = await web3.eth.getBalance(allUsers[i]);
+        let [nombre, userType] = web3ArrayToJSArray(details);
+        const balance = await web3.eth.getBalance(allUsers[i]);
 
-      response.push({
-        username: hexToAscii(nombre),
-        address: allUsers[i],
-        type: userType,
-        balance: web3.utils.fromWei(balance)
-      });
+        response.push({
+          username: hexToAscii(nombre),
+          address: allUsers[i],
+          type: userType,
+          balance: web3.utils.fromWei(balance)
+        });
+      }
+      const pendingTx = await txModel.find({ subject: 'add-user' });
+      for (let y = 0; y < pendingTx.length; y++) {
+        response.push({
+          userName: hexToAscii(pendingTx[y].data[0]),
+          tx: pendingTx[y].hash,
+          type: '',
+          balance: '0',
+          status: 'pending'
+        });
+      }
+
+      res.json(response);
+    } else {
+      res.json([]);
     }
-    const pendingTx = await txModel.find({ subject: 'add-user' });
-    for (let y = 0; y < pendingTx.length; y++) {
-      response.push({
-        userName: removeNullBytes(pendingTx[y].data[0]),
-        tx: pendingTx[y].hash,
-        type: '',
-        balance: '0',
-        status: 'pending'
-      });
-    }
-
-    res.json(response);
   } catch (e) {
     console.log(e);
 

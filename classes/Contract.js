@@ -44,8 +44,6 @@ class Contract {
         data
       });
 
-      console.log(tx);
-
       tx.encodeABI();
       await tx.estimateGas();
       await tx.estimateGasLimit();

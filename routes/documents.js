@@ -35,7 +35,7 @@ router.post('/verify/:contract', upload.single('file'), async (req, res) => {
   }
 });
 
-router.post('/download/:contract/:hash', async (req, res) => {
+router.get('/download/:contract/:hash', async (req, res) => {
   try {
     const hash = req.params.hash;
     const contractAddress = toChecksumAddress(req.params.contract);
@@ -46,12 +46,14 @@ router.post('/download/:contract/:hash', async (req, res) => {
       data: [hash]
     });
 
-    const storageHash = bs58.encode(foundDoc[3] + foundDoc[4] + foundDoc[2]);
+    const storageHash = bs58.encode(
+      Buffer.from(foundDoc[3] + foundDoc[4] + foundDoc[2].substr(2), 'hex')
+    );
     const [{ content }] = await getFromIPFS(storageHash);
 
     res.json({
-      mineTime,
-      name: hexToAscii(name),
+      mineTime: foundDoc[6],
+      docNumber: foundDoc[5],
       hash,
       storageHash,
       buffer: content.toString('base64')
@@ -74,10 +76,11 @@ router.post('/upload/:contract', upload.single('file'), async (req, res) => {
 
     const storage = await saveToIPFS(req.file.buffer);
     const hexStorage = bs58.decode(storage).toString('hex');
+    console.log(hexStorage);
 
     const storageFunction = hexStorage.substr(0, 2);
-    const storageSize = hexStorage.substr(2, 3);
-    const storageHash = hexStorage.substr(3);
+    const storageSize = hexStorage.substr(2, 2);
+    const storageHash = hexStorage.substr(4);
 
     const contract = new Contract({
       privateKey,
@@ -85,7 +88,7 @@ router.post('/upload/:contract', upload.single('file'), async (req, res) => {
       contractAddress
     });
 
-    const result = await contract.sendDataToContract({
+    const txHash = await contract.sendDataToContract({
       fromAddress: wallet,
       method: 'addDocument',
       data: [
@@ -104,13 +107,13 @@ router.post('/upload/:contract', upload.single('file'), async (req, res) => {
       data: [documentHash]
     });
 
-    res.json({ result });
+    res.json(txHash);
   } catch (e) {
     res.json({ error: e.message });
   }
 });
 
-router.get('/getAll/:contract/', async (req, res) => {
+router.get('/get/:contract/', async (req, res) => {
   try {
     const contractAddress = toChecksumAddress(req.params.contract);
     const contract = new Contract({ abi: processABI, contractAddress });
@@ -121,7 +124,7 @@ router.get('/getAll/:contract/', async (req, res) => {
 
     res.json(result);
   } catch (e) {
-    res.json({ error: e.message });
+    res.status(404).json({ error: e.message });
   }
 });
 
@@ -135,9 +138,17 @@ router.get('/get/:contract/:hash', async (req, res) => {
       data: [req.params.hash]
     });
 
-    res.json(result);
+    const storageHash = result[3] + result[4] + result[2].substr(2);
+
+    res.json({
+      latitude: result[0],
+      longitude: result[1],
+      storageHash: bs58.encode(Buffer.from(storageHash, 'hex')),
+      docNumber: result[5],
+      mineTime: result[6]
+    });
   } catch (e) {
-    res.json({ error: e.message });
+    res.status(404).json({ error: e.message });
   }
 });
 

@@ -18,7 +18,7 @@ class Transaction {
     try {
       return await this.contract.methods[this.method](...this.arg).call();
     } catch (e) {
-      console.log('Error in Call(): ' + e.message);
+      throw Error(e);
     }
   }
 
