@@ -1,10 +1,6 @@
 const web3 = require('web3');
 const UserModel = require('../models/user');
-const {
-  decryptBIP38,
-  generatePublicKey,
-  generateRSKAddress
-} = require('./wallet');
+const wallet = require('./wallet');
 const txModel = require('../models/transaction');
 
 module.exports.isString = string => {
@@ -60,14 +56,18 @@ module.exports.removeNullBytes = string => {
   return string.replace(/\0/g, '');
 };
 
-module.exports.getKeys = async ({ email, passphrase }) => {
+module.exports.getKeys = async ({ email, passphrase, coin }) => {
   const user = await UserModel.findOne({ email: email });
 
-  const privateKey = decryptBIP38(user.encryptedPrivateKey, passphrase);
-  const wallet = generateRSKAddress(generatePublicKey(privateKey));
+  const privateKey = await wallet.generatePrivateKeyFromMnemonic({
+    mnemonic: user.mnemonic,
+    passphrase,
+    coin
+  });
+  const address = wallet.generateRSKAddress(privateKey);
 
   return {
-    wallet,
+    address,
     privateKey
   };
 };

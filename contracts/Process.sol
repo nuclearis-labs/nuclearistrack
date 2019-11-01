@@ -6,7 +6,6 @@ contract Process {
 
     address private NuclearPoEAddress;
     address private moAddress;
-    address private supplierAddress;
     bytes32 private processName;
 
     struct Document {
@@ -25,24 +24,18 @@ contract Process {
 
     event AddDocument();
 
-    modifier onlySupplier() {
-        require(msg.sender == supplierAddress, 'Has to be supplier of project');
+    modifier onlyMain() {
+        require(msg.sender == NuclearPoEAddress, 'Has to be NuclearPoE Contract');
         _;
     }
 
-    modifier onlyMO() {
-        require(msg.sender == moAddress, 'Has to be Material Organization');
-        _;
-    }
-
-    constructor (address _moAddress, address _supplierAddress, bytes32 _processName) public {
+    constructor (address _moAddress, bytes32 _processName) public {
         NuclearPoEAddress = msg.sender;
         moAddress = _moAddress;
-        supplierAddress = _supplierAddress;
         processName = _processName;
     }
 
-    function addDocument (bytes32 _hash, uint8 storageFunction, uint8 storageSize, bytes32 storageHash, bytes32 latitude, bytes32 longitude) external onlySupplier() {
+    function addDocument (bytes32 _hash, uint8 storageFunction, uint8 storageSize, bytes32 storageHash, bytes32 latitude, bytes32 longitude) external {
         require(document[_hash].mineTime == 0, "Document already created");
 
         NuclearPoE main = NuclearPoE(NuclearPoEAddress);
@@ -52,6 +45,18 @@ contract Process {
         allDocuments.push(_hash);
 
         emit AddDocument();
+    }
+
+    function changeMOAddress (address _newAddress) external onlyMain() {
+        moAddress = _newAddress;
+    }
+
+    function changeNuclearPoEAddress (address _newAddress) external onlyMain() {
+        NuclearPoEAddress = _newAddress;
+    }
+
+    function changeProcessName (bytes32 _newName) external onlyMain() {
+        processName = _newName;
     }
 
     function findDocument(bytes32 _hash) external view returns (bytes32, bytes32, bytes32, uint8, uint8, uint, uint) {
@@ -67,8 +72,8 @@ contract Process {
             );
     }
 
-    function getDetails() external view returns (address, address, address, bytes32, bytes32[] memory, address) {
-        return (NuclearPoEAddress, moAddress, supplierAddress, processName, allDocuments, address(this));
+    function getDetails() external view returns (address, address, bytes32, bytes32[] memory, address) {
+        return (NuclearPoEAddress, moAddress, processName, allDocuments, address(this));
     }
 
     function getAllDocuments() external view returns(bytes32[] memory) {

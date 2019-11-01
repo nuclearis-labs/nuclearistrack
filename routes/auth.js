@@ -1,55 +1,48 @@
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const UserModel = require('../models/user');
-const {
-  generatePublicKey,
-  generateRSKAddress,
-  decryptBIP38
-} = require('../functions/wallet');
+const wallet = require('../functions/wallet');
+const { verifyToken } = require('../middleware/index');
 
-router.post('/', (req, res) => {
-  UserModel.findOne({ email: req.body.email }).then((user, err) => {
-    try {
-      let address;
-      if (err) throw Error();
-
-      if (user) {
-        const decryptedKey = decryptBIP38(
-          user.encryptedPrivateKey,
-          req.body.passphrase
-        );
-
-        if (decryptedKey === false) {
-          throw Error();
-        }
-        address = generateRSKAddress(generatePublicKey(decryptedKey));
-      }
-
-      if ((user.address = address)) {
-        jwt.sign(
-          {
-            userName: user.username,
-            userEmail: user.email,
-            userType: user.type,
-            address: user.address
-          },
-          process.env.JWT_SECRET,
-          (err, token) => {
-            if (err) throw Error();
-            else res.json({ token });
-          }
-        );
-      }
-    } catch (e) {
-      res.sendStatus(403);
+router.post('/', async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ email: req.body.email });
+    if (!user) {
+      throw Error('User does not exist');
     }
-  });
+    const account = await wallet.accountDiscovery({
+      mnemonic: user.mnemonic,
+      passphrase: req.body.passphrase,
+      coin: process.env.DERIVATIONPATHCOIN,
+      addressToFind: user.address
+    });
+
+    if (user.address === account) {
+      jwt.sign(
+        {
+          userName: user.username,
+          userEmail: user.email,
+          userType: user.type,
+          address: user.address
+        },
+        process.env.JWT_SECRET,
+        (err, token) => {
+          if (err) throw Error();
+          else res.json({ token });
+        }
+      );
+    }
+  } catch (e) {
+    console.log(e.message);
+
+    res.sendStatus(403);
+  }
 });
 
-router.post('/current', (req, res) => {
+router.post('/current', verifyToken, (req, res) => {
   const bearerHeader = req.headers['authorization'];
-  const bearer = bearerHeader.split(' ');
   if (typeof bearerHeader !== 'undefined') {
     const bearer = bearerHeader.split(' ');
     const bearerToken = bearer[1];

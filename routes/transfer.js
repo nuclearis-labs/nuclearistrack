@@ -7,15 +7,19 @@ const { verifyToken } = require('../middleware/index');
 
 router.post('/', verifyToken, async (req, res) => {
   try {
-    const { wallet, privateKey } = await getKeys(req.body);
+    const { address, privateKey } = await getKeys({
+      email: req.body.email,
+      passphrase: req.body.passphrase,
+      coin: 60
+    });
 
-    const balance = await web3.eth.getBalance(wallet);
+    const balance = await web3.eth.getBalance(address);
 
     if (Number(web3.utils.fromWei(balance)) < Number(req.body.value)) {
       throw Error('Not sufficient funds..');
     }
 
-    const tx = new Transaction({ fromAddress: wallet });
+    const tx = new Transaction({ fromAddress: address });
     await tx.estimateGas();
     await tx.getNonce();
     tx.prepareRawTx({
