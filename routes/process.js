@@ -16,7 +16,7 @@ const router = express.Router({ mergeParams: true });
 
 router.post('/create/', verifyToken, async (req, res) => {
   try {
-    const { wallet, privateKey } = await getKeys(req.body);
+    const { address, privateKey } = await getKeys(req.body);
 
     const processTitle = asciiToHex(req.body.processTitle);
     const supplierAddress = toChecksumAddress(req.body.supplierAddress);
@@ -25,7 +25,7 @@ router.post('/create/', verifyToken, async (req, res) => {
       privateKey
     });
     const txHash = await contract.sendDataToContract({
-      fromAddress: wallet,
+      fromAddress: address,
       method: 'createProcess',
       data: [supplierAddress, processTitle]
     });
@@ -43,13 +43,13 @@ router.post('/create/', verifyToken, async (req, res) => {
   }
 });
 
-router.get('/get/:contract', async (req, res) => {
+router.get('/get', async (req, res) => {
   try {
     const contract = new Contract();
 
     const process = new Contract({
       abi: processABI,
-      contractAddress: req.params.contract
+      contractAddress: req.query.contract
     });
 
     const details = await process.getDataFromContract({
@@ -77,12 +77,13 @@ router.get('/get/:contract', async (req, res) => {
   }
 });
 
-router.get('/getByExpediente/:expediente', async (req, res) => {
+router.get('/getByExpediente', async (req, res) => {
   try {
     const contract = new Contract();
 
     const details = await contract.getDataFromContract({
-      method: 'getAllProcessContracts'
+      method: 'getProcessContractsByProject',
+      data: [req.query.expediente]
     });
 
     let response = [];

@@ -19,9 +19,9 @@ const {
 
 const router = express.Router({ mergeParams: true });
 
-router.post('/verify/:contract', upload.single('file'), async (req, res) => {
+router.post('/verify', upload.single('file'), async (req, res) => {
   try {
-    const contractAddress = toChecksumAddress(req.params.contract);
+    const contractAddress = toChecksumAddress(req.query.contract);
     const documentHash = createSHA256(req.file.buffer);
     const contract = new Contract({ abi: processABI, contractAddress });
     const result = await contract.getDataFromContract({
@@ -46,10 +46,10 @@ router.post('/verify/:contract', upload.single('file'), async (req, res) => {
   }
 });
 
-router.get('/download/:contract/:hash', async (req, res) => {
+router.get('/download', async (req, res) => {
   try {
-    const hash = isSHA256(req.params.hash);
-    const contractAddress = toChecksumAddress(req.params.contract);
+    const hash = isSHA256(req.query.hash);
+    const contractAddress = toChecksumAddress(req.query.contract);
 
     const contract = new Contract({ abi: processABI, contractAddress });
     const foundDoc = await contract.getDataFromContract({
@@ -75,62 +75,57 @@ router.get('/download/:contract/:hash', async (req, res) => {
   }
 });
 
-router.post(
-  '/upload/:contract',
-  verifyToken,
-  upload.single('file'),
-  async (req, res) => {
-    try {
-      const { wallet, privateKey } = await getKeys(req.body);
-
-      const latitude = asciiToHex(req.body.latitude);
-      const longitude = asciiToHex(req.body.longitude);
-      const contractAddress = toChecksumAddress(req.params.contract);
-
-      const documentHash = createSHA256(req.file.buffer);
-
-      const storage = await saveToIPFS(req.file.buffer);
-      const hexStorage = bs58.decode(storage).toString('hex');
-
-      const storageFunction = hexStorage.substr(0, 2);
-      const storageSize = hexStorage.substr(2, 2);
-      const storageHash = hexStorage.substr(4);
-
-      const contract = new Contract({
-        privateKey,
-        abi: processABI,
-        contractAddress
-      });
-
-      const txHash = await contract.sendDataToContract({
-        fromAddress: wallet,
-        method: 'addDocument',
-        data: [
-          documentHash,
-          Number(storageFunction),
-          Number(storageSize),
-          `0x${storageHash}`,
-          latitude,
-          longitude
-        ]
-      });
-
-      await createPendingTx({
-        txHash,
-        subject: 'add-document',
-        data: [documentHash]
-      });
-
-      res.json(txHash);
-    } catch (e) {
-      res.json({ error: e.message });
-    }
-  }
-);
-
-router.get('/get/:contract/', async (req, res) => {
+router.post('/upload', verifyToken, upload.single('file'), async (req, res) => {
   try {
-    const contractAddress = toChecksumAddress(req.params.contract);
+    const { address, privateKey } = await getKeys(req.body);
+
+    const latitude = asciiToHex(req.body.latitude);
+    const longitude = asciiToHex(req.body.longitude);
+    const contractAddress = toChecksumAddress(req.query.contract);
+
+    const documentHash = createSHA256(req.file.buffer);
+
+    const storage = await saveToIPFS(req.file.buffer);
+    const hexStorage = bs58.decode(storage).toString('hex');
+
+    const storageFunction = hexStorage.substr(0, 2);
+    const storageSize = hexStorage.substr(2, 2);
+    const storageHash = hexStorage.substr(4);
+
+    const contract = new Contract({
+      privateKey,
+      abi: processABI,
+      contractAddress
+    });
+
+    const txHash = await contract.sendDataToContract({
+      fromAddress: address,
+      method: 'addDocument',
+      data: [
+        documentHash,
+        Number(storageFunction),
+        Number(storageSize),
+        `0x${storageHash}`,
+        latitude,
+        longitude
+      ]
+    });
+
+    await createPendingTx({
+      txHash,
+      subject: 'add-document',
+      data: [documentHash]
+    });
+
+    res.json(txHash);
+  } catch (e) {
+    res.json({ error: e.message });
+  }
+});
+
+router.get('/get', async (req, res) => {
+  try {
+    const contractAddress = toChecksumAddress(req.query.contract);
     const contract = new Contract({ abi: processABI, contractAddress });
 
     const result = await contract.getDataFromContract({
@@ -143,10 +138,10 @@ router.get('/get/:contract/', async (req, res) => {
   }
 });
 
-router.get('/get/:contract/:hash', async (req, res) => {
+router.get('/getOne', async (req, res) => {
   try {
-    const hash = isSHA256(req.params.hash);
-    const contractAddress = toChecksumAddress(req.params.contract);
+    const hash = isSHA256(req.query.hash);
+    const contractAddress = toChecksumAddress(req.query.contract);
     const contract = new Contract({ abi: processABI, contractAddress });
 
     const result = await contract.getDataFromContract({

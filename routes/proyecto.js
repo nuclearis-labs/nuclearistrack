@@ -1,6 +1,5 @@
 const express = require('express');
 const Contract = require('../classes/Contract');
-const { web3ArrayToJSArray } = require('../functions/utils');
 const {
   getKeys,
   toChecksumAddress,
@@ -16,17 +15,16 @@ const router = express.Router({ mergeParams: true });
 
 router.post('/', verifyToken, async (req, res) => {
   try {
-    const { wallet, privateKey } = await getKeys(req.body);
+    const { address, privateKey } = await getKeys(req.body);
     const nuclear = new Contract({ privateKey });
 
     const expediente = isNumber(Number(req.body.expediente));
     const oc = asciiToHex(req.body.oc);
     const projectTitle = asciiToHex(req.body.proyectoTitle);
     const clientAddress = toChecksumAddress(req.body.clientAddress);
-    console.log(clientAddress);
 
     const txHash = await nuclear.sendDataToContract({
-      fromAddress: wallet,
+      fromAddress: address,
       method: 'createProject',
       data: [expediente, clientAddress, projectTitle, oc]
     });
@@ -44,7 +42,7 @@ router.post('/', verifyToken, async (req, res) => {
   }
 });
 
-router.get('/getDocNumber', async (req, res) => {
+router.get('/getDocNumber', verifyToken, async (req, res) => {
   try {
     const contract = new Contract();
     const result = await contract.getDataFromContract({ method: 'docNumber' });
@@ -125,12 +123,12 @@ router.get('/get', verifyToken, async (req, res) => {
   }
 });
 
-router.get('/get/:expediente', async (req, res) => {
+router.get('/get', verifyToken, async (req, res) => {
   try {
     const contract = new Contract();
     const result = await contract.getDataFromContract({
       method: 'getProjectDetails',
-      data: [req.params.expediente]
+      data: [req.query.expediente]
     });
 
     const userName = await contract.getDataFromContract({
@@ -142,7 +140,7 @@ router.get('/get/:expediente', async (req, res) => {
       active: result[0],
       clientName: hexToAscii(userName[0]),
       clientAddress: result[1],
-      expediente: req.params.expediente,
+      expediente: req.query.expediente,
       title: hexToAscii(result[2]),
       oc: hexToAscii(result[3]),
       processContracts: result[4]
@@ -153,15 +151,15 @@ router.get('/get/:expediente', async (req, res) => {
   }
 });
 
-router.post('/close/:expediente', verifyToken, async (req, res) => {
+router.post('/close', verifyToken, async (req, res) => {
   try {
-    const { wallet, privateKey } = await getKeys(req.body);
+    const { address, privateKey } = await getKeys(req.body);
 
     const contract = new Contract({ privateKey });
     const txHash = await contract.sendDataToContract({
-      fromAddress: wallet,
+      fromAddress: address,
       method: 'closeProject',
-      data: [Number(req.params.expediente)]
+      data: [Number(req.query.expediente)]
     });
 
     res.json(txHash);
@@ -173,10 +171,10 @@ router.post('/close/:expediente', verifyToken, async (req, res) => {
 
 router.post('/assignProcess', verifyToken, async (req, res) => {
   try {
-    const { wallet, privateKey } = await getKeys(req.body);
+    const { address, privateKey } = await getKeys(req.body);
     const contract = new Contract({ privateKey });
     const txHash = await contract.sendDataToContract({
-      fromAddress: wallet,
+      fromAddress: address,
       method: 'addProcessToProject',
       data: [Number(req.body.expediente), req.body.processContract]
     });

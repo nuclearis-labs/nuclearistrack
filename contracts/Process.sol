@@ -42,7 +42,14 @@ contract Process {
         processName = _processName;
     }
 
-    function addDocument (bytes32 _hash, uint8 storageFunction, uint8 storageSize, bytes32 storageHash, bytes32 latitude, bytes32 longitude) external onlySupplier() {
+    function addDocument (
+        bytes32 _hash,
+        uint8 storageFunction,
+        uint8 storageSize,
+        bytes32 storageHash,
+        bytes32 latitude,
+        bytes32 longitude
+        ) external onlySupplier() {
         require(document[_hash].mineTime == 0, "Document already created");
 
         NuclearPoE main = NuclearPoE(NuclearPoEAddress);

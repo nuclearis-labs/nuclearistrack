@@ -1,11 +1,11 @@
 require('dotenv').config();
-const ecc = require('tiny-secp256k1');
-const crypto = require('crypto');
 const ethereumjs = require('ethereumjs-util');
 const utils = require('./utils');
 const wif = require('wif');
 const bip38 = require('bip38');
 const { networks } = require('bitcoinjs-lib');
+const bip39 = require('bip39');
+const bip32 = require('bip32');
 
 /**
  * Encrypts a WIF Format PrivateKey using the BIP-38 Implementation
@@ -35,11 +35,7 @@ module.exports.encryptBIP38 = (privKey, passphrase) => {
  * @param {number} network Network ID
  * @returns {Buffer} Decrypted Private Key in Buffer
  */
-module.exports.decryptBIP38 = (
-  encryptedKey,
-  passphrase,
-  network = networks.testnet.wif
-) => {
+module.exports.decryptBIP38 = (encryptedKey, passphrase) => {
   try {
     const { privateKey } = bip38.decrypt(encryptedKey, passphrase);
     return privateKey;
@@ -49,42 +45,36 @@ module.exports.decryptBIP38 = (
 };
 
 /**
- * Generates a new private key from crypto.randomBytes()
- * @returns {Buffer} Private Key as Buffer
+ * Generates a new mnemonic Phrase from an english wordlist
+ * @returns {String} Mnemonic Word String
  */
-module.exports.generatePrivateKey = () => {
-  let privKey;
-  do {
-    privKey = crypto.randomBytes(32);
-  } while (!ecc.isPrivate(privKey));
-  return privKey;
+module.exports.generateMnemonic = (strength = 256) => {
+  return bip39.generateMnemonic(strength);
 };
 
 /**
- * Generates a new public key
- * @param {Buffer} privKey Private Key
- * @returns {Buffer} Public Key
+ * Generates a Public Key from the Mnemonic Phrase, Derived at Coin: 0' Account: (Defaults to 0), Change:0 Index: Defaults to 0
+ * @returns {Promise<Buffer>} Public Key
  */
-module.exports.generatePublicKey = privKey => {
-  if (privKey == null) {
-    throw new Error(
-      'class Wallet => generatePublicKey() is missing a private key'
-    );
-  }
-
-  if (ecc.isPrivate(privKey)) {
-    return ecc.pointFromScalar(privKey, true);
-  }
+module.exports.generatePrivateKeyFromMnemonic = async ({
+  mnemonic,
+  coin = 0,
+  account = 0,
+  index = 0
+} = {}) => {
+  const seed = await bip39.mnemonicToSeed(mnemonic);
+  const node = bip32.fromSeed(seed);
+  return node.derivePath(`m/44'/${coin}'/${account}'/0/${index}`).privateKey;
 };
 
 /**
  * Generates a new Wallet Address
- * @param {Buffer} publicKey Public Key
+ * @param {Buffer} privateKey Private Key
  * @returns {string} Wallet Address
  */
-module.exports.generateRSKAddress = publicKey => {
+module.exports.generateRSKAddress = privateKey => {
   return utils.toChecksumAddress(
-    ethereumjs.pubToAddress(publicKey, true).toString('hex')
+    ethereumjs.privateToAddress(privateKey).toString('hex')
   );
 };
 

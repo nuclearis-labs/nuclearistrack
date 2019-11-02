@@ -75,10 +75,13 @@ contract NuclearPoE is Ownable {
     }
 
     function addProcessToProject(uint _expediente, address _processContract) external onlyOwner() {
+        require(project[_expediente].active == true, "Project does not exist or is not active");
         project[_expediente].processContracts.push(_processContract);
     }
 
     function closeProject(uint _expediente) external onlyOwner() {
+        require(project[_expediente].active == true, "Project does not exist or is already closed");
+
         project[_expediente].active = false;
         emit CloseProject();
     }
@@ -90,6 +93,10 @@ contract NuclearPoE is Ownable {
 
     function getAllProcessContracts() external view returns(address[] memory) {
         return processContractsArray;
+    }
+
+    function getProcessContractsByProject(uint _expediente) external view returns(address[] memory) {
+        return project[_expediente].processContracts;
     }
 
     function getAllProjects() external view returns(uint[] memory) {

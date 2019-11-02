@@ -1,13 +1,7 @@
 const express = require('express');
 const web3 = require('../services/web3');
 const { verifyToken } = require('../middleware/index');
-const {
-  generatePrivateKey,
-  generatePublicKey,
-  generateRSKAddress,
-  encryptBIP38,
-  decryptBIP38
-} = require('../functions/wallet');
+const wallet = require('../functions/wallet');
 const Contract = require('../classes/Contract');
 const UserModel = require('../models/user');
 const txModel = require('../models/transaction');
@@ -28,7 +22,6 @@ const router = express.Router({ mergeParams: true });
 
 router.post('/', verifyToken, async (req, res) => {
   try {
-    const newUserName = asciiToHex(req.body.newUserName);
     const newUserEmail = isEmail(req.body.newUserEmail);
     const userType = isNumber(Number(req.body.userType));
 
@@ -44,7 +37,7 @@ router.post('/', verifyToken, async (req, res) => {
       type: userType
     });
 
-    sendMail({ to: 'smartinez@nuclearis.com', data: db._id });
+    // sendMail({ to: 'smartinez@nuclearis.com', data: db._id });
 
     res.status(200).json({ userID: db._id });
   } catch (e) {
@@ -63,37 +56,46 @@ router.post('/confirm/:id', async (req, res) => {
       throw Error('A user with the given id has an address');
     }
 
-    const newPrivKey = generatePrivateKey();
-    const newPublicKey = generatePublicKey(newPrivKey);
-    const address = generateRSKAddress(newPublicKey);
-    const encryptedPrivateKey = encryptBIP38(newPrivKey, newPassphrase);
+    const mnemonic = wallet.generateMnemonic();
+    const newPrivKey = await wallet.generatePrivateKeyFromMnemonic({
+      passphrase: newPassphrase,
+      mnemonic,
+      coin: 60
+    });
+    const newAddress = wallet.generateRSKAddress(newPrivKey);
+    const encryptedPrivateKey = wallet.encryptBIP38(newPrivKey, newPassphrase);
 
-    const { wallet, privateKey } = await getKeys({
+    const { address, privateKey } = await getKeys({
       email: 'info@nuclearis.com',
       passphrase: 'Nuclearis'
     });
 
     const contract = new Contract({ privateKey });
     const txHash = await contract.sendDataToContract({
-      fromAddress: wallet,
+      fromAddress: address,
       method: 'createUser',
-      data: [address, user.type, asciiToHex(user.username)]
+      data: [newAddress, user.type, asciiToHex(user.username)]
     });
 
     await createPendingTx({
       hash: txHash,
       subject: 'add-user',
-      data: [user.username, user.type, address]
+      data: [user.username, user.type, newAddress]
     });
 
-    const db = await UserModel.findByIdAndUpdate(req.params.id, {
-      address,
-      encryptedPrivateKey
-    });
+    const db = await UserModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        address: newAddress,
+        encryptedPrivateKey
+      },
+      { new: true }
+    );
 
     res.json({
       username: db.username,
       email: db.email,
+      mnemonic,
       address: db.address,
       encryptedPrivateKey: db.encryptedPrivateKey,
       txHash
@@ -112,9 +114,14 @@ router.post('/change', verifyToken, async (req, res) => {
 
     const user = await UserModel.findOne({ email: email });
 
-    console.log(user);
-    const decryptedKey = decryptBIP38(user.encryptedPrivateKey, passphrase);
-    const encryptedPrivateKey = encryptBIP38(decryptedKey, newPassphrase);
+    const decryptedKey = wallet.decryptBIP38(
+      user.encryptedPrivateKey,
+      passphrase
+    );
+    const encryptedPrivateKey = wallet.encryptBIP38(
+      decryptedKey,
+      newPassphrase
+    );
 
     const updatedClient = await UserModel.findByIdAndUpdate(user._id, {
       encryptedPrivateKey

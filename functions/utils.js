@@ -64,10 +64,10 @@ module.exports.getKeys = async ({ email, passphrase }) => {
   const user = await UserModel.findOne({ email: email });
 
   const privateKey = decryptBIP38(user.encryptedPrivateKey, passphrase);
-  const wallet = generateRSKAddress(generatePublicKey(privateKey));
+  const address = generateRSKAddress(privateKey);
 
   return {
-    wallet,
+    address,
     privateKey
   };
 };
