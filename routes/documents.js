@@ -24,54 +24,23 @@ router.post('/verify', upload.single('file'), async (req, res) => {
     const contractAddress = toChecksumAddress(req.query.contract);
     const documentHash = createSHA256(req.file.buffer);
     const contract = new Contract({ abi: processABI, contractAddress });
-    const result = await contract.getDataFromContract({
-      method: 'findDocument',
+    const details = await contract.getDataFromContract({
+      method: 'getDocument',
       data: [documentHash]
     });
 
-    const storageHash = bs58.encode(
-      Buffer.from(result[3] + result[4] + result[2].substr(2), 'hex')
-    );
-
     res.json({
-      mineTime: result[6],
-      docNumber: result[5],
+      docNumber: details[2],
+      mineTime: details[3],
+      latitude: details[0],
+      longitude: details[1],
       documentHash,
-      storageHash
+      comment: details[4]
     });
   } catch (e) {
     console.log(e);
 
     res.status(404).json({ error: e.message });
-  }
-});
-
-router.get('/download', async (req, res) => {
-  try {
-    const hash = isSHA256(req.query.hash);
-    const contractAddress = toChecksumAddress(req.query.contract);
-
-    const contract = new Contract({ abi: processABI, contractAddress });
-    const foundDoc = await contract.getDataFromContract({
-      method: 'findDocument',
-      data: [hash]
-    });
-
-    const storageHash = bs58.encode(
-      Buffer.from(foundDoc[3] + foundDoc[4] + foundDoc[2].substr(2), 'hex')
-    );
-    const [{ content }] = await getFromIPFS(storageHash);
-
-    res.json({
-      mineTime: foundDoc[6],
-      docNumber: foundDoc[5],
-      hash,
-      storageHash,
-      buffer: content.toString('base64')
-    });
-  } catch (e) {
-    console.log(e);
-    res.json({ error: e.message });
   }
 });
 
@@ -140,23 +109,30 @@ router.get('/get', async (req, res) => {
 
 router.get('/getOne', async (req, res) => {
   try {
-    const hash = isSHA256(req.query.hash);
+    const documentHash = isSHA256(req.query.hash);
     const contractAddress = toChecksumAddress(req.query.contract);
     const contract = new Contract({ abi: processABI, contractAddress });
 
-    const result = await contract.getDataFromContract({
-      method: 'findDocument',
-      data: [hash]
+    const details = await contract.getDataFromContract({
+      method: 'getDocument',
+      data: [documentHash]
+    });
+    const storageDetails = await contract.getDataFromContract({
+      method: 'getDocumentStorage',
+      data: [documentHash]
     });
 
-    const storageHash = result[3] + result[4] + result[2].substr(2);
+    const storageHash =
+      storageDetails[2] + storageDetails[3] + storageDetails[1].substr(2);
 
     res.json({
-      latitude: result[0],
-      longitude: result[1],
+      docNumber: details[2],
+      mineTime: details[3],
+      latitude: details[0],
+      longitude: details[1],
+      documentHash,
       storageHash: bs58.encode(Buffer.from(storageHash, 'hex')),
-      docNumber: result[5],
-      mineTime: result[6]
+      comment: details[4]
     });
   } catch (e) {
     res.status(404).json({ error: e.message });
