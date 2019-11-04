@@ -1,16 +1,14 @@
-const express = require("express");
-const web3 = require("../services/web3");
-const { verifyToken } = require("../middleware/index");
-const wallet = require("../functions/wallet");
-const Contract = require("../classes/Contract");
-const UserModel = require("../models/user");
-const txModel = require("../models/transaction");
-const { sendMail } = require("../functions/mail");
-const utils = require("../functions/utils");
+const express = require('express');
+const web3 = require('../services/web3');
+const { verifyToken } = require('../middleware/index');
+const wallet = require('../functions/wallet');
+const Contract = require('../classes/Contract');
+const UserModel = require('../models/user');
+const utils = require('../functions/utils');
 
 const router = express.Router({ mergeParams: true });
 
-router.post("/", verifyToken, async (req, res) => {
+router.post('/', verifyToken, async (req, res) => {
   try {
     const newUserEmail = utils.isEmail(req.body.newUserEmail);
     const userType = utils.isNumber(Number(req.body.userType));
@@ -18,7 +16,7 @@ router.post("/", verifyToken, async (req, res) => {
     const user = await UserModel.findOne({ newUserEmail });
 
     if (user) {
-      throw Error("A user with the given email is already registered");
+      throw Error('A user with the given email is already registered');
     }
 
     const db = await UserModel.create({
@@ -27,25 +25,19 @@ router.post("/", verifyToken, async (req, res) => {
       type: userType
     });
 
-    // sendMail({ to: 'smartinez@nuclearis.com', data: db._id });
-
     res.status(200).json({ userID: db._id });
   } catch (e) {
-    console.log(e);
-    res.status(500).json({ error: e.message });
+    res.status(400).json({ error: e.message });
   }
 });
 
-router.post("/confirm/:id", async (req, res) => {
+router.post('/confirm/:id', async (req, res) => {
   try {
     const passphrase = utils.isString(req.body.newPassphrase);
-    const user = await UserModel.findById(req.params.id);
+    const user = await UserModel.findOne({ _id: req.params.id, address: null });
 
     if (!user) {
-      throw Error("Non existent user");
-    }
-    if (user.mnemonic) {
-      throw Error("A user with the given id has already been confirmed");
+      throw Error('Non existent user or already confirmed');
     }
 
     const mnemonic = wallet.generateMnemonic();
@@ -56,28 +48,31 @@ router.post("/confirm/:id", async (req, res) => {
     */
     const newPrivateKey = await wallet.generatePrivateKeyFromMnemonic({
       mnemonic,
-      passphrase,
       coin: process.env.DERIVATIONPATHCOIN
     });
+
+    const encryptedNewPrivateKey = wallet.encryptBIP38(
+      newPrivateKey,
+      req.body.newPassphrase
+    );
 
     const newAddress = wallet.generateRSKAddress(newPrivateKey);
 
     const { address, privateKey } = await utils.getKeys({
-      email: "info@nuclearis.com",
-      passphrase: "",
-      coin: process.env.DERIVATIONPATHCOIN
+      email: process.env.ADMINEMAIL,
+      passphrase: process.env.ADMINPASSPHRASE
     });
 
     const contract = new Contract({ privateKey });
     const txHash = await contract.sendDataToContract({
       fromAddress: address,
-      method: "createUser",
+      method: 'createUser',
       data: [newAddress, user.type, utils.asciiToHex(user.username)]
     });
 
     await utils.createPendingTx({
       hash: txHash,
-      subject: "add-user",
+      subject: 'add-user',
       data: [user.username, user.type, newAddress]
     });
 
@@ -85,7 +80,7 @@ router.post("/confirm/:id", async (req, res) => {
       req.params.id,
       {
         address: newAddress,
-        encryptedPrivateKey
+        encryptedPrivateKey: encryptedNewPrivateKey
       },
       { new: true }
     );
@@ -95,107 +90,108 @@ router.post("/confirm/:id", async (req, res) => {
       email: db.email,
       mnemonic,
       address: db.address,
-      encryptedPrivateKey: db.encryptedPrivateKey,
       txHash
     });
   } catch (e) {
-    console.log(e);
     res.status(500).json({ error: e.message });
   }
 });
 
-router.post("/change", verifyToken, async (req, res) => {
+router.post('/restore', async (req, res) => {
+  try {
+    const mnemonic = req.body.mnemonic;
+    const newPassphrase = req.body.newPassphrase;
+
+    const newPrivateKey = await wallet.generatePrivateKeyFromMnemonic({
+      mnemonic,
+      coin: process.env.DERIVATIONPATHCOIN
+    });
+
+    const newEncryptedPrivateKey = wallet.encryptBIP38(
+      newPrivateKey,
+      newPassphrase
+    );
+
+    const newAddress = wallet.generateRSKAddress(newPrivateKey);
+
+    const user = await UserModel.findOneAndUpdate(
+      { address: newAddress },
+      {
+        encryptedPrivateKey: newEncryptedPrivateKey
+      },
+      { new: true }
+    );
+
+    if (!user) {
+      throw Error('No user with this mnemonic');
+    }
+
+    res.json(user);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+router.post('/change', verifyToken, async (req, res) => {
   try {
     const passphrase = utils.isString(req.body.passphrase);
     const newPassphrase = utils.isString(req.body.newPassphrase);
     const email = utils.isEmail(req.body.email);
 
-    const user = await UserModel.findOne({ email: email });
-
-    const decryptedKey = wallet.decryptBIP38(user.encryptedPrivateKey, passphrase);
-    const encryptedPrivateKey = wallet.encryptBIP38(decryptedKey, newPassphrase);
-
-    const { address, privateKey } = await utils.getKeys({
-      email,
-      passphrase,
-      coin: process.env.DERIVATIONPATHCOIN
+    const user = await UserModel.findOne({
+      email: email,
+      address: { $ne: null }
     });
 
-    const contract = new Contract({ privateKey });
-    const txHash = await contract.sendDataToContract({
-      fromAddress: address,
-      method: "changePassphrase",
-      data: [newAddress]
-    });
-
-    const balance = await web3.eth.getBalance(address);
-
-    const tx = new Transaction({ fromAddress: address });
-    await tx.estimateGas();
-    await tx.getNonce();
-    tx.prepareRawTx({
-      value: balance,
-      to: newAddress,
-      gaslimit: 4000000
-    })
-      .sign(Buffer.from(privateKey, "hex"))
-      .serialize();
-
-    const CoinHash = await tx.send();
-
-    await utils.createPendingTx({
-      hash: txHash,
-      subject: "change-passphrase",
-      data: [newAddress]
-    });
-
-    const updatedClient = await UserModel.findByIdAndUpdate(
-      user._id,
-      {
-        address: newAddress
-      },
-      { new: true }
+    const decryptedKey = await wallet.decryptBIP38(
+      user.encryptedPrivateKey,
+      passphrase
+    );
+    const encryptedPrivateKey = wallet.encryptBIP38(
+      decryptedKey,
+      newPassphrase
     );
 
-    res.json(updatedClient);
-  } catch (e) {
-    console.log(e);
+    await UserModel.findByIdAndUpdate(user._id, {
+      encryptedPrivateKey
+    });
 
-    res.json({ error: e.message });
+    res.sendStatus(200);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
   }
 });
 
-router.get("/get", async (req, res) => {
+router.get('/get', async (req, res) => {
   try {
     const contract = new Contract();
     const allUsers = await contract.getDataFromContract({
-      method: "getAllUsers"
+      method: 'getAllUsers'
     });
-
-    const users = await UserModel.find({ address: { $in: allUsers } });
 
     response = [];
 
-    if (users.length !== 0) {
-      for (let i = 0; i < users.length; i++) {
-        await UserModel.findByIdAndUpdate(users[i]._id, {
-          status: true
-        });
-        console.log(users[i].address);
+    if (allUsers.length !== 0) {
+      for (let i = 0; i < allUsers.length; i++) {
+        const users = await UserModel.findOneAndUpdate(
+          { address: allUsers[i] },
+          { status: true },
+          { new: true }
+        );
 
         const details = await contract.getDataFromContract({
-          method: users[i].type == 0 ? "getClientDetails" : "getSupplierDetails",
-          data: [users[i].address]
+          method: 'getUserDetails',
+          data: [allUsers[i]]
         });
 
-        const balance = await web3.eth.getBalance(users[i].address);
+        const balance = await web3.eth.getBalance(allUsers[i]);
 
         response.push({
-          username: users[i].username,
-          address: users[i].address,
-          type: users[i].type == 0,
-          balance: web3.utils.fromWei(balance),
-          projects: details[2]
+          username: utils.hexToAscii(details[0]),
+          address: allUsers[i],
+          email: users.email,
+          type: details[1],
+          balance: web3.utils.fromWei(balance)
         });
       }
 
@@ -206,51 +202,58 @@ router.get("/get", async (req, res) => {
   } catch (e) {
     console.log(e);
 
-    res.json({ error: e.message });
+    res.status(500).json({ error: e.message });
   }
 });
 
-router.get("/getBalance/:address", (req, res) => {
-  web3.eth.getBalance(req.params.address).then(balance => {
-    res.json(web3.utils.fromWei(balance));
-  });
+router.get('/getBalance/:address', (req, res) => {
+  try {
+    web3.eth.getBalance(req.params.address).then(balance => {
+      res.json(web3.utils.fromWei(balance));
+    });
+  } catch (e) {
+    res.sendStatus(500);
+  }
 });
 
-router.get("/get/:address", async (req, res) => {
+router.get('/get/:address', async (req, res) => {
   try {
     const address = utils.toChecksumAddress(req.params.address);
     const contract = new Contract();
 
-    const user = await UserModel.findOne({ address });
+    await UserModel.findOneAndUpdate({ address }, { status: true });
 
-    const details = await contract.getDataFromContract({
-      method: user.type == 0 ? "getClientDetails" : "getSupplierDetails",
+    const userDetails = await contract.getDataFromContract({
+      method: 'getUserDetails',
+      data: [address]
+    });
+    const projects = await contract.getDataFromContract({
+      method: userDetails[1] == 0 ? 'getClientProjects' : 'getSupplierProjects',
       data: [address]
     });
 
     let response = [];
     let balance = await web3.eth.getBalance(address);
-    for (let i = 0; i < details[2].length; i++) {
+    for (let i = 0; i < projects.length; i++) {
       let projectDetails = await contract.getDataFromContract({
-        method: "getProjectDetails",
-        data: [details[2][i]]
+        method: 'getProjectDetails',
+        data: [projects[i]]
       });
 
       response.push({
         title: utils.hexToAscii(projectDetails[2]),
-        expediente: details[2][i],
+        expediente: projects[i],
         oc: utils.hexToAscii(projectDetails[3])
       });
     }
 
     res.json({
-      userName: user.username,
+      userName: utils.hexToAscii(userDetails[0]),
       balance: web3.utils.fromWei(balance),
+      type: userDetails[1],
       proyectos: response
     });
   } catch (e) {
-    console.log(e);
-
     res.status(500).json({ error: e.message });
   }
 });

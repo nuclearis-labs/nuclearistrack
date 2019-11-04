@@ -56,11 +56,16 @@ module.exports.removeNullBytes = string => {
   return string.replace(/\0/g, '');
 };
 
-module.exports.getKeys = async ({ email, passphrase, coin }) => {
+module.exports.getKeys = async ({ email, passphrase }) => {
   const user = await UserModel.findOne({ email: email });
 
-  const privateKey = decryptBIP38(user.encryptedPrivateKey, passphrase);
-  const address = generateRSKAddress(privateKey);
+  const privateKey = await wallet.decryptBIP38(
+    user.encryptedPrivateKey,
+    passphrase
+  );
+  const address = wallet.generateRSKAddress(privateKey);
+
+  console.log(address);
 
   return {
     address,

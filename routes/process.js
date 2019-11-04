@@ -43,7 +43,7 @@ router.post('/create/', verifyToken, async (req, res) => {
   }
 });
 
-router.get('/get', async (req, res) => {
+router.get('/getOne', async (req, res) => {
   try {
     const contract = new Contract();
 
@@ -142,12 +142,9 @@ router.get('/get', async (req, res) => {
         data: [details[2]]
       });
       resultProcessed.push({
-        NuclearPoEAddress: details[0],
-        MOAddress: details[1],
         supplierAddress: details[2],
         supplierName: hexToAscii(userName[0]),
         processName: hexToAscii(details[3]),
-        allDocuments: details[4],
         contractAddress: details[5]
       });
     }

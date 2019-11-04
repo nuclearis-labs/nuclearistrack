@@ -6,6 +6,7 @@ const bip38 = require('bip38');
 const { networks } = require('bitcoinjs-lib');
 const bip39 = require('bip39');
 const bip32 = require('bip32');
+const AssertionError = require('assert').AssertionError;
 
 /**
  * Encrypts a WIF Format PrivateKey using the BIP-38 Implementation
@@ -35,14 +36,17 @@ module.exports.encryptBIP38 = (privKey, passphrase) => {
  * @param {number} network Network ID
  * @returns {Buffer} Decrypted Private Key in Buffer
  */
-module.exports.decryptBIP38 = (encryptedKey, passphrase) => {
+module.exports.decryptBIP38 = async (encryptedKey, passphrase) => {
   try {
     const { privateKey } = bip38.decrypt(encryptedKey, passphrase);
     return privateKey;
   } catch (e) {
-    return false;
+    console.log(e.message);
+
+    if (e instanceof AssertionError) {
+      throw Error('Passphrase or User incorrect');
+    }
   }
-  throw Error('Address not found');
 };
 
 /**
@@ -74,9 +78,13 @@ module.exports.generatePrivateKeyFromMnemonic = async ({
  * @returns {string} Wallet Address
  */
 module.exports.generateRSKAddress = privateKey => {
-  return utils.toChecksumAddress(
-    ethereumjs.privateToAddress(privateKey).toString('hex')
-  );
+  try {
+    return utils.toChecksumAddress(
+      ethereumjs.privateToAddress(privateKey).toString('hex')
+    );
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 /**

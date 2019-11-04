@@ -1,9 +1,13 @@
-const wallet = require('./functions/wallet.js');
+const bip38 = require('bip38');
+const AssertionError = require('assert').AssertionError;
 
-const mnemonic =
-  'speak card review photo quote endless alpha metal long reflect angle rare';
-
-wallet
-  .accountDiscovery({ mnemonic, passphrase: '', coin: 60 })
-  .then(result => console.log(result))
-  .catch(e => console.error(e));
+try {
+  bip38.decrypt(
+    '6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn2Nh2ZoGg',
+    'TestingOneTwoThre'
+  );
+} catch (e) {
+  if (e instanceof AssertionError) {
+    console.log('Hashes not equal');
+  }
+}

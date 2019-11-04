@@ -87,8 +87,7 @@ router.get('/get', verifyToken, async (req, res) => {
           clientAddress: projectDetails[1],
           clientName: hexToAscii(userName[0]),
           expediente: allProjects[i],
-          oc: hexToAscii(projectDetails[3]),
-          processContracts: projectDetails[4]
+          oc: hexToAscii(projectDetails[3])
         });
       }
     }
@@ -123,7 +122,7 @@ router.get('/get', verifyToken, async (req, res) => {
   }
 });
 
-router.get('/get', verifyToken, async (req, res) => {
+router.get('/getOne', verifyToken, async (req, res) => {
   try {
     const contract = new Contract();
     const result = await contract.getDataFromContract({

@@ -68,31 +68,17 @@ contract NuclearPoE is Ownable {
     }
 
     function changeUserStatus(address _userAddress) external onlyOwner() {
-        require(user[_userAddress].status == true, "User already created");
-
+        require(user[_userAddress].status == true, "User already disabled");
         user[_userAddress].status = !user[_userAddress].status;
     }
 
     function createProcess(address _supplierAddress, bytes32 _processName) external onlyOwner() {
         require(user[_supplierAddress].status == true, "User does not exist");
 
-        address ProcessContractAddress = address(new Process(msg.sender, _processName));
+        address ProcessContractAddress = address(new Process(msg.sender, _supplierAddress, _processName));
         processContractsArray.push(ProcessContractAddress);
 
         emit CreateProcess(ProcessContractAddress);
-    }
-
-    function changePassphrase(address _newAddress) external {
-        require(user[msg.sender].created == true, "User does not exist");
-
-        user[_newAddress] = user[msg.sender];
-        if(user[msg.sender].userType == 1) {
-            supplierProcesses[_newAddress] = supplierProcesses[msg.sender];
-        }
-        else {
-            clientProjects[_newAddress] = clientProjects[msg.sender];
-        }
-        emit ChangePassphrase(msg.sender, _newAddress);
     }
 
     function addProcessToProject(uint _expediente, address _processContract) external onlyOwner() {
@@ -129,12 +115,16 @@ contract NuclearPoE is Ownable {
         return usersArray;
     }
 
-    function getClientDetails(address _address) external view returns(bytes32, uint8, uint[] memory) {
-        return (user[_address].name, user[_address].userType, clientProjects[_address]);
+    function getUserDetails(address _address) external view returns(bytes32, uint8) {
+        return (user[_address].name, user[_address].userType);
     }
 
-    function getSupplierDetails(address _address) external view returns(bytes32, uint8, address[] memory) {
-        return (user[_address].name, user[_address].userType, supplierProcesses[_address]);
+    function getSupplierProjects(address _address) external view returns(address[] memory) {
+        return (supplierProcesses[_address]);
+    }
+
+    function getClientProjects(address _address) external view returns(uint[] memory) {
+        return (clientProjects[_address]);
     }
 
     function getProjectDetails(uint _expediente) external view returns(bool, address, bytes32, bytes32, address[] memory) {

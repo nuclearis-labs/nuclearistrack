@@ -1,21 +1,21 @@
-require("dotenv").config();
-const express = require("express");
+require('dotenv').config();
+const express = require('express');
 const router = express.Router();
-const jwt = require("jsonwebtoken");
-const UserModel = require("../models/user");
-const wallet = require("../functions/wallet");
-const { verifyToken } = require("../middleware/index");
+const jwt = require('jsonwebtoken');
+const UserModel = require('../models/user');
+const wallet = require('../functions/wallet');
+const { verifyToken } = require('../middleware/index');
 
-router.post("/", async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.body.email });
-    if (!user) throw Error();
+    if (!user) throw Error('User does not exist');
 
-    const decryptedKey = wallet.decryptBIP38(user.encryptedPrivateKey, req.body.passphrase);
+    const decryptedKey = await wallet.decryptBIP38(
+      user.encryptedPrivateKey,
+      req.body.passphrase
+    );
 
-    if (decryptedKey === false) {
-      throw Error();
-    }
     address = wallet.generateRSKAddress(decryptedKey);
 
     if (user.address === address) {
@@ -38,10 +38,10 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.post("/current", verifyToken, (req, res) => {
-  const bearerHeader = req.headers["authorization"];
-  if (typeof bearerHeader !== "undefined") {
-    const bearer = bearerHeader.split(" ");
+router.post('/current', verifyToken, (req, res) => {
+  const bearerHeader = req.headers['authorization'];
+  if (typeof bearerHeader !== 'undefined') {
+    const bearer = bearerHeader.split(' ');
     const bearerToken = bearer[1];
     req.token = bearerToken;
     try {

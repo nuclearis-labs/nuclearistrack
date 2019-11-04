@@ -7,6 +7,7 @@ contract Process {
     address private NuclearPoEAddress;
     address private moAddress;
     bytes32 private processName;
+    address private supplierAddress;
 
     struct Document {
         bytes32 latitude;
@@ -30,10 +31,16 @@ contract Process {
         _;
     }
 
-    constructor (address _moAddress, bytes32 _processName) public {
+    modifier onlySupplier() {
+        require(msg.sender == supplierAddress, 'Has to be supplier of project');
+        _;
+    }
+
+    constructor (address _moAddress, address _supplierAddress, bytes32 _processName) public {
         NuclearPoEAddress = msg.sender;
         moAddress = _moAddress;
         processName = _processName;
+        supplierAddress = _supplierAddress;
     }
 
     function addDocument (
@@ -76,8 +83,8 @@ contract Process {
             );
     }
 
-    function getDetails() external view returns (address, address, bytes32, bytes32[] memory, address) {
-        return (NuclearPoEAddress, moAddress, processName, allDocuments, address(this));
+    function getDetails() external view returns (address, address, address, bytes32, bytes32[] memory, address) {
+        return (NuclearPoEAddress, moAddress, supplierAddress, processName, allDocuments, address(this));
     }
 
     function getAllDocuments() external view returns(bytes32[] memory) {

@@ -9,19 +9,13 @@ const processABI = JSON.parse(fs.readFileSync('build/contracts/Process.json'))
   .abi;
 const bs58 = require('bs58');
 const { verifyToken } = require('../middleware/index');
-const {
-  getKeys,
-  isSHA256,
-  toChecksumAddress,
-  asciiToHex,
-  createPendingTx
-} = require('../functions/utils');
+const utils = require('../functions/utils');
 
 const router = express.Router({ mergeParams: true });
 
 router.post('/verify', upload.single('file'), async (req, res) => {
   try {
-    const contractAddress = toChecksumAddress(req.query.contract);
+    const contractAddress = utils.toChecksumAddress(req.query.contract);
     const documentHash = createSHA256(req.file.buffer);
     const contract = new Contract({ abi: processABI, contractAddress });
     const details = await contract.getDataFromContract({
@@ -46,11 +40,11 @@ router.post('/verify', upload.single('file'), async (req, res) => {
 
 router.post('/upload', verifyToken, upload.single('file'), async (req, res) => {
   try {
-    const { address, privateKey } = await getKeys(req.body);
+    const { address, privateKey } = await utils.getKeys(req.body);
 
-    const latitude = asciiToHex(req.body.latitude);
-    const longitude = asciiToHex(req.body.longitude);
-    const contractAddress = toChecksumAddress(req.query.contract);
+    const latitude = utils.asciiToHex(req.body.latitude);
+    const longitude = utils.asciiToHex(req.body.longitude);
+    const contractAddress = utils.toChecksumAddress(req.query.contract);
 
     const documentHash = createSHA256(req.file.buffer);
 
@@ -60,6 +54,9 @@ router.post('/upload', verifyToken, upload.single('file'), async (req, res) => {
     const storageFunction = hexStorage.substr(0, 2);
     const storageSize = hexStorage.substr(2, 2);
     const storageHash = hexStorage.substr(4);
+    console.log(storageFunction);
+    console.log(storageSize);
+    console.log(storageHash);
 
     const contract = new Contract({
       privateKey,
@@ -76,11 +73,12 @@ router.post('/upload', verifyToken, upload.single('file'), async (req, res) => {
         Number(storageSize),
         `0x${storageHash}`,
         latitude,
-        longitude
+        longitude,
+        req.body.comment
       ]
     });
 
-    await createPendingTx({
+    await utils.createPendingTx({
       txHash,
       subject: 'add-document',
       data: [documentHash]
@@ -94,14 +92,30 @@ router.post('/upload', verifyToken, upload.single('file'), async (req, res) => {
 
 router.get('/get', async (req, res) => {
   try {
-    const contractAddress = toChecksumAddress(req.query.contract);
+    const contractAddress = utils.toChecksumAddress(req.query.contract);
     const contract = new Contract({ abi: processABI, contractAddress });
 
     const result = await contract.getDataFromContract({
       method: 'getAllDocuments'
     });
 
-    res.json(result);
+    const documents = [];
+    for (let i = 0; i < result.length; i++) {
+      const details = await contract.getDataFromContract({
+        method: 'getDocument',
+        data: [result[i]]
+      });
+
+      documents.push({
+        docNumber: details[2],
+        mineTime: details[3],
+        latitude: utils.hexToAscii(details[0]),
+        longitude: utils.hexToAscii(details[1]),
+        documentHash: result[i]
+      });
+    }
+
+    res.json(documents);
   } catch (e) {
     res.status(404).json({ error: e.message });
   }
@@ -109,8 +123,8 @@ router.get('/get', async (req, res) => {
 
 router.get('/getOne', async (req, res) => {
   try {
-    const documentHash = isSHA256(req.query.hash);
-    const contractAddress = toChecksumAddress(req.query.contract);
+    const documentHash = utils.isSHA256(req.query.hash);
+    const contractAddress = utils.toChecksumAddress(req.query.contract);
     const contract = new Contract({ abi: processABI, contractAddress });
 
     const details = await contract.getDataFromContract({
@@ -122,16 +136,23 @@ router.get('/getOne', async (req, res) => {
       data: [documentHash]
     });
 
-    const storageHash =
-      storageDetails[2] + storageDetails[3] + storageDetails[1].substr(2);
+    const storageHash = bs58.encode(
+      Buffer.from(
+        storageDetails[1] + storageDetails[2] + storageDetails[0].substr(2),
+        'hex'
+      )
+    );
+
+    const file = await getFromIPFS(storageHash);
 
     res.json({
       docNumber: details[2],
       mineTime: details[3],
-      latitude: details[0],
-      longitude: details[1],
+      latitude: utils.hexToAscii(details[0]),
+      longitude: utils.hexToAscii(details[1]),
       documentHash,
-      storageHash: bs58.encode(Buffer.from(storageHash, 'hex')),
+      storageHash,
+      fileBuffer: file[0].content.toString('base64'),
       comment: details[4]
     });
   } catch (e) {
