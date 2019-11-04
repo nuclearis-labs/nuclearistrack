@@ -1,25 +1,24 @@
-require('dotenv').config();
-const express = require('express');
+require("dotenv").config();
+const express = require("express");
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const UserModel = require('../models/user');
-const wallet = require('../functions/wallet');
-const { verifyToken } = require('../middleware/index');
+const jwt = require("jsonwebtoken");
+const UserModel = require("../models/user");
+const wallet = require("../functions/wallet");
+const { verifyToken } = require("../middleware/index");
 
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.body.email });
-    if (!user) {
-      throw Error('User does not exist');
-    }
-    const account = await wallet.accountDiscovery({
-      mnemonic: user.mnemonic,
-      passphrase: req.body.passphrase,
-      coin: process.env.DERIVATIONPATHCOIN,
-      addressToFind: user.address
-    });
+    if (!user) throw Error();
 
-    if (user.address === account) {
+    const decryptedKey = wallet.decryptBIP38(user.encryptedPrivateKey, req.body.passphrase);
+
+    if (decryptedKey === false) {
+      throw Error();
+    }
+    address = wallet.generateRSKAddress(decryptedKey);
+
+    if (user.address === address) {
       jwt.sign(
         {
           userName: user.username,
@@ -35,16 +34,14 @@ router.post('/', async (req, res) => {
       );
     }
   } catch (e) {
-    console.log(e.message);
-
     res.sendStatus(403);
   }
 });
 
-router.post('/current', verifyToken, (req, res) => {
-  const bearerHeader = req.headers['authorization'];
-  if (typeof bearerHeader !== 'undefined') {
-    const bearer = bearerHeader.split(' ');
+router.post("/current", verifyToken, (req, res) => {
+  const bearerHeader = req.headers["authorization"];
+  if (typeof bearerHeader !== "undefined") {
+    const bearer = bearerHeader.split(" ");
     const bearerToken = bearer[1];
     req.token = bearerToken;
     try {

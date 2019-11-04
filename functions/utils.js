@@ -59,12 +59,8 @@ module.exports.removeNullBytes = string => {
 module.exports.getKeys = async ({ email, passphrase, coin }) => {
   const user = await UserModel.findOne({ email: email });
 
-  const privateKey = await wallet.generatePrivateKeyFromMnemonic({
-    mnemonic: user.mnemonic,
-    passphrase,
-    coin
-  });
-  const address = wallet.generateRSKAddress(privateKey);
+  const privateKey = decryptBIP38(user.encryptedPrivateKey, passphrase);
+  const address = generateRSKAddress(privateKey);
 
   return {
     address,

@@ -16,6 +16,7 @@ contract Process {
         uint8 storageSize;
         uint docNumber;
         uint mineTime;
+        string comment;
     }
 
     bytes32[] public allDocuments;
@@ -35,40 +36,43 @@ contract Process {
         processName = _processName;
     }
 
-    function addDocument (bytes32 _hash, uint8 storageFunction, uint8 storageSize, bytes32 storageHash, bytes32 latitude, bytes32 longitude) external {
+    function addDocument (
+        bytes32 _hash,
+        uint8 _storageFunction,
+        uint8 _storageSize,
+        bytes32 _storageHash,
+        bytes32 _latitude,
+        bytes32 _longitude,
+        string calldata _comment
+        ) external onlySupplier() {
         require(document[_hash].mineTime == 0, "Document already created");
 
         NuclearPoE main = NuclearPoE(NuclearPoEAddress);
         uint docNumber = main.incrementDocNumber(address(this));
 
-        document[_hash] = Document(latitude, longitude, storageHash, storageFunction, storageSize, docNumber, now);
+        document[_hash] = Document(_latitude, _longitude, _storageHash, _storageFunction, _storageSize, docNumber, now, _comment);
         allDocuments.push(_hash);
 
         emit AddDocument();
     }
 
-    function changeMOAddress (address _newAddress) external onlyMain() {
-        moAddress = _newAddress;
-    }
-
-    function changeNuclearPoEAddress (address _newAddress) external onlyMain() {
-        NuclearPoEAddress = _newAddress;
-    }
-
-    function changeProcessName (bytes32 _newName) external onlyMain() {
-        processName = _newName;
-    }
-
-    function findDocument(bytes32 _hash) external view returns (bytes32, bytes32, bytes32, uint8, uint8, uint, uint) {
+    function getDocument(bytes32 _hash) external view returns (bytes32, bytes32, uint, uint, string memory) {
         require(document[_hash].mineTime != 0, "Document does not exist");
         return (
             document[_hash].latitude,
             document[_hash].longitude,
+            document[_hash].docNumber,
+            document[_hash].mineTime,
+            document[_hash].comment
+            );
+    }
+
+    function getDocumentStorage(bytes32 _hash) external view returns (bytes32, uint8, uint8) {
+        require(document[_hash].mineTime != 0, "Document does not exist");
+        return (
             document[_hash].storageHash,
             document[_hash].storageFunction,
-            document[_hash].storageSize,
-            document[_hash].docNumber,
-            document[_hash].mineTime
+            document[_hash].storageSize
             );
     }
 

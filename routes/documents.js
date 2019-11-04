@@ -19,25 +19,23 @@ const {
 
 const router = express.Router({ mergeParams: true });
 
-router.post('/verify/:contract', upload.single('file'), async (req, res) => {
+router.post('/verify', upload.single('file'), async (req, res) => {
   try {
-    const contractAddress = toChecksumAddress(req.params.contract);
+    const contractAddress = toChecksumAddress(req.query.contract);
     const documentHash = createSHA256(req.file.buffer);
     const contract = new Contract({ abi: processABI, contractAddress });
-    const result = await contract.getDataFromContract({
-      method: 'findDocument',
+    const details = await contract.getDataFromContract({
+      method: 'getDocument',
       data: [documentHash]
     });
 
-    const storageHash = bs58.encode(
-      Buffer.from(result[3] + result[4] + result[2].substr(2), 'hex')
-    );
-
     res.json({
-      mineTime: result[6],
-      docNumber: result[5],
+      docNumber: details[2],
+      mineTime: details[3],
+      latitude: details[0],
+      longitude: details[1],
       documentHash,
-      storageHash
+      comment: details[4]
     });
   } catch (e) {
     console.log(e);
@@ -46,91 +44,57 @@ router.post('/verify/:contract', upload.single('file'), async (req, res) => {
   }
 });
 
-router.get('/download/:contract/:hash', async (req, res) => {
+router.post('/upload', verifyToken, upload.single('file'), async (req, res) => {
   try {
-    const hash = isSHA256(req.params.hash);
-    const contractAddress = toChecksumAddress(req.params.contract);
+    const { address, privateKey } = await getKeys(req.body);
 
-    const contract = new Contract({ abi: processABI, contractAddress });
-    const foundDoc = await contract.getDataFromContract({
-      method: 'findDocument',
-      data: [hash]
+    const latitude = asciiToHex(req.body.latitude);
+    const longitude = asciiToHex(req.body.longitude);
+    const contractAddress = toChecksumAddress(req.query.contract);
+
+    const documentHash = createSHA256(req.file.buffer);
+
+    const storage = await saveToIPFS(req.file.buffer);
+    const hexStorage = bs58.decode(storage).toString('hex');
+
+    const storageFunction = hexStorage.substr(0, 2);
+    const storageSize = hexStorage.substr(2, 2);
+    const storageHash = hexStorage.substr(4);
+
+    const contract = new Contract({
+      privateKey,
+      abi: processABI,
+      contractAddress
     });
 
-    const storageHash = bs58.encode(
-      Buffer.from(foundDoc[3] + foundDoc[4] + foundDoc[2].substr(2), 'hex')
-    );
-    const [{ content }] = await getFromIPFS(storageHash);
-
-    res.json({
-      mineTime: foundDoc[6],
-      docNumber: foundDoc[5],
-      hash,
-      storageHash,
-      buffer: content.toString('base64')
+    const txHash = await contract.sendDataToContract({
+      fromAddress: address,
+      method: 'addDocument',
+      data: [
+        documentHash,
+        Number(storageFunction),
+        Number(storageSize),
+        `0x${storageHash}`,
+        latitude,
+        longitude
+      ]
     });
+
+    await createPendingTx({
+      txHash,
+      subject: 'add-document',
+      data: [documentHash]
+    });
+
+    res.json(txHash);
   } catch (e) {
-    console.log(e);
     res.json({ error: e.message });
   }
 });
 
-router.post(
-  '/upload/:contract',
-  verifyToken,
-  upload.single('file'),
-  async (req, res) => {
-    try {
-      const { wallet, privateKey } = await getKeys(req.body);
-
-      const latitude = asciiToHex(req.body.latitude);
-      const longitude = asciiToHex(req.body.longitude);
-      const contractAddress = toChecksumAddress(req.params.contract);
-
-      const documentHash = createSHA256(req.file.buffer);
-
-      const storage = await saveToIPFS(req.file.buffer);
-      const hexStorage = bs58.decode(storage).toString('hex');
-
-      const storageFunction = hexStorage.substr(0, 2);
-      const storageSize = hexStorage.substr(2, 2);
-      const storageHash = hexStorage.substr(4);
-
-      const contract = new Contract({
-        privateKey,
-        abi: processABI,
-        contractAddress
-      });
-
-      const txHash = await contract.sendDataToContract({
-        fromAddress: wallet,
-        method: 'addDocument',
-        data: [
-          documentHash,
-          Number(storageFunction),
-          Number(storageSize),
-          `0x${storageHash}`,
-          latitude,
-          longitude
-        ]
-      });
-
-      await createPendingTx({
-        txHash,
-        subject: 'add-document',
-        data: [documentHash]
-      });
-
-      res.json(txHash);
-    } catch (e) {
-      res.json({ error: e.message });
-    }
-  }
-);
-
-router.get('/get/:contract/', async (req, res) => {
+router.get('/get', async (req, res) => {
   try {
-    const contractAddress = toChecksumAddress(req.params.contract);
+    const contractAddress = toChecksumAddress(req.query.contract);
     const contract = new Contract({ abi: processABI, contractAddress });
 
     const result = await contract.getDataFromContract({
@@ -143,25 +107,32 @@ router.get('/get/:contract/', async (req, res) => {
   }
 });
 
-router.get('/get/:contract/:hash', async (req, res) => {
+router.get('/getOne', async (req, res) => {
   try {
-    const hash = isSHA256(req.params.hash);
-    const contractAddress = toChecksumAddress(req.params.contract);
+    const documentHash = isSHA256(req.query.hash);
+    const contractAddress = toChecksumAddress(req.query.contract);
     const contract = new Contract({ abi: processABI, contractAddress });
 
-    const result = await contract.getDataFromContract({
-      method: 'findDocument',
-      data: [hash]
+    const details = await contract.getDataFromContract({
+      method: 'getDocument',
+      data: [documentHash]
+    });
+    const storageDetails = await contract.getDataFromContract({
+      method: 'getDocumentStorage',
+      data: [documentHash]
     });
 
-    const storageHash = result[3] + result[4] + result[2].substr(2);
+    const storageHash =
+      storageDetails[2] + storageDetails[3] + storageDetails[1].substr(2);
 
     res.json({
-      latitude: result[0],
-      longitude: result[1],
+      docNumber: details[2],
+      mineTime: details[3],
+      latitude: details[0],
+      longitude: details[1],
+      documentHash,
       storageHash: bs58.encode(Buffer.from(storageHash, 'hex')),
-      docNumber: result[5],
-      mineTime: result[6]
+      comment: details[4]
     });
   } catch (e) {
     res.status(404).json({ error: e.message });
