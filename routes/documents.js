@@ -1,16 +1,17 @@
 const express = require('express');
 const fs = require('fs');
+const bs58 = require('bs58');
 const storage = require('multer').memoryStorage();
 const upload = require('multer')({ storage });
-const { createSHA256 } = require('../functions/hash');
+
 const Contract = require('../classes/Contract');
-const { saveToIPFS, getFromIPFS } = require('../services/ipfs');
-const processABI = JSON.parse(fs.readFileSync('build/contracts/Process.json'))
-  .abi;
-const bs58 = require('bs58');
 const { verifyToken } = require('../middleware/index');
+const { saveToIPFS, getFromIPFS } = require('../services/ipfs');
+const { createSHA256 } = require('../functions/hash');
 const utils = require('../functions/utils');
 
+const processABI = JSON.parse(fs.readFileSync('build/contracts/Process.json'))
+  .abi;
 const router = express.Router({ mergeParams: true });
 
 router.post('/verify', upload.single('file'), async (req, res) => {
@@ -26,8 +27,8 @@ router.post('/verify', upload.single('file'), async (req, res) => {
     res.json({
       docNumber: details[2],
       mineTime: details[3],
-      latitude: details[0],
-      longitude: details[1],
+      latitude: utils.hexToAscii(details[0]),
+      longitude: utils.hexToAscii(details[1]),
       documentHash,
       comment: details[4]
     });

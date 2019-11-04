@@ -1,9 +1,10 @@
 const express = require('express');
-const Transaction = require('../classes/Transaction');
-const router = express.Router({ mergeParams: true });
-const { getKeys } = require('../functions/utils');
 const web3 = require('../services/web3');
+const Transaction = require('../classes/Transaction');
 const { verifyToken } = require('../middleware/index');
+const { getKeys } = require('../functions/utils');
+
+const router = express.Router({ mergeParams: true });
 
 router.post('/', verifyToken, async (req, res) => {
   try {

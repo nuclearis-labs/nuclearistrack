@@ -2,9 +2,10 @@ require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+
+const { verifyToken } = require('../middleware/index');
 const UserModel = require('../models/user');
 const wallet = require('../functions/wallet');
-const { verifyToken } = require('../middleware/index');
 
 router.post('/', async (req, res) => {
   try {

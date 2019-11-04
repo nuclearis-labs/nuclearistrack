@@ -1,25 +1,20 @@
 const express = require('express');
-const Contract = require('../classes/Contract');
 const fs = require('fs');
+
+const Contract = require('../classes/Contract');
 const { verifyToken } = require('../middleware/index');
+const utils = require('../functions/utils');
+
 const processABI = JSON.parse(fs.readFileSync('build/contracts/Process.json'))
   .abi;
-const {
-  getKeys,
-  createPendingTx,
-  asciiToHex,
-  hexToAscii,
-  toChecksumAddress
-} = require('../functions/utils');
-
 const router = express.Router({ mergeParams: true });
 
 router.post('/create/', verifyToken, async (req, res) => {
   try {
-    const { address, privateKey } = await getKeys(req.body);
+    const { address, privateKey } = await utils.getKeys(req.body);
 
-    const processTitle = asciiToHex(req.body.processTitle);
-    const supplierAddress = toChecksumAddress(req.body.supplierAddress);
+    const processTitle = utils.asciiToHex(req.body.processTitle);
+    const supplierAddress = utils.toChecksumAddress(req.body.supplierAddress);
 
     const contract = new Contract({
       privateKey
@@ -30,7 +25,7 @@ router.post('/create/', verifyToken, async (req, res) => {
       data: [supplierAddress, processTitle]
     });
 
-    await createPendingTx({
+    await utils.createPendingTx({
       txHash,
       subject: 'add-process',
       data: [req.body.processTitle, supplierAddress]
@@ -65,8 +60,8 @@ router.get('/getOne', async (req, res) => {
       NuclearPoEAddress: details[0],
       MOAddress: details[1],
       supplierAddress: details[2],
-      supplierName: hexToAscii(userName[0]),
-      processName: hexToAscii(details[3]),
+      supplierName: utils.hexToAscii(userName[0]),
+      processName: utils.hexToAscii(details[3]),
       allDocuments: details[4],
       contractAddress: details[5]
     });
@@ -103,8 +98,8 @@ router.get('/getByExpediente', async (req, res) => {
         NuclearPoEAddress: result[0],
         MOAddress: result[1],
         supplierAddress: result[2],
-        supplierName: hexToAscii(userName[0]),
-        processName: hexToAscii(result[3]),
+        supplierName: utils.hexToAscii(userName[0]),
+        processName: utils.hexToAscii(result[3]),
         allDocuments: result[4],
         contractAddress: result[5]
       });
@@ -143,8 +138,8 @@ router.get('/get', async (req, res) => {
       });
       resultProcessed.push({
         supplierAddress: details[2],
-        supplierName: hexToAscii(userName[0]),
-        processName: hexToAscii(details[3]),
+        supplierName: utils.hexToAscii(userName[0]),
+        processName: utils.hexToAscii(details[3]),
         contractAddress: details[5]
       });
     }

@@ -1,13 +1,7 @@
 const express = require('express');
+
 const Contract = require('../classes/Contract');
-const {
-  getKeys,
-  toChecksumAddress,
-  isNumber,
-  asciiToHex,
-  hexToAscii,
-  createPendingTx
-} = require('../functions/utils');
+const utils = require('../functions/utils');
 const { verifyToken } = require('../middleware/index');
 const txModel = require('../models/transaction');
 
@@ -15,13 +9,13 @@ const router = express.Router({ mergeParams: true });
 
 router.post('/', verifyToken, async (req, res) => {
   try {
-    const { address, privateKey } = await getKeys(req.body);
+    const { address, privateKey } = await utils.getKeys(req.body);
     const nuclear = new Contract({ privateKey });
 
-    const expediente = isNumber(Number(req.body.expediente));
-    const oc = asciiToHex(req.body.oc);
-    const projectTitle = asciiToHex(req.body.proyectoTitle);
-    const clientAddress = toChecksumAddress(req.body.clientAddress);
+    const expediente = utils.isNumber(Number(req.body.expediente));
+    const oc = utils.asciiToHex(req.body.oc);
+    const projectTitle = utils.asciiToHex(req.body.proyectoTitle);
+    const clientAddress = utils.toChecksumAddress(req.body.clientAddress);
 
     const txHash = await nuclear.sendDataToContract({
       fromAddress: address,
@@ -29,7 +23,7 @@ router.post('/', verifyToken, async (req, res) => {
       data: [expediente, clientAddress, projectTitle, oc]
     });
 
-    await createPendingTx({
+    await utils.createPendingTx({
       txHash,
       subject: 'add-project',
       data: [req.body.proyectoTitle, clientAddress, expediente, req.body.oc]
@@ -83,11 +77,11 @@ router.get('/get', verifyToken, async (req, res) => {
         req.user.address === process.env.ADMINADDRESS
       ) {
         response.push({
-          title: hexToAscii(projectDetails[2]),
+          title: utils.hexToAscii(projectDetails[2]),
           clientAddress: projectDetails[1],
-          clientName: hexToAscii(userName[0]),
+          clientName: utils.hexToAscii(userName[0]),
           expediente: allProjects[i],
-          oc: hexToAscii(projectDetails[3])
+          oc: utils.hexToAscii(projectDetails[3])
         });
       }
     }
@@ -105,7 +99,7 @@ router.get('/get', verifyToken, async (req, res) => {
       ) {
         response.push({
           title: pendingTx[y].data[0],
-          clientName: hexToAscii(userName[0]),
+          clientName: utils.hexToAscii(userName[0]),
           clientAddress: pendingTx[y].data[1],
           expediente: pendingTx[y].data[2],
           tx: pendingTx[y].txHash,
@@ -119,6 +113,23 @@ router.get('/get', verifyToken, async (req, res) => {
   } catch (e) {
     console.log(e);
     res.status(500).json({ error: e.message });
+  }
+});
+
+router.post('/close/:expediente', verifyToken, async (req, res) => {
+  try {
+    const { address, privateKey } = await utils.getKeys(req.body);
+
+    const contract = new Contract({ privateKey });
+    const txHash = await contract.sendDataToContract({
+      fromAddress: address,
+      method: 'changeProjectStatus',
+      data: [req.params.expediente]
+    });
+
+    res.json(txHash);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
   }
 });
 
@@ -137,11 +148,11 @@ router.get('/getOne', verifyToken, async (req, res) => {
 
     res.json({
       active: result[0],
-      clientName: hexToAscii(userName[0]),
+      clientName: utils.hexToAscii(userName[0]),
       clientAddress: result[1],
       expediente: req.query.expediente,
-      title: hexToAscii(result[2]),
-      oc: hexToAscii(result[3]),
+      title: utils.hexToAscii(result[2]),
+      oc: utils.hexToAscii(result[3]),
       processContracts: result[4]
     });
   } catch (e) {
@@ -152,7 +163,7 @@ router.get('/getOne', verifyToken, async (req, res) => {
 
 router.post('/close', verifyToken, async (req, res) => {
   try {
-    const { address, privateKey } = await getKeys(req.body);
+    const { address, privateKey } = await utils.getKeys(req.body);
 
     const contract = new Contract({ privateKey });
     const txHash = await contract.sendDataToContract({
@@ -170,7 +181,7 @@ router.post('/close', verifyToken, async (req, res) => {
 
 router.post('/assignProcess', verifyToken, async (req, res) => {
   try {
-    const { address, privateKey } = await getKeys(req.body);
+    const { address, privateKey } = await utils.getKeys(req.body);
     const contract = new Contract({ privateKey });
     const txHash = await contract.sendDataToContract({
       fromAddress: address,
@@ -178,7 +189,7 @@ router.post('/assignProcess', verifyToken, async (req, res) => {
       data: [Number(req.body.expediente), req.body.processContract]
     });
 
-    await createPendingTx({
+    await utils.createPendingTx({
       txHash,
       subject: 'assign-process',
       data: [req.body.expediente, req.body.processContract]

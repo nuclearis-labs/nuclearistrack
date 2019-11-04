@@ -1,14 +1,14 @@
 import React from 'react';
+import '../ball-atom.css';
 
 function Loader() {
   return (
     <div className="d-flex justify-content-center mt-5">
-      <div
-        className="spinner-border"
-        role="status"
-        style={{ width: '3rem', height: '3rem' }}
-      >
-        <span className="sr-only">Loading...</span>
+      <div class="la-ball-atom la-light la-2x">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
       </div>
     </div>
   );

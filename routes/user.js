@@ -1,11 +1,11 @@
 const express = require('express');
 const web3 = require('../services/web3');
-const { verifyToken } = require('../middleware/index');
-const wallet = require('../functions/wallet');
+
 const Contract = require('../classes/Contract');
+const { verifyToken } = require('../middleware/index');
 const UserModel = require('../models/user');
 const utils = require('../functions/utils');
-
+const wallet = require('../functions/wallet');
 const router = express.Router({ mergeParams: true });
 
 router.post('/', verifyToken, async (req, res) => {
@@ -191,6 +191,7 @@ router.get('/get', async (req, res) => {
           address: allUsers[i],
           email: users.email,
           type: details[1],
+          status: details[2],
           balance: web3.utils.fromWei(balance)
         });
       }
@@ -213,6 +214,23 @@ router.get('/getBalance/:address', (req, res) => {
     });
   } catch (e) {
     res.sendStatus(500);
+  }
+});
+
+router.post('/close/:address', verifyToken, async (req, res) => {
+  try {
+    const { address, privateKey } = await utils.getKeys(req.body);
+
+    const contract = new Contract({ privateKey });
+    const txHash = await contract.sendDataToContract({
+      fromAddress: address,
+      method: 'changeUserStatus',
+      data: [req.params.address]
+    });
+
+    res.json(txHash);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
   }
 });
 
@@ -251,6 +269,7 @@ router.get('/get/:address', async (req, res) => {
       userName: utils.hexToAscii(userDetails[0]),
       balance: web3.utils.fromWei(balance),
       type: userDetails[1],
+      status: userDetails[2],
       proyectos: response
     });
   } catch (e) {
