@@ -7,6 +7,7 @@ const UserModel = require('../models/user');
 const utils = require('../functions/utils');
 const wallet = require('../functions/wallet');
 const router = express.Router({ mergeParams: true });
+const txModel = require('../models/transaction');
 
 router.post('/', verifyToken, async (req, res) => {
   try {
@@ -165,44 +166,50 @@ router.post('/change', verifyToken, async (req, res) => {
 router.get('/get', async (req, res) => {
   try {
     const contract = new Contract();
-    const allUsers = await contract.getDataFromContract({
+    const contractUsers = await contract.getDataFromContract({
       method: 'getAllUsers'
     });
 
-    response = [];
+    await txModel.deleteMany({ data: { $in: contractUsers } });
 
-    if (allUsers.length !== 0) {
-      for (let i = 0; i < allUsers.length; i++) {
-        const users = await UserModel.findOneAndUpdate(
-          { address: allUsers[i] },
-          { status: true },
-          { new: true }
-        );
-
-        const details = await contract.getDataFromContract({
-          method: 'getUserDetails',
-          data: [allUsers[i]]
-        });
-
-        const balance = await web3.eth.getBalance(allUsers[i]);
-
-        response.push({
-          username: utils.hexToAscii(details[0]),
-          address: allUsers[i],
-          email: users.email,
-          type: details[1],
-          status: details[2],
-          balance: web3.utils.fromWei(balance)
-        });
+    const pendingUser = await txModel.aggregate([
+      {
+        $match: {
+          subject: 'add-user'
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          result: { $push: { $arrayElemAt: ['$data', 2] } }
+        }
       }
+    ]);
 
-      res.json(response);
-    } else {
-      res.json([]);
-    }
+    console.log(pendingUser);
+
+    const allUsers = Object.values(contractUsers).concat(
+      pendingUser.length > 0 ? pendingUser[0]['result'] : []
+    );
+
+    const allUsersDetails = allUsers.map(async address => {
+      const details = await contract.getDataFromContract({
+        method: 'getUserDetails',
+        data: [address]
+      });
+
+      return {
+        name: utils.hexToAscii(details[0]),
+        type: details[1],
+        status: details[2],
+        address
+      };
+    });
+    Promise.all(allUsersDetails).then(userDetails => {
+      res.json(userDetails);
+    });
   } catch (e) {
     console.log(e);
-
     res.status(500).json({ error: e.message });
   }
 });

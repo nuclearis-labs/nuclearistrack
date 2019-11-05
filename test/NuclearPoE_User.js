@@ -9,7 +9,6 @@ const web3 = require('web3');
 
 contract('User Contracts', accounts => {
   let instance;
-  let userInstance;
   before(async () => {
     instance = await NuclearPoE.deployed();
   });
@@ -43,7 +42,28 @@ contract('User Contracts', accounts => {
     await truffleAssert.passes(instance.user(accounts[1]));
   });
 
-  after(async () => {
-    await instance.kill({ from: accounts[0] });
+  it('EVENT: Change User Status', async () => {
+    const result = await instance.changeUserStatus(accounts[1], {
+      from: accounts[0]
+    });
+    truffleAssert.eventEmitted(result, 'ChangeUserStatus');
+  });
+
+  it('REVERT: Change User Status of non existant user', async () => {
+    await truffleAssert.reverts(
+      instance.changeUserStatus(accounts[7], {
+        from: accounts[0]
+      }),
+      'User does not exist or paused'
+    );
+  });
+
+  it('REVERT: Change User Status as non owner', async () => {
+    await truffleAssert.reverts(
+      instance.changeUserStatus(accounts[2], {
+        from: accounts[1]
+      }),
+      'Ownable: caller is not the owner.'
+    );
   });
 });

@@ -41,12 +41,14 @@ contract('Add Document', accounts => {
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
       web3.utils.asciiToHex('-31,324234234'),
       web3.utils.asciiToHex('-54,324234234'),
+      'Este es un comentario',
       { from: accounts[2] }
     );
 
     truffleAssert.eventEmitted(result, 'AddDocument');
+    assert.equal(1, await instance.docNumber());
   });
-  it('EVENT: Add a document as non-supplier', async () => {
+  it('REVERT: Add a document as non-supplier', async () => {
     await truffleAssert.reverts(
       processInstance.addDocument(
         '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
@@ -55,6 +57,7 @@ contract('Add Document', accounts => {
         '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
         web3.utils.asciiToHex('-31,324234234'),
         web3.utils.asciiToHex('-54,324234234'),
+        'Este es un comentario',
         { from: accounts[0] }
       ),
       'Has to be supplier of project'
@@ -69,14 +72,11 @@ contract('Add Document', accounts => {
         '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
         web3.utils.asciiToHex('-31,324234234'),
         web3.utils.asciiToHex('-54,324234234'),
+        'Este es un comentario',
         { from: accounts[2] }
       ),
       'Document already created'
     );
-  });
-
-  after(async () => {
-    await instance.kill({ from: accounts[0] });
   });
 });
 
@@ -110,69 +110,73 @@ contract('Find Document', accounts => {
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
       web3.utils.asciiToHex('-31,324234234'),
       web3.utils.asciiToHex('-54,324234234'),
+      'Este es un comentario',
       { from: accounts[2] }
     );
   });
   it('Find a document', async () => {
-    const result = await processInstance.findDocument(
+    const result = await processInstance.getDocument(
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd'
     );
     assert.equal(
-      result[2],
-      '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
-      'Document record does not match requested document'
+      result[0],
+      '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd'
     );
   });
   it('REVERT: Find a non-existent document', async () => {
     await truffleAssert.reverts(
-      processInstance.findDocument(
+      processInstance.getDocument(
         '0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
-      )
+      ),
+      'Document does not exist'
     );
-  });
-  after(async () => {
-    await instance.kill({ from: accounts[0] });
   });
 });
 
-/*
 contract('Return Documents', accounts => {
   let instance;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    const result = await instance.createProject(
+    await instance.createUser(accounts[1], 0, web3.utils.asciiToHex('NA-SA'));
+    await instance.createUser(accounts[2], 1, web3.utils.asciiToHex('IMECO'));
+    await instance.createProject(
       41955,
-      web3.utils.asciiToHex('Conjunto Soporte'),
       accounts[1],
-      web3.utils.asciiToHex('NA-SA')
+      web3.utils.asciiToHex('Conjunto Soporte'),
+      web3.utils.asciiToHex('234342 / 3453453')
     );
-    instance = await Project.at(result.logs[0].args[0]);
 
-    await instance.addProcess(
+    const result = await instance.createProcess(
       accounts[2],
-      web3.utils.asciiToHex('Mecanizado'),
-      web3.utils.asciiToHex('BGH')
+      web3.utils.asciiToHex('Mecanizado')
     );
-    await instance.approveProject({ from: accounts[1] });
-    await instance.addDocument(
-      accounts[2],
+
+    processAddress = result.logs[0].args[0];
+    processInstance = await Process.at(processAddress);
+
+    await processInstance.addDocument(
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
-      web3.utils.asciiToHex('Certificado'),
+      12,
+      20,
+      '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
+      web3.utils.asciiToHex('-31,324234234'),
+      web3.utils.asciiToHex('-54,324234234'),
+      'Este es un comentario',
       { from: accounts[2] }
     );
-    await instance.addDocument(
-      accounts[2],
-      '0xa31fe9656fc8d3a459e623dc8204e6d0268f8df56d734dac3ca3262edb5db883',
-      web3.utils.asciiToHex('Certificado'),
+    await processInstance.addDocument(
+      '0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+      12,
+      20,
+      '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
+      web3.utils.asciiToHex('-31,324234234'),
+      web3.utils.asciiToHex('-54,324234234'),
+      'Este es un comentario',
       { from: accounts[2] }
     );
   });
   it('Return 2 document hashes', async () => {
-    const result = await instance.returnDocument();
+    const result = await processInstance.getAllDocuments();
     assert.lengthOf(result, 2, 'Result should be array of 2 document hashes');
   });
-  after(async () => {
-    await instance.kill({ from: accounts[0] });
-  });
 });
-*/

@@ -1,4 +1,4 @@
-const bip38 = require('bip38');
+/* const bip38 = require('bip38');
 const AssertionError = require('assert').AssertionError;
 
 try {
@@ -11,3 +11,16 @@ try {
     console.log('Hashes not equal');
   }
 }
+
+
+const pdf = require('./functions/pdf');
+
+const fs = require('fs');
+
+const buffer = fs.readFileSync('cert.pdf');
+
+pdf
+  .addDocNumber({ buffer, docNumber: 'B-001' })
+  .then(result => console.log(result))
+  .catch(e => console.error(e));
+ */

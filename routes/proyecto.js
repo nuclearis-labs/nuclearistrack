@@ -51,65 +51,53 @@ router.get('/getDocNumber', verifyToken, async (req, res) => {
 router.get('/get', verifyToken, async (req, res) => {
   try {
     const contract = new Contract();
-    const allProjects = await contract.getDataFromContract({
+    const contractProjects = await contract.getDataFromContract({
       method: 'getAllProjects'
     });
 
-    response = [];
-    for (let i = 0; i < allProjects.length; i++) {
-      const projectDetails = await contract.getDataFromContract({
+    await txModel.deleteMany({ data: { $in: contractProjects } });
+    const pendingProjects = await txModel.aggregate([
+      {
+        $match: {
+          subject: 'add-project'
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          result: { $push: { $arrayElemAt: ['$data', 2] } }
+        }
+      }
+    ]);
+
+    const allProjects = Object.values(contractProjects).concat(
+      pendingProjects.length > 0 ? pendingProjects[0]['result'] : []
+    );
+
+    const allProjectsDetails = allProjects.map(async id => {
+      const details = await contract.getDataFromContract({
         method: 'getProjectDetails',
-        data: [allProjects[i]]
+        data: [id]
       });
-
-      await txModel.findOneAndRemove({
-        subject: 'add-project',
-        data: { $in: allProjects[i] }
-      });
-
-      const userName = await contract.getDataFromContract({
-        method: 'getUserDetails',
-        data: [projectDetails[1]]
-      });
-
       if (
-        projectDetails[1] === req.user.address ||
+        details[1] === req.user.address ||
         req.user.address === process.env.ADMINADDRESS
-      ) {
-        response.push({
-          title: utils.hexToAscii(projectDetails[2]),
-          clientAddress: projectDetails[1],
-          clientName: utils.hexToAscii(userName[0]),
-          expediente: allProjects[i],
-          oc: utils.hexToAscii(projectDetails[3])
-        });
-      }
-    }
+      )
+        return {
+          status: details[0],
+          clientAddress: details[1],
+          clientName: utils.hexToAscii(details[2]),
+          title: utils.hexToAscii(details[3]),
+          oc: utils.hexToAscii(details[4]),
+          processContracts: details[5],
+          id
+        };
+      return {};
+    });
 
-    const pendingTx = await txModel.find({ subject: 'add-project' });
-    for (let y = 0; y < pendingTx.length; y++) {
-      const userName = await contract.getDataFromContract({
-        method: 'getUserDetails',
-        data: [pendingTx[y].data[1]]
-      });
-
-      if (
-        pendingTx[y].data[1] === req.user.address ||
-        pendingTx[y].data[1] === process.env.ADMINADDRESS
-      ) {
-        response.push({
-          title: pendingTx[y].data[0],
-          clientName: utils.hexToAscii(userName[0]),
-          clientAddress: pendingTx[y].data[1],
-          expediente: pendingTx[y].data[2],
-          tx: pendingTx[y].txHash,
-          oc: pendingTx[y].data[3],
-          status: 'pending'
-        });
-      }
-    }
-
-    res.json(response);
+    Promise.all(allProjectsDetails).then(projectDetails => {
+      res.json(projectDetails);
+    });
   } catch (e) {
     console.log(e);
     res.status(500).json({ error: e.message });
@@ -141,38 +129,15 @@ router.get('/getOne', verifyToken, async (req, res) => {
       data: [req.query.expediente]
     });
 
-    const userName = await contract.getDataFromContract({
-      method: 'getUserDetails',
-      data: [result[1]]
-    });
-
     res.json({
       active: result[0],
-      clientName: utils.hexToAscii(userName[0]),
+      clientName: utils.hexToAscii(result[2]),
       clientAddress: result[1],
       expediente: req.query.expediente,
-      title: utils.hexToAscii(result[2]),
-      oc: utils.hexToAscii(result[3]),
-      processContracts: result[4]
+      title: utils.hexToAscii(result[3]),
+      oc: utils.hexToAscii(result[4]),
+      processContracts: result[5]
     });
-  } catch (e) {
-    console.log(e);
-    res.json({ error: e.message });
-  }
-});
-
-router.post('/close', verifyToken, async (req, res) => {
-  try {
-    const { address, privateKey } = await utils.getKeys(req.body);
-
-    const contract = new Contract({ privateKey });
-    const txHash = await contract.sendDataToContract({
-      fromAddress: address,
-      method: 'closeProject',
-      data: [Number(req.query.expediente)]
-    });
-
-    res.json(txHash);
   } catch (e) {
     console.log(e);
     res.json({ error: e.message });

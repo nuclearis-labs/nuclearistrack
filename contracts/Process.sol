@@ -5,7 +5,6 @@ import "./NuclearPoE.sol";
 contract Process {
 
     address private NuclearPoEAddress;
-    address private moAddress;
     bytes32 private processName;
     address private supplierAddress;
 
@@ -21,24 +20,17 @@ contract Process {
     }
 
     bytes32[] public allDocuments;
-
     mapping (bytes32 => Document) private document;
 
     event AddDocument();
-
-    modifier onlyMain() {
-        require(msg.sender == NuclearPoEAddress, 'Has to be NuclearPoE Contract');
-        _;
-    }
 
     modifier onlySupplier() {
         require(msg.sender == supplierAddress, 'Has to be supplier of project');
         _;
     }
 
-    constructor (address _moAddress, address _supplierAddress, bytes32 _processName) public {
+    constructor (address _supplierAddress, bytes32 _processName) public {
         NuclearPoEAddress = msg.sender;
-        moAddress = _moAddress;
         processName = _processName;
         supplierAddress = _supplierAddress;
     }
@@ -54,18 +46,20 @@ contract Process {
         ) external onlySupplier() {
         require(document[_hash].mineTime == 0, "Document already created");
 
-        NuclearPoE main = NuclearPoE(NuclearPoEAddress);
-        uint docNumber = main.incrementDocNumber(address(this));
+       NuclearPoE main = NuclearPoE(NuclearPoEAddress);
 
-        document[_hash] = Document(_latitude, _longitude, _storageHash, _storageFunction, _storageSize, docNumber, now, _comment);
+        document[_hash] = Document(_latitude, _longitude, _storageHash, _storageFunction, _storageSize, main.docNumber(), now, _comment);
         allDocuments.push(_hash);
+
+        main.incrementDocNumber(address(this));
 
         emit AddDocument();
     }
 
-    function getDocument(bytes32 _hash) external view returns (bytes32, bytes32, uint, uint, string memory) {
+    function getDocument(bytes32 _hash) external view returns (bytes32, bytes32, bytes32, uint, uint, string memory) {
         require(document[_hash].mineTime != 0, "Document does not exist");
         return (
+            _hash,
             document[_hash].latitude,
             document[_hash].longitude,
             document[_hash].docNumber,
@@ -83,8 +77,8 @@ contract Process {
             );
     }
 
-    function getDetails() external view returns (address, address, address, bytes32, bytes32[] memory, address) {
-        return (NuclearPoEAddress, moAddress, supplierAddress, processName, allDocuments, address(this));
+    function getDetails() external view returns (address, address, bytes32, bytes32[] memory, address) {
+        return (NuclearPoEAddress, supplierAddress, processName, allDocuments, address(this));
     }
 
     function getAllDocuments() external view returns(bytes32[] memory) {

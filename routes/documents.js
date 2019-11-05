@@ -9,6 +9,7 @@ const { verifyToken } = require('../middleware/index');
 const { saveToIPFS, getFromIPFS } = require('../services/ipfs');
 const { createSHA256 } = require('../functions/hash');
 const utils = require('../functions/utils');
+const { addDocNumber } = require('../functions/pdf');
 
 const processABI = JSON.parse(fs.readFileSync('build/contracts/Process.json'))
   .abi;
@@ -25,12 +26,12 @@ router.post('/verify', upload.single('file'), async (req, res) => {
     });
 
     res.json({
-      docNumber: details[2],
-      mineTime: details[3],
-      latitude: utils.hexToAscii(details[0]),
-      longitude: utils.hexToAscii(details[1]),
+      docNumber: details[3],
+      mineTime: details[4],
+      latitude: utils.hexToAscii(details[1]),
+      longitude: utils.hexToAscii(details[2]),
       documentHash,
-      comment: details[4]
+      comment: details[5]
     });
   } catch (e) {
     console.log(e);
@@ -47,25 +48,32 @@ router.post('/upload', verifyToken, upload.single('file'), async (req, res) => {
     const longitude = utils.asciiToHex(req.body.longitude);
     const contractAddress = utils.toChecksumAddress(req.query.contract);
 
-    const documentHash = createSHA256(req.file.buffer);
+    const NuclearPoEContract = new Contract();
+    const rawDocNumber = await NuclearPoEContract.getDataFromContract({
+      method: 'docNumber'
+    });
 
-    const storage = await saveToIPFS(req.file.buffer);
+    const FileBufferWithDocNumber = await addDocNumber({
+      buffer: req.file.buffer,
+      docNumber: `B-${rawDocNumber}`
+    });
+
+    const documentHash = createSHA256(FileBufferWithDocNumber);
+
+    const storage = await saveToIPFS(FileBufferWithDocNumber);
     const hexStorage = bs58.decode(storage).toString('hex');
 
     const storageFunction = hexStorage.substr(0, 2);
     const storageSize = hexStorage.substr(2, 2);
     const storageHash = hexStorage.substr(4);
-    console.log(storageFunction);
-    console.log(storageSize);
-    console.log(storageHash);
 
-    const contract = new Contract({
+    const ProcessContract = new Contract({
       privateKey,
       abi: processABI,
       contractAddress
     });
 
-    const txHash = await contract.sendDataToContract({
+    const txHash = await ProcessContract.sendDataToContract({
       fromAddress: address,
       method: 'addDocument',
       data: [
@@ -82,7 +90,7 @@ router.post('/upload', verifyToken, upload.single('file'), async (req, res) => {
     await utils.createPendingTx({
       txHash,
       subject: 'add-document',
-      data: [documentHash]
+      data: [documentHash, `B-${rawDocNumber}`]
     });
 
     res.json(txHash);
@@ -108,10 +116,10 @@ router.get('/get', async (req, res) => {
       });
 
       documents.push({
-        docNumber: details[2],
-        mineTime: details[3],
-        latitude: utils.hexToAscii(details[0]),
-        longitude: utils.hexToAscii(details[1]),
+        docNumber: details[3],
+        mineTime: details[4],
+        latitude: utils.hexToAscii(details[1]),
+        longitude: utils.hexToAscii(details[2]),
         documentHash: result[i]
       });
     }
@@ -147,14 +155,14 @@ router.get('/getOne', async (req, res) => {
     const file = await getFromIPFS(storageHash);
 
     res.json({
-      docNumber: details[2],
-      mineTime: details[3],
-      latitude: utils.hexToAscii(details[0]),
-      longitude: utils.hexToAscii(details[1]),
+      docNumber: details[3],
+      mineTime: details[4],
+      latitude: utils.hexToAscii(details[1]),
+      longitude: utils.hexToAscii(details[2]),
       documentHash,
       storageHash,
       fileBuffer: file[0].content.toString('base64'),
-      comment: details[4]
+      comment: details[5]
     });
   } catch (e) {
     res.status(404).json({ error: e.message });

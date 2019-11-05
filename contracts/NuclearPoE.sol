@@ -51,21 +51,22 @@ contract NuclearPoE is Ownable {
     event CreateProject();
     event CreateUser();
     event CreateProcess(address ProcessContractAddress);
-    event CloseProject();
+    event CloseProject(uint id);
+    event ChangeUserStatus(address UserAddress, State UserState);
 
     function createProject(
-    uint _expediente,
-    address _clientAddress,
-    bytes32 title,
-    bytes32 oc
+        uint _id,
+        address _clientAddress,
+        bytes32 title,
+        bytes32 oc
     ) external onlyOwner() onlyExistingUser(_clientAddress) {
-        require(project[_expediente].status == State.Null, "Project already created or closed");
+        require(project[_id].status == State.Null, "Project already created or closed");
         require(user[_clientAddress].userType == Type.Client, "User has to be Client Type");
 
         address[] memory processContracts = new address[](0);
-        project[_expediente] = Project(State.Created, _clientAddress, title, oc, processContracts);
-        clientProjects[_clientAddress].push(_expediente);
-        projectsArray.push(_expediente);
+        project[_id] = Project(State.Created, _clientAddress, title, oc, processContracts);
+        clientProjects[_clientAddress].push(_id);
+        projectsArray.push(_id);
 
         emit CreateProject();
     }
@@ -82,32 +83,35 @@ contract NuclearPoE is Ownable {
     function changeUserStatus(address _userAddress) external onlyOwner() onlyExistingUser(_userAddress) {
         if(user[_userAddress].status == State.Created) user[_userAddress].status = State.Closed;
         else user[_userAddress].status = State.Created;
+
+        emit ChangeUserStatus(_userAddress, user[_userAddress].status);
     }
 
     function createProcess(address _supplierAddress, bytes32 _processName) external onlyOwner() onlyExistingUser(_supplierAddress) {
         require(user[_supplierAddress].userType == Type.Supplier, "User has to be Supplier Type");
 
-        address ProcessContractAddress = address(new Process(msg.sender, _supplierAddress, _processName));
+        address ProcessContractAddress = address(new Process(_supplierAddress, _processName));
         processContractsArray.push(ProcessContractAddress);
 
         emit CreateProcess(ProcessContractAddress);
     }
 
-    function addProcessToProject(uint _expediente, address _processContract) external onlyOwner() {
-        require(project[_expediente].status == State.Created, "Project does not exist or is closed");
+    function addProcessToProject(uint _id, address _processContract) external onlyOwner() {
+        require(project[_id].status == State.Created, "Project does not exist or is closed");
 
-        project[_expediente].processContracts.push(_processContract);
+        project[_id].processContracts.push(_processContract);
     }
 
-    function changeProjectStatus(uint _expediente) external onlyOwner() {
-        require(project[_expediente].status == State.Created, "Project does not exist or is already closed");
+    function changeProjectStatus(uint _id) external onlyOwner() {
+        require(project[_id].status == State.Created, "Project does not exist or is already closed");
 
-        if(project[_expediente].status == State.Created) project[_expediente].status = State.Closed;
-        else project[_expediente].status = State.Created;
+        if(project[_id].status == State.Created) project[_id].status = State.Closed;
+        else project[_id].status = State.Created;
 
-        emit CloseProject();
+        emit CloseProject(_id);
     }
 
+    // Receives input from corresponding Process Contract and returns new Doc Number
     function incrementDocNumber(address _processAddress) external onlyProcessContract(_processAddress) returns(uint) {
         docNumber++;
         return docNumber;
@@ -117,8 +121,8 @@ contract NuclearPoE is Ownable {
         return processContractsArray;
     }
 
-    function getProcessContractsByProject(uint _expediente) external view returns(address[] memory) {
-        return project[_expediente].processContracts;
+    function getProcessContractsByProject(uint _id) external view returns(address[] memory) {
+        return project[_id].processContracts;
     }
 
     function getAllProjects() external view returns(uint[] memory) {
@@ -141,13 +145,16 @@ contract NuclearPoE is Ownable {
         return (clientProjects[_address]);
     }
 
-    function getProjectDetails(uint _expediente) external view returns(State, address, bytes32, bytes32, address[] memory) {
+    function getProjectDetails(uint _id) external view returns(State, address, bytes32, bytes32, bytes32, address[] memory) {
+        address clientAddress = project[_id].clientAddress;
+        bytes32 clientName = user[clientAddress].name;
         return (
-            project[_expediente].status,
-            project[_expediente].clientAddress,
-            project[_expediente].title,
-            project[_expediente].oc,
-            project[_expediente].processContracts);
+            project[_id].status,
+            project[_id].clientAddress,
+            clientName,
+            project[_id].title,
+            project[_id].oc,
+            project[_id].processContracts);
     }
 
 }

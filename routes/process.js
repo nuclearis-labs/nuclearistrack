@@ -4,6 +4,7 @@ const fs = require('fs');
 const Contract = require('../classes/Contract');
 const { verifyToken } = require('../middleware/index');
 const utils = require('../functions/utils');
+const txModel = require('../models/transaction');
 
 const processABI = JSON.parse(fs.readFileSync('build/contracts/Process.json'))
   .abi;
@@ -53,17 +54,16 @@ router.get('/getOne', async (req, res) => {
 
     const userName = await contract.getDataFromContract({
       method: 'getUserDetails',
-      data: [details[2]]
+      data: [details[1]]
     });
 
     res.json({
       NuclearPoEAddress: details[0],
-      MOAddress: details[1],
-      supplierAddress: details[2],
+      supplierAddress: details[1],
       supplierName: utils.hexToAscii(userName[0]),
-      processName: utils.hexToAscii(details[3]),
-      allDocuments: details[4],
-      contractAddress: details[5]
+      processName: utils.hexToAscii(details[2]),
+      allDocuments: details[3],
+      contractAddress: details[4]
     });
   } catch (e) {
     console.log(e);
@@ -76,36 +76,37 @@ router.get('/getByExpediente', async (req, res) => {
   try {
     const contract = new Contract();
 
-    const details = await contract.getDataFromContract({
+    const processContractsByExpediente = await contract.getDataFromContract({
       method: 'getProcessContractsByProject',
       data: [req.query.expediente]
     });
 
-    let response = [];
-    for (let i = 0; i < details.length; i++) {
-      const process = new Contract({
-        abi: processABI,
-        contractAddress: details[i]
-      });
-      let result = await process.getDataFromContract({
-        method: 'getDetails'
-      });
-      const userName = await contract.getDataFromContract({
-        method: 'getUserDetails',
-        data: [result[2]]
-      });
-      response.push({
-        NuclearPoEAddress: result[0],
-        MOAddress: result[1],
-        supplierAddress: result[2],
-        supplierName: utils.hexToAscii(userName[0]),
-        processName: utils.hexToAscii(result[3]),
-        allDocuments: result[4],
-        contractAddress: result[5]
-      });
-    }
-
-    res.json(response);
+    const AssignmentDetails = processContractsByExpediente.map(
+      async processContractAddress => {
+        const process = new Contract({
+          abi: processABI,
+          contractAddress: processContractAddress
+        });
+        const details = await process.getDataFromContract({
+          method: 'getDetails'
+        });
+        const userName = await contract.getDataFromContract({
+          method: 'getUserDetails',
+          data: [details[1]]
+        });
+        return {
+          NuclearPoEAddress: details[0],
+          supplierAddress: details[1],
+          supplierName: utils.hexToAscii(userName[0]),
+          processName: utils.hexToAscii(details[2]),
+          allDocuments: details[3],
+          contractAddress: details[4]
+        };
+      }
+    );
+    Promise.all(AssignmentDetails).then(details => {
+      res.json(details);
+    });
   } catch (e) {
     console.log(e);
 
@@ -113,37 +114,51 @@ router.get('/getByExpediente', async (req, res) => {
   }
 });
 
-router.get('/get', async (req, res) => {
+router.get('/get', verifyToken, async (req, res) => {
   try {
     const contract = new Contract();
-
-    const result = await contract.getDataFromContract({
+    const processContracts = await contract.getDataFromContract({
       method: 'getAllProcessContracts'
     });
 
-    let resultProcessed = [];
-    for (let i = 0; i < result.length; i++) {
-      const process = new Contract({
+    const allProcessDetails = processContracts.map(async address => {
+      const processContract = new Contract({
         abi: processABI,
-        contractAddress: result[i]
+        contractAddress: address
+      });
+      const details = await processContract.getDataFromContract({
+        method: 'getDetails'
       });
 
-      const details = await process.getDataFromContract({
-        method: 'getDetails'
+      await txModel.deleteMany({
+        subject: 'add-process',
+        data: { $in: details[1] }
       });
 
       const userName = await contract.getDataFromContract({
         method: 'getUserDetails',
-        data: [details[2]]
+        data: [details[1]]
       });
-      resultProcessed.push({
-        supplierAddress: details[2],
-        supplierName: utils.hexToAscii(userName[0]),
-        processName: utils.hexToAscii(details[3]),
-        contractAddress: details[5]
-      });
-    }
-    res.json(resultProcessed);
+
+      if (
+        details[1] === req.user.address ||
+        req.user.address === process.env.ADMINADDRESS
+      )
+        return {
+          supplierAddress: details[1],
+          supplierName: utils.hexToAscii(userName[0]),
+          processName: utils.hexToAscii(details[2]),
+          allDocuments: details[3],
+          processContracts: details[4]
+        };
+      return {};
+    });
+
+    const pendingTx = await txModel.find({ subject: 'add-process' });
+
+    Promise.all(allProcessDetails).then(processDetails => {
+      res.json(processDetails.concat(pendingTx));
+    });
   } catch (e) {
     console.log(e);
 
