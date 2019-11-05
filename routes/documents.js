@@ -10,6 +10,7 @@ const { saveToIPFS, getFromIPFS } = require('../services/ipfs');
 const { createSHA256 } = require('../functions/hash');
 const utils = require('../functions/utils');
 const { addDocNumber } = require('../functions/pdf');
+const niv = require('../services/Validator');
 
 const processABI = JSON.parse(fs.readFileSync('build/contracts/Process.json'))
   .abi;
@@ -17,22 +18,35 @@ const router = express.Router({ mergeParams: true });
 
 router.post('/verify', upload.single('file'), async (req, res) => {
   try {
-    const contractAddress = utils.toChecksumAddress(req.query.contract);
-    const documentHash = createSHA256(req.file.buffer);
-    const contract = new Contract({ abi: processABI, contractAddress });
-    const details = await contract.getDataFromContract({
-      method: 'getDocument',
-      data: [documentHash]
-    });
+    const v = new niv.Validator(
+      { body: req.body, params: req.query },
+      {
+        'body.file': 'required|mime:pdf|size:5mb,1kb',
+        'query.contract': 'required|checksumAddress'
+      }
+    );
 
-    res.json({
-      docNumber: details[3],
-      mineTime: details[4],
-      latitude: utils.hexToAscii(details[1]),
-      longitude: utils.hexToAscii(details[2]),
-      documentHash,
-      comment: details[5]
-    });
+    const matched = await v.check();
+    if (!matched) {
+      res.status(422).send(v.errors);
+    } else {
+      const contractAddress = utils.toChecksumAddress(req.query.contract);
+      const documentHash = createSHA256(req.file.buffer);
+      const contract = new Contract({ abi: processABI, contractAddress });
+      const details = await contract.getDataFromContract({
+        method: 'getDocument',
+        data: [documentHash]
+      });
+
+      res.json({
+        docNumber: details[3],
+        mineTime: details[4],
+        latitude: utils.hexToAscii(details[1]),
+        longitude: utils.hexToAscii(details[2]),
+        documentHash,
+        comment: details[5]
+      });
+    }
   } catch (e) {
     console.log(e);
 
@@ -42,58 +56,76 @@ router.post('/verify', upload.single('file'), async (req, res) => {
 
 router.post('/upload', verifyToken, upload.single('file'), async (req, res) => {
   try {
-    const { address, privateKey } = await utils.getKeys(req.body);
+    const v = new Validator(
+      { body: req.body, query: req.query },
+      {
+        contract: 'required|checksumAddress',
+        latitude: 'required|ascii',
+        longitude: 'required|ascii',
+        file: 'required|mime:pdf|size:5mb,1kb',
+        email: 'required|email',
+        passphrase: 'required|ascii',
+        comment: 'required|ascii|length:140,3'
+      }
+    );
 
-    const latitude = utils.asciiToHex(req.body.latitude);
-    const longitude = utils.asciiToHex(req.body.longitude);
-    const contractAddress = utils.toChecksumAddress(req.query.contract);
+    const matched = await v.check();
+    if (!matched) {
+      res.status(422).send(v.errors);
+    } else {
+      const { address, privateKey } = await utils.getKeys(req.body);
 
-    const NuclearPoEContract = new Contract();
-    const rawDocNumber = await NuclearPoEContract.getDataFromContract({
-      method: 'docNumber'
-    });
+      const latitude = utils.asciiToHex(req.body.latitude);
+      const longitude = utils.asciiToHex(req.body.longitude);
+      const contractAddress = utils.toChecksumAddress(req.query.contract);
 
-    const FileBufferWithDocNumber = await addDocNumber({
-      buffer: req.file.buffer,
-      docNumber: `B-${rawDocNumber}`
-    });
+      const NuclearPoEContract = new Contract();
+      const rawDocNumber = await NuclearPoEContract.getDataFromContract({
+        method: 'docNumber'
+      });
 
-    const documentHash = createSHA256(FileBufferWithDocNumber);
+      const FileBufferWithDocNumber = await addDocNumber({
+        buffer: req.file.buffer,
+        docNumber: `B-${rawDocNumber}`
+      });
 
-    const storage = await saveToIPFS(FileBufferWithDocNumber);
-    const hexStorage = bs58.decode(storage).toString('hex');
+      const documentHash = createSHA256(FileBufferWithDocNumber);
 
-    const storageFunction = hexStorage.substr(0, 2);
-    const storageSize = hexStorage.substr(2, 2);
-    const storageHash = hexStorage.substr(4);
+      const storage = await saveToIPFS(FileBufferWithDocNumber);
+      const hexStorage = bs58.decode(storage).toString('hex');
 
-    const ProcessContract = new Contract({
-      privateKey,
-      abi: processABI,
-      contractAddress
-    });
+      const storageFunction = hexStorage.substr(0, 2);
+      const storageSize = hexStorage.substr(2, 2);
+      const storageHash = hexStorage.substr(4);
 
-    const txHash = await ProcessContract.sendDataToContract({
-      fromAddress: address,
-      method: 'addDocument',
-      data: [
-        documentHash,
-        Number(storageFunction),
-        Number(storageSize),
-        `0x${storageHash}`,
-        latitude,
-        longitude,
-        req.body.comment
-      ]
-    });
+      const ProcessContract = new Contract({
+        privateKey,
+        abi: processABI,
+        contractAddress
+      });
 
-    await utils.createPendingTx({
-      txHash,
-      subject: 'add-document',
-      data: [documentHash, `B-${rawDocNumber}`]
-    });
+      const txHash = await ProcessContract.sendDataToContract({
+        fromAddress: address,
+        method: 'addDocument',
+        data: [
+          documentHash,
+          Number(storageFunction),
+          Number(storageSize),
+          `0x${storageHash}`,
+          latitude,
+          longitude,
+          req.body.comment
+        ]
+      });
 
-    res.json(txHash);
+      await utils.createPendingTx({
+        txHash,
+        subject: 'add-document',
+        data: [documentHash, `B-${rawDocNumber}`]
+      });
+
+      res.json(txHash);
+    }
   } catch (e) {
     res.json({ error: e.message });
   }
@@ -132,38 +164,49 @@ router.get('/get', async (req, res) => {
 
 router.get('/getOne', async (req, res) => {
   try {
-    const documentHash = utils.isSHA256(req.query.hash);
-    const contractAddress = utils.toChecksumAddress(req.query.contract);
-    const contract = new Contract({ abi: processABI, contractAddress });
-
-    const details = await contract.getDataFromContract({
-      method: 'getDocument',
-      data: [documentHash]
-    });
-    const storageDetails = await contract.getDataFromContract({
-      method: 'getDocumentStorage',
-      data: [documentHash]
-    });
-
-    const storageHash = bs58.encode(
-      Buffer.from(
-        storageDetails[1] + storageDetails[2] + storageDetails[0].substr(2),
-        'hex'
-      )
+    const v = new Validator(
+      { body: req.body, query: req.query },
+      {
+        contract: 'required|checksumAddress',
+        hash: 'required|isSHA256'
+      }
     );
 
-    const file = await getFromIPFS(storageHash);
+    const matched = await v.check();
+    if (!matched) {
+      res.status(422).send(v.errors);
+    } else {
+      const contract = new Contract({ abi: processABI, contractAddress });
 
-    res.json({
-      docNumber: details[3],
-      mineTime: details[4],
-      latitude: utils.hexToAscii(details[1]),
-      longitude: utils.hexToAscii(details[2]),
-      documentHash,
-      storageHash,
-      fileBuffer: file[0].content.toString('base64'),
-      comment: details[5]
-    });
+      const details = await contract.getDataFromContract({
+        method: 'getDocument',
+        data: [documentHash]
+      });
+      const storageDetails = await contract.getDataFromContract({
+        method: 'getDocumentStorage',
+        data: [documentHash]
+      });
+
+      const storageHash = bs58.encode(
+        Buffer.from(
+          storageDetails[1] + storageDetails[2] + storageDetails[0].substr(2),
+          'hex'
+        )
+      );
+
+      const file = await getFromIPFS(storageHash);
+
+      res.json({
+        docNumber: details[3],
+        mineTime: details[4],
+        latitude: utils.hexToAscii(details[1]),
+        longitude: utils.hexToAscii(details[2]),
+        documentHash,
+        storageHash,
+        fileBuffer: file[0].content.toString('base64'),
+        comment: details[5]
+      });
+    }
   } catch (e) {
     res.status(404).json({ error: e.message });
   }
