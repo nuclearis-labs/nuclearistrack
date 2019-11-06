@@ -4,6 +4,7 @@ const wallet = require('../functions/wallet');
 const txModel = require('../models/transaction');
 const web3 = require('../services/web3');
 const Contract = require('../classes/Contract');
+const logger = require('../services/winston');
 
 module.exports.create = async (req, res) => {
   try {
@@ -13,8 +14,13 @@ module.exports.create = async (req, res) => {
       type: req.body.userType
     });
 
+    logger.info(`User ${db._id} created {"email":${req.body.newUserEmail}}`);
+
     res.status(200).json({ userID: db._id });
   } catch (e) {
+    logger.error(`User ${req.body.newUserEmail} Creation didn't worked out `, {
+      message: e.message
+    });
     res.status(400).json({ error: e.message });
   }
 };
@@ -67,6 +73,8 @@ module.exports.confirm = async (req, res) => {
       { new: true }
     );
 
+    logger.info(`User ${user._id} confirmed {"address":${newAddress}}`);
+
     res.json({
       username: db.username,
       email: db.email,
@@ -75,6 +83,8 @@ module.exports.confirm = async (req, res) => {
       txHash
     });
   } catch (e) {
+    logger.error(`User Confirmation ${user._id}`, { message: e.message });
+
     res.status(500).json({ error: e.message });
   }
 };
@@ -88,7 +98,7 @@ module.exports.restore = async (req, res) => {
 
     const newEncryptedPrivateKey = wallet.encryptBIP38(
       newPrivateKey,
-      newPassphrasereq.body.newPassphrase
+      req.body.newPassphrase
     );
 
     const newAddress = wallet.generateRSKAddress(newPrivateKey);
@@ -105,8 +115,15 @@ module.exports.restore = async (req, res) => {
       throw Error('No user with this mnemonic');
     }
 
+    logger.info(`User ${user._id} restored with mnemonic passphrase`);
+
     res.json(user);
   } catch (e) {
+    logger.error(
+      `User ${user._id} not able to restore with mnemonic passphrase`,
+      { message: e.message }
+    );
+
     res.status(400).json({ error: e.message });
   }
 };
@@ -114,25 +131,31 @@ module.exports.restore = async (req, res) => {
 module.exports.change = async (req, res) => {
   try {
     const user = await UserModel.findOne({
-      email: email,
+      email: req.body.email,
       address: { $ne: null }
     });
 
     const decryptedKey = await wallet.decryptBIP38(
       user.encryptedPrivateKey,
-      passphrase
+      req.body.passphrase
     );
     const encryptedPrivateKey = wallet.encryptBIP38(
       decryptedKey,
-      newPassphrase
+      req.body.newPassphrase
     );
 
     await UserModel.findByIdAndUpdate(user._id, {
       encryptedPrivateKey
     });
+    logger.info(`User ${user._id} changed passphrase`);
 
     res.sendStatus(200);
   } catch (e) {
+    logger.error(
+      `User ${user._id} not able to restore with mnemonic passphrase`,
+      { error: e.message }
+    );
+
     res.status(400).json({ error: e.message });
   }
 };
@@ -182,6 +205,8 @@ module.exports.get = async (req, res) => {
     });
   } catch (e) {
     console.log(e);
+    logger.error(`Couldn't retrieve userList`, { message: e.message });
+
     res.status(500).json({ error: e.message });
   }
 };
@@ -192,6 +217,10 @@ module.exports.getBalance = async (req, res) => {
       res.json(web3.utils.fromWei(balance));
     });
   } catch (e) {
+    logger.error(`Couldn't get balance of ${req.params.address} `, {
+      message: e.message
+    });
+
     res.sendStatus(500);
   }
 };
@@ -207,8 +236,13 @@ module.exports.close = async (req, res) => {
       data: [req.params.address]
     });
 
+    logger.info(`Paused User ${req.params.address}`);
+
     res.json(txHash);
   } catch (e) {
+    logger.error(`Couldn't pause User ${req.params.address}`, {
+      message: e.message
+    });
     res.status(400).json({ error: e.message });
   }
 };
@@ -252,6 +286,9 @@ module.exports.getOne = async (req, res) => {
       proyectos: response
     });
   } catch (e) {
+    logger.error(`Couldn't get user details ${req.params.address}`, {
+      message: e.message
+    });
     res.status(500).json({ error: e.message });
   }
 };

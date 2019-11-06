@@ -11,13 +11,14 @@ module.exports = {
   },
   userRestore: {
     'body.mnemonic': 'required|isValidMnemonic',
-    'body.newPassphrase': 'required|ascii|length:50,8|same:confirm_passphrase'
+    'body.newPassphrase':
+      'required|ascii|length:50,8|same:body.confirm_passphrase'
   },
   userChange: {
-    'body.passphrase': 'required|ascii|length:50,8',
+    'body.passphrase': 'required|ascii|length:50,3',
     'body.email': 'required|email',
     'body.newPassphrase':
-      'required|ascii|length:50,8|same:confirm_newPassphrase'
+      'required|ascii|length:50,4|same:body.confirm_newPassphrase'
   },
   userVerifyAddress: {
     'params.address': 'required|checksumAddress'

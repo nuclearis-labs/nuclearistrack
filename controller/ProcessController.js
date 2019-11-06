@@ -4,6 +4,7 @@ const txModel = require('../models/transaction');
 const fs = require('fs');
 const processABI = JSON.parse(fs.readFileSync('build/contracts/Process.json'))
   .abi;
+const logger = require('../services/winston');
 
 module.exports.create = async (req, res) => {
   try {
@@ -27,9 +28,16 @@ module.exports.create = async (req, res) => {
       data: [req.body.processTitle, supplierAddress]
     });
 
+    logger.info(`Process created `, {
+      title: req.body.processTitle,
+      supplier: req.body.supplierAddress
+    });
     res.json(txHash);
   } catch (e) {
-    console.log(e);
+    logger.error(`Process was not created`, {
+      title: req.body.processTitle,
+      supplier: req.body.supplierAddress
+    });
     res.status(500).json({ error: e.message });
   }
 };
@@ -60,8 +68,9 @@ module.exports.getOne = async (req, res) => {
       contractAddress: details[4]
     });
   } catch (e) {
-    console.log(e);
-
+    logger.error(`Process ${req.query.contract} could not be obtained `, {
+      message: e.message
+    });
     res.json({ error: e.message });
   }
 };
@@ -102,8 +111,9 @@ module.exports.getByID = async (req, res) => {
       res.json(details);
     });
   } catch (e) {
-    console.log(e);
-
+    logger.error(`ProcessListByID could not be obtained `, {
+      message: e.message
+    });
     res.json({ error: e.message });
   }
 };
@@ -154,8 +164,7 @@ module.exports.get = async (req, res) => {
       res.json(processDetails.concat(pendingTx));
     });
   } catch (e) {
-    console.log(e);
-
+    logger.error(`ProcessList could not be obtained `, { message: e.message });
     res.json({ error: e.message });
   }
 };

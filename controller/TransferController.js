@@ -1,6 +1,7 @@
 const Transaction = require('../classes/Transaction');
 const { getKeys } = require('../functions/utils');
 const web3 = require('../services/web3');
+const logger = require('../services/winston');
 
 module.exports.transfer = async (req, res) => {
   try {
@@ -29,8 +30,14 @@ module.exports.transfer = async (req, res) => {
 
     const txHash = await tx.send();
 
+    logger.info(`Transfered ${req.body.value} to ${req.body.to} `, {
+      txHash: txHash
+    });
     res.json({ txHash });
   } catch (e) {
+    logger.error(`Couldn't transfer ${req.body.value} to ${req.body.to} `, {
+      message: e.message
+    });
     res.status(400).json({ error: e.message });
   }
 };

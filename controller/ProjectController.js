@@ -1,6 +1,7 @@
 const Contract = require('../classes/Contract');
 const utils = require('../functions/utils');
 const txModel = require('../models/transaction');
+const logger = require('../services/winston');
 
 module.exports.create = async (req, res) => {
   try {
@@ -27,9 +28,11 @@ module.exports.create = async (req, res) => {
       ]
     });
 
+    logger.info(`Project ${req.body.expediente} created`);
+
     res.json(txHash);
   } catch (e) {
-    console.log(e);
+    logger.error(`Project ${req.body.expediente} was not created`);
     res.status(500).json({ error: e.message });
   }
 };
@@ -41,7 +44,7 @@ module.exports.getDocNumber = async (req, res) => {
 
     res.json(result);
   } catch (e) {
-    console.log(e);
+    logger.error(`Doc Number could not be retrieved `, { message: e.message });
     res.json({ error: e.message });
   }
 };
@@ -97,7 +100,8 @@ module.exports.get = async (req, res) => {
       res.json(projectDetails);
     });
   } catch (e) {
-    console.log(e);
+    logger.error(`ProjectList could not be obtained `, { message: e.message });
+
     res.status(500).json({ error: e.message });
   }
 };
@@ -112,9 +116,11 @@ module.exports.close = async (req, res) => {
       method: 'changeProjectStatus',
       data: [req.params.expediente]
     });
+    logger.info(`Project ${req.params.expediente} closed`);
 
     res.json(txHash);
   } catch (e) {
+    logger.error(`Project could not be closed `, { message: e.message });
     res.status(400).json({ error: e.message });
   }
 };
@@ -137,7 +143,9 @@ module.exports.getOne = async (req, res) => {
       processContracts: result[5]
     });
   } catch (e) {
-    console.log(e);
+    logger.error(`Project ${req.query.expediente} could not be obtained `, {
+      message: e.message
+    });
     res.json({ error: e.message });
   }
 };
@@ -157,10 +165,17 @@ module.exports.assignProcess = async (req, res) => {
       subject: 'assign-process',
       data: [req.body.expediente, req.body.processContract]
     });
+    logger.info(
+      `Process ${req.body.processContract} was assigned to project ${req.body.expediente} `
+    );
 
     res.json(txHash);
   } catch (e) {
-    console.log(e);
+    logger.error(
+      `Process ${req.body.processContract} could not be assigned to project ${req.body.expediente} `,
+      { message: e.message }
+    );
+
     res.json({ error: e.message });
   }
 };

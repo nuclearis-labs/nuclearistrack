@@ -1,0 +1,33 @@
+2019-11-06T20:08:23.488Z error: MongoNetworkError connect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:10:45.328Z error: MongoNetworkError connect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:10:58.700Z error: MongoNetworkError connect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:11:18.510Z error: MongoNetworkError connect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:13:20.494Z error: ReferenceError devDB is not defined
+2019-11-06T20:13:53.395Z error: ReferenceError devDB is not defined
+2019-11-06T20:26:21.886Z error: Couldn't connect to database
+2019-11-06T20:27:28.513Z error: Couldn't connect to databaseconnect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:27:46.065Z error: Couldn't connect to database connect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:29:22.044Z error: Couldn't connect to database connect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:29:30.132Z error: Couldn't connect to database connect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:29:52.241Z error: Couldn't connect to database connect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:30:06.072Z error: Couldn't connect to database connect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:30:24.084Z error: Couldn't connect to database connect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:30:45.417Z error: Couldn't connect to database connect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:31:13.777Z error: Couldn't connect to database connect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:31:37.108Z error: Couldn't connect to database connect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:32:06.154Z error: Couldn't connect to database connect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:32:28.871Z error: Couldn't connect to database connect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:32:50.338Z error: Couldn't connect to database connect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:33:21.946Z error: Couldn't connect to database connect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:33:31.365Z error: Couldn't connect to database connect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:33:43.475Z error: Couldn't connect to database connect ECONNREFUSED 127.0.0.1:27017
+2019-11-06T20:34:49.225Z error: Couldn't transfer 1 to 0x5a48e9a6bBB88958Eacd7d2c54f1fb70b8b3E845Returned error: the tx doesn't have the correct nonce. account has nonce of: 11 tx has nonce of: 10
+2019-11-06T20:36:06.660Z error: Couldn't transfer 1 to 0x5a48e9a6bBB88958Eacd7d2c54f1fb70b8b3E845Returned error: the tx doesn't have the correct nonce. account has nonce of: 14 tx has nonce of: 13
+2019-11-06T20:36:15.579Z error: Couldn't transfer 1 to 0x5a48e9a6bBB88958Eacd7d2c54f1fb70b8b3E845Returned error: the tx doesn't have the correct nonce. account has nonce of: 14 tx has nonce of: 13
+2019-11-06T20:36:21.455Z error: Couldn't transfer 1 to 0x5a48e9a6bBB88958Eacd7d2c54f1fb70b8b3E845Invalid JSON RPC response: ""
+2019-11-06T20:36:44.143Z error: Couldn't transfer 1 to 0x5a48e9a6bBB88958Eacd7d2c54f1fb70b8b3E845Returned error: the tx doesn't have the correct nonce. account has nonce of: 15 tx has nonce of: 14
+2019-11-06T20:36:49.690Z error: Couldn't transfer 1 to 0x5a48e9a6bBB88958Eacd7d2c54f1fb70b8b3E845Invalid JSON RPC response: ""
+2019-11-06T20:36:53.497Z error: Couldn't transfer 1 to 0x5a48e9a6bBB88958Eacd7d2c54f1fb70b8b3E845Returned error: the tx doesn't have the correct nonce. account has nonce of: 15 tx has nonce of: 14
+2019-11-06T20:36:59.865Z error: Couldn't transfer 1 to 0x5a48e9a6bBB88958Eacd7d2c54f1fb70b8b3E845Invalid JSON RPC response: ""
+2019-11-06T20:37:40.332Z error: Couldn't transfer 120 to 0x5a48e9a6bBB88958Eacd7d2c54f1fb70b8b3E845 Not sufficient funds
+2019-11-06T20:38:05.436Z error: Couldn't transfer 120 to 0x5a48e9a6bBB88958Eacd7d2c54f1fb70b8b3E845 Not sufficient funds

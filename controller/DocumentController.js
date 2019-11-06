@@ -7,12 +7,15 @@ const utils = require('../functions/utils');
 const { addDocNumber } = require('../functions/pdf');
 const processABI = JSON.parse(fs.readFileSync('build/contracts/Process.json'))
   .abi;
+const logger = require('../services/winston');
 
 module.exports.verify = async (req, res) => {
   try {
-    const contractAddress = utils.toChecksumAddress(req.query.contract);
     const documentHash = createSHA256(req.file.buffer);
-    const contract = new Contract({ abi: processABI, contractAddress });
+    const contract = new Contract({
+      abi: processABI,
+      contractAddress: req.query.contract
+    });
     const details = await contract.getDataFromContract({
       method: 'getDocument',
       data: [documentHash]
@@ -27,7 +30,10 @@ module.exports.verify = async (req, res) => {
       comment: details[5]
     });
   } catch (e) {
-    console.log(e);
+    logger.error(`Document could not be verified`, {
+      hash: documentHash,
+      contract: req.query.contract
+    });
     res.status(404).json({ error: e.message });
   }
 };
@@ -87,14 +93,19 @@ module.exports.upload = async (req, res) => {
 
     res.json(txHash);
   } catch (e) {
+    logger.error(`Document could not be uploaded `, {
+      documentHash
+    });
     res.json({ error: e.message });
   }
 };
 
 module.exports.get = async (req, res) => {
   try {
-    const contractAddress = utils.toChecksumAddress(req.query.contract);
-    const contract = new Contract({ abi: processABI, contractAddress });
+    const contract = new Contract({
+      abi: processABI,
+      contractAddress: req.query.contract
+    });
 
     const result = await contract.getDataFromContract({
       method: 'getAllDocuments'
@@ -118,21 +129,27 @@ module.exports.get = async (req, res) => {
 
     res.json(documents);
   } catch (e) {
+    logger.error(`DocumentList could not be obtained `, {
+      message: e.message
+    });
     res.status(404).json({ error: e.message });
   }
 };
 
 module.exports.getOne = async (req, res) => {
   try {
-    const contract = new Contract({ abi: processABI, contractAddress });
+    const contract = new Contract({
+      abi: processABI,
+      contractAddress: req.query.contract
+    });
 
     const details = await contract.getDataFromContract({
       method: 'getDocument',
-      data: [documentHash]
+      data: [req.query.hash]
     });
     const storageDetails = await contract.getDataFromContract({
       method: 'getDocumentStorage',
-      data: [documentHash]
+      data: [req.query.hash]
     });
 
     const storageHash = bs58.encode(
@@ -149,12 +166,15 @@ module.exports.getOne = async (req, res) => {
       mineTime: details[4],
       latitude: utils.hexToAscii(details[1]),
       longitude: utils.hexToAscii(details[2]),
-      documentHash,
+      documentHash: req.query.hash,
       storageHash,
       fileBuffer: file[0].content.toString('base64'),
       comment: details[5]
     });
   } catch (e) {
+    logger.error(`Document ${req.query.hash} could not be obtained `, {
+      message: e.message
+    });
     res.status(404).json({ error: e.message });
   }
 };

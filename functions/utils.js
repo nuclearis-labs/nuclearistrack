@@ -65,8 +65,6 @@ module.exports.getKeys = async ({ email, passphrase }) => {
   );
   const address = wallet.generateRSKAddress(privateKey);
 
-  console.log(address);
-
   return {
     address,
     privateKey

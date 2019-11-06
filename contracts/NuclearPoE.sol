@@ -44,7 +44,7 @@ contract NuclearPoE is Ownable {
     }
 
     modifier onlyExistingUser(address _address) {
-        require(user[_address].status == State.Created, "User does not exist or paused");
+        require(user[_address].status != State.Null, "User does not exist");
         _;
     }
 
