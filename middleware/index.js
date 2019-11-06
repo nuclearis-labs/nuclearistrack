@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const niv = require('../services/Validator.js');
 
 module.exports.asyncMiddleware = fn => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
@@ -19,4 +20,21 @@ module.exports.verifyToken = (req, res, next) => {
       res.sendStatus(403);
     }
   } else res.sendStatus(403);
+};
+
+module.exports.validateForm = rules => {
+  return (req, res, next) => {
+    const v = new niv.Validator(
+      { body: req.body, params: req.params, query: req.query },
+      rules
+    );
+
+    v.check().then(matched => {
+      if (!matched) {
+        res.status(422).send(v.errors);
+      } else {
+        next();
+      }
+    });
+  };
 };

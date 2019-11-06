@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const web3 = require('./web3');
 const bip39 = require('bip39');
 const { isSHA256 } = require('../functions/utils');
+const { getKeys } = require('../functions/utils');
 
 niv.extendMessages(
   {
@@ -49,7 +50,13 @@ niv.extend('savedRecord', async ({ value, args }) => {
 });
 
 niv.extend('sufficientFunds', async ({ value, args }) => {
-  const balance = await web3.eth.getBalance(args[0]);
+  console.log(args);
+
+  const { address, privateKey } = getKeys({
+    email: args[0],
+    passprase: args[1]
+  });
+  const balance = await web3.eth.getBalance(address);
   if (Number(web3.utils.fromWei(balance)) < Number(value)) {
     return false;
   }

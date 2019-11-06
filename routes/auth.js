@@ -3,46 +3,36 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 
-const { verifyToken } = require('../middleware/index');
+const { verifyToken, validateForm } = require('../middleware/index');
 const UserModel = require('../models/user');
 const wallet = require('../functions/wallet');
-const niv = require('../services/Validator');
+const rules = require('../services/validationRules');
 
-router.post('/', async (req, res) => {
+router.post('/', validateForm(rules.auth), async (req, res) => {
   try {
-    const v = new niv.Validator(req.body, {
-      email: 'required|email|savedRecord:User,email',
-      passphrase: 'required|ascii'
-    });
+    const user = await UserModel.findOne({ email: req.body.email });
 
-    const matched = await v.check();
-    if (!matched) {
-      res.status(422).send(v.errors);
-    } else {
-      const user = await UserModel.findOne({ email: req.body.email });
+    const decryptedKey = await wallet.decryptBIP38(
+      user.encryptedPrivateKey,
+      req.body.passphrase
+    );
 
-      const decryptedKey = await wallet.decryptBIP38(
-        user.encryptedPrivateKey,
-        req.body.passphrase
+    address = wallet.generateRSKAddress(decryptedKey);
+
+    if (user.address === address) {
+      jwt.sign(
+        {
+          userName: user.username,
+          userEmail: user.email,
+          userType: user.type,
+          address: user.address
+        },
+        process.env.JWT_SECRET,
+        (err, token) => {
+          if (err) throw Error();
+          else res.json({ token });
+        }
       );
-
-      address = wallet.generateRSKAddress(decryptedKey);
-
-      if (user.address === address) {
-        jwt.sign(
-          {
-            userName: user.username,
-            userEmail: user.email,
-            userType: user.type,
-            address: user.address
-          },
-          process.env.JWT_SECRET,
-          (err, token) => {
-            if (err) throw Error();
-            else res.json({ token });
-          }
-        );
-      }
     }
   } catch (e) {
     console.log(e);
@@ -51,15 +41,13 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.post('/current', verifyToken, async (req, res) => {
-  const v = new niv.Validator(req.headers, {
+router.post(
+  '/current',
+  verifyToken,
+  validateForm({
     authorization: 'required'
-  });
-
-  const matched = await v.check();
-  if (!matched) {
-    res.status(422).send(v.errors);
-  } else {
+  }),
+  async (req, res) => {
     const bearer = req.headers.authorization.split(' ');
     const bearerToken = bearer[1];
     req.token = bearerToken;
@@ -70,6 +58,6 @@ router.post('/current', verifyToken, async (req, res) => {
       res.json({});
     }
   }
-});
+);
 
 module.exports = router;
