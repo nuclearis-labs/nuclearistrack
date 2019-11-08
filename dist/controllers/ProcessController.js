@@ -11,20 +11,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const Contract = require('../classes/Contract');
-const utils = require('../functions/utils');
-const txModel = require('../models/transaction');
-const fs = require('fs');
-const processABI = JSON.parse(fs.readFileSync('build/contracts/Process.json'))
-    .abi;
+const Contract_1 = __importDefault(require("../classes/Contract"));
+const utils = __importStar(require("../config/utils"));
+const transaction_1 = __importDefault(require("../models/transaction"));
 const winston_1 = __importDefault(require("../config/winston"));
+const processABI = require('build/contracts/Process.json').abi;
 module.exports.create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { address, privateKey } = yield utils.getKeys(req.body);
         const processTitle = utils.asciiToHex(req.body.processTitle);
         const supplierAddress = utils.toChecksumAddress(req.body.supplierAddress);
-        const contract = new Contract({
+        const contract = new Contract_1.default({
             privateKey
         });
         const txHash = yield contract.sendDataToContract({
@@ -53,8 +58,8 @@ module.exports.create = (req, res) => __awaiter(void 0, void 0, void 0, function
 });
 module.exports.getOne = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const contract = new Contract();
-        const process = new Contract({
+        const contract = new Contract_1.default();
+        const process = new Contract_1.default({
             abi: processABI,
             contractAddress: req.query.contract
         });
@@ -83,13 +88,13 @@ module.exports.getOne = (req, res) => __awaiter(void 0, void 0, void 0, function
 });
 module.exports.getByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const contract = new Contract();
+        const contract = new Contract_1.default();
         const processContractsByExpediente = yield contract.getDataFromContract({
             method: 'getProcessContractsByProject',
             data: [req.query.expediente]
         });
         const AssignmentDetails = processContractsByExpediente.map((processContractAddress) => __awaiter(void 0, void 0, void 0, function* () {
-            const process = new Contract({
+            const process = new Contract_1.default({
                 abi: processABI,
                 contractAddress: processContractAddress
             });
@@ -122,19 +127,19 @@ module.exports.getByID = (req, res) => __awaiter(void 0, void 0, void 0, functio
 });
 module.exports.get = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const contract = new Contract();
+        const contract = new Contract_1.default();
         const processContracts = yield contract.getDataFromContract({
             method: 'getAllProcessContracts'
         });
         const allProcessDetails = processContracts.map((address) => __awaiter(void 0, void 0, void 0, function* () {
-            const processContract = new Contract({
+            const processContract = new Contract_1.default({
                 abi: processABI,
                 contractAddress: address
             });
             const details = yield processContract.getDataFromContract({
                 method: 'getDetails'
             });
-            yield txModel.deleteMany({
+            yield transaction_1.default.deleteMany({
                 subject: 'add-process',
                 data: { $in: details[1] }
             });
@@ -153,7 +158,7 @@ module.exports.get = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 };
             return {};
         }));
-        const pendingTx = yield txModel.find({ subject: 'add-process' });
+        const pendingTx = yield transaction_1.default.find({ subject: 'add-process' });
         Promise.all(allProcessDetails).then(processDetails => {
             res.json(processDetails.concat(pendingTx));
         });

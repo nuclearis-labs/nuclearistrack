@@ -1,14 +1,14 @@
-const Transaction = require('../classes/Transaction');
-const { getKeys } = require('../functions/utils');
-const web3 = require('../services/web3');
+import Transaction from '../classes/Transaction';
+import { getKeys } from '../config/utils';
+import web3 from '../config/web3';
 import logger from '../config/winston';
+import { Request, Response } from 'express';
 
-module.exports.transfer = async (req, res) => {
+export const transfer = async (req: Request, res: Response) => {
   try {
     const { address, privateKey } = await getKeys({
       email: req.body.email,
-      passphrase: req.body.passphrase,
-      coin: process.env.DEVIATIONCOIN
+      passphrase: req.body.passphrase
     });
 
     const balance = await web3.eth.getBalance(address);
@@ -23,9 +23,9 @@ module.exports.transfer = async (req, res) => {
     tx.prepareRawTx({
       value: req.body.value,
       to: req.body.to,
-      gaslimit: 4000000
+      gaslimit: '4000000'
     })
-      .sign(Buffer.from(privateKey, 'hex'))
+      .sign(privateKey)
       .serialize();
 
     const txHash = await tx.send();

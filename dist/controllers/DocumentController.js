@@ -11,21 +11,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs = require('fs');
-const bs58 = require('bs58');
-const Contract = require('../classes/Contract');
-const { saveToIPFS, getFromIPFS } = require('../services/ipfs');
-const { createSHA256 } = require('../functions/hash');
-const utils = require('../functions/utils');
-const { addDocNumber } = require('../functions/pdf');
-const processABI = JSON.parse(fs.readFileSync('build/contracts/Process.json'))
-    .abi;
+const bs58_1 = __importDefault(require("bs58"));
+const Contract_1 = __importDefault(require("../classes/Contract"));
+const ipfs_1 = require("../config/ipfs");
+const hash_1 = require("../config/hash");
+const utils = __importStar(require("../config/utils"));
+const pdf_1 = require("../config/pdf");
 const winston_1 = __importDefault(require("../config/winston"));
+const processABI = require('build/contracts/Process.json').abi;
 module.exports.verify = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let documentHash;
     try {
-        const documentHash = createSHA256(req.file.buffer);
-        const contract = new Contract({
+        documentHash = hash_1.createSHA256(req.file.buffer);
+        const contract = new Contract_1.default({
             abi: processABI,
             contractAddress: req.query.contract
         });
@@ -51,26 +57,27 @@ module.exports.verify = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 module.exports.upload = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let documentHash;
     try {
         const { address, privateKey } = yield utils.getKeys(req.body);
         const latitude = utils.asciiToHex(req.body.latitude);
         const longitude = utils.asciiToHex(req.body.longitude);
         const contractAddress = utils.toChecksumAddress(req.query.contract);
-        const NuclearPoEContract = new Contract();
+        const NuclearPoEContract = new Contract_1.default();
         const rawDocNumber = yield NuclearPoEContract.getDataFromContract({
             method: 'docNumber'
         });
-        const FileBufferWithDocNumber = yield addDocNumber({
+        const FileBufferWithDocNumber = yield pdf_1.addDocNumber({
             buffer: req.file.buffer,
             docNumber: `B-${rawDocNumber}`
         });
-        const documentHash = createSHA256(FileBufferWithDocNumber);
-        const storage = yield saveToIPFS(FileBufferWithDocNumber);
-        const hexStorage = bs58.decode(storage).toString('hex');
+        documentHash = hash_1.createSHA256(FileBufferWithDocNumber);
+        const storage = yield ipfs_1.saveToIPFS(FileBufferWithDocNumber);
+        const hexStorage = bs58_1.default.decode(storage).toString('hex');
         const storageFunction = hexStorage.substr(0, 2);
         const storageSize = hexStorage.substr(2, 2);
         const storageHash = hexStorage.substr(4);
-        const ProcessContract = new Contract({
+        const ProcessContract = new Contract_1.default({
             privateKey,
             abi: processABI,
             contractAddress
@@ -104,7 +111,7 @@ module.exports.upload = (req, res) => __awaiter(void 0, void 0, void 0, function
 });
 module.exports.get = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const contract = new Contract({
+        const contract = new Contract_1.default({
             abi: processABI,
             contractAddress: req.query.contract
         });
@@ -136,7 +143,7 @@ module.exports.get = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 module.exports.getOne = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const contract = new Contract({
+        const contract = new Contract_1.default({
             abi: processABI,
             contractAddress: req.query.contract
         });
@@ -148,8 +155,8 @@ module.exports.getOne = (req, res) => __awaiter(void 0, void 0, void 0, function
             method: 'getDocumentStorage',
             data: [req.query.hash]
         });
-        const storageHash = bs58.encode(Buffer.from(storageDetails[1] + storageDetails[2] + storageDetails[0].substr(2), 'hex'));
-        const file = yield getFromIPFS(storageHash);
+        const storageHash = bs58_1.default.encode(Buffer.from(storageDetails[1] + storageDetails[2] + storageDetails[0].substr(2), 'hex'));
+        const file = yield ipfs_1.getFromIPFS(storageHash);
         res.json({
             docNumber: details[3],
             mineTime: details[4],

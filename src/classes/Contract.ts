@@ -1,26 +1,34 @@
 /* eslint-disable no-await-in-loop */
 require('dotenv').config();
 import web3 from '../config/web3';
-import fs from 'fs';
 import Transaction from './Transaction';
 
-const nuclearPoEABI = JSON.parse(
-  fs.readFileSync('../build/contracts/NuclearPoE.json')
-).abi;
+const nuclearPoEABI = require('../build/contracts/NuclearPoE.json');
+
+interface getDataFromContractInput {
+  method: string;
+  data?: Array<string>;
+}
+
+interface sendDataToContract {
+  fromAddress: string;
+  method: string;
+  data: Array<string>;
+}
 
 class Contract {
-  /**
-   * Constructor
-   * @param {string} abi The ABI to be used for this contract
-   * @param {string} contractAddress Defaults to the main NuclearPoE contract, defined in the env variable
-   */
+  abi: string;
+  privateKey?: Buffer;
+  contractAddress?: string;
+  instance?: object;
+
   constructor({
     privateKey = undefined,
     abi = nuclearPoEABI,
     contractAddress = process.env.SCADDRESS
   } = {}) {
     this.abi = abi;
-    this.privateKey = privateKey ? Buffer.from(privateKey, 'hex') : undefined;
+    this.privateKey = Buffer.from(privateKey, 'hex');
     this.contractAddress = contractAddress;
     this.instance = new web3.eth.Contract(abi, contractAddress);
   }
@@ -31,12 +39,16 @@ class Contract {
    * @param  {String} arg Arguments to provide for call
    * @returns {Object} Result of contract method call
    */
-  async getDataFromContract({ method, data }) {
+  async getDataFromContract({ method, data }: getDataFromContractInput) {
     const tx = new Transaction({ contract: this.instance, method, data });
     return await tx.call();
   }
 
-  async sendDataToContract({ fromAddress, method, data }) {
+  async sendDataToContract({
+    fromAddress,
+    method,
+    data
+  }: sendDataToContract): Promise<string> {
     try {
       const tx = new Transaction({
         contract: this.instance,

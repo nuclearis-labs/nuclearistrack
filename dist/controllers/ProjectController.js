@@ -11,15 +11,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const Contract = require('../classes/Contract');
-const utils = require('../functions/utils');
-const txModel = require('../models/transaction');
+const Contract_1 = __importDefault(require("../classes/Contract"));
+const utils = __importStar(require("../config/utils"));
+const transaction_1 = __importDefault(require("../models/transaction"));
 const winston_1 = __importDefault(require("../config/winston"));
-module.exports.create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { address, privateKey } = yield utils.getKeys(req.body);
-        const nuclear = new Contract({ privateKey });
+        const nuclear = new Contract_1.default({ privateKey });
         const oc = utils.asciiToHex(req.body.oc);
         const projectTitle = utils.asciiToHex(req.body.proyectoTitle);
         const txHash = yield nuclear.sendDataToContract({
@@ -45,9 +52,9 @@ module.exports.create = (req, res) => __awaiter(void 0, void 0, void 0, function
         res.status(500).json({ error: e.message });
     }
 });
-module.exports.getDocNumber = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getDocNumber = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const contract = new Contract();
+        const contract = new Contract_1.default();
         const result = yield contract.getDataFromContract({ method: 'docNumber' });
         res.json(result);
     }
@@ -56,14 +63,14 @@ module.exports.getDocNumber = (req, res) => __awaiter(void 0, void 0, void 0, fu
         res.json({ error: e.message });
     }
 });
-module.exports.get = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.get = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const contract = new Contract();
+        const contract = new Contract_1.default();
         const contractProjects = yield contract.getDataFromContract({
             method: 'getAllProjects'
         });
-        yield txModel.deleteMany({ data: { $in: contractProjects } });
-        const pendingProjects = yield txModel.aggregate([
+        yield transaction_1.default.deleteMany({ data: { $in: contractProjects } });
+        const pendingProjects = yield transaction_1.default.aggregate([
             {
                 $match: {
                     subject: 'add-project'
@@ -104,10 +111,10 @@ module.exports.get = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(500).json({ error: e.message });
     }
 });
-module.exports.close = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.close = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { address, privateKey } = yield utils.getKeys(req.body);
-        const contract = new Contract({ privateKey });
+        const contract = new Contract_1.default({ privateKey });
         const txHash = yield contract.sendDataToContract({
             fromAddress: address,
             method: 'changeProjectStatus',
@@ -121,9 +128,9 @@ module.exports.close = (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(400).json({ error: e.message });
     }
 });
-module.exports.getOne = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getOne = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const contract = new Contract();
+        const contract = new Contract_1.default();
         const result = yield contract.getDataFromContract({
             method: 'getProjectDetails',
             data: [req.query.expediente]
@@ -145,10 +152,10 @@ module.exports.getOne = (req, res) => __awaiter(void 0, void 0, void 0, function
         res.json({ error: e.message });
     }
 });
-module.exports.assignProcess = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.assignProcess = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { address, privateKey } = yield utils.getKeys(req.body);
-        const contract = new Contract({ privateKey });
+        const contract = new Contract_1.default({ privateKey });
         const txHash = yield contract.sendDataToContract({
             fromAddress: address,
             method: 'addProcessToProject',

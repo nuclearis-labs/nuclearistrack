@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,12 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const ethereumjs_tx_1 = __importDefault(require("ethereumjs-tx"));
-const web3_1 = __importDefault(require("../config/web3"));
+import { Transaction as ethTx } from 'ethereumjs-tx';
+import web3 from '../config/web3';
 class Transaction {
     constructor({ contract, method, data = [], fromAddress }) {
         this.contract = contract;
@@ -37,7 +32,7 @@ class Transaction {
     }
     estimateGas() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.gasprice = yield web3_1.default.eth.getGasPrice();
+            this.gasprice = yield web3.eth.getGasPrice();
             return this;
         });
     }
@@ -51,7 +46,7 @@ class Transaction {
     }
     getNonce() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.nonce = yield web3_1.default.eth.getTransactionCount(this.fromAddress);
+            this.nonce = yield web3.eth.getTransactionCount(this.fromAddress);
             return this;
         });
     }
@@ -62,15 +57,16 @@ class Transaction {
      * @returns {ethTx} Signed Transaction Instance
      */
     prepareRawTx({ value = '0', to = this.contract.options.address, gaslimit = this.gaslimit } = {}) {
-        let weiValue = web3_1.default.utils.toWei(value, 'ether');
-        this.tx = new ethereumjs_tx_1.default({
-            nonce: web3_1.default.utils.toHex(this.nonce),
-            gasPrice: web3_1.default.utils.toHex(this.gasprice),
-            gasLimit: web3_1.default.utils.toHex(gaslimit),
+        let weiValue = web3.utils.toWei(value, 'ether');
+        const txParams = {
+            nonce: web3.utils.toHex(this.nonce),
+            gasPrice: web3.utils.toHex(this.gasprice),
+            gasLimit: web3.utils.toHex(gaslimit),
             to: to,
-            value: web3_1.default.utils.toHex(weiValue),
+            value: web3.utils.toHex(weiValue),
             data: this.data
-        });
+        };
+        this.tx = new ethTx(txParams, { chain: 'testnet' });
         return this;
     }
     /**
@@ -83,23 +79,14 @@ class Transaction {
         this.tx.sign(privateKey);
         return this;
     }
-    /**
-     * Serialize transaction data
-     * @param {ethTx} tx Instance of ethTx Class
-     * @returns {ethTx} Serialized Transaction Instance
-     */
     serialize() {
         this.serializedTx = this.tx.serialize();
         return this;
     }
-    /**
-     * Send a serialized transaction
-     * @returns {Promise<string>} Hash of transaction
-     */
     send() {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
-                web3_1.default.eth.sendSignedTransaction(`0x${this.serializedTx.toString('hex')}`, (err, result) => {
+                web3.eth.sendSignedTransaction(`0x${this.serializedTx.toString('hex')}`, (err, result) => {
                     if (err)
                         reject(err);
                     resolve(result);
@@ -108,5 +95,5 @@ class Transaction {
         });
     }
 }
-exports.default = Transaction;
+export default Transaction;
 //# sourceMappingURL=Transaction.js.map

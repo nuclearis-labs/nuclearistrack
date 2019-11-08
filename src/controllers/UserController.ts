@@ -1,12 +1,13 @@
 import UserModel from '../models/user';
-import utils from '../config/utils';
-import wallet from '../config/wallet';
+import * as utils from '../config/utils';
+import * as wallet from '../config/wallet';
 import txModel from '../models/transaction';
 import web3 from '../config/web3';
 import Contract from '../classes/Contract';
 import logger from '../config/winston';
+import { Request, Response } from 'express';
 
-module.exports.create = async (req, res) => {
+module.exports.create = async (req: Request, res: Response) => {
   try {
     const db = await UserModel.create({
       username: req.body.newUserName,
@@ -25,7 +26,9 @@ module.exports.create = async (req, res) => {
   }
 };
 
-module.exports.confirm = async (req, res) => {
+module.exports.confirm = async (req: Request, res: Response) => {
+  let user: { _id: string };
+
   try {
     const user = await UserModel.findOne({
       _id: req.params.id,
@@ -59,7 +62,7 @@ module.exports.confirm = async (req, res) => {
     });
 
     await utils.createPendingTx({
-      hash: txHash,
+      txHash,
       subject: 'add-user',
       data: [user.username, user.type, newAddress]
     });
@@ -89,7 +92,8 @@ module.exports.confirm = async (req, res) => {
   }
 };
 
-module.exports.restore = async (req, res) => {
+export const restore = async (req: Request, res: Response) => {
+  let user: { _id: string };
   try {
     const newPrivateKey = await wallet.generatePrivateKeyFromMnemonic({
       mnemonic: req.body.mnemonic,
@@ -103,7 +107,7 @@ module.exports.restore = async (req, res) => {
 
     const newAddress = wallet.generateRSKAddress(newPrivateKey);
 
-    const user = await UserModel.findOneAndUpdate(
+    user = await UserModel.findOneAndUpdate(
       { address: newAddress },
       {
         encryptedPrivateKey: newEncryptedPrivateKey
@@ -128,7 +132,9 @@ module.exports.restore = async (req, res) => {
   }
 };
 
-module.exports.change = async (req, res) => {
+module.exports.change = async (req: Request, res: Response) => {
+  let user: { _id: string };
+
   try {
     const user = await UserModel.findOne({
       email: req.body.email,
@@ -160,7 +166,7 @@ module.exports.change = async (req, res) => {
   }
 };
 
-module.exports.get = async (req, res) => {
+module.exports.get = async (req: Request, res: Response) => {
   try {
     const contract = new Contract();
     const contractUsers = await contract.getDataFromContract({
@@ -187,7 +193,7 @@ module.exports.get = async (req, res) => {
       pendingUser.length > 0 ? pendingUser[0]['result'] : []
     );
 
-    const allUsersDetails = allUsers.map(async address => {
+    const allUsersDetails = allUsers.map(async (address: string) => {
       const details = await contract.getDataFromContract({
         method: 'getUserDetails',
         data: [address]
@@ -211,7 +217,7 @@ module.exports.get = async (req, res) => {
   }
 };
 
-module.exports.getBalance = async (req, res) => {
+module.exports.getBalance = async (req: Request, res: Response) => {
   try {
     web3.eth.getBalance(req.params.address).then(balance => {
       res.json(web3.utils.fromWei(balance));
@@ -225,7 +231,7 @@ module.exports.getBalance = async (req, res) => {
   }
 };
 
-module.exports.close = async (req, res) => {
+module.exports.close = async (req: Request, res: Response) => {
   try {
     const { address, privateKey } = await utils.getKeys(req.body);
 
@@ -247,7 +253,7 @@ module.exports.close = async (req, res) => {
   }
 };
 
-module.exports.getOne = async (req, res) => {
+module.exports.getOne = async (req: Request, res: Response) => {
   try {
     const address = utils.toChecksumAddress(req.params.address);
     const contract = new Contract();

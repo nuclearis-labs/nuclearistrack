@@ -1,12 +1,13 @@
-const Contract = require('../classes/Contract');
-const utils = require('../functions/utils');
-const txModel = require('../models/transaction');
-const fs = require('fs');
-const processABI = JSON.parse(fs.readFileSync('build/contracts/Process.json'))
-  .abi;
+import Contract from '../classes/Contract';
+import * as utils from '../config/utils';
+import txModel from '../models/transaction';
+import fs from 'fs';
 import logger from '../config/winston';
+import { Request, Response } from 'express';
 
-module.exports.create = async (req, res) => {
+const processABI = require('build/contracts/Process.json').abi;
+
+module.exports.create = async (req: Request, res: Response) => {
   try {
     const { address, privateKey } = await utils.getKeys(req.body);
 
@@ -41,7 +42,7 @@ module.exports.create = async (req, res) => {
     res.status(500).json({ error: e.message });
   }
 };
-module.exports.getOne = async (req, res) => {
+module.exports.getOne = async (req: Request, res: Response) => {
   try {
     const contract = new Contract();
 
@@ -75,7 +76,7 @@ module.exports.getOne = async (req, res) => {
   }
 };
 
-module.exports.getByID = async (req, res) => {
+module.exports.getByID = async (req: Request, res: Response) => {
   try {
     const contract = new Contract();
 
@@ -85,7 +86,7 @@ module.exports.getByID = async (req, res) => {
     });
 
     const AssignmentDetails = processContractsByExpediente.map(
-      async processContractAddress => {
+      async (processContractAddress: string) => {
         const process = new Contract({
           abi: processABI,
           contractAddress: processContractAddress
@@ -118,14 +119,14 @@ module.exports.getByID = async (req, res) => {
   }
 };
 
-module.exports.get = async (req, res) => {
+module.exports.get = async (req: Request, res: Response) => {
   try {
     const contract = new Contract();
     const processContracts = await contract.getDataFromContract({
       method: 'getAllProcessContracts'
     });
 
-    const allProcessDetails = processContracts.map(async address => {
+    const allProcessDetails = processContracts.map(async (address: string) => {
       const processContract = new Contract({
         abi: processABI,
         contractAddress: address

@@ -11,10 +11,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_1 = __importDefault(require("../models/user"));
-const utils_1 = __importDefault(require("../config/utils"));
-const wallet_1 = __importDefault(require("../config/wallet"));
+const utils = __importStar(require("../config/utils"));
+const wallet = __importStar(require("../config/wallet"));
 const transaction_1 = __importDefault(require("../models/transaction"));
 const web3_1 = __importDefault(require("../config/web3"));
 const Contract_1 = __importDefault(require("../classes/Contract"));
@@ -37,19 +44,20 @@ module.exports.create = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 module.exports.confirm = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let user;
     try {
         const user = yield user_1.default.findOne({
             _id: req.params.id,
             address: null
         });
-        const mnemonic = wallet_1.default.generateMnemonic();
-        const newPrivateKey = yield wallet_1.default.generatePrivateKeyFromMnemonic({
+        const mnemonic = wallet.generateMnemonic();
+        const newPrivateKey = yield wallet.generatePrivateKeyFromMnemonic({
             mnemonic,
             coin: process.env.DERIVATIONPATHCOIN
         });
-        const encryptedNewPrivateKey = wallet_1.default.encryptBIP38(newPrivateKey, req.body.passphrase);
-        const newAddress = wallet_1.default.generateRSKAddress(newPrivateKey);
-        const { address, privateKey } = yield utils_1.default.getKeys({
+        const encryptedNewPrivateKey = wallet.encryptBIP38(newPrivateKey, req.body.passphrase);
+        const newAddress = wallet.generateRSKAddress(newPrivateKey);
+        const { address, privateKey } = yield utils.getKeys({
             email: process.env.ADMINEMAIL,
             passphrase: process.env.ADMINPASSPHRASE
         });
@@ -57,10 +65,10 @@ module.exports.confirm = (req, res) => __awaiter(void 0, void 0, void 0, functio
         const txHash = yield contract.sendDataToContract({
             fromAddress: address,
             method: 'createUser',
-            data: [newAddress, user.type, utils_1.default.asciiToHex(user.username)]
+            data: [newAddress, user.type, utils.asciiToHex(user.username)]
         });
-        yield utils_1.default.createPendingTx({
-            hash: txHash,
+        yield utils.createPendingTx({
+            txHash,
             subject: 'add-user',
             data: [user.username, user.type, newAddress]
         });
@@ -82,15 +90,16 @@ module.exports.confirm = (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.status(500).json({ error: e.message });
     }
 });
-module.exports.restore = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.restore = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let user;
     try {
-        const newPrivateKey = yield wallet_1.default.generatePrivateKeyFromMnemonic({
+        const newPrivateKey = yield wallet.generatePrivateKeyFromMnemonic({
             mnemonic: req.body.mnemonic,
             coin: process.env.DERIVATIONPATHCOIN
         });
-        const newEncryptedPrivateKey = wallet_1.default.encryptBIP38(newPrivateKey, req.body.newPassphrase);
-        const newAddress = wallet_1.default.generateRSKAddress(newPrivateKey);
-        const user = yield user_1.default.findOneAndUpdate({ address: newAddress }, {
+        const newEncryptedPrivateKey = wallet.encryptBIP38(newPrivateKey, req.body.newPassphrase);
+        const newAddress = wallet.generateRSKAddress(newPrivateKey);
+        user = yield user_1.default.findOneAndUpdate({ address: newAddress }, {
             encryptedPrivateKey: newEncryptedPrivateKey
         }, { new: true });
         if (!user) {
@@ -105,13 +114,14 @@ module.exports.restore = (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 module.exports.change = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let user;
     try {
         const user = yield user_1.default.findOne({
             email: req.body.email,
             address: { $ne: null }
         });
-        const decryptedKey = yield wallet_1.default.decryptBIP38(user.encryptedPrivateKey, req.body.passphrase);
-        const encryptedPrivateKey = wallet_1.default.encryptBIP38(decryptedKey, req.body.newPassphrase);
+        const decryptedKey = yield wallet.decryptBIP38(user.encryptedPrivateKey, req.body.passphrase);
+        const encryptedPrivateKey = wallet.encryptBIP38(decryptedKey, req.body.newPassphrase);
         yield user_1.default.findByIdAndUpdate(user._id, {
             encryptedPrivateKey
         });
@@ -150,7 +160,7 @@ module.exports.get = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 data: [address]
             });
             return {
-                name: utils_1.default.hexToAscii(details[0]),
+                name: utils.hexToAscii(details[0]),
                 type: details[1],
                 status: details[2],
                 address
@@ -181,7 +191,7 @@ module.exports.getBalance = (req, res) => __awaiter(void 0, void 0, void 0, func
 });
 module.exports.close = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { address, privateKey } = yield utils_1.default.getKeys(req.body);
+        const { address, privateKey } = yield utils.getKeys(req.body);
         const contract = new Contract_1.default({ privateKey });
         const txHash = yield contract.sendDataToContract({
             fromAddress: address,
@@ -200,7 +210,7 @@ module.exports.close = (req, res) => __awaiter(void 0, void 0, void 0, function*
 });
 module.exports.getOne = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const address = utils_1.default.toChecksumAddress(req.params.address);
+        const address = utils.toChecksumAddress(req.params.address);
         const contract = new Contract_1.default();
         yield user_1.default.findOneAndUpdate({ address }, { status: true });
         const userDetails = yield contract.getDataFromContract({
@@ -219,13 +229,13 @@ module.exports.getOne = (req, res) => __awaiter(void 0, void 0, void 0, function
                 data: [projects[i]]
             });
             response.push({
-                title: utils_1.default.hexToAscii(projectDetails[2]),
+                title: utils.hexToAscii(projectDetails[2]),
                 expediente: projects[i],
-                oc: utils_1.default.hexToAscii(projectDetails[3])
+                oc: utils.hexToAscii(projectDetails[3])
             });
         }
         res.json({
-            userName: utils_1.default.hexToAscii(userDetails[0]),
+            userName: utils.hexToAscii(userDetails[0]),
             balance: web3_1.default.utils.fromWei(balance),
             type: userDetails[1],
             status: userDetails[2],

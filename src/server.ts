@@ -1,8 +1,8 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
-// const morgan = require('morgan');
-const logger = require('./services/winston');
+import express from 'express';
+import bodyParser from 'body-parser';
+import path from 'path';
+// import morgan from 'morgan';
+import logger from './config/winston';
 
 const app = express();
 

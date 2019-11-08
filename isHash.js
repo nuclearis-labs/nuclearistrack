@@ -24,3 +24,13 @@ pdf
   .then(result => console.log(result))
   .catch(e => console.error(e));
  */
+
+const fs = require('fs');
+
+const HummusRecipe = require('hummus-recipe');
+
+let buffer = fs.readFileSync('cert.pdf');
+
+const pdfDoc = new HummusRecipe(buffer);
+
+console.log(pdfDoc.metadata);

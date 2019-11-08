@@ -14,8 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require('dotenv').config();
 const express_1 = __importDefault(require("express"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const router = express_1.default.Router();
-const jwt = require('jsonwebtoken');
 const { verifyToken, validateForm } = require('../../middleware/index');
 const UserModel = require('../models/user');
 const wallet = require('../../functions/wallet');
@@ -24,18 +24,18 @@ router.post('/', validateForm(rules.auth), (req, res) => __awaiter(void 0, void 
     try {
         const user = yield UserModel.findOne({ email: req.body.email });
         const decryptedKey = yield wallet.decryptBIP38(user.encryptedPrivateKey, req.body.passphrase);
-        address = wallet.generateRSKAddress(decryptedKey);
+        const address = wallet.generateRSKAddress(decryptedKey);
         if (user.address === address) {
-            jwt.sign({
+            jsonwebtoken_1.default.sign({
                 userName: user.username,
                 userEmail: user.email,
                 userType: user.type,
                 address: user.address
-            }, process.env.JWT_SECRET, (err, token) => {
+            }, process.env.JWT_SECRET, (err, encoded) => {
                 if (err)
                     throw Error();
                 else
-                    res.json({ token });
+                    res.json({ encoded });
             });
         }
     }
@@ -49,9 +49,8 @@ router.post('/current', verifyToken, validateForm({
 }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const bearer = req.headers.authorization.split(' ');
     const bearerToken = bearer[1];
-    req.token = bearerToken;
     try {
-        const authData = jwt.verify(req.token, process.env.JWT_SECRET);
+        const authData = jsonwebtoken_1.default.verify(bearerToken, process.env.JWT_SECRET);
         res.json(authData);
     }
     catch (e) {

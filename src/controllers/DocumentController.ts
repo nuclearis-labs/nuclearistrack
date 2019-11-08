@@ -1,17 +1,19 @@
-const fs = require('fs');
-const bs58 = require('bs58');
-const Contract = require('../classes/Contract');
-const { saveToIPFS, getFromIPFS } = require('../services/ipfs');
-const { createSHA256 } = require('../functions/hash');
-const utils = require('../functions/utils');
-const { addDocNumber } = require('../functions/pdf');
-const processABI = JSON.parse(fs.readFileSync('build/contracts/Process.json'))
-  .abi;
+import fs from 'fs';
+import bs58 from 'bs58';
+import Contract from '../classes/Contract';
+import { saveToIPFS, getFromIPFS } from '../config/ipfs';
+import { createSHA256 } from '../config/hash';
+import * as utils from '../config/utils';
+import { addDocNumber } from '../config/pdf';
+import { Request, Response } from 'express';
 import logger from '../config/winston';
 
-module.exports.verify = async (req, res) => {
+const processABI = require('build/contracts/Process.json').abi;
+
+module.exports.verify = async (req: Request, res: Response) => {
+  let documentHash: string;
   try {
-    const documentHash = createSHA256(req.file.buffer);
+    documentHash = createSHA256(req.file.buffer);
     const contract = new Contract({
       abi: processABI,
       contractAddress: req.query.contract
@@ -38,7 +40,8 @@ module.exports.verify = async (req, res) => {
   }
 };
 
-module.exports.upload = async (req, res) => {
+module.exports.upload = async (req: Request, res: Response) => {
+  let documentHash: string;
   try {
     const { address, privateKey } = await utils.getKeys(req.body);
 
@@ -56,7 +59,7 @@ module.exports.upload = async (req, res) => {
       docNumber: `B-${rawDocNumber}`
     });
 
-    const documentHash = createSHA256(FileBufferWithDocNumber);
+    documentHash = createSHA256(FileBufferWithDocNumber);
 
     const storage = await saveToIPFS(FileBufferWithDocNumber);
     const hexStorage = bs58.decode(storage).toString('hex');
@@ -100,7 +103,7 @@ module.exports.upload = async (req, res) => {
   }
 };
 
-module.exports.get = async (req, res) => {
+module.exports.get = async (req: Request, res: Response) => {
   try {
     const contract = new Contract({
       abi: processABI,
@@ -136,7 +139,7 @@ module.exports.get = async (req, res) => {
   }
 };
 
-module.exports.getOne = async (req, res) => {
+module.exports.getOne = async (req: Request, res: Response) => {
   try {
     const contract = new Contract({
       abi: processABI,

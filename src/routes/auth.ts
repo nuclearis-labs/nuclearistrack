@@ -1,7 +1,7 @@
 require('dotenv').config();
 import express from 'express';
+import jwt from 'jsonwebtoken';
 const router = express.Router();
-const jwt = require('jsonwebtoken');
 
 const { verifyToken, validateForm } = require('../../middleware/index');
 const UserModel = require('../models/user');
@@ -17,7 +17,7 @@ router.post('/', validateForm(rules.auth), async (req, res) => {
       req.body.passphrase
     );
 
-    address = wallet.generateRSKAddress(decryptedKey);
+    const address = wallet.generateRSKAddress(decryptedKey);
 
     if (user.address === address) {
       jwt.sign(
@@ -28,9 +28,9 @@ router.post('/', validateForm(rules.auth), async (req, res) => {
           address: user.address
         },
         process.env.JWT_SECRET,
-        (err, token) => {
+        (err: Error, encoded: string) => {
           if (err) throw Error();
-          else res.json({ token });
+          else res.json({ encoded });
         }
       );
     }
@@ -50,9 +50,8 @@ router.post(
   async (req, res) => {
     const bearer = req.headers.authorization.split(' ');
     const bearerToken = bearer[1];
-    req.token = bearerToken;
     try {
-      const authData = jwt.verify(req.token, process.env.JWT_SECRET);
+      const authData = jwt.verify(bearerToken, process.env.JWT_SECRET);
       res.json(authData);
     } catch (e) {
       res.json({});

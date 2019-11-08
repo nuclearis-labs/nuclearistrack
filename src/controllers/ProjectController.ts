@@ -1,9 +1,10 @@
-const Contract = require('../classes/Contract');
-const utils = require('../functions/utils');
-const txModel = require('../models/transaction');
+import Contract from '../classes/Contract';
+import * as utils from '../config/utils';
+import txModel from '../models/transaction';
 import logger from '../config/winston';
+import { Request, Response } from 'express';
 
-module.exports.create = async (req, res) => {
+export const create = async (req: Request, res: Response) => {
   try {
     const { address, privateKey } = await utils.getKeys(req.body);
     const nuclear = new Contract({ privateKey });
@@ -37,7 +38,7 @@ module.exports.create = async (req, res) => {
   }
 };
 
-module.exports.getDocNumber = async (req, res) => {
+export const getDocNumber = async (req: Request, res: Response) => {
   try {
     const contract = new Contract();
     const result = await contract.getDataFromContract({ method: 'docNumber' });
@@ -49,7 +50,7 @@ module.exports.getDocNumber = async (req, res) => {
   }
 };
 
-module.exports.get = async (req, res) => {
+export const get = async (req: Request, res: Response) => {
   try {
     const contract = new Contract();
     const contractProjects = await contract.getDataFromContract({
@@ -75,7 +76,7 @@ module.exports.get = async (req, res) => {
       pendingProjects.length > 0 ? pendingProjects[0]['result'] : []
     );
 
-    const allProjectsDetails = allProjects.map(async id => {
+    const allProjectsDetails = allProjects.map(async (id: string) => {
       const details = await contract.getDataFromContract({
         method: 'getProjectDetails',
         data: [id]
@@ -106,7 +107,7 @@ module.exports.get = async (req, res) => {
   }
 };
 
-module.exports.close = async (req, res) => {
+export const close = async (req: Request, res: Response) => {
   try {
     const { address, privateKey } = await utils.getKeys(req.body);
 
@@ -125,7 +126,7 @@ module.exports.close = async (req, res) => {
   }
 };
 
-module.exports.getOne = async (req, res) => {
+export const getOne = async (req: Request, res: Response) => {
   try {
     const contract = new Contract();
     const result = await contract.getDataFromContract({
@@ -150,7 +151,7 @@ module.exports.getOne = async (req, res) => {
   }
 };
 
-module.exports.assignProcess = async (req, res) => {
+export const assignProcess = async (req: Request, res: Response) => {
   try {
     const { address, privateKey } = await utils.getKeys(req.body);
     const contract = new Contract({ privateKey });
