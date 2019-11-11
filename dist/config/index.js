@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const Validator_js_1 = __importDefault(require("../config/Validator.js"));
-exports.verifyToken = (req, res, next) => {
+function verifyToken(req, res, next) {
     const bearerHeader = req.headers['authorization'];
     if (typeof bearerHeader !== 'undefined') {
         const bearer = bearerHeader.split(' ');
@@ -21,8 +21,9 @@ exports.verifyToken = (req, res, next) => {
     }
     else
         res.sendStatus(403);
-};
-exports.validateForm = (rules) => {
+}
+exports.verifyToken = verifyToken;
+function validateForm(rules) {
     return (req, res, next) => {
         const v = new Validator_js_1.default.Validator({ body: req.body, params: req.params, query: req.query }, rules);
         v.check().then(matched => {
@@ -34,5 +35,6 @@ exports.validateForm = (rules) => {
             }
         });
     };
-};
+}
+exports.validateForm = validateForm;
 //# sourceMappingURL=index.js.map

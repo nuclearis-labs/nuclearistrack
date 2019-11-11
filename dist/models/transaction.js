@@ -1,10 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose = require('mongoose');
-const txSchema = new mongoose.Schema({
+const mongoose_1 = __importDefault(require("mongoose"));
+const txSchema = new mongoose_1.default.Schema({
     txHash: String,
     subject: String,
     data: [String]
 });
-exports.default = mongoose.model('Transaction', txSchema);
+exports.default = mongoose_1.default.model('Transaction', txSchema);
 //# sourceMappingURL=transaction.js.map

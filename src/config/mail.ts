@@ -1,11 +1,6 @@
 import nodeMailer from 'nodemailer';
 
-interface mailParams {
-  to: string;
-  data: string;
-}
-
-module.exports.sendMail = function sendMail({ to, data }: mailParams) {
+export function sendMail({ to, data }: { to: string; data: string }): any {
   const subject = 'Confirmación de tu usuario';
   const html = `
   Estimado,<br><br>
@@ -41,4 +36,4 @@ module.exports.sendMail = function sendMail({ to, data }: mailParams) {
     }
     return info;
   });
-};
+}

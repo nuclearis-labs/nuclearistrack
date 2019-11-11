@@ -4,7 +4,7 @@ import web3 from '../config/web3';
 import logger from '../config/winston';
 import { Request, Response } from 'express';
 
-export const transfer = async (req: Request, res: Response) => {
+export async function transfer(req: Request, res: Response) {
   try {
     const { address, privateKey } = await getKeys({
       email: req.body.email,
@@ -40,4 +40,4 @@ export const transfer = async (req: Request, res: Response) => {
     });
     res.status(400).json({ error: e.message });
   }
-};
+}

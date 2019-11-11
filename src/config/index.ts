@@ -2,13 +2,8 @@ import jwt from 'jsonwebtoken';
 import niv from '../config/Validator.js';
 import { Response, Request, NextFunction } from 'express';
 
-export const verifyToken = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export function verifyToken(req: Request, res: Response, next: NextFunction) {
   const bearerHeader = req.headers['authorization'];
-
   if (typeof bearerHeader !== 'undefined') {
     const bearer = bearerHeader.split(' ');
     const bearerToken = bearer[1];
@@ -20,9 +15,9 @@ export const verifyToken = (
       res.sendStatus(403);
     }
   } else res.sendStatus(403);
-};
+}
 
-export const validateForm = (rules: object) => {
+export function validateForm(rules: object) {
   return (req: Request, res: Response, next: NextFunction) => {
     const v = new niv.Validator(
       { body: req.body, params: req.params, query: req.query },
@@ -37,4 +32,4 @@ export const validateForm = (rules: object) => {
       }
     });
   };
-};
+}

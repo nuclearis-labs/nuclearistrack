@@ -7,7 +7,7 @@ import { Request, Response } from 'express';
 
 const processABI = require('../../build/contracts/Process.json').abi;
 
-module.exports.create = async (req: Request, res: Response) => {
+export async function create(req: Request, res: Response) {
   try {
     const { address, privateKey } = await utils.getKeys(req.body);
 
@@ -41,8 +41,8 @@ module.exports.create = async (req: Request, res: Response) => {
     });
     res.status(500).json({ error: e.message });
   }
-};
-module.exports.getOne = async (req: Request, res: Response) => {
+}
+export async function getOne(req: Request, res: Response) {
   try {
     const contract = new Contract();
 
@@ -74,9 +74,9 @@ module.exports.getOne = async (req: Request, res: Response) => {
     });
     res.json({ error: e.message });
   }
-};
+}
 
-module.exports.getByID = async (req: Request, res: Response) => {
+export async function getByID(req: Request, res: Response) {
   try {
     const contract = new Contract();
 
@@ -117,9 +117,9 @@ module.exports.getByID = async (req: Request, res: Response) => {
     });
     res.json({ error: e.message });
   }
-};
+}
 
-module.exports.get = async (req: Request, res: Response) => {
+export async function get(req: Request, res: Response) {
   try {
     const contract = new Contract();
     const processContracts = await contract.getDataFromContract({
@@ -168,4 +168,4 @@ module.exports.get = async (req: Request, res: Response) => {
     logger.error(`ProcessList could not be obtained `, { message: e.message });
     res.json({ error: e.message });
   }
-};
+}

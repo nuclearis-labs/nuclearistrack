@@ -4,19 +4,19 @@ const node = new ipfs('localhost', '5001', {
   protocol: 'http'
 });
 
-export const saveToIPFS = async (buffer: Buffer) => {
+export async function saveToIPFS(buffer: Buffer) {
   try {
     const [{ hash }] = await node.add(buffer);
     return hash;
   } catch (err) {
     throw Error(err);
   }
-};
+}
 
-export const getFromIPFS = async (hash: string) => {
+export async function getFromIPFS(hash: string) {
   try {
     return await node.get(hash);
   } catch (err) {
     throw Error(err);
   }
-};
+}

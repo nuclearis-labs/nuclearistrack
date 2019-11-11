@@ -4,32 +4,29 @@ import { toChecksumAddress } from './utils';
 import wif from 'wif';
 import bip38 from 'bip38';
 import { networks } from 'bitcoinjs-lib';
-import {
-  generateMnemonic as bip39generateMnemonic,
-  mnemonicToSeed as bip39mnemonicToSeed
-} from 'bip39';
-import { fromSeed } from 'bip32';
+import bip39 from 'bip39';
+import bip32 from 'bip32';
 import { AssertionError } from 'assert';
 
-const generateWifPrivateKey = (
+function generateWifPrivateKey(
   privKey: Buffer,
   network = networks.testnet.wif
-) => {
+): string {
   return wif.encode(network, privKey, true);
-};
+}
 
-export const encryptBIP38 = (privKey: Buffer, passphrase: string) => {
+export function encryptBIP38(privKey: Buffer, passphrase: string): string {
   const decoded = wif.decode(
     generateWifPrivateKey(privKey),
     networks.testnet.wif
   );
   return bip38.encrypt(decoded.privateKey, decoded.compressed, passphrase);
-};
+}
 
-export const decryptBIP38 = async (
+export async function decryptBIP38(
   encryptedKey: string,
   passphrase: string
-) => {
+): Promise<Buffer> {
   try {
     const { privateKey } = bip38.decrypt(encryptedKey, passphrase);
     return privateKey;
@@ -40,13 +37,13 @@ export const decryptBIP38 = async (
       throw Error('Passphrase or User incorrect');
     }
   }
-};
+}
 
-export const generateMnemonic = () => {
-  return bip39generateMnemonic();
-};
+export function generateMnemonic(): string {
+  return bip39.generateMnemonic();
+}
 
-export const generatePrivateKeyFromMnemonic = async ({
+export async function generatePrivateKeyFromMnemonic({
   mnemonic,
   coin = '0',
   account = 0,
@@ -56,20 +53,16 @@ export const generatePrivateKeyFromMnemonic = async ({
   coin: string;
   account?: number;
   index?: number;
-}) => {
-  const seed = await bip39mnemonicToSeed(mnemonic);
-  const node = fromSeed(seed);
+}): Promise<Buffer> {
+  const seed = await bip39.mnemonicToSeed(mnemonic);
+  const node = bip32.fromSeed(seed);
   return node.derivePath(`m/44'/${coin}'/${account}'/0/${index}`).privateKey;
-};
+}
 
-export const generateRSKAddress = (privateKey: Buffer) => {
+export function generateRSKAddress(privateKey: Buffer): string {
   try {
     return toChecksumAddress(privateToAddress(privateKey).toString('hex'));
   } catch (e) {
     console.log(e);
   }
-};
-
-export const toHex = (input: Buffer) => {
-  return input.toString('hex');
-};
+}

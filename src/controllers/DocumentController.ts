@@ -10,7 +10,7 @@ import logger from '../config/winston';
 
 const processABI = require('../../build/contracts/Process.json').abi;
 
-module.exports.verify = async (req: Request, res: Response) => {
+export async function verify(req: Request, res: Response) {
   let documentHash: string;
   try {
     documentHash = createSHA256(req.file.buffer);
@@ -38,9 +38,9 @@ module.exports.verify = async (req: Request, res: Response) => {
     });
     res.status(404).json({ error: e.message });
   }
-};
+}
 
-module.exports.upload = async (req: Request, res: Response) => {
+export async function upload(req: Request, res: Response) {
   let documentHash: string;
   try {
     const { address, privateKey } = await utils.getKeys(req.body);
@@ -101,9 +101,9 @@ module.exports.upload = async (req: Request, res: Response) => {
     });
     res.json({ error: e.message });
   }
-};
+}
 
-module.exports.get = async (req: Request, res: Response) => {
+export async function get(req: Request, res: Response) {
   try {
     const contract = new Contract({
       abi: processABI,
@@ -137,9 +137,9 @@ module.exports.get = async (req: Request, res: Response) => {
     });
     res.status(404).json({ error: e.message });
   }
-};
+}
 
-module.exports.getOne = async (req: Request, res: Response) => {
+export async function getOne(req: Request, res: Response) {
   try {
     const contract = new Contract({
       abi: processABI,
@@ -180,4 +180,4 @@ module.exports.getOne = async (req: Request, res: Response) => {
     });
     res.status(404).json({ error: e.message });
   }
-};
+}

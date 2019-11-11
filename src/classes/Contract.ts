@@ -6,17 +6,6 @@ import { Contract as web3Contract } from 'web3-eth-contract';
 
 const nuclearPoEABI = require('../../build/contracts/NuclearPoE.json').abi;
 
-interface getDataFromContractInput {
-  method: string;
-  data?: Array<string>;
-}
-
-interface sendDataToContract {
-  fromAddress: string;
-  method: string;
-  data: Array<string>;
-}
-
 class Contract {
   abi: web3Contract['_jsonInterface'][0];
   privateKey?: Buffer;
@@ -38,7 +27,13 @@ class Contract {
     this.instance = new web3.eth.Contract(abi, contractAddress);
   }
 
-  async getDataFromContract({ method, data }: getDataFromContractInput) {
+  async getDataFromContract({
+    method,
+    data
+  }: {
+    method: string;
+    data?: Array<string>;
+  }) {
     const tx = new Transaction({ contract: this.instance, method, data });
     return await tx.call();
   }
@@ -47,7 +42,11 @@ class Contract {
     fromAddress,
     method,
     data
-  }: sendDataToContract): Promise<string> {
+  }: {
+    fromAddress: string;
+    method: string;
+    data: Array<string>;
+  }): Promise<string> {
     try {
       const tx = new Transaction({
         contract: this.instance,

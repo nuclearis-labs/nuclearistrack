@@ -55,12 +55,6 @@ class Transaction {
             return this;
         });
     }
-    /**
-     * Prepares
-     * @param {ethTx} tx Instance of ethTx Class
-     * @param {Buffer} privateKey Private Key of user
-     * @returns {ethTx} Signed Transaction Instance
-     */
     prepareRawTx({ value = '0', to = this.contract.options.address, gaslimit = this.gaslimit } = {}) {
         let weiValue = web3_1.default.utils.toWei(value, 'ether');
         const txParams = {
@@ -74,12 +68,6 @@ class Transaction {
         this.tx = new ethereumjs_tx_1.Transaction(txParams);
         return this;
     }
-    /**
-     * Sign Transaction Instance
-     * @param {ethTx} tx Instance of ethTx Class
-     * @param {Buffer} privateKey Private Key of user
-     * @returns {ethTx} Signed Transaction Instance
-     */
     sign(privateKey) {
         this.tx.sign(privateKey);
         return this;

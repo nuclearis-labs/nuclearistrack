@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const nodemailer_1 = __importDefault(require("nodemailer"));
-module.exports.sendMail = function sendMail({ to, data }) {
+function sendMail({ to, data }) {
     const subject = 'Confirmación de tu usuario';
     const html = `
   Estimado,<br><br>
@@ -38,5 +38,6 @@ module.exports.sendMail = function sendMail({ to, data }) {
         }
         return info;
     });
-};
+}
+exports.sendMail = sendMail;
 //# sourceMappingURL=mail.js.map

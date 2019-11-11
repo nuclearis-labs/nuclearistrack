@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const txSchema = new mongoose.Schema({
   txHash: String,

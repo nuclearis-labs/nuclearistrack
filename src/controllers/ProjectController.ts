@@ -4,7 +4,7 @@ import txModel from '../models/transaction';
 import logger from '../config/winston';
 import { Request, Response } from 'express';
 
-export const create = async (req: Request, res: Response) => {
+export async function create(req: Request, res: Response) {
   try {
     const { address, privateKey } = await utils.getKeys(req.body);
     const nuclear = new Contract({ privateKey });
@@ -36,9 +36,9 @@ export const create = async (req: Request, res: Response) => {
     logger.error(`Project ${req.body.expediente} was not created`);
     res.status(500).json({ error: e.message });
   }
-};
+}
 
-export const getDocNumber = async (req: Request, res: Response) => {
+export async function getDocNumber(req: Request, res: Response) {
   try {
     const contract = new Contract();
     const result = await contract.getDataFromContract({ method: 'docNumber' });
@@ -48,9 +48,9 @@ export const getDocNumber = async (req: Request, res: Response) => {
     logger.error(`Doc Number could not be retrieved `, { message: e.message });
     res.json({ error: e.message });
   }
-};
+}
 
-export const get = async (req: Request, res: Response) => {
+export async function get(req: Request, res: Response) {
   try {
     const contract = new Contract();
     const contractProjects = await contract.getDataFromContract({
@@ -105,9 +105,9 @@ export const get = async (req: Request, res: Response) => {
 
     res.status(500).json({ error: e.message });
   }
-};
+}
 
-export const close = async (req: Request, res: Response) => {
+export async function close(req: Request, res: Response) {
   try {
     const { address, privateKey } = await utils.getKeys(req.body);
 
@@ -124,9 +124,9 @@ export const close = async (req: Request, res: Response) => {
     logger.error(`Project could not be closed `, { message: e.message });
     res.status(400).json({ error: e.message });
   }
-};
+}
 
-export const getOne = async (req: Request, res: Response) => {
+export async function getOne(req: Request, res: Response) {
   try {
     const contract = new Contract();
     const result = await contract.getDataFromContract({
@@ -149,9 +149,9 @@ export const getOne = async (req: Request, res: Response) => {
     });
     res.json({ error: e.message });
   }
-};
+}
 
-export const assignProcess = async (req: Request, res: Response) => {
+export async function assignProcess(req: Request, res: Response) {
   try {
     const { address, privateKey } = await utils.getKeys(req.body);
     const contract = new Contract({ privateKey });
@@ -179,4 +179,4 @@ export const assignProcess = async (req: Request, res: Response) => {
 
     res.json({ error: e.message });
   }
-};
+}

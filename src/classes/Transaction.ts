@@ -60,22 +60,16 @@ class Transaction {
     return this;
   }
 
-  async getNonce(): Promise<any> {
+  async getNonce(): Promise<Transaction> {
     this.nonce = await web3.eth.getTransactionCount(this.fromAddress);
     return this;
   }
 
-  /**
-   * Prepares
-   * @param {ethTx} tx Instance of ethTx Class
-   * @param {Buffer} privateKey Private Key of user
-   * @returns {ethTx} Signed Transaction Instance
-   */
   prepareRawTx({
     value = '0',
     to = this.contract.options.address,
     gaslimit = this.gaslimit
-  } = {}): any {
+  }: { value?: string; to?: string; gaslimit?: string } = {}): Transaction {
     let weiValue = web3.utils.toWei(value, 'ether');
 
     const txParams = {
@@ -91,18 +85,12 @@ class Transaction {
     return this;
   }
 
-  /**
-   * Sign Transaction Instance
-   * @param {ethTx} tx Instance of ethTx Class
-   * @param {Buffer} privateKey Private Key of user
-   * @returns {ethTx} Signed Transaction Instance
-   */
-  sign(privateKey: Buffer): any {
+  sign(privateKey: Buffer): Transaction {
     this.tx.sign(privateKey);
     return this;
   }
 
-  serialize(): any {
+  serialize(): Transaction {
     this.serializedTx = this.tx.serialize();
     return this;
   }

@@ -16,21 +16,27 @@ const ipfs_http_client_1 = __importDefault(require("ipfs-http-client"));
 const node = new ipfs_http_client_1.default('localhost', '5001', {
     protocol: 'http'
 });
-exports.saveToIPFS = (buffer) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const [{ hash }] = yield node.add(buffer);
-        return hash;
-    }
-    catch (err) {
-        throw Error(err);
-    }
-});
-exports.getFromIPFS = (hash) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        return yield node.get(hash);
-    }
-    catch (err) {
-        throw Error(err);
-    }
-});
+function saveToIPFS(buffer) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const [{ hash }] = yield node.add(buffer);
+            return hash;
+        }
+        catch (err) {
+            throw Error(err);
+        }
+    });
+}
+exports.saveToIPFS = saveToIPFS;
+function getFromIPFS(hash) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            return yield node.get(hash);
+        }
+        catch (err) {
+            throw Error(err);
+        }
+    });
+}
+exports.getFromIPFS = getFromIPFS;
 //# sourceMappingURL=ipfs.js.map
