@@ -26,7 +26,7 @@ const hash_1 = require("../config/hash");
 const utils = __importStar(require("../config/utils"));
 const pdf_1 = require("../config/pdf");
 const winston_1 = __importDefault(require("../config/winston"));
-const processABI = require('build/contracts/Process.json').abi;
+const processABI = require('../../build/contracts/Process.json').abi;
 module.exports.verify = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let documentHash;
     try {

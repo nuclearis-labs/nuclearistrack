@@ -2,8 +2,9 @@
 require('dotenv').config();
 import web3 from '../config/web3';
 import Transaction from './Transaction';
+import { Contract as web3Contract } from 'web3-eth-contract';
 
-const nuclearPoEABI = require('../build/contracts/NuclearPoE.json');
+const nuclearPoEABI = require('../../build/contracts/NuclearPoE.json').abi;
 
 interface getDataFromContractInput {
   method: string;
@@ -17,28 +18,26 @@ interface sendDataToContract {
 }
 
 class Contract {
-  abi: string;
+  abi: web3Contract['_jsonInterface'][0];
   privateKey?: Buffer;
   contractAddress?: string;
-  instance?: object;
+  instance?: web3Contract;
 
   constructor({
-    privateKey = undefined,
+    privateKey = Buffer.from('', 'hex'),
     abi = nuclearPoEABI,
     contractAddress = process.env.SCADDRESS
+  }: {
+    privateKey?: Buffer;
+    abi?: any;
+    contractAddress?: string;
   } = {}) {
     this.abi = abi;
-    this.privateKey = Buffer.from(privateKey, 'hex');
+    this.privateKey = privateKey;
     this.contractAddress = contractAddress;
     this.instance = new web3.eth.Contract(abi, contractAddress);
   }
 
-  /**
-   * Creates a new Transaction Instance and invokes a call method on the contract.
-   * @param  {String} method External View Contract Method to be called
-   * @param  {String} arg Arguments to provide for call
-   * @returns {Object} Result of contract method call
-   */
   async getDataFromContract({ method, data }: getDataFromContractInput) {
     const tx = new Transaction({ contract: this.instance, method, data });
     return await tx.call();

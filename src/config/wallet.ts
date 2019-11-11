@@ -1,11 +1,14 @@
 require('dotenv').config();
-import ethereumjs from 'ethereumjs-util';
+import { privateToAddress } from 'ethereumjs-util';
 import { toChecksumAddress } from './utils';
 import wif from 'wif';
 import bip38 from 'bip38';
 import { networks } from 'bitcoinjs-lib';
-import bip39 from 'bip39';
-import bip32 from 'bip32';
+import {
+  generateMnemonic as bip39generateMnemonic,
+  mnemonicToSeed as bip39mnemonicToSeed
+} from 'bip39';
+import { fromSeed } from 'bip32';
 import { AssertionError } from 'assert';
 
 const generateWifPrivateKey = (
@@ -39,8 +42,8 @@ export const decryptBIP38 = async (
   }
 };
 
-export const generateMnemonic = (strength = 256) => {
-  return bip39.generateMnemonic(strength);
+export const generateMnemonic = () => {
+  return bip39generateMnemonic();
 };
 
 export const generatePrivateKeyFromMnemonic = async ({
@@ -54,16 +57,14 @@ export const generatePrivateKeyFromMnemonic = async ({
   account?: number;
   index?: number;
 }) => {
-  const seed = await bip39.mnemonicToSeed(mnemonic);
-  const node = bip32.fromSeed(seed);
+  const seed = await bip39mnemonicToSeed(mnemonic);
+  const node = fromSeed(seed);
   return node.derivePath(`m/44'/${coin}'/${account}'/0/${index}`).privateKey;
 };
 
 export const generateRSKAddress = (privateKey: Buffer) => {
   try {
-    return toChecksumAddress(
-      ethereumjs.privateToAddress(privateKey).toString('hex')
-    );
+    return toChecksumAddress(privateToAddress(privateKey).toString('hex'));
   } catch (e) {
     console.log(e);
   }

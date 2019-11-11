@@ -11,18 +11,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 require('dotenv').config();
 const express_1 = __importDefault(require("express"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const router = express_1.default.Router();
-const { verifyToken, validateForm } = require('../../middleware/index');
-const UserModel = require('../models/user');
-const wallet = require('../../functions/wallet');
-const rules = require('../../services/validationRules');
-router.post('/', validateForm(rules.auth), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const index_1 = require("../config/index");
+const user_1 = __importDefault(require("../models/user"));
+const wallet = __importStar(require("../config/wallet"));
+const validationRules_1 = __importDefault(require("../config/validationRules"));
+router.post('/', index_1.validateForm(validationRules_1.default.auth), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield UserModel.findOne({ email: req.body.email });
+        const user = yield user_1.default.findOne({ email: req.body.email });
         const decryptedKey = yield wallet.decryptBIP38(user.encryptedPrivateKey, req.body.passphrase);
         const address = wallet.generateRSKAddress(decryptedKey);
         if (user.address === address) {
@@ -44,9 +51,7 @@ router.post('/', validateForm(rules.auth), (req, res) => __awaiter(void 0, void 
         res.sendStatus(403);
     }
 }));
-router.post('/current', verifyToken, validateForm({
-    authorization: 'required'
-}), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/current', index_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const bearer = req.headers.authorization.split(' ');
     const bearerToken = bearer[1];
     try {

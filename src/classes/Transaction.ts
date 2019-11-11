@@ -1,45 +1,44 @@
 import { Transaction as ethTx } from 'ethereumjs-tx';
 import web3 from '../config/web3';
 import Web3 from 'web3';
+import { Contract } from 'web3-eth-contract';
+import { TxData } from 'ethereumjs-tx';
 
 class Transaction {
-  contract: {
-    options: { address: string };
-    methods: { [key: string]: object };
-  };
-  method: string;
+  public contract: Contract;
+  public method: string;
+  public data: string;
+  public fromAddress: string;
   arg: Array<string>;
-  fromAddress: string;
   tx: ethTx;
-  data: string;
   serializedTx: Buffer;
   gaslimit: string;
   nonce: number;
   gasprice: string;
 
   constructor({
+    fromAddress,
     contract,
     method,
-    data = [],
-    fromAddress
+    data
   }: {
+    fromAddress?: string;
+    contract?: Contract;
     method?: string;
-    contract?: object;
     data?: Array<string>;
-    fromAddress: string;
   }) {
     this.contract = contract;
     this.method = method;
-    this.arg = data;
+    this.arg = data || [];
     this.fromAddress = fromAddress;
   }
 
-  encodeABI() {
+  encodeABI(): Transaction {
     this.data = this.contract.methods[this.method](...this.arg).encodeABI();
     return this;
   }
 
-  async call() {
+  async call(): Promise<any> {
     try {
       return await this.contract.methods[this.method](...this.arg).call();
     } catch (e) {
@@ -47,12 +46,12 @@ class Transaction {
     }
   }
 
-  async estimateGas(): Promise<any> {
+  async estimateGas(): Promise<Transaction> {
     this.gasprice = await web3.eth.getGasPrice();
     return this;
   }
 
-  async estimateGasLimit(): Promise<any> {
+  async estimateGasLimit(): Promise<Transaction> {
     this.gaslimit = await this.contract.methods[this.method](
       ...this.arg
     ).estimateGas({
@@ -88,7 +87,7 @@ class Transaction {
       data: this.data
     };
 
-    this.tx = new ethTx(txParams, { chain: 'testnet' });
+    this.tx = new ethTx(txParams);
     return this;
   }
 

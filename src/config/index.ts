@@ -14,7 +14,7 @@ export const verifyToken = (
     const bearerToken = bearer[1];
     try {
       const authData = jwt.verify(bearerToken, process.env.JWT_SECRET);
-      req.body.user = authData;
+      req.user = authData;
       next();
     } catch (e) {
       res.sendStatus(403);

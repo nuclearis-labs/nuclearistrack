@@ -86,7 +86,8 @@ module.exports.confirm = async (req: Request, res: Response) => {
       txHash
     });
   } catch (e) {
-    logger.error(`User Confirmation ${user._id}`, { message: e.message });
+    logger.error(`User Confirmation: `, { message: e.message });
+    console.log(e);
 
     res.status(500).json({ error: e.message });
   }
@@ -123,10 +124,9 @@ export const restore = async (req: Request, res: Response) => {
 
     res.json(user);
   } catch (e) {
-    logger.error(
-      `User ${user._id} not able to restore with mnemonic passphrase`,
-      { message: e.message }
-    );
+    logger.error(`User not able to restore with mnemonic passphrase`, {
+      message: e.message
+    });
 
     res.status(400).json({ error: e.message });
   }
@@ -157,10 +157,9 @@ module.exports.change = async (req: Request, res: Response) => {
 
     res.sendStatus(200);
   } catch (e) {
-    logger.error(
-      `User ${user._id} not able to restore with mnemonic passphrase`,
-      { error: e.message }
-    );
+    logger.error(`User not able to change passphrase`, {
+      error: e.message
+    });
 
     res.status(400).json({ error: e.message });
   }

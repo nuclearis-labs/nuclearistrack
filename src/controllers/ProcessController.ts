@@ -5,7 +5,7 @@ import fs from 'fs';
 import logger from '../config/winston';
 import { Request, Response } from 'express';
 
-const processABI = require('build/contracts/Process.json').abi;
+const processABI = require('../../build/contracts/Process.json').abi;
 
 module.exports.create = async (req: Request, res: Response) => {
   try {

@@ -9,7 +9,7 @@ const path_1 = __importDefault(require("path"));
 // import morgan from 'morgan';
 const winston_1 = __importDefault(require("./config/winston"));
 const app = express_1.default();
-require('./services/mongoose_connect');
+require('./config/mongoose_connect');
 require('dotenv').config();
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: false }));

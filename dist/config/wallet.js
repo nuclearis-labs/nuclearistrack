@@ -13,13 +13,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require('dotenv').config();
-const ethereumjs_util_1 = __importDefault(require("ethereumjs-util"));
+const ethereumjs_util_1 = require("ethereumjs-util");
 const utils_1 = require("./utils");
 const wif_1 = __importDefault(require("wif"));
 const bip38_1 = __importDefault(require("bip38"));
 const bitcoinjs_lib_1 = require("bitcoinjs-lib");
-const bip39_1 = __importDefault(require("bip39"));
-const bip32_1 = __importDefault(require("bip32"));
+const bip39_1 = require("bip39");
+const bip32_1 = require("bip32");
 const assert_1 = require("assert");
 const generateWifPrivateKey = (privKey, network = bitcoinjs_lib_1.networks.testnet.wif) => {
     return wif_1.default.encode(network, privKey, true);
@@ -40,17 +40,17 @@ exports.decryptBIP38 = (encryptedKey, passphrase) => __awaiter(void 0, void 0, v
         }
     }
 });
-exports.generateMnemonic = (strength = 256) => {
-    return bip39_1.default.generateMnemonic(strength);
+exports.generateMnemonic = () => {
+    return bip39_1.generateMnemonic();
 };
 exports.generatePrivateKeyFromMnemonic = ({ mnemonic, coin = '0', account = 0, index = 0 }) => __awaiter(void 0, void 0, void 0, function* () {
-    const seed = yield bip39_1.default.mnemonicToSeed(mnemonic);
-    const node = bip32_1.default.fromSeed(seed);
+    const seed = yield bip39_1.mnemonicToSeed(mnemonic);
+    const node = bip32_1.fromSeed(seed);
     return node.derivePath(`m/44'/${coin}'/${account}'/0/${index}`).privateKey;
 });
 exports.generateRSKAddress = (privateKey) => {
     try {
-        return utils_1.toChecksumAddress(ethereumjs_util_1.default.privateToAddress(privateKey).toString('hex'));
+        return utils_1.toChecksumAddress(ethereumjs_util_1.privateToAddress(privateKey).toString('hex'));
     }
     catch (e) {
         console.log(e);

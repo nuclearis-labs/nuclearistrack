@@ -4,10 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const { verifyToken, validateForm } = require('../../middleware/index');
+const { verifyToken, validateForm } = require('../config/index');
 const router = express_1.default.Router({ mergeParams: true });
-const rules = require('../../services/validationRules');
-const { create, confirm, restore, change, get, close, getOne, getBalance } = require('../controller/UserController');
+const rules = require('../config/validationRules');
+const { create, confirm, restore, change, get, close, getOne, getBalance } = require('../controllers/UserController');
 router.post('/', verifyToken, validateForm(rules.userCreate), create);
 router.post('/confirm/:id', validateForm(rules.userConfirm), confirm);
 router.post('/restore', validateForm(rules.userRestore), restore);

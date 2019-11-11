@@ -192,3 +192,144 @@
 2019-11-06T20:49:31.723Z info: Connected to database mongodb://localhost:27017/nrspoe
 2019-11-06T20:50:30.824Z info: Server started working on port 6000
 2019-11-06T20:50:32.876Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:20:53.583Z info: Server started working on port 6000
+2019-11-11T17:20:55.679Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:23:14.536Z error: Couldn't retrieve userListThe first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type undefined
+2019-11-11T17:23:58.303Z info: Server started working on port 6000
+2019-11-11T17:24:00.324Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:24:05.880Z info: Server started working on port 6000
+2019-11-11T17:24:07.929Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:25:09.442Z info: Server started working on port 6000
+2019-11-11T17:25:11.487Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:25:21.783Z info: Server started working on port 6000
+2019-11-11T17:25:23.834Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:25:29.935Z info: Server started working on port 6000
+2019-11-11T17:25:31.969Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:26:28.755Z info: Server started working on port 6000
+2019-11-11T17:26:30.818Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:27:10.898Z info: Server started working on port 6000
+2019-11-11T17:27:12.948Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:27:59.346Z info: Server started working on port 6000
+2019-11-11T17:28:01.382Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:28:30.651Z info: Server started working on port 6000
+2019-11-11T17:28:32.704Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:29:36.611Z info: Server started working on port 6000
+2019-11-11T17:29:38.673Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:30:01.006Z info: Server started working on port 6000
+2019-11-11T17:30:03.071Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:30:38.189Z info: Server started working on port 6000
+2019-11-11T17:30:40.230Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:31:01.618Z info: Server started working on port 6000
+2019-11-11T17:31:03.653Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:31:40.889Z info: Server started working on port 6000
+2019-11-11T17:31:42.916Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:31:45.644Z info: Server started working on port 6000
+2019-11-11T17:31:47.702Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:31:52.176Z error: Couldn't retrieve userListYou must provide the json interface of the contract when instantiating a contract object.
+2019-11-11T17:33:45.963Z info: Server started working on port 6000
+2019-11-11T17:33:47.999Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:33:48.880Z error: Couldn't retrieve userListTypeError: Cannot read property 'Symbol(Symbol.iterator)' of this.contract.methods[this.method]
+2019-11-11T17:36:44.386Z info: Server started working on port 6000
+2019-11-11T17:36:46.408Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:36:51.800Z info: Server started working on port 6000
+2019-11-11T17:36:52.589Z error: Couldn't retrieve userListTypeError: Cannot read property 'Symbol(Symbol.iterator)' of this.contract.methods[this.method]
+2019-11-11T17:36:53.857Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:36:55.850Z error: Couldn't retrieve userListTypeError: Cannot read property 'Symbol(Symbol.iterator)' of this.contract.methods[this.method]
+2019-11-11T17:37:20.049Z info: Server started working on port 6000
+2019-11-11T17:37:22.074Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:37:32.311Z info: Server started working on port 6000
+2019-11-11T17:37:34.369Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:37:50.172Z info: Server started working on port 6000
+2019-11-11T17:37:52.227Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:38:44.780Z info: User 5dc99ca457745310241735db created {"email":info@nasa.com}
+2019-11-11T17:41:07.154Z info: Server started working on port 6000
+2019-11-11T17:41:09.199Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:41:09.215Z error: User ConfirmationCannot read property 'generateMnemonic' of undefined
+2019-11-11T17:41:22.860Z info: Server started working on port 6000
+2019-11-11T17:41:24.903Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:41:24.916Z error: User Confirmation: Cannot read property 'generateMnemonic' of undefined
+2019-11-11T17:43:13.697Z info: Server started working on port 6000
+2019-11-11T17:43:15.768Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:43:15.783Z error: User Confirmation: Cannot read property 'generateMnemonic' of undefined
+2019-11-11T17:43:57.931Z info: Server started working on port 6000
+2019-11-11T17:43:59.971Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:44:03.693Z error: User Confirmation: Cannot read property 'generateMnemonic' of undefined
+2019-11-11T17:45:42.850Z info: Server started working on port 6000
+2019-11-11T17:45:44.899Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:45:50.503Z info: Server started working on port 6000
+2019-11-11T17:45:52.565Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:46:23.958Z info: Server started working on port 6000
+2019-11-11T17:46:25.996Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:46:40.046Z info: Server started working on port 6000
+2019-11-11T17:46:42.081Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:46:52.184Z info: Server started working on port 6000
+2019-11-11T17:46:54.247Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:47:01.670Z info: Server started working on port 6000
+2019-11-11T17:47:03.729Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:47:06.664Z error: User Confirmation: Cannot read property 'fromSeed' of undefined
+2019-11-11T17:48:08.898Z info: Server started working on port 6000
+2019-11-11T17:48:10.925Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:48:14.643Z info: Server started working on port 6000
+2019-11-11T17:48:16.694Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:48:22.915Z error: User Confirmation: Error: invalid address (arg="_userAddress", coderType="address", value=undefined)
+2019-11-11T17:48:39.560Z info: Server started working on port 6000
+2019-11-11T17:48:43.331Z info: Server started working on port 6000
+2019-11-11T17:48:45.369Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:48:50.874Z error: User Confirmation: Error: Chain with name testnet not supported
+2019-11-11T17:49:24.438Z info: Server started working on port 6000
+2019-11-11T17:49:26.489Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:49:35.736Z info: User 5dc99ca457745310241735db confirmed {"address":0xcd29835722FD13Fe11A0D54Ba3f3d1c0cE034F3c}
+2019-11-11T17:50:02.862Z info: Paused User 0xcd29835722FD13Fe11A0D54Ba3f3d1c0cE034F3c
+2019-11-11T17:50:12.229Z error: Couldn't pause User 0xcd29835722FD13Fe11A0D54Ba3f3d1c0cE034F3cError: Invalid JSON RPC response: ""
+2019-11-11T17:50:16.779Z info: Paused User 0xcd29835722FD13Fe11A0D54Ba3f3d1c0cE034F3c
+2019-11-11T17:50:45.972Z info: User 5dc99ca457745310241735db changed passphrase
+2019-11-11T17:51:39.327Z info: Server started working on port 6000
+2019-11-11T17:51:41.386Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:51:53.743Z info: Server started working on port 6000
+2019-11-11T17:51:55.798Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:51:58.350Z error: User not able to change passphrase
+2019-11-11T17:52:08.432Z error: User not able to change passphrase
+2019-11-11T17:52:52.523Z info: User 5dc99ca457745310241735db changed passphrase
+2019-11-11T17:53:31.739Z info: Server started working on port 6000
+2019-11-11T17:53:35.134Z info: Server started working on port 6000
+2019-11-11T17:53:37.157Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:53:39.791Z info: User 5dc99ca457745310241735db restored with mnemonic passphrase
+2019-11-11T17:53:58.130Z info: User 5dc99ca457745310241735db restored with mnemonic passphrase
+2019-11-11T17:55:30.273Z info: Server started working on port 6000
+2019-11-11T17:55:32.317Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:55:48.907Z info: Server started working on port 6000
+2019-11-11T17:55:50.950Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:56:11.204Z info: Server started working on port 6000
+2019-11-11T17:56:13.236Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:56:46.752Z info: Server started working on port 6000
+2019-11-11T17:56:48.803Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:57:06.200Z info: Server started working on port 6000
+2019-11-11T17:57:08.254Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:57:18.207Z info: Server started working on port 6000
+2019-11-11T17:57:20.255Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:58:39.606Z info: Server started working on port 6000
+2019-11-11T17:58:41.639Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:58:56.746Z info: Server started working on port 6000
+2019-11-11T17:58:58.803Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:59:16.334Z info: Server started working on port 6000
+2019-11-11T17:59:18.395Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T17:59:35.742Z info: Transfered 1 to 0xcd29835722FD13Fe11A0D54Ba3f3d1c0cE034F3c 
+2019-11-11T17:59:57.344Z info: Project 41955 created
+2019-11-11T18:01:38.774Z info: Server started working on port 6000
+2019-11-11T18:01:40.823Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T18:02:10.671Z info: Server started working on port 6000
+2019-11-11T18:02:12.695Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T18:02:39.404Z info: User 5dc9a23fed7a6d1bb41a4bde created {"email":info@imeco.com}
+2019-11-11T18:02:53.805Z info: User 5dc9a23fed7a6d1bb41a4bde confirmed {"address":0xb338852617c3F253a78C6C8A0b974BdAC76e6ED3}
+2019-11-11T18:03:03.307Z info: Process created 
+2019-11-11T18:03:49.392Z info: Server started working on port 6000
+2019-11-11T18:03:51.412Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T18:04:23.576Z info: Server started working on port 6000
+2019-11-11T18:04:25.623Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-11T18:04:37.155Z info: Process 0x1EdcdE414000B0B182761168CC72B4c01B21fD0A was assigned to project 41955 
+2019-11-11T18:05:56.490Z error: Document could not be uploaded 
+2019-11-11T18:06:13.883Z error: Couldn't transfer 1 to 0xb338852617c3F253a78C6C8A0b974BdAC76e6ED3 Invalid JSON RPC response: ""
+2019-11-11T18:06:19.215Z info: Transfered 1 to 0xb338852617c3F253a78C6C8A0b974BdAC76e6ED3 
+2019-11-11T18:06:25.197Z error: Document could not be uploaded 
+2019-11-11T18:06:54.992Z error: Document could not be verified
+2019-11-11T18:08:10.644Z info: Project 41955 closed

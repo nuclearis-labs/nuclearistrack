@@ -12,7 +12,7 @@ exports.verifyToken = (req, res, next) => {
         const bearerToken = bearer[1];
         try {
             const authData = jsonwebtoken_1.default.verify(bearerToken, process.env.JWT_SECRET);
-            req.body.user = authData;
+            req.user = authData;
             next();
         }
         catch (e) {

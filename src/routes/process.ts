@@ -1,9 +1,9 @@
 import express from 'express';
 
-const { verifyToken, validateForm } = require('../../middleware/index');
+const { verifyToken, validateForm } = require('../config/index');
 const router = express.Router({ mergeParams: true });
-const rules = require('../../services/validationRules');
-const ProcessController = require('../controller/ProcessController');
+const rules = require('../config/validationRules');
+const ProcessController = require('../controllers/ProcessController');
 
 router.post(
   '/',
@@ -15,7 +15,7 @@ router.post(
 router.get(
   '/getOne',
   validateForm({
-    'params.contract': 'required|checksumAddress'
+    'query.contract': 'required|checksumAddress'
   }),
   ProcessController.getOne
 );
@@ -23,7 +23,7 @@ router.get(
 router.get(
   '/getByExpediente',
   validateForm({
-    expediente: 'required|integer'
+    'query.expediente': 'required|integer'
   }),
   ProcessController.getByID
 );

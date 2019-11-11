@@ -8,7 +8,7 @@ import { addDocNumber } from '../config/pdf';
 import { Request, Response } from 'express';
 import logger from '../config/winston';
 
-const processABI = require('build/contracts/Process.json').abi;
+const processABI = require('../../build/contracts/Process.json').abi;
 
 module.exports.verify = async (req: Request, res: Response) => {
   let documentHash: string;

@@ -1,4 +1,6 @@
-module.exports = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const rules = {
     userCreate: {
         'body.newUserName': 'required|unique:User,username|ascii|length:50,3',
         'body.newUserEmail': 'required|unique:User,email|email|length:100,3',
@@ -81,4 +83,5 @@ module.exports = {
         'body.passphrase': 'required|ascii'
     }
 };
+exports.default = rules;
 //# sourceMappingURL=validationRules.js.map

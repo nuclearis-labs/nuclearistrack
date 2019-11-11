@@ -3,10 +3,10 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 const router = express.Router();
 
-const { verifyToken, validateForm } = require('../../middleware/index');
-const UserModel = require('../models/user');
-const wallet = require('../../functions/wallet');
-const rules = require('../../services/validationRules');
+import { verifyToken, validateForm } from '../config/index';
+import UserModel from '../models/user';
+import * as wallet from '../config/wallet';
+import rules from '../config/validationRules';
 
 router.post('/', validateForm(rules.auth), async (req, res) => {
   try {
@@ -41,22 +41,15 @@ router.post('/', validateForm(rules.auth), async (req, res) => {
   }
 });
 
-router.post(
-  '/current',
-  verifyToken,
-  validateForm({
-    authorization: 'required'
-  }),
-  async (req, res) => {
-    const bearer = req.headers.authorization.split(' ');
-    const bearerToken = bearer[1];
-    try {
-      const authData = jwt.verify(bearerToken, process.env.JWT_SECRET);
-      res.json(authData);
-    } catch (e) {
-      res.json({});
-    }
+router.post('/current', verifyToken, async (req, res) => {
+  const bearer = req.headers.authorization.split(' ');
+  const bearerToken = bearer[1];
+  try {
+    const authData = jwt.verify(bearerToken, process.env.JWT_SECRET);
+    res.json(authData);
+  } catch (e) {
+    res.json({});
   }
-);
+});
 
 module.exports = router;

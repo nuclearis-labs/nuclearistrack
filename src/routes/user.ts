@@ -1,8 +1,8 @@
 import express from 'express';
-const { verifyToken, validateForm } = require('../../middleware/index');
+const { verifyToken, validateForm } = require('../config/index');
 
 const router = express.Router({ mergeParams: true });
-const rules = require('../../services/validationRules');
+const rules = require('../config/validationRules');
 const {
   create,
   confirm,
@@ -12,7 +12,7 @@ const {
   close,
   getOne,
   getBalance
-} = require('../controller/UserController');
+} = require('../controllers/UserController');
 
 router.post('/', verifyToken, validateForm(rules.userCreate), create);
 

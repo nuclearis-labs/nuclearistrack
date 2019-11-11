@@ -2,12 +2,12 @@ import express from 'express';
 const storage = require('multer').memoryStorage();
 const upload = require('multer')({ storage });
 
-const { verifyToken, validateForm } = require('../../middleware/index');
-const rules = require('../../services/validationRules');
+const { verifyToken, validateForm } = require('../config/index');
+const rules = require('../config/validationRules');
 
 const router = express.Router({ mergeParams: true });
 
-const DocumentController = require('../controller/DocumentController');
+const DocumentController = require('../controllers/DocumentController');
 
 router.post(
   '/verify',

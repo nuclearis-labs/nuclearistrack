@@ -1,7 +1,7 @@
 import niv from 'node-input-validator';
 import mongoose from 'mongoose';
 import web3 from './web3';
-import bip39 from 'bip39';
+import { validateMnemonic } from 'bip39';
 import { isSHA256 } from './utils';
 
 niv.extendMessages(
@@ -62,7 +62,7 @@ niv.extend('isSHA256', async ({ value }: ValueParam) => {
 });
 
 niv.extend('isValidMnemonic', async ({ value }: ValueParam) => {
-  return bip39.validateMnemonic(value);
+  return validateMnemonic(value);
 });
 
 export default niv;

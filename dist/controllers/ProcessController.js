@@ -23,7 +23,7 @@ const Contract_1 = __importDefault(require("../classes/Contract"));
 const utils = __importStar(require("../config/utils"));
 const transaction_1 = __importDefault(require("../models/transaction"));
 const winston_1 = __importDefault(require("../config/winston"));
-const processABI = require('build/contracts/Process.json').abi;
+const processABI = require('../../build/contracts/Process.json').abi;
 module.exports.create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { address, privateKey } = yield utils.getKeys(req.body);

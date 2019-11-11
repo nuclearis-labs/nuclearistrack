@@ -86,7 +86,8 @@ module.exports.confirm = (req, res) => __awaiter(void 0, void 0, void 0, functio
         });
     }
     catch (e) {
-        winston_1.default.error(`User Confirmation ${user._id}`, { message: e.message });
+        winston_1.default.error(`User Confirmation: `, { message: e.message });
+        console.log(e);
         res.status(500).json({ error: e.message });
     }
 });
@@ -109,7 +110,9 @@ exports.restore = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.json(user);
     }
     catch (e) {
-        winston_1.default.error(`User ${user._id} not able to restore with mnemonic passphrase`, { message: e.message });
+        winston_1.default.error(`User not able to restore with mnemonic passphrase`, {
+            message: e.message
+        });
         res.status(400).json({ error: e.message });
     }
 });
@@ -129,7 +132,9 @@ module.exports.change = (req, res) => __awaiter(void 0, void 0, void 0, function
         res.sendStatus(200);
     }
     catch (e) {
-        winston_1.default.error(`User ${user._id} not able to restore with mnemonic passphrase`, { error: e.message });
+        winston_1.default.error(`User not able to change passphrase`, {
+            error: e.message
+        });
         res.status(400).json({ error: e.message });
     }
 });

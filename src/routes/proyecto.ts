@@ -1,6 +1,6 @@
 import express from 'express';
-const { verifyToken, validateForm } = require('../../middleware/index');
-const rules = require('../../services/validationRules');
+const { verifyToken, validateForm } = require('../config/index');
+const rules = require('../config/validationRules');
 const {
   create,
   getDocNumber,
@@ -8,7 +8,7 @@ const {
   close,
   getOne,
   assignProcess
-} = require('../controller/ProjectController');
+} = require('../controllers/ProjectController');
 const router = express.Router({ mergeParams: true });
 
 router.post('/', verifyToken, validateForm(rules.projectCreate), create);
