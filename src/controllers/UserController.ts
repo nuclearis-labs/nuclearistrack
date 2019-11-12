@@ -7,7 +7,7 @@ import Contract from '../classes/Contract';
 import logger from '../config/winston';
 import { Request, Response } from 'express';
 
-module.exports.create = async (req: Request, res: Response) => {
+export async function create(req: Request, res: Response) {
   try {
     const db = await UserModel.create({
       username: req.body.newUserName,
@@ -24,9 +24,9 @@ module.exports.create = async (req: Request, res: Response) => {
     });
     res.status(400).json({ error: e.message });
   }
-};
+}
 
-module.exports.confirm = async (req: Request, res: Response) => {
+export async function confirm(req: Request, res: Response) {
   let user: { _id: string };
 
   try {
@@ -91,9 +91,9 @@ module.exports.confirm = async (req: Request, res: Response) => {
 
     res.status(500).json({ error: e.message });
   }
-};
+}
 
-export const restore = async (req: Request, res: Response) => {
+export async function restore(req: Request, res: Response) {
   let user: { _id: string };
   try {
     const newPrivateKey = await wallet.generatePrivateKeyFromMnemonic({
@@ -130,9 +130,9 @@ export const restore = async (req: Request, res: Response) => {
 
     res.status(400).json({ error: e.message });
   }
-};
+}
 
-module.exports.change = async (req: Request, res: Response) => {
+export async function change(req: Request, res: Response) {
   let user: { _id: string };
 
   try {
@@ -163,9 +163,9 @@ module.exports.change = async (req: Request, res: Response) => {
 
     res.status(400).json({ error: e.message });
   }
-};
+}
 
-module.exports.get = async (req: Request, res: Response) => {
+export async function get(req: Request, res: Response) {
   try {
     const contract = new Contract();
     const contractUsers = await contract.getDataFromContract({
@@ -214,9 +214,9 @@ module.exports.get = async (req: Request, res: Response) => {
 
     res.status(500).json({ error: e.message });
   }
-};
+}
 
-module.exports.getBalance = async (req: Request, res: Response) => {
+export async function getBalance(req: Request, res: Response) {
   try {
     web3.eth.getBalance(req.params.address).then(balance => {
       res.json(web3.utils.fromWei(balance));
@@ -228,9 +228,9 @@ module.exports.getBalance = async (req: Request, res: Response) => {
 
     res.sendStatus(500);
   }
-};
+}
 
-module.exports.close = async (req: Request, res: Response) => {
+export async function close(req: Request, res: Response) {
   try {
     const { address, privateKey } = await utils.getKeys(req.body);
 
@@ -250,9 +250,9 @@ module.exports.close = async (req: Request, res: Response) => {
     });
     res.status(400).json({ error: e.message });
   }
-};
+}
 
-module.exports.getOne = async (req: Request, res: Response) => {
+export async function getOne(req: Request, res: Response) {
   try {
     const address = utils.toChecksumAddress(req.params.address);
     const contract = new Contract();
@@ -296,4 +296,4 @@ module.exports.getOne = async (req: Request, res: Response) => {
     });
     res.status(500).json({ error: e.message });
   }
-};
+}

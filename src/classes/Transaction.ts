@@ -1,8 +1,7 @@
 import { Transaction as ethTx } from 'ethereumjs-tx';
 import web3 from '../config/web3';
-import Web3 from 'web3';
 import { Contract } from 'web3-eth-contract';
-import { TxData } from 'ethereumjs-tx';
+import Common from 'ethereumjs-common';
 
 class Transaction {
   public contract: Contract;

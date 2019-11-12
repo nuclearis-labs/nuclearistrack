@@ -16,9 +16,14 @@ const {
 
 router.post('/', verifyToken, validateForm(rules.userCreate), create);
 
-router.post('/confirm/:id', validateForm(rules.userConfirm), confirm);
+router.post(
+  '/confirm/:id',
+  verifyToken,
+  validateForm(rules.userConfirm),
+  confirm
+);
 
-router.post('/restore', validateForm(rules.userRestore), restore);
+router.post('/restore', verifyToken, validateForm(rules.userRestore), restore);
 
 router.post('/change', verifyToken, validateForm(rules.userChange), change);
 

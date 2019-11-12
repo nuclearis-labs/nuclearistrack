@@ -1,1 +1,0 @@
-{"version":3,"file":"transaction.js","sourceRoot":"","sources":["../../src/models/transaction.ts"],"names":[],"mappings":";;;;;AAAA,wDAAgC;AAEhC,MAAM,QAAQ,GAAG,IAAI,kBAAQ,CAAC,MAAM,CAAC;IACnC,MAAM,EAAE,MAAM;IACd,OAAO,EAAE,MAAM;IACf,IAAI,EAAE,CAAC,MAAM,CAAC;CACf,CAAC,CAAC;AAEH,kBAAe,kBAAQ,CAAC,KAAK,CAAC,aAAa,EAAE,QAAQ,CAAC,CAAC"}

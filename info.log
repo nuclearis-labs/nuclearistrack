@@ -7,3 +7,29 @@
 2019-11-12T13:31:44.707Z info: Server started working on port 6000
 2019-11-12T13:31:46.728Z info: Connected to database mongodb://localhost:27017/nrspoe
 2019-11-12T13:31:53.822Z error: User Confirmation: Cannot read property 'type' of null
+2019-11-12T13:56:40.193Z info: Server started working on port 6000
+2019-11-12T13:56:42.215Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-12T13:57:03.711Z info: User 5dcaba2f34f7fb589c21ca9c created {"email":info@nasa.com}
+2019-11-12T13:57:37.631Z error: User Confirmation: Error: Returned error: the sender account doesn't exist
+2019-11-12T13:59:06.684Z info: Server started working on port 6000
+2019-11-12T13:59:08.705Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-12T13:59:25.663Z info: User 5dcaba2f34f7fb589c21ca9c confirmed {"address":0x6dBc950B3Bd500F12f95B5152A7437E7ed88b37e}
+2019-11-12T14:00:10.739Z info: Server started working on port 6000
+2019-11-12T14:00:12.764Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-12T14:04:28.329Z info: Server started working on port 6000
+2019-11-12T14:04:30.350Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-12T14:04:49.349Z error: User Confirmation: Error: Returned error: the sender account doesn't exist
+2019-11-12T14:05:30.141Z info: Server started working on port 6000
+2019-11-12T14:05:32.182Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-12T14:05:37.541Z info: User 5dcaba2f34f7fb589c21ca9c confirmed {"address":0xbC6c1C13E76398B586E10C36E898928dB2aa333F}
+2019-11-12T15:12:30.976Z info: Server started working on port 6000
+2019-11-12T15:12:33.002Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-12T15:13:12.158Z info: User 5dcacc08db9e8a4c98d03b23 created {"email":info@nasa.com}
+2019-11-12T15:13:25.644Z info: User 5dcacc08db9e8a4c98d03b23 confirmed {"address":0xF3FeaBf429846292eE48d0f8e9A8ff55dF9Dc03D}
+2019-11-12T15:14:03.184Z info: User 5dcacc3bdb9e8a4c98d03b25 created {"email":info@imeco.com}
+2019-11-12T15:14:16.776Z info: User 5dcacc3bdb9e8a4c98d03b25 confirmed {"address":0x49F3061268EF96bD349720BE2fD6A734f0Ca8f63}
+2019-11-12T15:24:07.435Z info: Server started working on port 6000
+2019-11-12T15:24:09.468Z info: Connected to database mongodb://localhost:27017/nrspoe
+2019-11-12T15:34:36.255Z info: Server started working on port 6000
+2019-11-12T16:04:25.697Z info: Server started working on port 6000
+2019-11-12T16:04:39.259Z info: Connected to database mongodb://localhost:27017/nrspoe
