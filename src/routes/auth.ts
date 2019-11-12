@@ -19,6 +19,7 @@ router.post('/', validateForm(rules.auth), async (req, res) => {
     );
 
     const address = wallet.generateRSKAddress(decryptedKey);
+    logger.info(address);
 
     if (user.address === address) {
       jwt.sign(
@@ -38,6 +39,8 @@ router.post('/', validateForm(rules.auth), async (req, res) => {
           }
         }
       );
+    } else {
+      throw Error('Address not match');
     }
   } catch (e) {
     logger.error(`User ${req.body.email} couldn't log in `, {
