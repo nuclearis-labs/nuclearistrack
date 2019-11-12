@@ -43,7 +43,7 @@ router.post('/', validateForm(rules.auth), async (req, res) => {
     logger.error(`User ${req.body.email} couldn't log in `, {
       message: e.message
     });
-    res.sendStatus(403);
+    res.status(403).json({ error: e.message });
   }
 });
 
