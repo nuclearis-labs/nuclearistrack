@@ -12,14 +12,15 @@ import rules from '../config/validationRules';
 router.post('/', validateForm(rules.auth), async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.body.email });
-
+    console.log(user);
     const decryptedKey = await wallet.decryptBIP38(
       user.encryptedPrivateKey,
       req.body.passphrase
     );
+    console.log(decryptedKey);
 
     const address = wallet.generateRSKAddress(decryptedKey);
-    logger.info(address);
+    console.log(address);
 
     if (user.address === address) {
       jwt.sign(
@@ -31,9 +32,11 @@ router.post('/', validateForm(rules.auth), async (req, res) => {
         },
         process.env.JWT_SECRET,
         (err: Error, encoded: string) => {
-          if (err) throw Error();
+          console.log(address);
+
+          if (err) throw Error(err.message);
           else {
-            logger.info(`User ${user._id} logged in}`);
+            console.log(encoded);
 
             res.json({ encoded });
           }
