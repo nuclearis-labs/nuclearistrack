@@ -39,7 +39,7 @@ export async function decryptBIP38(
   }
 }
 
-export function generateMnemonic(): string {
+export function newMnemonic(): string {
   return bip39.generateMnemonic();
 }
 

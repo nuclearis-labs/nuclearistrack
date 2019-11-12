@@ -35,7 +35,7 @@ module.exports.confirm = async (req: Request, res: Response) => {
       address: null
     });
 
-    const mnemonic = wallet.generateMnemonic();
+    const mnemonic = wallet.newMnemonic();
 
     const newPrivateKey = await wallet.generatePrivateKeyFromMnemonic({
       mnemonic,

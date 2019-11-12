@@ -1,4 +1,5 @@
 require('ts-node/register');
+const HDWalletProvider = require('truffle-hdwallet-provider');
 
 const testNode = 'https://public-node.testnet.rsk.co:443';
 const publicNode = 'https://public-node.rsk.co';
