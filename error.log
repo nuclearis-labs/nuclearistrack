@@ -1,5 +1,0 @@
-2019-11-12T13:29:58.424Z error: User Confirmation: Cannot read property 'generateMnemonic' of undefined
-2019-11-12T13:30:25.944Z error: User Confirmation: Cannot read property 'generateMnemonic' of undefined
-2019-11-12T13:31:53.822Z error: User Confirmation: Cannot read property 'type' of null
-2019-11-12T13:57:37.631Z error: User Confirmation: Error: Returned error: the sender account doesn't exist
-2019-11-12T14:04:49.349Z error: User Confirmation: Error: Returned error: the sender account doesn't exist

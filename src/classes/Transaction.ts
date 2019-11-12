@@ -1,4 +1,4 @@
-import { Transaction as ethTx } from 'ethereumjs-tx';
+import ethTx from 'ethereumjs-tx';
 import web3 from '../config/web3';
 import { Contract } from 'web3-eth-contract';
 import Common from 'ethereumjs-common';
