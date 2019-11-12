@@ -2,10 +2,10 @@ require('dotenv').config();
 import { privateToAddress } from 'ethereumjs-util';
 import { toChecksumAddress } from './utils';
 import wif from 'wif';
-import bip38 from 'bip38';
+import * as bip38 from 'bip38';
 import { networks } from 'bitcoinjs-lib';
-import bip39 from 'bip39';
-import bip32 from 'bip32';
+import * as bip39 from 'bip39';
+import * as bip32 from 'bip32';
 import { AssertionError } from 'assert';
 
 function generateWifPrivateKey(

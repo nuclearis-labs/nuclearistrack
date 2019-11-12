@@ -11,28 +11,35 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 require('dotenv').config();
 const ethereumjs_util_1 = require("ethereumjs-util");
 const utils_1 = require("./utils");
 const wif_1 = __importDefault(require("wif"));
-const bip38_1 = __importDefault(require("bip38"));
+const bip38 = __importStar(require("bip38"));
 const bitcoinjs_lib_1 = require("bitcoinjs-lib");
-const bip39_1 = __importDefault(require("bip39"));
-const bip32_1 = __importDefault(require("bip32"));
+const bip39 = __importStar(require("bip39"));
+const bip32 = __importStar(require("bip32"));
 const assert_1 = require("assert");
 function generateWifPrivateKey(privKey, network = bitcoinjs_lib_1.networks.testnet.wif) {
     return wif_1.default.encode(network, privKey, true);
 }
 function encryptBIP38(privKey, passphrase) {
     const decoded = wif_1.default.decode(generateWifPrivateKey(privKey), bitcoinjs_lib_1.networks.testnet.wif);
-    return bip38_1.default.encrypt(decoded.privateKey, decoded.compressed, passphrase);
+    return bip38.encrypt(decoded.privateKey, decoded.compressed, passphrase);
 }
 exports.encryptBIP38 = encryptBIP38;
 function decryptBIP38(encryptedKey, passphrase) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { privateKey } = bip38_1.default.decrypt(encryptedKey, passphrase);
+            const { privateKey } = bip38.decrypt(encryptedKey, passphrase);
             return privateKey;
         }
         catch (e) {
@@ -44,14 +51,14 @@ function decryptBIP38(encryptedKey, passphrase) {
     });
 }
 exports.decryptBIP38 = decryptBIP38;
-function generateMnemonic() {
-    return bip39_1.default.generateMnemonic();
+function newMnemonic() {
+    return bip39.generateMnemonic();
 }
-exports.generateMnemonic = generateMnemonic;
+exports.newMnemonic = newMnemonic;
 function generatePrivateKeyFromMnemonic({ mnemonic, coin = '0', account = 0, index = 0 }) {
     return __awaiter(this, void 0, void 0, function* () {
-        const seed = yield bip39_1.default.mnemonicToSeed(mnemonic);
-        const node = bip32_1.default.fromSeed(seed);
+        const seed = yield bip39.mnemonicToSeed(mnemonic);
+        const node = bip32.fromSeed(seed);
         return node.derivePath(`m/44'/${coin}'/${account}'/0/${index}`).privateKey;
     });
 }

@@ -50,7 +50,7 @@ module.exports.confirm = (req, res) => __awaiter(void 0, void 0, void 0, functio
             _id: req.params.id,
             address: null
         });
-        const mnemonic = wallet.generateMnemonic();
+        const mnemonic = wallet.newMnemonic();
         const newPrivateKey = yield wallet.generatePrivateKeyFromMnemonic({
             mnemonic,
             coin: process.env.DERIVATIONPATHCOIN
