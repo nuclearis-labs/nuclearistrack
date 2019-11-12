@@ -76,11 +76,15 @@ export async function get(req: Request, res: Response) {
       pendingProjects.length > 0 ? pendingProjects[0]['result'] : []
     );
 
+    console.log(allProjects);
+
     const allProjectsDetails = allProjects.map(async (id: string) => {
       const details = await contract.getDataFromContract({
         method: 'getProjectDetails',
         data: [id]
       });
+      console.log(req.user.address);
+
       if (
         details[1] === req.user.address ||
         req.user.address === process.env.ADMINADDRESS

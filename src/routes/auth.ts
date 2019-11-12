@@ -1,6 +1,7 @@
 require('dotenv').config();
 import express from 'express';
 import jwt from 'jsonwebtoken';
+import logger from '../config/winston';
 const router = express.Router();
 
 import { verifyToken, validateForm } from '../config/index';
@@ -30,13 +31,18 @@ router.post('/', validateForm(rules.auth), async (req, res) => {
         process.env.JWT_SECRET,
         (err: Error, encoded: string) => {
           if (err) throw Error();
-          else res.json({ encoded });
+          else {
+            logger.info(`User ${user._id} logged in}`);
+
+            res.json({ encoded });
+          }
         }
       );
     }
   } catch (e) {
-    console.log(e);
-
+    logger.error(`User ${req.body.email} couldn't log in `, {
+      message: e.message
+    });
     res.sendStatus(403);
   }
 });
