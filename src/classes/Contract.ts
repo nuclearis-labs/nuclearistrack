@@ -32,7 +32,7 @@ class Contract {
     data
   }: {
     method: string;
-    data?: Array<string>;
+    data?: string[];
   }) {
     const tx = new Transaction({ contract: this.instance, method, data });
     return await tx.call();
@@ -45,7 +45,7 @@ class Contract {
   }: {
     fromAddress: string;
     method: string;
-    data: Array<string>;
+    data: string[];
   }): Promise<string> {
     try {
       const tx = new Transaction({

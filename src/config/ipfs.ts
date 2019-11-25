@@ -1,29 +1,52 @@
-import ipfs from 'ipfs-http-client';
+require('dotenv').config();
+import axios, { AxiosResponse } from 'axios';
+import FormData from 'form-data';
+import fs from 'fs';
+import { Readable } from 'stream';
 
-let host: string;
-let port: string;
-if (process.env.NODE_ENV === 'development') {
-  host = 'localhost';
-  port = '5001';
-} else {
-  host = 'ec2-18-229-161-21.sa-east-1.compute.amazonaws.com';
-  port = '5001';
+function BufferToReadStream(buffer: Buffer): Promise<FormData> {
+  return new Promise((resolve, reject) => {
+    let data = new FormData();
+    const readable = new Readable();
+    readable.push(buffer);
+    readable.push(null);
+    readable.on('readable', () => {
+      resolve(data);
+    });
+  });
 }
 
-const node = new ipfs(host, port, { protocol: 'http' });
-
-export async function saveToIPFS(buffer: Buffer) {
+export async function saveToPinata(buffer: Buffer): Promise<string> {
   try {
-    const [{ hash }] = await node.add(buffer);
-    return hash;
+    const data = await BufferToReadStream(buffer);
+
+    const response = await axios.post(
+      'https://api.pinata.cloud/pinning/pinFileToIPFS',
+      data,
+      {
+        withCredentials: true,
+        maxContentLength: -1,
+        headers: {
+          'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
+          pinata_api_key: process.env.PINATA_API_KEY,
+          pinata_secret_api_key: process.env.PINATA_SECRET_API_KEY
+        }
+      }
+    );
+    return response.data.IpfsHash;
   } catch (err) {
     throw Error(err);
   }
 }
 
-export async function getFromIPFS(hash: string) {
+export async function getFromPinata(hash: string): Promise<AxiosResponse> {
   try {
-    return await node.get(hash);
+    return await axios.get('https://gateway.pinata.cloud/ipfs/' + hash, {
+      headers: {
+        pinata_api_key: process.env.PINATA_API_KEY,
+        pinata_secret_api_key: process.env.PINATA_SECRET_API_KEY
+      }
+    });
   } catch (err) {
     throw Error(err);
   }

@@ -1,8 +1,6 @@
 import Web3 from 'web3';
 import UserModel from '../models/user';
 import { generateRSKAddress, decryptBIP38 } from './wallet';
-import txModel from '../models/transaction';
-import { Document } from 'mongoose';
 
 export function isString(string: string): string | TypeError {
   if (typeof string !== 'string') throw TypeError(`${string} is not a string`);
@@ -12,22 +10,6 @@ export function isString(string: string): string | TypeError {
 export function isNumber(number: number): number | TypeError {
   if (!Number.isInteger(number)) throw TypeError(`${number} is not a number`);
   return number;
-}
-
-export async function createPendingTx({
-  txHash,
-  subject,
-  data
-}: {
-  txHash: string;
-  subject: string;
-  data: Array<string>;
-}): Promise<Document> {
-  return await txModel.create({
-    txHash,
-    subject: subject,
-    data
-  });
 }
 
 export function asciiToHex(string: string): string {
@@ -57,7 +39,7 @@ export function isEmail(email: string): string | TypeError {
   throw TypeError(`Given email "${email}" is not a valid email`);
 }
 
-export function web3ArrayToJSArray(object: object): Array<any> {
+export function web3ArrayToJSArray(object: object): any[] {
   return Object.values(object);
 }
 

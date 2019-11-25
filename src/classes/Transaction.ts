@@ -1,14 +1,20 @@
 import ethTx from 'ethereumjs-tx';
 import web3 from '../config/web3';
 import { Contract } from 'web3-eth-contract';
-import Common from 'ethereumjs-common';
+
+enum State {
+  null,
+  pending,
+  successfull,
+  error
+}
 
 class Transaction {
   public contract: Contract;
   public method: string;
   public data: string;
   public fromAddress: string;
-  arg: Array<string>;
+  arg: string[];
   tx: ethTx;
   serializedTx: Buffer;
   gaslimit: string;
@@ -24,7 +30,7 @@ class Transaction {
     fromAddress?: string;
     contract?: Contract;
     method?: string;
-    data?: Array<string>;
+    data?: string[];
   }) {
     this.contract = contract;
     this.method = method;
@@ -57,6 +63,32 @@ class Transaction {
       from: this.fromAddress
     });
     return this;
+  }
+
+  static async getTransactionStatus(hash: string): Promise<State> {
+    try {
+      const tx = await web3.eth.getTransaction(hash);
+      const receipt = await web3.eth.getTransactionReceipt(hash);
+      if (tx !== null && receipt === null) {
+        return State.pending;
+      } else if (
+        tx !== null &&
+        receipt.hasOwnProperty('status') &&
+        receipt.status === true
+      ) {
+        return State.successfull;
+      } else if (
+        tx !== null &&
+        receipt.hasOwnProperty('status') &&
+        receipt.status === false
+      ) {
+        return State.error;
+      } else {
+        return State.null;
+      }
+    } catch (e) {
+      return e;
+    }
   }
 
   async getNonce(): Promise<Transaction> {

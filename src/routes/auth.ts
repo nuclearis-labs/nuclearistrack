@@ -2,25 +2,23 @@ require('dotenv').config();
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import logger from '../config/winston';
-const router = express.Router();
 
 import { verifyToken, validateForm } from '../config/index';
 import UserModel from '../models/user';
 import * as wallet from '../config/wallet';
 import rules from '../config/validationRules';
 
+const router = express.Router({ mergeParams: true });
+
 router.post('/', validateForm(rules.auth), async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.body.email });
-    console.log(user);
     const decryptedKey = await wallet.decryptBIP38(
       user.encryptedPrivateKey,
       req.body.passphrase
     );
-    console.log(decryptedKey);
 
     const address = wallet.generateRSKAddress(decryptedKey);
-    console.log(address);
 
     if (user.address === address) {
       jwt.sign(
@@ -32,12 +30,8 @@ router.post('/', validateForm(rules.auth), async (req, res) => {
         },
         process.env.JWT_SECRET,
         (err: Error, encoded: string) => {
-          console.log(address);
-
           if (err) throw Error(err.message);
           else {
-            console.log(encoded);
-
             res.json({ encoded });
           }
         }

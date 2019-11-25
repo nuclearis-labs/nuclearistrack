@@ -29,7 +29,7 @@ niv.niceNames({
 
 interface ValueParam {
   value: string;
-  args?: Array<string>;
+  args?: string[];
 }
 
 niv.extend('unique', async ({ value, args }: ValueParam) => {

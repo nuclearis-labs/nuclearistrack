@@ -5,6 +5,7 @@ import txModel from '../models/transaction';
 import web3 from '../config/web3';
 import Contract from '../classes/Contract';
 import logger from '../config/winston';
+import * as pendingTx from '../config/pendingTx';
 import { Request, Response } from 'express';
 
 export async function create(req: Request, res: Response) {
@@ -61,7 +62,7 @@ export async function confirm(req: Request, res: Response) {
       data: [newAddress, user.type, utils.asciiToHex(user.username)]
     });
 
-    await utils.createPendingTx({
+    await pendingTx.create({
       txHash,
       subject: 'add-user',
       data: [user.username, user.type, newAddress]
@@ -172,21 +173,7 @@ export async function get(req: Request, res: Response) {
       method: 'getAllUsers'
     });
 
-    await txModel.deleteMany({ data: { $in: contractUsers } });
-
-    const pendingUser = await txModel.aggregate([
-      {
-        $match: {
-          subject: 'add-user'
-        }
-      },
-      {
-        $group: {
-          _id: null,
-          result: { $push: { $arrayElemAt: ['$data', 2] } }
-        }
-      }
-    ]);
+    const pendingUser = await pendingTx.sync(contractUsers, 'add-user');
 
     const allUsers = Object.values(contractUsers).concat(
       pendingUser.length > 0 ? pendingUser[0]['result'] : []

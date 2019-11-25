@@ -1,5 +1,6 @@
 import Contract from '../classes/Contract';
 import * as utils from '../config/utils';
+import * as pending from '../config/pendingTx';
 import txModel from '../models/transaction';
 import fs from 'fs';
 import logger from '../config/winston';
@@ -23,7 +24,7 @@ export async function create(req: Request, res: Response) {
       data: [supplierAddress, processTitle]
     });
 
-    await utils.createPendingTx({
+    await pending.create({
       txHash,
       subject: 'add-process',
       data: [req.body.processTitle, supplierAddress]

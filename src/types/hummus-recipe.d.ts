@@ -191,12 +191,12 @@ declare namespace Recipe {
 
   interface PageInfo {
     pageNumber: number;
-    mediaBox: Array<number>;
+    mediaBox: number[];
     layout: string;
     rotate: number;
     width: number;
     height: number;
-    size: Array<number>;
+    size: number[];
     offsetX: number;
     offsetY: number;
   }

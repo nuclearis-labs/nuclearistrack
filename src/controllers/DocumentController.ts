@@ -1,9 +1,10 @@
 import fs from 'fs';
 import bs58 from 'bs58';
 import Contract from '../classes/Contract';
-import { saveToIPFS, getFromIPFS } from '../config/ipfs';
+import { saveToPinata, getFromPinata } from '../config/ipfs';
 import { createSHA256 } from '../config/hash';
 import * as utils from '../config/utils';
+import * as pending from '../config/pendingTx';
 import { addDocNumber } from '../config/pdf';
 import { Request, Response } from 'express';
 import logger from '../config/winston';
@@ -61,7 +62,7 @@ export async function upload(req: Request, res: Response) {
 
     documentHash = createSHA256(FileBufferWithDocNumber);
 
-    const storage = await saveToIPFS(FileBufferWithDocNumber);
+    const storage = await saveToPinata(FileBufferWithDocNumber);
     const hexStorage = bs58.decode(storage).toString('hex');
 
     const storageFunction = hexStorage.substr(0, 2);
@@ -88,7 +89,7 @@ export async function upload(req: Request, res: Response) {
       ]
     });
 
-    await utils.createPendingTx({
+    await pending.create({
       txHash,
       subject: 'add-document',
       data: [documentHash, `B-${rawDocNumber}`]
@@ -96,6 +97,8 @@ export async function upload(req: Request, res: Response) {
 
     res.json(txHash);
   } catch (e) {
+    console.log(e);
+
     logger.error(`Document could not be uploaded `, {
       documentHash
     });
@@ -162,7 +165,7 @@ export async function getOne(req: Request, res: Response) {
       )
     );
 
-    const file = await getFromIPFS(storageHash);
+    const file = await getFromPinata(storageHash);
 
     res.json({
       docNumber: details[3],

@@ -1,5 +1,6 @@
 import Contract from '../classes/Contract';
 import * as utils from '../config/utils';
+import * as pending from '../config/pendingTx';
 import txModel from '../models/transaction';
 import logger from '../config/winston';
 import { Request, Response } from 'express';
@@ -18,7 +19,7 @@ export async function create(req: Request, res: Response) {
       data: [req.body.expediente, req.body.clientAddress, projectTitle, oc]
     });
 
-    await utils.createPendingTx({
+    await pending.create({
       txHash,
       subject: 'add-project',
       data: [
@@ -165,7 +166,7 @@ export async function assignProcess(req: Request, res: Response) {
       data: [Number(req.body.expediente), req.body.processContract]
     });
 
-    await utils.createPendingTx({
+    await pending.create({
       txHash,
       subject: 'assign-process',
       data: [req.body.expediente, req.body.processContract]

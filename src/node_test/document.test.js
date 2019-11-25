@@ -1,7 +1,7 @@
 const fs = require('fs');
-const { saveToIPFS, getFromIPFS } = require('../../services/ipfs');
+const { saveToIPFS, getFromIPFS } = require('../config/ipfs');
 
-const { createSHA256 } = require('../../functions/hash');
+const { createSHA256 } = require('../config/hash');
 
 const toBeType = require('jest-tobetype');
 expect.extend(toBeType);
