@@ -1,42 +1,31 @@
 require('dotenv').config();
 import axios, { AxiosResponse } from 'axios';
 import FormData from 'form-data';
-import fs from 'fs';
-import { Readable } from 'stream';
 
-function BufferToReadStream(buffer: Buffer): Promise<FormData> {
+export function pinFileToIPFS(stream) {
   return new Promise((resolve, reject) => {
+    const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
     let data = new FormData();
-    const readable = new Readable();
-    readable.push(buffer);
-    readable.push(null);
-    readable.on('readable', () => {
-      resolve(data);
+
+    data.append('file', stream, {
+      filename: `${stream.hash}.pdf`,
+      filepath: `${stream.hash}.pdf`,
+      contentType: 'application/pdf',
+      knownLength: stream.length
     });
-  });
-}
 
-export async function saveToPinata(buffer: Buffer): Promise<string> {
-  try {
-    const data = await BufferToReadStream(buffer);
-
-    const response = await axios.post(
-      'https://api.pinata.cloud/pinning/pinFileToIPFS',
-      data,
-      {
-        withCredentials: true,
-        maxContentLength: -1,
+    axios
+      .post(url, data, {
+        maxContentLength: 'Infinity', //this is needed to prevent axios from erroring out with large files
         headers: {
           'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
           pinata_api_key: process.env.PINATA_API_KEY,
           pinata_secret_api_key: process.env.PINATA_SECRET_API_KEY
         }
-      }
-    );
-    return response.data.IpfsHash;
-  } catch (err) {
-    throw Error(err);
-  }
+      })
+      .then(result => resolve(result))
+      .catch(error => reject(error));
+  });
 }
 
 export async function getFromPinata(hash: string): Promise<AxiosResponse> {

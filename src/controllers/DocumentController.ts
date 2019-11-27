@@ -1,11 +1,13 @@
 import fs from 'fs';
 import bs58 from 'bs58';
 import Contract from '../classes/Contract';
-import { saveToPinata, getFromPinata } from '../config/ipfs';
+import stream from 'stream';
+import { HashStream, PDFModStream } from '../config/streams';
+import { pdfFn } from '../config/pdf';
+import { pinFileToIPFS, getFromPinata } from '../config/ipfs';
 import { createSHA256 } from '../config/hash';
 import * as utils from '../config/utils';
 import * as pending from '../config/pendingTx';
-import { addDocNumber } from '../config/pdf';
 import { Request, Response } from 'express';
 import logger from '../config/winston';
 
@@ -55,47 +57,54 @@ export async function upload(req: Request, res: Response) {
       method: 'docNumber'
     });
 
-    const FileBufferWithDocNumber = await addDocNumber({
-      buffer: req.file.buffer,
-      docNumber: `B-${rawDocNumber}`
+    const pdfStream = new PDFModStream(pdfFn, `B-${rawDocNumber}`);
+    const hashStream = new HashStream('sha256');
+
+    req.file.stream.pipe(pdfStream).pipe(hashStream);
+
+    hashStream.on('finish', () => {
+      pinFileToIPFS(hashStream).then(async result => {
+        console.log(hashStream.hash);
+
+        const hexStorage = bs58.decode(result.data.IpfsHash).toString('hex');
+
+        const storageFunction = hexStorage.substr(0, 2);
+        const storageSize = hexStorage.substr(2, 2);
+        const storageHash = hexStorage.substr(4);
+
+        console.log(storageFunction);
+        console.log(storageSize);
+        console.log(storageHash);
+
+        const ProcessContract = new Contract({
+          privateKey,
+          abi: processABI,
+          contractAddress
+        });
+
+        const txHash = await ProcessContract.sendDataToContract({
+          fromAddress: address,
+          method: 'addDocument',
+          data: [
+            hashStream.hash,
+            Number(storageFunction),
+            Number(storageSize),
+            `0x${storageHash}`,
+            latitude,
+            longitude,
+            req.body.comment
+          ]
+        });
+
+        await pending.create({
+          txHash,
+          subject: 'add-document',
+          data: [hashStream.hash, `B-${rawDocNumber}`]
+        });
+
+        res.json(txHash);
+      });
     });
-
-    documentHash = createSHA256(FileBufferWithDocNumber);
-
-    const storage = await saveToPinata(FileBufferWithDocNumber);
-    const hexStorage = bs58.decode(storage).toString('hex');
-
-    const storageFunction = hexStorage.substr(0, 2);
-    const storageSize = hexStorage.substr(2, 2);
-    const storageHash = hexStorage.substr(4);
-
-    const ProcessContract = new Contract({
-      privateKey,
-      abi: processABI,
-      contractAddress
-    });
-
-    const txHash = await ProcessContract.sendDataToContract({
-      fromAddress: address,
-      method: 'addDocument',
-      data: [
-        documentHash,
-        Number(storageFunction),
-        Number(storageSize),
-        `0x${storageHash}`,
-        latitude,
-        longitude,
-        req.body.comment
-      ]
-    });
-
-    await pending.create({
-      txHash,
-      subject: 'add-document',
-      data: [documentHash, `B-${rawDocNumber}`]
-    });
-
-    res.json(txHash);
   } catch (e) {
     console.log(e);
 
@@ -164,6 +173,8 @@ export async function getOne(req: Request, res: Response) {
         'hex'
       )
     );
+
+    console.log(storageHash);
 
     const file = await getFromPinata(storageHash);
 

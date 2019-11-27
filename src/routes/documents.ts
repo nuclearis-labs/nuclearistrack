@@ -1,6 +1,6 @@
 import express from 'express';
-const storage = require('multer').memoryStorage();
-const upload = require('multer')({ storage });
+const multer = require('multer');
+const upload = multer();
 
 const { verifyToken, validateForm } = require('../config/index');
 const rules = require('../config/validationRules');

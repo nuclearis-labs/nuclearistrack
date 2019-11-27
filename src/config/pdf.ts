@@ -1,25 +1,19 @@
-import HummusRecipe from 'hummus-recipe';
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 
-export function addDocNumber({
-  buffer,
-  docNumber
-}: {
-  buffer: Buffer;
-  docNumber: string;
-}): Promise<Buffer> {
-  return new Promise(resolve => {
-    const pdfDoc = new HummusRecipe(buffer);
-    for (let i = 1; i <= pdfDoc.metadata.pages; i += 1) {
-      pdfDoc.editPage(i).text(docNumber, pdfDoc.metadata[i].width - 20, 20, {
-        size: 10,
-        color: '#000000',
-        align: 'right center'
-      });
+export async function pdfFn(buf: Buffer[], text: string): Promise<Uint8Array> {
+  const pdfDoc = await PDFDocument.load(Buffer.concat(buf));
+  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const pages = pdfDoc.getPages();
+  pages.forEach(page => {
+    const { width, height } = page.getSize();
 
-      pdfDoc.endPage();
-    }
-    pdfDoc.endPDF(output => {
-      resolve(output);
+    page.drawText(text, {
+      x: width - 30,
+      y: height - 20,
+      size: 13,
+      font,
+      color: rgb(0, 0, 0)
     });
   });
+  return await pdfDoc.save();
 }
