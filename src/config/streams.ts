@@ -1,7 +1,11 @@
 import stream from 'stream';
-import { createHash } from 'crypto';
+import { createHash, Hash } from 'crypto';
 
 export class HashStream extends stream.Transform {
+  hash: string;
+  length: number;
+  digester: Hash;
+
   constructor(algo) {
     super();
     this.digester = createHash(algo);
@@ -20,6 +24,10 @@ export class HashStream extends stream.Transform {
 }
 
 export class PDFModStream extends stream.Transform {
+  fn: Function;
+  buffer: Buffer[];
+  text: string;
+
   constructor(fn: Function, text: string) {
     super();
     this.fn = fn;

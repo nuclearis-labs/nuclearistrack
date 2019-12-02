@@ -1,6 +1,6 @@
 declare namespace Express {
   export interface Request {
     user?: any;
-    file?: { buffer: Buffer };
+    file?: { buffer: Buffer; stream: any };
   }
 }

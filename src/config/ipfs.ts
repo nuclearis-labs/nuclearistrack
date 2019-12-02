@@ -2,7 +2,7 @@ require('dotenv').config();
 import axios, { AxiosResponse } from 'axios';
 import FormData from 'form-data';
 
-export function pinFileToIPFS(stream) {
+export function pinFileToIPFS(stream): Promise<{ data: { IpfsHash: string } }> {
   return new Promise((resolve, reject) => {
     const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
     let data = new FormData();
@@ -16,7 +16,7 @@ export function pinFileToIPFS(stream) {
 
     axios
       .post(url, data, {
-        maxContentLength: 'Infinity', //this is needed to prevent axios from erroring out with large files
+        maxContentLength: 100 * 1024 * 1024, //this is needed to prevent axios from erroring out with large files
         headers: {
           'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
           pinata_api_key: process.env.PINATA_API_KEY,

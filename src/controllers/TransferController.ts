@@ -23,7 +23,7 @@ export async function transfer(req: Request, res: Response) {
     tx.prepareRawTx({
       value: req.body.value,
       to: req.body.to,
-      gaslimit: '4000000'
+      gaslimit: 4000000
     })
       .sign(privateKey)
       .serialize();

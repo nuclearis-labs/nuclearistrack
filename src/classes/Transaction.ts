@@ -100,7 +100,7 @@ class Transaction {
     value = '0',
     to = this.contract.options.address,
     gaslimit = this.gaslimit
-  }: { value?: string; to?: string; gaslimit?: string } = {}): Transaction {
+  }: { value?: string; to?: string; gaslimit?: number } = {}): Transaction {
     let weiValue = web3.utils.toWei(value, 'ether');
 
     const txParams = {
