@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs, { truncateSync } from 'fs';
 import bs58 from 'bs58';
 import Contract from '../classes/Contract';
 import stream from 'stream';
@@ -63,18 +63,12 @@ export async function upload(req: Request, res: Response) {
     req.file.stream.pipe(pdfStream).pipe(hashStream);
 
     hashStream.on('finish', () => {
-      pinFileToIPFS(hashStream).then(async result => {
-        console.log(hashStream.hash);
-
+      pinFileToIPFS(hashStream).then(result => {
         const hexStorage = bs58.decode(result.data.IpfsHash).toString('hex');
 
         const storageFunction = hexStorage.substr(0, 2);
         const storageSize = hexStorage.substr(2, 2);
         const storageHash = hexStorage.substr(4);
-
-        console.log(storageFunction);
-        console.log(storageSize);
-        console.log(storageHash);
 
         const ProcessContract = new Contract({
           privateKey,
@@ -82,7 +76,7 @@ export async function upload(req: Request, res: Response) {
           contractAddress
         });
 
-        const txHash = await ProcessContract.sendDataToContract({
+        ProcessContract.sendDataToContract({
           fromAddress: address,
           method: 'addDocument',
           data: [
@@ -94,15 +88,30 @@ export async function upload(req: Request, res: Response) {
             longitude,
             req.body.comment
           ]
-        });
-
-        await pending.create({
-          txHash,
-          subject: 'add-document',
-          data: [hashStream.hash, `B-${rawDocNumber}`]
-        });
-
-        res.json(txHash);
+        })
+          .then(txHash => {
+            pending
+              .create({
+                txHash,
+                subject: 'add-document',
+                data: [hashStream.hash, `B-${rawDocNumber}`]
+              })
+              .then(() => {
+                res.json(txHash);
+              })
+              .catch(e => {
+                logger.error(e.message, {
+                  documentHash
+                });
+                res.json({ error: e.message });
+              });
+          })
+          .catch(e => {
+            logger.error(e.message, {
+              documentHash
+            });
+            res.json({ error: e.message });
+          });
       });
     });
   } catch (e) {

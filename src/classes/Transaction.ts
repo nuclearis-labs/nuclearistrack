@@ -17,7 +17,7 @@ class Transaction {
   arg: string[];
   tx: ethTx;
   serializedTx: Buffer;
-  gaslimit: string;
+  gaslimit: number;
   nonce: number;
   gasprice: string;
 

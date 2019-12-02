@@ -63,9 +63,18 @@ class Contract {
         .sign(this.privateKey)
         .serialize();
 
+      const balance = await web3.eth.getBalance(fromAddress);
+
+      if (tx.gaslimit > parseInt(balance)) {
+        throw Error(
+          `Not enough funds, transfer at least ${web3.utils.fromWei(
+            tx.gaslimit.toString()
+          )} to ${fromAddress}`
+        );
+      }
       return await tx.send();
     } catch (e) {
-      throw Error(e);
+      throw e;
     }
   }
 }
