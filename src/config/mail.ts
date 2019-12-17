@@ -1,39 +1,55 @@
-import nodeMailer from 'nodemailer';
+import Email from 'email-templates';
+import path from 'path';
 
-export function sendMail({ to, data }: { to: string; data: string }): any {
-  const subject = 'Confirmación de tu usuario';
-  const html = `
-  Estimado,<br><br>
-  Le avisamos que se genero una cuenta en la plataforma NuclearPoE<br><br>
-  
-  Le pedimos que haga click en el siguiente enlace para confirmar la inscripción y definir su clave<br><br>
-  
-  <a href="http://localhost:3000/user-form/${data}">Confirmar Cuenta</a><br><br>
-
-  Muchas gracias<br>
-  Saludos<br>
-  La Blockchain`;
-
-  const transporter = nodeMailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-      user: 'sistemas@nuclearis.com',
-      pass: 'vwthkppvxvkyuxyd'
+export function sendMail({
+  to,
+  name,
+  id
+}: {
+  to: string;
+  name: string;
+  id: string;
+}): any {
+  const email = new Email({
+    message: {
+      from: 'sistemas@nuclearis.com'
+    },
+    send: true,
+    transport: {
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: 'sistemas@nuclearis.com',
+        pass: 'vwthkppvxvkyuxyd'
+      }
+    },
+    juice: true,
+    juiceResources: {
+      preserveImportant: true,
+      webResources: {
+        relativeTo: path.join(__dirname, '..', '..', 'mail_templates', 'css')
+      }
     }
   });
-  const mailOptions = {
-    from: '"Sistemas NRS" <sistemas@nuclearis.com>', // sender address
-    to, // list of receivers
-    subject, // Subject line
-    html // plain text body
-  };
 
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) {
-      throw Error('Problem sending mail');
-    }
-    return info;
-  });
+  email
+    .send({
+      template: path.join(
+        __dirname,
+        '..',
+        '..',
+        'mail_templates',
+        'invitation'
+      ),
+      message: {
+        to
+      },
+      locals: {
+        name,
+        id
+      }
+    })
+    .then(console.log)
+    .catch(console.error);
 }

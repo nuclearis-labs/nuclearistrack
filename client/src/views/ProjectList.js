@@ -3,8 +3,6 @@ import axios from 'axios';
 import Table from '../components/Table';
 import Loader from '../components/Loader';
 import { Link } from 'react-router-dom';
-import CogIcon from '../components/CogIcon';
-import CheckIcon from '../components/CheckIcon';
 
 function ProjectListTableBody({ projects }) {
   if (projects.length === 0) {
@@ -37,7 +35,7 @@ function ProjectListTableBody({ projects }) {
                 </td>
                 <td>{expediente}</td>
                 <td>{oc}</td>
-                <td>{status === 'pending' ? <CogIcon /> : <CheckIcon />}</td>
+                {/* <td>{status === 'pending' ? <CogIcon /> : <CheckIcon />}</td> */}
               </tr>
             );
           }

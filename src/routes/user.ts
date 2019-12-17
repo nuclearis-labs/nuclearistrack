@@ -1,9 +1,7 @@
 import express from 'express';
-const { verifyToken, validateForm } = require('../config/index');
-
-const router = express.Router({ mergeParams: true });
-const rules = require('../config/validationRules');
-const {
+import { verifyToken, validateForm } from '../config/index';
+import rules from '../config/validationRules';
+import {
   create,
   confirm,
   restore,
@@ -12,16 +10,13 @@ const {
   close,
   getOne,
   getBalance
-} = require('../controllers/UserController');
+} from '../controllers/UserController';
+
+const router = express.Router({ mergeParams: true });
 
 router.post('/', verifyToken, validateForm(rules.userCreate), create);
 
-router.post(
-  '/confirm/:id',
-  verifyToken,
-  validateForm(rules.userConfirm),
-  confirm
-);
+router.post('/confirm/:id', validateForm(rules.userConfirm), confirm);
 
 router.post('/restore', verifyToken, validateForm(rules.userRestore), restore);
 

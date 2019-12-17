@@ -2,6 +2,7 @@ import UserModel from '../models/user';
 import * as utils from '../config/utils';
 import * as wallet from '../config/wallet';
 import txModel from '../models/transaction';
+import { sendMail } from '../config/mail';
 import web3 from '../config/web3';
 import Contract from '../classes/Contract';
 import logger from '../config/winston';
@@ -17,6 +18,12 @@ export async function create(req: Request, res: Response) {
     });
 
     logger.info(`User ${db._id} created {"email":${req.body.newUserEmail}}`);
+
+    sendMail({
+      to: 'smartinez@nuclearis.com',
+      name: req.body.newUserName,
+      id: db._id
+    });
 
     res.status(200).json({ userID: db._id });
   } catch (e) {

@@ -26,7 +26,7 @@ export function validateForm(rules: object) {
 
     v.check().then(matched => {
       if (!matched) {
-        res.status(422).send(v.errors);
+        res.status(400).send(v.errors);
       } else {
         next();
       }

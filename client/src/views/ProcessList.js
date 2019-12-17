@@ -3,8 +3,6 @@ import axios from 'axios';
 import Table from '../components/Table';
 import Loader from '../components/Loader';
 import { Link } from 'react-router-dom';
-import CogIcon from '../components/CogIcon';
-import CheckIcon from '../components/CheckIcon';
 import RSKLink from '../components/RSKLink';
 import Hash from '../components/Hash';
 
@@ -62,7 +60,7 @@ function ProcessListTableBody({ processes }) {
                     text={contractAddress}
                   />
                 </td>
-                <td>{status === 'pending' ? <CogIcon /> : <CheckIcon />}</td>
+                {/* <td>{status === 'pending' ? <CogIcon /> : <CheckIcon />}</td> */}
               </tr>
             );
           }

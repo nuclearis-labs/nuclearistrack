@@ -35,7 +35,7 @@ export function UserProvider(props) {
       method: 'post',
       url: '/auth/current',
       headers: {
-        Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+        Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     }).then(({ data }) => {
       setCurrentUser(data);

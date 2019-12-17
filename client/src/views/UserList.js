@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Table from '../components/Table';
 import Loader from '../components/Loader';
-import CogIcon from '../components/CogIcon';
-import CheckIcon from '../components/CheckIcon';
 import RSKLink from '../components/RSKLink';
 
 function UserTableBody({ users }) {
@@ -49,7 +47,7 @@ function UserTableBody({ users }) {
               </td>
               <td>{type === '0' ? 'Client' : 'Supplier'}</td>
               <td>{balance || 0}</td>
-              <td>{status === 'pending' ? <CogIcon /> : <CheckIcon />}</td>
+              {/* <td>{status === 'pending' ? <CogIcon /> : <CheckIcon />}</td> */}
             </tr>
           );
         })}

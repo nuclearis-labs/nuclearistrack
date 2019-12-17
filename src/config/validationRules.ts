@@ -5,8 +5,8 @@ const rules = {
     'body.userType': 'required|integer|max:2'
   },
   userConfirm: {
-    'body.passphrase':
-      'required|ascii|length:50,4|same:body.confirm_passphrase',
+    'body.passphrase': 'required|ascii|length:50,4',
+    'body.confirm_passphrase': 'required|ascii|length:50,4',
     'params.id': 'required|ascii|length:50,3|savedRecord:User'
   },
   userRestore: {

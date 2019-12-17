@@ -35,7 +35,7 @@ export async function create(req: Request, res: Response) {
     res.json(txHash);
   } catch (e) {
     logger.error(`Project ${req.body.expediente} was not created`);
-    res.status(500).json({ error: e.message });
+    res.status(400).json({ error: e.message });
   }
 }
 

@@ -19,7 +19,6 @@ niv.extendMessages(
 
 niv.niceNames({
   'body.email': 'email',
-  'body.passphrase': 'passphrase',
   'params.id': 'database id',
   'params.expediente': 'expediente',
   newUserName: 'name',
