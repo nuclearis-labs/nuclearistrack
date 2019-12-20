@@ -8,10 +8,11 @@
     "client": "npm start --prefix client",
     "test": "jest --forceExit --coverage --verbose",
     "serve": "node dist/server.js",
+    "blockchain": "ganache-cli -m \"speak card review photo quote endless alpha metal long reflect angle rare\" -l 6800000 -g 65164000",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
     "watch-node": "nodemon dist/server.js",
-    "prepare": "concurrently \"ganache-cli -m \"speak card review photo quote endless alpha metal long reflect angle rare\"\" \"mongod\"",
+    "prepare": "concurrently \"npm run blockchain\" \"mongod\"",
     "run": "concurrently \"npm run watch-ts\" \"npm run watch-node\" \"npm run client\""
   },
   "repository": {
@@ -32,6 +33,7 @@
     "bip39": "3.0.2",
     "bitcoinjs-lib": "5.1.6",
     "body-parser": "1.18.3",
+    "bootstrap": "^4.4.1",
     "bs58": "4.0.1",
     "connect-busboy": "0.0.2",
     "dotenv": "8.2.0",
@@ -48,6 +50,7 @@
     "node-input-validator": "4.1.0",
     "nodemailer": "^6.3.1",
     "pdf-lib": "^1.2.1",
+    "react-bootstrap": "^1.0.0-beta.16",
     "truffle-hdwallet-provider": "1.0.17",
     "web3": "1.2.2",
     "winston": "3.2.1"

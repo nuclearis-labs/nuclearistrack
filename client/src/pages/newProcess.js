@@ -7,7 +7,6 @@ import {
   Label,
   Input,
   Select,
-  TextArea,
   Button,
   Wrap
 } from '../components/components.js';
@@ -18,8 +17,6 @@ export default function NewProcess() {
   const [users, setUsers] = useState();
   const [form, setForm] = useState([]);
   const [event, setEvent] = useState();
-  const [error, setError] = useState(false);
-  const [isSending, setSending] = useState(false);
 
   function handleInput(e) {
     e.persist();
@@ -33,15 +30,7 @@ export default function NewProcess() {
     });
   }, []);
 
-  function resetState() {
-    setEvent();
-    setForm([]);
-    setError(false);
-    setSending(false);
-  }
-
   function handleSubmit(e) {
-    setSending(true);
     e.preventDefault();
     axios({
       method: 'post',
@@ -52,12 +41,10 @@ export default function NewProcess() {
       }
     })
       .then(({ data }) => {
-        setSending(false);
         setEvent(data);
+        console.log(event);
       })
-      .catch(e => {
-        setError();
-      });
+      .catch(e => {});
   }
   return (
     <Wrap>

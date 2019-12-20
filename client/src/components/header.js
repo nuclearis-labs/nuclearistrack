@@ -1,7 +1,6 @@
 // header.js
 import React, { useContext } from 'react';
 import { UserContext } from '../context/UserContext';
-import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import { ReactComponent as New } from '../img/new.svg';
@@ -75,7 +74,7 @@ const NavUser = styled.div`
 
 const MenuLink = styled.a``;
 function Header() {
-  const { contextUser, logoutUser } = useContext(UserContext);
+  const { contextUser } = useContext(UserContext);
 
   return (
     <Nav>

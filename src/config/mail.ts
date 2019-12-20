@@ -1,7 +1,7 @@
 import Email from 'email-templates';
 import path from 'path';
 
-export function sendMail({
+export async function sendMail({
   to,
   name,
   id
@@ -9,12 +9,13 @@ export function sendMail({
   to: string;
   name: string;
   id: string;
-}): any {
+}): Promise<any> {
   const email = new Email({
     message: {
       from: 'sistemas@nuclearis.com'
     },
-    send: true,
+    send: false,
+    preview: false,
     transport: {
       host: 'smtp.gmail.com',
       port: 465,
@@ -32,9 +33,8 @@ export function sendMail({
       }
     }
   });
-
-  email
-    .send({
+  try {
+    await email.send({
       template: path.join(
         __dirname,
         '..',
@@ -49,7 +49,8 @@ export function sendMail({
         name,
         id
       }
-    })
-    .then(console.log)
-    .catch(console.error);
+    });
+  } catch (e) {
+    throw e;
+  }
 }

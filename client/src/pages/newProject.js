@@ -11,14 +11,15 @@ import {
   Wrap
 } from '../components/components.js';
 import { Top, Form, FormWrap } from '../components/form.js';
+import { CustomModal } from '../components/CustomModal';
+import RSKLink from '../components/RSKLink';
 
 export default function NewProvider() {
   const { contextUser } = useContext(UserContext);
   const [form, setForm] = useState({});
   const [event, setEvent] = useState();
   const [users, setUsers] = useState();
-  const [error, setError] = useState(false);
-  const [isSending, setSending] = useState(false);
+  const [modalShow, setModalShow] = useState(false);
 
   function handleInput(e) {
     e.persist();
@@ -29,8 +30,6 @@ export default function NewProvider() {
     e.preventDefault();
     setEvent();
     setForm([]);
-    setError(false);
-    setSending(false);
   }
 
   useEffect(() => {
@@ -41,7 +40,6 @@ export default function NewProvider() {
   }, []);
 
   function handleSubmit(e) {
-    setSending(true);
     e.preventDefault();
     axios({
       method: 'post',
@@ -58,12 +56,9 @@ export default function NewProvider() {
       .then(({ data }) => {
         resetState();
         setEvent(data);
-        setSending(false);
+        setModalShow(true);
       })
-      .catch(e => {
-        setSending(false);
-        setError(e.message);
-      });
+      .catch(e => {});
   }
   return (
     <Wrap>
@@ -109,6 +104,34 @@ export default function NewProvider() {
           <Button className="submit" onClick={handleSubmit}>
             CREAR
           </Button>
+          <CustomModal
+            title="Project Creation Successfull"
+            body={
+              <>
+                <p>A new project was created successfully</p>
+                <ul>
+                  <li>Name: {form.proyectoTitle}</li>
+                  <li>
+                    Cliente:{' '}
+                    <RSKLink hash={form.clientAddress} type="account" testnet />
+                  </li>
+                  <li>
+                    Transaction Hash:{' '}
+                    <RSKLink hash={event && event.txHash} type="tx" testnet />
+                  </li>
+                </ul>
+                <p>
+                  Para completar la registración, el usuario recibe un correo
+                  electronico.
+                  <br />
+                  El cual lo va a llevar a ingresar una contraseña secreta, con
+                  la cual se genera la wallet del usuario.
+                </p>
+              </>
+            }
+            show={modalShow}
+            onHide={() => setModalShow(false)}
+          />
         </Form>
       </FormWrap>
     </Wrap>

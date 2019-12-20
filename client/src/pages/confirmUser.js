@@ -1,66 +1,46 @@
 // newProvider.js
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { UserContext } from '../context/UserContext';
-import {
-  Title,
-  Label,
-  Input,
-  Select,
-  Button,
-  Wrap
-} from '../components/components.js';
+import { Title, Label, Input, Button, Wrap } from '../components/components.js';
 import { Top, Form, FormWrap } from '../components/form.js';
+import { CustomModal } from '../components/CustomModal';
+import RSKLink from '../components/RSKLink';
 
 export default function ConfirmUser() {
-  const { contextUser } = useContext(UserContext);
   const [form, setForm] = useState([]);
   const [event, setEvent] = useState();
-  const [error, setError] = useState(false);
-  const [isSending, setSending] = useState(false);
   const { id } = useParams();
+  const [modalShow, setModalShow] = useState(false);
 
   function handleInput(e) {
     e.persist();
     setForm(form => ({ ...form, [e.target.name]: e.target.value }));
   }
 
-  function resetState() {
-    setEvent();
-    setForm([]);
-    setError(false);
-    setSending(false);
-  }
-
   function handleSubmit(e) {
-    setSending(true);
     e.preventDefault();
 
     axios({
       method: 'post',
       url: `/api/user/confirm/${id}`,
       data: {
-        ...form,
-        email: contextUser.userEmail,
-        passphrase: 'Nuclearis'
+        ...form
       },
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     })
       .then(result => {
-        setSending(false);
         if (result.data.error) {
-          setError(result.data.error);
+          setEvent(result.data.error);
         } else {
           setEvent(result.data);
+          setModalShow(true);
         }
       })
       .catch(e => {
-        setEvent();
-        setSending(false);
-        setError('Not able to save User to the Blockchain, try later again');
+        setEvent('Not able to save User to the Blockchain, try later again');
       });
   }
 
@@ -87,10 +67,59 @@ export default function ConfirmUser() {
             name="confirm_passphrase"
             onChange={handleInput}
           ></Input>
-
           <Button className="submit" onClick={handleSubmit}>
             CREAR
           </Button>
+          <CustomModal
+            title="User Confirmation Successfull"
+            body={
+              <>
+                <p>
+                  Your account has been successfully generated and sended to the
+                  Blockchain.
+                </p>
+                <ul>
+                  <li>Name: {event && event.username}</li>
+                  <li>Email: {event && event.email}</li>
+                  <li>
+                    Mnemonic Passphrase:{' '}
+                    <span
+                      title="Click for copy"
+                      style={{
+                        color: 'blue',
+                        'text-decoration': 'underline',
+                        cursor: 'pointer'
+                      }}
+                      onClick={() => {
+                        navigator.clipboard.writeText(event.mnemonic);
+                      }}
+                    >
+                      {event && event.mnemonic}
+                    </span>
+                  </li>
+                  <li>
+                    Address:
+                    <RSKLink
+                      hash={event && event.address}
+                      type="address"
+                      testnet
+                    />
+                  </li>
+                  <li>
+                    Transaction:{' '}
+                    <RSKLink hash={event && event.txHash} type="tx" testnet />
+                  </li>
+                </ul>
+                <p>
+                  Les sugerimos de anotar en un medio seguro la clave mnemonica,
+                  ya que es la unica forma de recuperar su cuenta en caso de que
+                  se olvide su clave ingresada.
+                </p>
+              </>
+            }
+            show={modalShow}
+            onHide={() => setModalShow(false)}
+          />
         </Form>
       </FormWrap>
     </Wrap>
