@@ -10,23 +10,23 @@ import {
 import { Top, Form, FormWrap } from '../components/form.js';
 import axios from 'axios';
 
-export const ListProject = () => {
-  const [projects, setProjects] = useState([]);
-
+export const ListUser = () => {
+  const [user, setUser] = useState([]);
   useEffect(() => {
     axios({
       method: 'get',
-      url: '/api/project/get',
+      url: '/api/user/get',
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     }).then(({ data }) => {
-      setProjects(data);
+      setUser(data);
+      console.log(data);
     });
   }, []);
 
   return (
     <Wrap>
       <Top>
-        <Title>Listado de proyectos</Title>
+        <Title>Listado de usuarios</Title>
       </Top>
       <FormWrap>
         <Form>
@@ -34,18 +34,24 @@ export const ListProject = () => {
             <thead>
               <tr>
                 <th>Nombre</th>
-                <th>Cliente</th>
-                <th>Expediente</th>
-                <th>OC</th>
+                <th>Tipo</th>
+                <th>Dirección</th>
+                <th>Estado</th>
               </tr>
             </thead>
             <tbody>
-              {projects.map(({ title, clientName, id, oc }) => (
+              {user.map(({ name, type, address, status }) => (
                 <tr>
-                  <td>{title}</td>
-                  <td>{clientName}</td>
-                  <td>{id}</td>
-                  <td>{oc}</td>
+                  <td>{name}</td>
+                  <td>{type == 0 ? 'Cliente' : 'Proveedor'}</td>
+                  <td>{address}</td>
+                  <td>
+                    {status == 0
+                      ? 'En creación'
+                      : status == 1
+                      ? 'Activado'
+                      : 'Pausado'}
+                  </td>
                 </tr>
               ))}
             </tbody>

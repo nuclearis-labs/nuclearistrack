@@ -10,23 +10,22 @@ import {
 import { Top, Form, FormWrap } from '../components/form.js';
 import axios from 'axios';
 
-export const ListProject = () => {
-  const [projects, setProjects] = useState([]);
-
+export const ListProcess = () => {
+  const [process, setProcess] = useState([]);
   useEffect(() => {
     axios({
       method: 'get',
-      url: '/api/project/get',
+      url: '/api/process/get',
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     }).then(({ data }) => {
-      setProjects(data);
+      setProcess(data);
     });
   }, []);
 
   return (
     <Wrap>
       <Top>
-        <Title>Listado de proyectos</Title>
+        <Title>Listado de procesos</Title>
       </Top>
       <FormWrap>
         <Form>
@@ -34,20 +33,20 @@ export const ListProject = () => {
             <thead>
               <tr>
                 <th>Nombre</th>
-                <th>Cliente</th>
-                <th>Expediente</th>
-                <th>OC</th>
+                <th>Proveedor</th>
+                <th>Contrato</th>
               </tr>
             </thead>
             <tbody>
-              {projects.map(({ title, clientName, id, oc }) => (
-                <tr>
-                  <td>{title}</td>
-                  <td>{clientName}</td>
-                  <td>{id}</td>
-                  <td>{oc}</td>
-                </tr>
-              ))}
+              {process.map(
+                ({ processName, supplierName, processContracts }) => (
+                  <tr>
+                    <td>{processName}</td>
+                    <td>{supplierName}</td>
+                    <td>{processContracts}</td>
+                  </tr>
+                )
+              )}
             </tbody>
           </table>
         </Form>
