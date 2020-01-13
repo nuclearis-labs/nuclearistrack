@@ -24,13 +24,9 @@ const rules = {
     'params.address': 'required|checksumAddress'
   },
   userClose: {
-    'body.email': 'required|email',
-    'body.passphrase': 'required|ascii',
     'params.address': 'required|checksumAddress'
   },
   transfer: {
-    'body.email': 'required|email',
-    'body.passphrase': 'required|ascii',
     'body.to': 'required',
     'body.value': `required|integer`
   },
@@ -38,27 +34,20 @@ const rules = {
     'body.expediente': 'required|integer',
     'body.proyectoTitle': 'required|ascii',
     'body.clientAddress': 'required|checksumAddress',
-    'body.passphrase': 'required|ascii',
-    'body.email': 'required|email',
     'body.oc': 'required|ascii'
   },
   projectClose: {
     'body.email': 'required|email',
-    'body.passphrase': 'required|ascii',
     'params.expediente': 'required|integer'
   },
   projectGetOne: {
     'query.expediente': 'required|integer'
   },
   projectAssignProcess: {
-    'body.email': 'required|email',
-    'body.passphrase': 'required|ascii',
     'body.expediente': 'required|integer',
     'body.processContract': 'required|checksumAddress'
   },
   processCreate: {
-    'body.email': 'required|email',
-    'body.passphrase': 'required|ascii',
     'body.processTitle': 'required|ascii',
     'body.supplierAddress': 'required|checksumAddress'
   },

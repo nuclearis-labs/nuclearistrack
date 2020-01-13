@@ -1,8 +1,6 @@
 // components.js
 import styled from 'styled-components';
-
 export const Wrap = styled.div``;
-
 export const Title = styled.h1`
   color: #5d5d5d;
   font-family: 'Montserrat', sans-serif;
@@ -11,7 +9,6 @@ export const Title = styled.h1`
   letter-spacing: 2px;
   line-height: 37px;
 `;
-
 export const Label = styled.label`
   color: #333;
   font-family: 'Montserrat', sans-serif;
@@ -35,22 +32,6 @@ export const Input = styled.input`
   font-weight: 300;
   box-sizing: border-box;
   background: transparent;
-  &:active,
-  &:focus {
-    text-align: left;
-  }
-`;
-
-export const Select = styled.select`
-  border: solid 2px #5d5d5d;
-  background: transparent;
-  width: 370px;
-  height: 36px;
-  font-size: 14px;
-  font-weight: 300;
-  box-sizing: border-box;
-  color: #555;
-  padding: 5px;
   &:active,
   &:focus {
     text-align: left;
@@ -121,4 +102,20 @@ export const Datepicker = styled.input.attrs(props => ({
   color: #555;
   box-sizing: border-box;
   background: transparent;
+`;
+
+export const Select = styled.select`
+  border: solid 2px #5d5d5d;
+  background: transparent;
+  width: 370px;
+  height: 36px;
+  font-size: 14px;
+  font-weight: 300;
+  box-sizing: border-box;
+  color: #555;
+  padding: 5px;
+  &:active,
+  &:focus {
+    text-align: left;
+  }
 `;

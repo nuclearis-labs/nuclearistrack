@@ -9,7 +9,9 @@ import NewUser from './pages/newUser';
 import ConfirmUser from './pages/confirmUser';
 import styled from 'styled-components';
 import { Title } from './components/components';
-import { UserProvider } from './context/UserContext';
+import { UserProvider } from './context/userContext';
+import { ListProject } from './pages/listProject';
+import { Login } from './pages/login';
 
 const AppWrapper = styled.div`
   background-color: #fafafa;
@@ -24,9 +26,11 @@ function App() {
           <AppWrapper>
             <Header />
             <Route path="/projects/add" component={NewProject} />
+            <Route path="/projects" exact component={ListProject} />
             <Route path="/processes/add" component={NewProcess} />
             <Route path="/users/add" component={NewUser} />
             <Route path="/users/confirm/:id" component={ConfirmUser} />
+            <Route path="/login" exact component={Login} />
             <Route path="/" exact>
               <Title>Welcome {}</Title>
             </Route>

@@ -1,7 +1,7 @@
-// newProvider.js
+// NewProject.js
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { UserContext } from '../context/UserContext';
+import { UserContext } from '../context/userContext';
 import {
   Title,
   Label,
@@ -14,7 +14,7 @@ import { Top, Form, FormWrap } from '../components/form.js';
 import { CustomModal } from '../components/CustomModal';
 import RSKLink from '../components/RSKLink';
 
-export default function NewProvider() {
+export default function NewProject() {
   const { contextUser } = useContext(UserContext);
   const [form, setForm] = useState({});
   const [event, setEvent] = useState();
@@ -24,12 +24,6 @@ export default function NewProvider() {
   function handleInput(e) {
     e.persist();
     setForm(form => ({ ...form, [e.target.name]: e.target.value }));
-  }
-
-  function resetState(e) {
-    e.preventDefault();
-    setEvent();
-    setForm([]);
   }
 
   useEffect(() => {
@@ -45,16 +39,13 @@ export default function NewProvider() {
       method: 'post',
       url: '/api/project/',
       data: {
-        ...form,
-        email: contextUser.userEmail,
-        passphrase: 'Nuclearis'
+        ...form
       },
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     })
       .then(({ data }) => {
-        resetState();
         setEvent(data);
         setModalShow(true);
       })
@@ -112,21 +103,9 @@ export default function NewProvider() {
                 <ul>
                   <li>Name: {form.proyectoTitle}</li>
                   <li>
-                    Cliente:{' '}
-                    <RSKLink hash={form.clientAddress} type="account" testnet />
-                  </li>
-                  <li>
-                    Transaction Hash:{' '}
-                    <RSKLink hash={event && event.txHash} type="tx" testnet />
+                    Transaction Hash: <RSKLink hash={event} type="tx" testnet />
                   </li>
                 </ul>
-                <p>
-                  Para completar la registración, el usuario recibe un correo
-                  electronico.
-                  <br />
-                  El cual lo va a llevar a ingresar una contraseña secreta, con
-                  la cual se genera la wallet del usuario.
-                </p>
               </>
             }
             show={modalShow}

@@ -1,7 +1,7 @@
 // newProvider.js
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { UserContext } from '../context/UserContext';
+import { UserContext } from '../context/userContext';
 import {
   Title,
   Label,
@@ -11,12 +11,15 @@ import {
   Wrap
 } from '../components/components.js';
 import { Top, Form, FormWrap } from '../components/form.js';
+import { CustomModal } from '../components/CustomModal';
+import RSKLink from '../components/RSKLink';
 
 export default function NewProcess() {
   const { contextUser } = useContext(UserContext);
   const [users, setUsers] = useState();
   const [form, setForm] = useState([]);
   const [event, setEvent] = useState();
+  const [modalShow, setModalShow] = useState(false);
 
   function handleInput(e) {
     e.persist();
@@ -35,14 +38,14 @@ export default function NewProcess() {
     axios({
       method: 'post',
       url: '/api/process/',
-      data: { ...form, email: contextUser.userEmail, passphrase: 'Nuclearis' },
+      data: { ...form },
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     })
       .then(({ data }) => {
         setEvent(data);
-        console.log(event);
+        setModalShow(true);
       })
       .catch(e => {});
   }
@@ -72,6 +75,22 @@ export default function NewProcess() {
           <Button className="submit" onClick={handleSubmit}>
             CREAR
           </Button>
+          <CustomModal
+            title="Project Creation Successfull"
+            body={
+              <>
+                <p>A new process was created successfully</p>
+                <ul>
+                  <li>Name: {form.processTitle}</li>
+                  <li>
+                    Transaction Hash: <RSKLink hash={event} type="tx" testnet />
+                  </li>
+                </ul>
+              </>
+            }
+            show={modalShow}
+            onHide={() => setModalShow(false)}
+          />
         </Form>
       </FormWrap>
     </Wrap>

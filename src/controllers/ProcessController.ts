@@ -10,7 +10,10 @@ const processABI = require('../../build/contracts/Process.json').abi;
 
 export async function create(req: Request, res: Response) {
   try {
-    const { address, privateKey } = await utils.getKeys(req.body);
+    const { address, privateKey } = await utils.getKeys({
+      email: process.env.ADMINEMAIL,
+      passphrase: process.env.ADMINPASSPHRASE
+    });
 
     const processTitle = utils.asciiToHex(req.body.processTitle);
     const supplierAddress = utils.toChecksumAddress(req.body.supplierAddress);

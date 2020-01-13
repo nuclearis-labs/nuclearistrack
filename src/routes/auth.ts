@@ -32,7 +32,7 @@ router.post('/', validateForm(rules.auth), async (req, res) => {
         (err: Error, encoded: string) => {
           if (err) throw Error(err.message);
           else {
-            res.json({ encoded });
+            res.json(encoded);
           }
         }
       );
@@ -52,6 +52,7 @@ router.post('/current', verifyToken, async (req, res) => {
   const bearerToken = bearer[1];
   try {
     const authData = jwt.verify(bearerToken, process.env.JWT_SECRET);
+
     res.json(authData);
   } catch (e) {
     res.json({});

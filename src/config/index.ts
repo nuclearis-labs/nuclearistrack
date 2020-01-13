@@ -6,6 +6,7 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
   const bearerHeader = req.headers['authorization'];
   if (typeof bearerHeader !== 'undefined') {
     const bearer = bearerHeader.split(' ');
+
     const bearerToken = bearer[1];
     try {
       const authData = jwt.verify(bearerToken, process.env.JWT_SECRET);

@@ -14,7 +14,7 @@ export async function sendMail({
     message: {
       from: 'sistemas@nuclearis.com'
     },
-    send: false,
+    send: true,
     preview: false,
     transport: {
       host: 'smtp.gmail.com',

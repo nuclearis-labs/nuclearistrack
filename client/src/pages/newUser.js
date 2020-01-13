@@ -1,7 +1,7 @@
 // newProvider.js
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { UserContext } from '../context/UserContext';
+import { UserContext } from '../context/userContext';
 import {
   Title,
   Label,

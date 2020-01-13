@@ -9,7 +9,7 @@ import RSKLink from '../components/RSKLink';
 
 export default function ConfirmUser() {
   const [form, setForm] = useState([]);
-  const [event, setEvent] = useState();
+  const [event, setEvent] = useState({});
   const { id } = useParams();
   const [modalShow, setModalShow] = useState(false);
 
@@ -70,56 +70,61 @@ export default function ConfirmUser() {
           <Button className="submit" onClick={handleSubmit}>
             CREAR
           </Button>
-          <CustomModal
-            title="User Confirmation Successfull"
-            body={
-              <>
-                <p>
-                  Your account has been successfully generated and sended to the
-                  Blockchain.
-                </p>
-                <ul>
-                  <li>Name: {event && event.username}</li>
-                  <li>Email: {event && event.email}</li>
-                  <li>
-                    Mnemonic Passphrase:{' '}
-                    <span
-                      title="Click for copy"
-                      style={{
-                        color: 'blue',
-                        'text-decoration': 'underline',
-                        cursor: 'pointer'
-                      }}
-                      onClick={() => {
-                        navigator.clipboard.writeText(event.mnemonic);
-                      }}
-                    >
-                      {event && event.mnemonic}
-                    </span>
-                  </li>
-                  <li>
-                    Address:
-                    <RSKLink
-                      hash={event && event.address}
-                      type="address"
-                      testnet
-                    />
-                  </li>
-                  <li>
-                    Transaction:{' '}
-                    <RSKLink hash={event && event.txHash} type="tx" testnet />
-                  </li>
-                </ul>
-                <p>
-                  Les sugerimos de anotar en un medio seguro la clave mnemonica,
-                  ya que es la unica forma de recuperar su cuenta en caso de que
-                  se olvide su clave ingresada.
-                </p>
-              </>
-            }
-            show={modalShow}
-            onHide={() => setModalShow(false)}
-          />
+          {event.hasOwnProperty('address') && (
+            <CustomModal
+              title="User Confirmation Successfull"
+              body={
+                <>
+                  <p>
+                    Your account has been successfully generated and sended to
+                    the Blockchain.
+                  </p>
+                  <ul>
+                    <li>Name: {event && event.username}</li>
+                    <li>Email: {event && event.email}</li>
+                    <li>
+                      Mnemonic Passphrase:{' '}
+                      <span
+                        title="Click for copy"
+                        style={{
+                          color: 'blue',
+                          'text-decoration': 'underline',
+                          cursor: 'pointer'
+                        }}
+                        onClick={() => {
+                          navigator.clipboard.writeText(event.mnemonic);
+                        }}
+                      >
+                        {event && event.mnemonic}
+                      </span>
+                    </li>
+                    <li>
+                      Address:{' '}
+                      <a
+                        href={
+                          'https://explorer.testnet.rsk.co/address/' +
+                          event.address
+                        }
+                      >
+                        {event && event.address}
+                      </a>
+                    </li>
+                    <li>
+                      Transaction:{' '}
+                      <RSKLink hash={event && event.txHash} type="tx" testnet />
+                    </li>
+                  </ul>
+                  <p>
+                    Les sugerimos de anotar en un medio seguro la clave
+                    mnemonica, ya que es la unica forma de recuperar su cuenta
+                    en caso de que se olvide su clave ingresada.
+                  </p>
+                </>
+              }
+              show={modalShow}
+              onHide={() => setModalShow(false)}
+            />
+          )}
         </Form>
       </FormWrap>
     </Wrap>

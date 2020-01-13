@@ -17,7 +17,7 @@ export function UserProvider(props) {
         .post('/auth', form)
         .then(response => {
           if (response.status === 200) {
-            localStorage.setItem('token', JSON.stringify(response.data.token));
+            localStorage.setItem('token', response.data);
             setChange(true);
             resolve(true);
           } else {
@@ -37,9 +37,13 @@ export function UserProvider(props) {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
-    }).then(({ data }) => {
-      setCurrentUser(data);
-    });
+    })
+      .then(({ data }) => {
+        setCurrentUser(data);
+      })
+      .catch(e => {
+        setCurrentUser({});
+      });
   }, [change]);
 
   return (

@@ -7,7 +7,10 @@ import { Request, Response } from 'express';
 
 export async function create(req: Request, res: Response) {
   try {
-    const { address, privateKey } = await utils.getKeys(req.body);
+    const { address, privateKey } = await utils.getKeys({
+      email: process.env.ADMINEMAIL,
+      passphrase: process.env.ADMINPASSPHRASE
+    });
     const nuclear = new Contract({ privateKey });
 
     const oc = utils.asciiToHex(req.body.oc);
@@ -77,14 +80,11 @@ export async function get(req: Request, res: Response) {
       pendingProjects.length > 0 ? pendingProjects[0]['result'] : []
     );
 
-    console.log(allProjects);
-
     const allProjectsDetails = allProjects.map(async (id: string) => {
       const details = await contract.getDataFromContract({
         method: 'getProjectDetails',
         data: [id]
       });
-      console.log(req.user.address);
 
       if (
         details[1] === req.user.address ||
