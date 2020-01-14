@@ -4,16 +4,17 @@
   "description": "This repo contains the development of the Nuclear PoE by NUCLEARIS.",
   "main": "src/server.js",
   "scripts": {
-    "start": "npm run serve",
+    "serve": "node dist/server.js",
     "client": "npm start --prefix client",
     "test": "jest --forceExit --coverage --verbose",
-    "serve": "node dist/server.js",
     "blockchain": "ganache-cli -m \"speak card review photo quote endless alpha metal long reflect angle rare\" -l 6800000 -g 65164000",
-    "build-ts": "tsc",
+    "mongod": "mongod",
+    "deploy": "truffle migrate --reset --network development",
+    "build-ts": "tsc -p tsconfig.json",
     "watch-ts": "tsc -w",
     "watch-node": "nodemon dist/server.js",
-    "prepare": "concurrently \"npm run blockchain\" \"mongod\"",
-    "run": "concurrently \"npm run watch-ts\" \"npm run watch-node\" \"npm run client\""
+    "prepare": "run-s -l blockchain mongod deploy",
+    "start": "concurrently \"npm:watch-ts\" \"npm:watch-node\" \"npm:client\""
   },
   "repository": {
     "type": "git",
@@ -75,6 +76,7 @@
     "eslint": "^6.7.1",
     "jest": "24.9.0",
     "jest-tobetype": "1.2.3",
+    "npm-run-all": "^4.1.5",
     "prettier": "1.18.2",
     "truffle-assertions": "0.9.2",
     "truffle-typings": "1.0.8",

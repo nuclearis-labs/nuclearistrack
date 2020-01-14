@@ -3,7 +3,7 @@ import Web3 from 'web3';
 let node;
 switch (process.env.NODE_ENV) {
   case 'development':
-    node = 'http://localhost:8545';
+    node = 'http://ganachecli:8545';
     break;
   case 'testnet':
     node = 'https://public-node.testnet.rsk.co';
@@ -12,7 +12,7 @@ switch (process.env.NODE_ENV) {
     node = 'https://public-node.rsk.co';
     break;
   default:
-    node = 'http://localhost:8545';
+    node = 'http://ganachecli:8545';
     break;
 }
 

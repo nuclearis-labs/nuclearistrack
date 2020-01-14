@@ -1,0 +1,18 @@
+version: '3'
+services:
+  ganachecli:
+    image: trufflesuite/ganache-cli:latest
+    ports:
+      - '8545:8545'
+  mongo:
+    image: mongo
+    ports:
+      - '27017:27017'
+  client:
+    build: ./client
+    ports:
+      - 3000:3000
+  server:
+    build: .
+    ports:
+      - 6000:6000
