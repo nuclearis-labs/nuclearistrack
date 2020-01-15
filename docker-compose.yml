@@ -1,18 +1,34 @@
 version: '3'
 services:
   ganachecli:
-    image: trufflesuite/ganache-cli:latest
+    build: ./ganache
     ports:
       - '8545:8545'
+    networks:
+      - backend
+    volumes:
+      - ./ganache_data:/ganache_data
   mongo:
     image: mongo
     ports:
       - '27017:27017'
+    networks:
+      - backend
   client:
     build: ./client
     ports:
       - 3000:3000
+    networks:
+      - backend
   server:
     build: .
     ports:
       - 6000:6000
+    networks:
+      - backend
+    depends_on:
+      - ganachecli
+    entrypoint: ./server_start.sh
+networks:
+  backend:
+    driver: bridge
