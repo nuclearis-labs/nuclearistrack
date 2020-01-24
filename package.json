@@ -5,12 +5,8 @@
   "main": "src/server.js",
   "scripts": {
     "serve": "node dist/server.js",
-    "client": "npm start --prefix client",
     "test": "jest --forceExit --coverage --verbose",
-    "build-ts": "tsc -p tsconfig.json",
-    "watch-ts": "tsc -w",
-    "watch-node": "nodemon dist/server.js",
-    "start": "concurrently \"npm:watch-ts\" \"npm:watch-node\" \"npm:client\""
+    "build-ts": "tsc -p tsconfig.json"
   },
   "repository": {
     "type": "git",
