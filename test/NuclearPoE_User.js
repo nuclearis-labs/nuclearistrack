@@ -54,7 +54,7 @@ contract('User Contracts', accounts => {
       instance.changeUserStatus(accounts[7], {
         from: accounts[0]
       }),
-      'User does not exist or paused'
+      'User does not exist'
     );
   });
 

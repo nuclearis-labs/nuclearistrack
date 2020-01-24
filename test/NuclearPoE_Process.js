@@ -56,12 +56,11 @@ contract('Process', accounts => {
 
   it('Get Process Details', async () => {
     const result = await processInstance.getDetails();
-    assert(result[0], instance.address);
-    assert(result[1], accounts[0]);
-    assert(result[2], accounts[2]);
-    assert(result[3], web3.utils.asciiToHex('Mecanizado'));
-    assert(result[4], []);
-    assert(result[5], processAddress);
+    assert(result[0], accounts[0]);
+    assert(result[1], accounts[2]);
+    assert(result[2], web3.utils.asciiToHex('Mecanizado'));
+    assert(result[3], []);
+    assert(result[4], processAddress);
   });
 
   it('Get All Documents', async () => {
