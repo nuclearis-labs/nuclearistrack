@@ -7,13 +7,9 @@
     "serve": "node dist/server.js",
     "client": "npm start --prefix client",
     "test": "jest --forceExit --coverage --verbose",
-    "blockchain": "ganache-cli -m \"speak card review photo quote endless alpha metal long reflect angle rare\" -l 6800000 -g 65164000",
-    "mongod": "mongod",
-    "deploy": "truffle migrate --reset --network development",
     "build-ts": "tsc -p tsconfig.json",
     "watch-ts": "tsc -w",
     "watch-node": "nodemon dist/server.js",
-    "prepare": "run-s -l blockchain mongod deploy",
     "start": "concurrently \"npm:watch-ts\" \"npm:watch-node\" \"npm:client\""
   },
   "repository": {

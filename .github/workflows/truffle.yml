@@ -1,0 +1,20 @@
+name: truffle test
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js 12
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Install Truffle globally
+        run: |
+          npm ci
+          npm install -g truffle
+      - name: Run truffle test on development network
+        run: truffle test

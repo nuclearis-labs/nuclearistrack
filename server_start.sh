@@ -1,4 +1,4 @@
 #!/bin/bash
 
-truffle migrate --reset --network development
+truffle migrate --reset --network docker
 npm run serve

@@ -25,7 +25,7 @@ module.exports = {
       gas: 6800000,
       gasPrice: 60240000
     },
-    development: {
+    docker: {
       host: 'ganachecli',
       port: 8545,
       network_id: '*',
