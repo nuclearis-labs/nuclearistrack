@@ -1,9 +1,7 @@
 // header.js
-import React, { useState, useContext } from 'react';
-import styled from 'styled-components';
-import { UserContext } from '../context/userContext';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import styled from 'styled-components';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import { ReactComponent as New } from '../img/new.svg';
 import { ReactComponent as User } from '../img/user.svg';
@@ -72,7 +70,7 @@ const SubMenuNew = styled.div`
   transition: all 0.5s ease;
   &.open {
     padding: 10px 0;
-    height: 90px;
+    height: 115px;
   }
   a {
     color: #fff;
@@ -87,7 +85,7 @@ const SubMenuNew = styled.div`
     color: #333;
   }
 `;
-const SubMenuView = styled.div`
+const SubMenuEdit = styled.div`
   background: #8c6239;
   line-height: 23px;
   position: absolute;
@@ -100,7 +98,7 @@ const SubMenuView = styled.div`
   transition: all 0.5s ease;
   &.open {
     padding: 10px 0;
-    height: 90px;
+    height: 115px;
   }
   a {
     color: #fff;
@@ -145,7 +143,7 @@ const UserName = styled.div`
   text-align: left;
   text-transform: uppercase;
 `;
-const LogOut = styled.p`
+const LogOut = styled.a`
   color: #8c6239;
   font-family: Montserrat, sans-serif;
   font-size: 12px;
@@ -156,96 +154,57 @@ const LogOut = styled.p`
   width: 100%;
   float: left;
   padding: 1px 50px;
-  cursor: pointer;
   :hover {
-    color: #ffffff;
+    color: #fff;
   }
 `;
 
-function DropDownNew() {
-  const [active, setActive] = useState(false);
+class DropDownNew extends React.Component {
+  state = {
+    active: false
+  };
 
-  return (
-    <div>
-      <AbmLink onClick={() => setActive(!active)}>
-        <New />
-        NUEVO
-      </AbmLink>
+  render() {
+    return (
+      <div>
+        <AbmLink onClick={() => this.setState({ active: !this.state.active })}>
+          <New />
+          NUEVO
+        </AbmLink>
 
-      <SubMenuNew className={active ? 'open' : 'closed'}>
-        <Link
-          to="/projects/add"
-          onClick={() => {
-            setActive(false);
-          }}
-        >
-          + PROYECTO
-        </Link>
-
-        <Link
-          to="/users/add"
-          onClick={() => {
-            setActive(false);
-          }}
-        >
-          + USUARIO
-        </Link>
-        <Link
-          to="/processes/add"
-          onClick={() => {
-            setActive(false);
-          }}
-        >
-          + PROCESO
-        </Link>
-      </SubMenuNew>
-    </div>
-  );
+        <SubMenuNew className={this.state.active ? 'open' : 'closed'}>
+          <Link to="/projects/add">+ PROYECTO</Link>
+          <Link to="/users/add">+ USUARIO</Link>
+          <Link to="/processes/add">+ PROCESO</Link>
+        </SubMenuNew>
+      </div>
+    );
+  }
 }
-function DropDownView() {
-  const [active, setActive] = useState(false);
+class DropDownEdit extends React.Component {
+  state = {
+    active: false
+  };
 
-  return (
-    <div>
-      <AbmLink onClick={() => setActive(!active)}>
-        <Eye />
-        VER / EDITAR
-      </AbmLink>
+  render() {
+    return (
+      <div>
+        <AbmLink onClick={() => this.setState({ active: !this.state.active })}>
+          <Eye />
+          VER / EDITAR
+        </AbmLink>
 
-      <SubMenuView className={active ? 'open' : 'closed'}>
-        <Link
-          to="/projects"
-          onClick={() => {
-            setActive(false);
-          }}
-        >
-          + PROYECTO
-        </Link>
-
-        <Link
-          to="/users"
-          onClick={() => {
-            setActive(false);
-          }}
-        >
-          + USUARIO
-        </Link>
-        <Link
-          to="/processes"
-          onClick={() => {
-            setActive(false);
-          }}
-        >
-          + PROCESO
-        </Link>
-      </SubMenuView>
-    </div>
-  );
+        <SubMenuEdit className={this.state.active ? 'open' : 'closed'}>
+          <Link to="/projects">+ PROYECTO</Link>
+          <Link to="/users">+ USUARIO</Link>
+          <Link to="/processes">+ PROCESO</Link>
+        </SubMenuEdit>
+      </div>
+    );
+  }
 }
 
 function Header() {
-  const { logoutUser, contextUser } = useContext(UserContext);
-
   return (
     <Nav>
       <NavHeader>
@@ -264,17 +223,13 @@ function Header() {
         </NavPhrase>
         <NavAbm>
           <DropDownNew></DropDownNew>
-          <DropDownView></DropDownView>
+          <DropDownEdit></DropDownEdit>
         </NavAbm>
-        {contextUser.hasOwnProperty('userEmail') ? (
-          <NavUser>
-            <User />
-            <UserName>Admin Nuclearis</UserName>
-            <LogOut onClick={logoutUser}>LOGOUT</LogOut>
-          </NavUser>
-        ) : (
-          ''
-        )}
+        <NavUser>
+          <User />
+          <UserName>Admin Nuclearis</UserName>
+          <LogOut href="#">LOGOUT</LogOut>
+        </NavUser>
       </NavHeader>
     </Nav>
   );

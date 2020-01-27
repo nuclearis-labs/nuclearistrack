@@ -15,6 +15,8 @@ import { UserProvider } from './context/userContext';
 import { ListProject } from './pages/listProject';
 import { ListProcess } from './pages/listProcess';
 import { Login } from './pages/login';
+import Projects from './pages/projects';
+import Processes from './pages/processes';
 import { ListUser } from './pages/listUser';
 
 const AppWrapper = styled.div`
@@ -30,9 +32,9 @@ function App() {
           <AppWrapper>
             <Header />
             <Route path="/projects/add" component={NewProject} />
-            <Route path="/projects" exact component={ListProject} />
+            <Route path="/projects" exact component={Projects} />
             <Route path="/processes/add" component={NewProcess} />
-            <Route path="/processes" exact component={ListProcess} />
+            <Route path="/processes" exact component={Processes} />
             <Route path="/users/add" component={NewUser} />
             <Route path="/users/confirm/:id" component={ConfirmUser} />
             <Route path="/users" exact component={ListUser} />

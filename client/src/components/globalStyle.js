@@ -5,7 +5,6 @@ const GlobalStyle = createGlobalStyle`
   body {
     font-family: 'Roboto Condensed', sans-serif;
     margin: 0;
-    background-color: #fafafa;
     padding: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

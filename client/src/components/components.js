@@ -61,7 +61,9 @@ export const Button = styled.button`
   padding: 5px 10px;
   letter-spacing: 1px;
   display: block;
-  margin-top: 20px;
+  margin-top: 10px;
+  border: none;
+  cursor: pointer;
   &.submit {
     position: relative;
     top: 60px;
@@ -102,6 +104,19 @@ export const Datepicker = styled.input.attrs(props => ({
   color: #555;
   box-sizing: border-box;
   background: transparent;
+`;
+
+export const Scroll = styled.div`
+  overflow: scroll;
+  &::-webkit-scrollbar {
+    width: 14px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #5d5d5d;
+  }
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
 `;
 
 export const Select = styled.select`
