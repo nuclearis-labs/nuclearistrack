@@ -1,5 +1,5 @@
 // header.js
-import React from 'react';
+import React,{useState} from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { ReactComponent as Eye } from '../img/eye.svg';
@@ -159,49 +159,41 @@ const LogOut = styled.a`
   }
 `;
 
-class DropDownNew extends React.Component {
-  state = {
-    active: false
-  };
+function DropDownNew(props) {
 
-  render() {
     return (
       <div>
-        <AbmLink onClick={() => this.setState({ active: !this.state.active })}>
+        <AbmLink onClick={() => props.handleClick()}>
           <New />
           NUEVO
         </AbmLink>
 
-        <SubMenuNew className={this.state.active ? 'open' : 'closed'}>
+        <SubMenuNew className={props.active ? 'open' : 'closed'}>
           <Link to="/projects/add">+ PROYECTO</Link>
           <Link to="/users/add">+ USUARIO</Link>
           <Link to="/processes/add">+ PROCESO</Link>
         </SubMenuNew>
       </div>
     );
-  }
-}
-class DropDownEdit extends React.Component {
-  state = {
-    active: false
-  };
 
-  render() {
+}
+function DropDownEdit(props) {
+
     return (
       <div>
-        <AbmLink onClick={() => this.setState({ active: !this.state.active })}>
+        <AbmLink>
           <Eye />
           VER / EDITAR
         </AbmLink>
 
-        <SubMenuEdit className={this.state.active ? 'open' : 'closed'}>
+        <SubMenuEdit className={props.active ? 'open' : 'closed'}>
           <Link to="/projects">+ PROYECTO</Link>
           <Link to="/users">+ USUARIO</Link>
           <Link to="/processes">+ PROCESO</Link>
         </SubMenuEdit>
       </div>
     );
-  }
+  
 }
 
 function Header() {
@@ -209,7 +201,7 @@ function Header() {
     <Nav>
       <NavHeader>
         <NavLogo>
-          <MenuLink href="#">
+          <MenuLink as={Link} to="/">
             <Logo />
           </MenuLink>
         </NavLogo>

@@ -1,4 +1,5 @@
 // components.js
+import {Link} from "react-router-dom"
 import styled from 'styled-components';
 export const Wrap = styled.div``;
 export const Title = styled.h1`
@@ -53,6 +54,7 @@ export const TextArea = styled.textarea`
     text-align: left;
   }
 `;
+
 export const Button = styled.button`
   background: #8c6239;
   color: #fff;
@@ -62,12 +64,16 @@ export const Button = styled.button`
   letter-spacing: 1px;
   display: block;
   margin-top: 10px;
+  width: 250px;
   border: none;
   cursor: pointer;
   &.submit {
     position: relative;
     top: 60px;
     margin-top: 0;
+  }
+  &:hover {
+    color: #FFF;
   }
 `;
 

@@ -1,7 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import GlobalStyle from './components/globalStyle';
-import Header from './components/header.js';
+import LoggedInHeader from './components/header.js';
+import PublicHeader from './components/webHeader.js';
 import Footer from './components/footer.js';
 import NewProject from './pages/newProject';
 import NewProcess from './pages/newProcess';
@@ -18,6 +19,7 @@ import { Login } from './pages/login';
 import Projects from './pages/projects';
 import Processes from './pages/processes';
 import { ListUser } from './pages/listUser';
+import Users from './pages/users';
 
 const AppWrapper = styled.div`
   background-color: #fafafa;
@@ -30,16 +32,40 @@ function App() {
         <GlobalStyle />
         <Switch>
           <AppWrapper>
-            <Header />
-            <Route path="/projects/add" component={NewProject} />
-            <Route path="/projects" exact component={Projects} />
-            <Route path="/processes/add" component={NewProcess} />
-            <Route path="/processes" exact component={Processes} />
-            <Route path="/users/add" component={NewUser} />
-            <Route path="/users/confirm/:id" component={ConfirmUser} />
-            <Route path="/users" exact component={ListUser} />
-            <Route path="/login" exact component={Login} />
+            <Route path="/projects/add">
+              <LoggedInHeader />
+              <NewProject/>
+            </Route>
+            <Route path="/projects" exact>
+              <LoggedInHeader/>
+              <Projects/>
+              </Route>
+            <Route path="/processes/add">
+              <LoggedInHeader/>
+              <NewProcess/>
+            </Route>
+            <Route path="/processes" exact>
+              <LoggedInHeader/>
+              <Processes/>
+            </Route>
+            <Route path="/users/add">
+              <LoggedInHeader/>
+              <NewUser/>
+            </Route>
+            <Route path="/users/confirm/:id">
+              <LoggedInHeader/>
+              <ConfirmUser/>
+            </Route>
+            <Route path="/users" exact>
+              <LoggedInHeader/>
+              <Users/>
+            </Route>
+            <Route path="/login" exact>
+              <PublicHeader/>
+              <Login/>
+            </Route>
             <Route path="/" exact>
+              <PublicHeader/>
               <Wrap>
                 <Top>
                   <Title>Bienvenido</Title>

@@ -99,9 +99,7 @@ function Projects() {
       <FlexWrap>
         <Left>
           <FlexWrapRight>
-            <AddProyectBtn>
-              <Link to="/projects/add">+ NUEVO PROYECTO</Link>
-            </AddProyectBtn>
+            <AddProyectBtn as={Link} to="/projects/add">+ NUEVO PROYECTO</AddProyectBtn>
             <Title>PROYECTOS</Title>
           </FlexWrapRight>
           <Table>

@@ -1,6 +1,6 @@
 // processes.js
 import React from 'react';
-import styled from 'styled-components';
+import { Link } from "react-router-dom";
 import { Title, Button, Wrap } from '../components/components.js';
 import { Top, Form, FormWrap } from '../components/form.js';
 import { Table, Row, HeadRow, Col4 } from '../components/tableComponents.js';
@@ -69,7 +69,7 @@ function Processes() {
               </a>
             </Col4>
           </Row>
-          <Button className="submit">NUEVO PROCESO</Button>
+          <Button as={Link} className="submit" to="/processes/add">NUEVO PROCESO</Button>
         </Form>
       </FormWrap>
     </Wrap>

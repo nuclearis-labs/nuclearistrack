@@ -1,5 +1,6 @@
 // webHeader.js
 import React from 'react';
+import {Link} from "react-router-dom";
 import styled from 'styled-components';
 import { ReactComponent as Logo } from '../img/logo.svg';
 import { Nav, NavHeader, NavLogo, NavPhrase, MenuLink } from '../components/navComponents.js';
@@ -42,7 +43,7 @@ function WebHeader() {
     <Nav>
       <NavHeader>
         <NavLogo>
-          <MenuLink href="#">
+          <MenuLink as={Link} to="/">
             <Logo />
           </MenuLink>
         </NavLogo>
