@@ -1,42 +1,59 @@
-// processes.js
-import React from 'react';
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { Title, Button, Wrap } from '../components/components.js';
 import { Top, Form, FormWrap } from '../components/form.js';
-import { Table, Row, HeadRow, Col4 } from '../components/tableComponents.js';
-import { ReactComponent as Eye } from '../img/eye.svg';
-import { ReactComponent as Pen } from '../img/pen.svg';
+import { Row, HeadRow, Col4 } from '../components/tableComponents.js';
+import Header from '../components/header.js';
+import Footer from '../components/footer.js';
 
-function Processes() {
+export default function Users() {
+  const [users, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    axios({
+      method: 'get',
+      url: '/api/user/get',
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    }).then(({ data }) => {
+      setUsers(data);
+      setIsLoading(false);
+    });
+  }, []);
+
   return (
-    <Wrap>
-      <Top>
-        <Title>USUARIOS</Title>
-      </Top>
-      <FormWrap>
-        <Form>
-          <HeadRow>
-            <Col4>NOMBRE</Col4>
-            <Col4>TIPO</Col4>
-            <Col4>DIRECCION</Col4>
-            <Col4>ESTADO</Col4>
-          </HeadRow>
-          <Row>
-            <Col4>NA-SA</Col4>
-            <Col4>Cliente</Col4>
-            <Col4>0x429d603e0777a8f50086eca73f58f8663441a77d</Col4>
-            <Col4>Activo</Col4>
-          </Row>
-          <Row>
-            <Col4>BGH</Col4>
-            <Col4>Proveedor</Col4>
-            <Col4>0x2b591e99afe9f32eaa6214f7b7629768c40eeb39</Col4>
-            <Col4>Activo</Col4>
-          </Row>
-          <Button as={Link} className="submit" to="/users/add">NUEVO USUARIO</Button>
-        </Form>
-      </FormWrap>
-    </Wrap>
+    <>
+      <Header />
+      <Wrap>
+        <Top>
+          <Title>USUARIOS</Title>
+        </Top>
+        <FormWrap>
+          <Form>
+            <HeadRow>
+              <Col4>NOMBRE</Col4>
+              <Col4>TIPO</Col4>
+              <Col4>DIRECCION</Col4>
+              <Col4>ESTADO</Col4>
+            </HeadRow>
+
+            {users.map(user => (
+              <Row key={user.address}>
+                <Col4>{user.name}</Col4>
+                <Col4>{user.type === '0' ? 'Cliente' : 'Proveedor'}</Col4>
+                <Col4>{user.address}</Col4>
+                <Col4>{user.status === '1' ? 'Activo' : 'Pausado'}</Col4>
+              </Row>
+            ))}
+
+            <Button as={Link} className="submit" to="/users/add">
+              NUEVO USUARIO
+            </Button>
+          </Form>
+        </FormWrap>
+      </Wrap>
+      <Footer />
+    </>
   );
 }
-export default Processes;

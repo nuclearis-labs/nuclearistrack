@@ -20,6 +20,8 @@ services:
       - 3000:3000
     networks:
       - backend
+    volumes:
+      - ./client:/client
   server:
     build: .
     ports:

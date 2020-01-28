@@ -9,6 +9,7 @@ import {
 } from '../components/components.js';
 import { Top, Form, FormWrap } from '../components/form.js';
 import axios from 'axios';
+import Footer from '../components/footer.js';
 
 export const ListProcess = () => {
   const [process, setProcess] = useState([]);
@@ -23,34 +24,38 @@ export const ListProcess = () => {
   }, []);
 
   return (
-    <Wrap>
-      <Top>
-        <Title>Listado de procesos</Title>
-      </Top>
-      <FormWrap>
-        <Form>
-          <table cellPadding={10}>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Proveedor</th>
-                <th>Contrato</th>
-              </tr>
-            </thead>
-            <tbody>
-              {process.map(
-                ({ processName, supplierName, processContracts }) => (
-                  <tr>
-                    <td>{processName}</td>
-                    <td>{supplierName}</td>
-                    <td>{processContracts}</td>
-                  </tr>
-                )
-              )}
-            </tbody>
-          </table>
-        </Form>
-      </FormWrap>
-    </Wrap>
+    <>
+      <Header />
+      <Wrap>
+        <Top>
+          <Title>Listado de procesos</Title>
+        </Top>
+        <FormWrap>
+          <Form>
+            <table cellPadding={10}>
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Proveedor</th>
+                  <th>Contrato</th>
+                </tr>
+              </thead>
+              <tbody>
+                {process.map(
+                  ({ processName, supplierName, processContracts }) => (
+                    <tr>
+                      <td>{processName}</td>
+                      <td>{supplierName}</td>
+                      <td>{processContracts}</td>
+                    </tr>
+                  )
+                )}
+              </tbody>
+            </table>
+          </Form>
+        </FormWrap>
+      </Wrap>
+      <Footer />
+    </>
   );
 };

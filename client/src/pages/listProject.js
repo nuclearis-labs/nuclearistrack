@@ -9,6 +9,8 @@ import {
 } from '../components/components.js';
 import { Top, Form, FormWrap } from '../components/form.js';
 import axios from 'axios';
+import Header from '../components/header.js';
+import Footer from '../components/footer.js';
 
 export const ListProject = () => {
   const [projects, setProjects] = useState([]);
@@ -24,34 +26,38 @@ export const ListProject = () => {
   }, []);
 
   return (
-    <Wrap>
-      <Top>
-        <Title>Listado de proyectos</Title>
-      </Top>
-      <FormWrap>
-        <Form>
-          <table cellPadding={10}>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Cliente</th>
-                <th>Expediente</th>
-                <th>OC</th>
-              </tr>
-            </thead>
-            <tbody>
-              {projects.map(({ title, clientName, id, oc }) => (
+    <>
+      <Header />
+      <Wrap>
+        <Top>
+          <Title>Listado de proyectos</Title>
+        </Top>
+        <FormWrap>
+          <Form>
+            <table cellPadding={10}>
+              <thead>
                 <tr>
-                  <td>{title}</td>
-                  <td>{clientName}</td>
-                  <td>{id}</td>
-                  <td>{oc}</td>
+                  <th>Nombre</th>
+                  <th>Cliente</th>
+                  <th>Expediente</th>
+                  <th>OC</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </Form>
-      </FormWrap>
-    </Wrap>
+              </thead>
+              <tbody>
+                {projects.map(({ title, clientName, id, oc }) => (
+                  <tr>
+                    <td>{title}</td>
+                    <td>{clientName}</td>
+                    <td>{id}</td>
+                    <td>{oc}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </Form>
+        </FormWrap>
+      </Wrap>
+      <Footer />
+    </>
   );
 };

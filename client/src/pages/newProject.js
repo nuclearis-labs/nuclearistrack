@@ -1,7 +1,8 @@
 // NewProject.js
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { UserContext } from '../context/userContext';
+import Header from '../components/header.js';
+import Footer from '../components/footer.js';
 import {
   Title,
   Label,
@@ -15,7 +16,6 @@ import { CustomModal } from '../components/CustomModal';
 import RSKLink from '../components/RSKLink';
 
 export default function NewProject() {
-  const { contextUser } = useContext(UserContext);
   const [form, setForm] = useState({});
   const [event, setEvent] = useState();
   const [users, setUsers] = useState();
@@ -52,67 +52,72 @@ export default function NewProject() {
       .catch(e => {});
   }
   return (
-    <Wrap>
-      <Top>
-        <Title>
-          NUEVO
-          <br />
-          PROYECTO
-        </Title>
-      </Top>
-      <FormWrap>
-        <Form>
-          <Label>NOMBRE</Label>
-          <Input
-            type="text"
-            name="proyectoTitle"
-            value={form.proyectoTitle}
-            onChange={handleInput}
-          ></Input>
-          <Label>CLIENTE</Label>
-          <Select
-            name="clientAddress"
-            value={form.clientAddress}
-            onChange={handleInput}
-          >
-            <option>Select one...</option>
-            {users &&
-              users.map(user => (
-                <option value={user.address} key={user.address}>
-                  {user.name}
-                </option>
-              ))}
-          </Select>
-          <Label>EXPEDIENTE</Label>
-          <Input
-            type="number"
-            name="expediente"
-            value={form.expediente}
-            onChange={handleInput}
-          ></Input>
-          <Label>Nº OC</Label>
-          <Input name="oc" value={form.oc} onChange={handleInput}></Input>
-          <Button className="submit" onClick={handleSubmit}>
-            CREAR
-          </Button>
-          <CustomModal
-            title="Project Creation Successfull"
-            body={
-              <>
-                <p>A new project was created successfully</p>
-                <ul>
-                  <li>Name: {form.proyectoTitle}</li>
-                  <li>
-                    Transaction Hash: <RSKLink hash={event} type="tx" testnet />
-                  </li>
-                </ul>
-              </>
-            }
-            show={modalShow}
-            onHide={() => setModalShow(false)}
-          />
-        </Form>
-      </FormWrap>
-    </Wrap>
+    <>
+      <Header />
+      <Wrap>
+        <Top>
+          <Title>
+            NUEVO
+            <br />
+            PROYECTO
+          </Title>
+        </Top>
+        <FormWrap>
+          <Form>
+            <Label>NOMBRE</Label>
+            <Input
+              type="text"
+              name="proyectoTitle"
+              value={form.proyectoTitle}
+              onChange={handleInput}
+            ></Input>
+            <Label>CLIENTE</Label>
+            <Select
+              name="clientAddress"
+              value={form.clientAddress}
+              onChange={handleInput}
+            >
+              <option>Select one...</option>
+              {users &&
+                users.map(user => (
+                  <option value={user.address} key={user.address}>
+                    {user.name}
+                  </option>
+                ))}
+            </Select>
+            <Label>EXPEDIENTE</Label>
+            <Input
+              type="number"
+              name="expediente"
+              value={form.expediente}
+              onChange={handleInput}
+            ></Input>
+            <Label>Nº OC</Label>
+            <Input name="oc" value={form.oc} onChange={handleInput}></Input>
+            <Button className="submit" onClick={handleSubmit}>
+              CREAR
+            </Button>
+            <CustomModal
+              title="Project Creation Successfull"
+              body={
+                <>
+                  <p>A new project was created successfully</p>
+                  <ul>
+                    <li>Name: {form.proyectoTitle}</li>
+                    <li>
+                      Transaction Hash:{' '}
+                      <RSKLink hash={event} type="tx" testnet />
+                    </li>
+                  </ul>
+                </>
+              }
+              show={modalShow}
+              onHide={() => setModalShow(false)}
+            />
+          </Form>
+        </FormWrap>
+      </Wrap>
+      <Footer />
+    </>
   );
 }

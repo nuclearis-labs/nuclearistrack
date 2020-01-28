@@ -1,5 +1,8 @@
 // newProvider.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Header from '../components/header.js';
+
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Modal from '../components/modal.js';
@@ -14,6 +17,7 @@ import {
   Col3
 } from '../components/tableComponents.js';
 import { ReactComponent as Eye } from '../img/eye.svg';
+import Footer from '../components/footer.js';
 
 const FlexWrap = styled.div`
   display: flex;
@@ -78,125 +82,104 @@ const ScrollBox400 = styled(Scroll)`
 `;
 
 function Projects() {
-  const projectsArray = [
-    {
-      nombre: 'Anillos 2018',
-      cliente: 'NA-SA',
-      expediente: '41955',
-      oc: '4500107165'
-    },
-    {
-      nombre: 'Conjuntos Soporte',
-      cliente: 'NA-SA',
-      expediente: '54534',
-      oc: '4534534545'
-    }
-  ];
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    axios({
+      method: 'get',
+      url: '/api/project/get',
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    }).then(({ data }) => {
+      setProjects(data);
+    });
+  }, []);
 
   const [showModal, setShowModal] = useState(false);
+  const [projectDetails, setProjectDetails] = useState({});
+
+  function handleRowClick(project) {
+    setProjectDetails(project);
+  }
+
   return (
-    <Wrap>
-      <FlexWrap>
-        <Left>
-          <FlexWrapRight>
-            <AddProyectBtn as={Link} to="/projects/add">+ NUEVO PROYECTO</AddProyectBtn>
-            <Title>PROYECTOS</Title>
-          </FlexWrapRight>
-          <Table>
-            <HeadRowMonsterrat>
-              <Col>NOMBRE</Col>
-              <Col>CLIENTE</Col>
-              <Col>EXPEDIENTE</Col>
-              <Col>N°OC</Col>
-            </HeadRowMonsterrat>
-            <ScrollBox400>
-              {projectsArray.map(project => (
-                <Row
-                  onClick={() => {
-                    console.log(project);
-                  }}
-                >
-                  <Col>{project.nombre}</Col>
-                  <Col>{project.cliente}</Col>
-                  <Col>{project.expediente}</Col>
-                  <Col>{project.oc}</Col>
-                </Row>
-              ))}
-            </ScrollBox400>
-          </Table>
-        </Left>
-        <Right>
-          <ResumenTit>RESUMEN DE PROYECTO</ResumenTit>
-          <ResumenName>ANILLOS 2018</ResumenName>
-          <Row>
-            <Col2 className="color">CLIENTE</Col2>
-            <Col2 className="bold">NA-SA</Col2>
-          </Row>
-          <Row>
-            <Col2 className="color">EXPEDIENTE</Col2>
-            <Col2 className="bold">41955</Col2>
-          </Row>
-          <Row>
-            <Col2 className="color">APROBACIÓN</Col2>
-            <Col2 className="bold">17/09/2019 - 11:31</Col2>
-          </Row>
-          <Row>
-            <Col2 className="color">Nº OC</Col2>
-            <Col2 className="bold">4500107165</Col2>
-          </Row>
-          <Row>
-            <Col2 className="color">CONTRATO</Col2>
-            <Col2 className="bold">
-              OXF691198C305eaDc10c295420 2eA6b0BB38A76B43
-            </Col2>
-          </Row>
-          <ProcesosTit>PROCESOS</ProcesosTit>
-          <HeadRow>
-            <Col3>NOMBRE</Col3>
-            <Col3>PROVEEDOR</Col3>
-            <Col3>DOCUMENTOS</Col3>
-          </HeadRow>
-          <Row>
-            <Col3>MATERIA PRIMA</Col3>
-            <Col3>BGH</Col3>
-            <Col3>
-              <a href="">
-                <Eye />
-                VER DOC.
-              </a>
-            </Col3>
-          </Row>
-          <Row>
-            <Col3>MECANIZADO</Col3>
-            <Col3>IMECO</Col3>
-            <Col3>
-              <a href="">
-                <Eye />
-                VER DOC.
-              </a>
-            </Col3>
-          </Row>
-          <Row>
-            <Col3>PLATEADO</Col3>
-            <Col3>NRS</Col3>
-            <Col3>
-              <a href="">
-                <Eye />
-                VER DOC.
-              </a>
-            </Col3>
-          </Row>
-          <Button
-            onClick={() => {
-              setShowModal(true);
-            }}
-          >
-            + AGREGAR PROCESOS
-          </Button>
-        </Right>
-      </FlexWrap>
-      {showModal && <Modal />}
-    </Wrap>
+    <>
+      <Header />
+      <Wrap>
+        <FlexWrap>
+          <Left>
+            <FlexWrapRight>
+              <AddProyectBtn as={Link} to="/projects/add">
+                + NUEVO PROYECTO
+              </AddProyectBtn>
+              <Title>PROYECTOS</Title>
+            </FlexWrapRight>
+            <Table>
+              <HeadRowMonsterrat>
+                <Col>NOMBRE</Col>
+                <Col>CLIENTE</Col>
+                <Col>EXPEDIENTE</Col>
+                <Col>N°OC</Col>
+              </HeadRowMonsterrat>
+              <ScrollBox400>
+                {projects.map(project => (
+                  <Row
+                    onClick={() => {
+                      handleRowClick(project);
+                    }}
+                  >
+                    <Col>{project.title}</Col>
+                    <Col>{project.clientName}</Col>
+                    <Col>{project.id}</Col>
+                    <Col>{project.oc}</Col>
+                  </Row>
+                ))}
+              </ScrollBox400>
+            </Table>
+          </Left>
+          <Right>
+            <ResumenTit>RESUMEN DE PROYECTO</ResumenTit>
+            <ResumenName>{projectDetails.title}</ResumenName>
+            <Row>
+              <Col2 className="color">CLIENTE</Col2>
+              <Col2 className="bold">{projectDetails.clientName}</Col2>
+            </Row>
+            <Row>
+              <Col2 className="color">EXPEDIENTE</Col2>
+              <Col2 className="bold">{projectDetails.id}</Col2>
+            </Row>
+            <Row>
+              <Col2 className="color">Nº OC</Col2>
+              <Col2 className="bold">{projectDetails.oc}</Col2>
+            </Row>
+            <ProcesosTit>PROCESOS</ProcesosTit>
+            <HeadRow>
+              <Col3>NOMBRE</Col3>
+              <Col3>PROVEEDOR</Col3>
+              <Col3>DOCUMENTOS</Col3>
+            </HeadRow>
+            <Row>
+              <Col3>MATERIA PRIMA</Col3>
+              <Col3>BGH</Col3>
+              <Col3>
+                <Link>
+                  <Eye />
+                  VER DOC.
+                </Link>
+              </Col3>
+            </Row>
+            <Button
+              onClick={() => {
+                setShowModal(true);
+              }}
+            >
+              + AGREGAR PROCESOS
+            </Button>
+          </Right>
+        </FlexWrap>
+        {showModal && <Modal />}
+      </Wrap>
+      <Footer />
+    </>
   );
 }
 export default Projects;

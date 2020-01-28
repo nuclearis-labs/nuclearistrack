@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Button, Scroll } from '../components/components.js';
 import { Row, HeadRow, Col4 } from '../components/tableComponents.js';
 import { ReactComponent as Eye } from '../img/eye.svg';
+import { Link } from 'react-router-dom';
 
 const Backdrop = styled.div`
   width: 100%;
@@ -146,72 +147,12 @@ function Modal() {
               <Col4>MATERIA PRIMA</Col4>
               <Col4>BGH</Col4>
               <Col4>
-                <a href="">
+                <Link>
                   <Eye />
                   VER DOC.
-                </a>
+                </Link>
               </Col4>
               <Col4>15/02/2019</Col4>
-            </Row>
-            <Row>
-              <Check />
-              <Col4>MECANIZADO</Col4>
-              <Col4>IMECO</Col4>
-              <Col4>
-                <a href="">
-                  <Eye />
-                  VER DOC.
-                </a>
-              </Col4>
-              <Col4>19/02/2018</Col4>
-            </Row>
-            <Row>
-              <Check />
-              <Col4>PLATEADO</Col4>
-              <Col4>NRS</Col4>
-              <Col4>
-                <a href="">
-                  <Eye />
-                  VER DOC.
-                </a>
-              </Col4>
-              <Col4>02/02/2018</Col4>
-            </Row>
-            <Row>
-              <Check />
-              <Col4>MATERIA PRIMA</Col4>
-              <Col4>BGH</Col4>
-              <Col4>
-                <a href="">
-                  <Eye />
-                  VER DOC.
-                </a>
-              </Col4>
-              <Col4>15/02/2019</Col4>
-            </Row>
-            <Row>
-              <Check />
-              <Col4>MECANIZADO</Col4>
-              <Col4>IMECO</Col4>
-              <Col4>
-                <a href="">
-                  <Eye />
-                  VER DOC.
-                </a>
-              </Col4>
-              <Col4>19/02/2018</Col4>
-            </Row>
-            <Row>
-              <Check />
-              <Col4>PLATEADO</Col4>
-              <Col4>NRS</Col4>
-              <Col4>
-                <a href="">
-                  <Eye />
-                  VER DOC.
-                </a>
-              </Col4>
-              <Col4>02/02/2018</Col4>
             </Row>
           </ScrollBox130>
           <Button>+ AGREGAR PROCESOS</Button>

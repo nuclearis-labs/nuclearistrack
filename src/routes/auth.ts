@@ -10,7 +10,7 @@ import rules from '../config/validationRules';
 
 const router = express.Router({ mergeParams: true });
 
-router.post('/', validateForm(rules.auth), async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.body.email });
     const decryptedKey = await wallet.decryptBIP38(

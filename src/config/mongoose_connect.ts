@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import logger from '../config/winston';
 
-const db = 'mongodb://mongo:27017/nrspoe';
+const db = 'mongodb://127.0.0.1:27017/nrspoe';
 
 mongoose
   .connect(db, {

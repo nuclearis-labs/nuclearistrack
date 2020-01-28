@@ -12,6 +12,8 @@ import {
 } from '../components/components.js';
 import { Top, Form, FormWrap } from '../components/form.js';
 import { CustomModal } from '../components/CustomModal';
+import Header from '../components/header';
+import Footer from '../components/footer';
 
 export default function NewUser() {
   const { contextUser } = useContext(UserContext);
@@ -51,59 +53,67 @@ export default function NewUser() {
   }
 
   return (
-    <Wrap>
-      <Top>
-        <Title>
-          NUEVO
-          <br />
-          USUARIO
-        </Title>
-      </Top>
-      <FormWrap>
-        <Form>
-          <Label>NOMBRE</Label>
-          <Input name="newUserName" onChange={handleInput}></Input>
-          <Label>MAIL</Label>
-          <Input type="mail" name="newUserEmail" onChange={handleInput}></Input>
-          <Label>TIPO</Label>
-          <Select name="userType" onChange={handleInput}>
-            <option>Select one...</option>
-            <option value="1">Proveedor</option>
-            <option value="0">Cliente</option>
-          </Select>
-          <Button className="submit" onClick={handleSubmit}>
-            CREAR
-          </Button>
-          <CustomModal
-            title="User Creation Successfull"
-            body={
-              <>
-                <p>
-                  A new user with the following information was successfully
-                  saved in the Database.
-                </p>
-                <ul>
-                  <li>Identificación: {event && event.userID}</li>
-                  <li>Name: {form.newUserName}</li>
-                  <li>Email: {form.newUserEmail}</li>
-                  <li>
-                    UserType: {form.userType === '0' ? 'Client' : 'Supplier'}
-                  </li>
-                </ul>
-                <p>
-                  Para completar la registración, el usuario recibe un correo
-                  electronico.
-                  <br />
-                  El cual lo va a llevar a ingresar una contraseña secreta, con
-                  la cual se genera la wallet del usuario.
-                </p>
-              </>
-            }
-            show={modalShow}
-            onHide={() => setModalShow(false)}
-          />
-        </Form>
-      </FormWrap>
-    </Wrap>
+    <>
+      <Header />
+      <Wrap>
+        <Top>
+          <Title>
+            NUEVO
+            <br />
+            USUARIO
+          </Title>
+        </Top>
+        <FormWrap>
+          <Form>
+            <Label>NOMBRE</Label>
+            <Input name="newUserName" onChange={handleInput}></Input>
+            <Label>MAIL</Label>
+            <Input
+              type="mail"
+              name="newUserEmail"
+              onChange={handleInput}
+            ></Input>
+            <Label>TIPO</Label>
+            <Select name="userType" onChange={handleInput}>
+              <option>Select one...</option>
+              <option value="1">Proveedor</option>
+              <option value="0">Cliente</option>
+            </Select>
+            <Button className="submit" onClick={handleSubmit}>
+              CREAR
+            </Button>
+            <CustomModal
+              title="User Creation Successfull"
+              body={
+                <>
+                  <p>
+                    A new user with the following information was successfully
+                    saved in the Database.
+                  </p>
+                  <ul>
+                    <li>Identificación: {event && event.userID}</li>
+                    <li>Name: {form.newUserName}</li>
+                    <li>Email: {form.newUserEmail}</li>
+                    <li>
+                      UserType: {form.userType === '0' ? 'Client' : 'Supplier'}
+                    </li>
+                  </ul>
+                  <p>
+                    Para completar la registración, el usuario recibe un correo
+                    electronico.
+                    <br />
+                    El cual lo va a llevar a ingresar una contraseña secreta,
+                    con la cual se genera la wallet del usuario.
+                  </p>
+                </>
+              }
+              show={modalShow}
+              onHide={() => setModalShow(false)}
+            />
+          </Form>
+        </FormWrap>
+      </Wrap>
+      <Footer />
+    </>
   );
 }

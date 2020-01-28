@@ -1,5 +1,4 @@
 // components.js
-import {Link} from "react-router-dom"
 import styled from 'styled-components';
 export const Wrap = styled.div``;
 export const Title = styled.h1`
@@ -73,7 +72,7 @@ export const Button = styled.button`
     margin-top: 0;
   }
   &:hover {
-    color: #FFF;
+    color: #fff;
   }
 `;
 

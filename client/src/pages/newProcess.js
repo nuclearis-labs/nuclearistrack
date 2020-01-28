@@ -1,7 +1,6 @@
 // newProvider.js
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { UserContext } from '../context/userContext';
 import {
   Title,
   Label,
@@ -13,9 +12,10 @@ import {
 import { Top, Form, FormWrap } from '../components/form.js';
 import { CustomModal } from '../components/CustomModal';
 import RSKLink from '../components/RSKLink';
+import Header from '../components/header.js';
+import Footer from '../components/footer.js';
 
 export default function NewProcess() {
-  const { contextUser } = useContext(UserContext);
   const [users, setUsers] = useState();
   const [form, setForm] = useState([]);
   const [event, setEvent] = useState();
@@ -50,49 +50,54 @@ export default function NewProcess() {
       .catch(e => {});
   }
   return (
-    <Wrap>
-      <Top>
-        <Title>
-          NUEVO
-          <br />
-          PROCESO
-        </Title>
-      </Top>
-      <FormWrap>
-        <Form>
-          <Label>NOMBRE</Label>
-          <Input name="processTitle" onChange={handleInput}></Input>
-          <Label>PROVEEDOR</Label>
-          <Select name="supplierAddress" onChange={handleInput}>
-            <option>Select one...</option>
-            {users &&
-              users.map(user => (
-                <option value={user.address} key={user.address}>
-                  {user.name}
-                </option>
-              ))}
-          </Select>
-          <Button className="submit" onClick={handleSubmit}>
-            CREAR
-          </Button>
-          <CustomModal
-            title="Project Creation Successfull"
-            body={
-              <>
-                <p>A new process was created successfully</p>
-                <ul>
-                  <li>Name: {form.processTitle}</li>
-                  <li>
-                    Transaction Hash: <RSKLink hash={event} type="tx" testnet />
-                  </li>
-                </ul>
-              </>
-            }
-            show={modalShow}
-            onHide={() => setModalShow(false)}
-          />
-        </Form>
-      </FormWrap>
-    </Wrap>
+    <>
+      <Header />
+      <Wrap>
+        <Top>
+          <Title>
+            NUEVO
+            <br />
+            PROCESO
+          </Title>
+        </Top>
+        <FormWrap>
+          <Form>
+            <Label>NOMBRE</Label>
+            <Input name="processTitle" onChange={handleInput}></Input>
+            <Label>PROVEEDOR</Label>
+            <Select name="supplierAddress" onChange={handleInput}>
+              <option>Select one...</option>
+              {users &&
+                users.map(user => (
+                  <option value={user.address} key={user.address}>
+                    {user.name}
+                  </option>
+                ))}
+            </Select>
+            <Button className="submit" onClick={handleSubmit}>
+              CREAR
+            </Button>
+            <CustomModal
+              title="Project Creation Successfull"
+              body={
+                <>
+                  <p>A new process was created successfully</p>
+                  <ul>
+                    <li>Name: {form.processTitle}</li>
+                    <li>
+                      Transaction Hash:{' '}
+                      <RSKLink hash={event} type="tx" testnet />
+                    </li>
+                  </ul>
+                </>
+              }
+              show={modalShow}
+              onHide={() => setModalShow(false)}
+            />
+          </Form>
+        </FormWrap>
+      </Wrap>
+      <Footer />
+    </>
   );
 }

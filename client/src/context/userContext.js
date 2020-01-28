@@ -6,6 +6,7 @@ export const UserContext = createContext();
 export function UserProvider(props) {
   const [change, setChange] = useState();
   const [contextUser, setCurrentUser] = useState({});
+
   const logoutUser = props => {
     localStorage.removeItem('token');
     setChange(false);
@@ -13,8 +14,7 @@ export function UserProvider(props) {
 
   const loginUser = form => {
     return new Promise((resolve, reject) => {
-      axios
-        .post('/auth', form)
+      axios({ method: 'POST', url: '/auth', data: form })
         .then(response => {
           if (response.status === 200) {
             localStorage.setItem('token', response.data);
@@ -25,7 +25,7 @@ export function UserProvider(props) {
           }
         })
         .catch(e => {
-          reject();
+          reject(e);
         });
     });
   };

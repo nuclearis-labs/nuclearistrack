@@ -6,7 +6,8 @@
   "scripts": {
     "serve": "node dist/server.js",
     "test": "jest --forceExit --coverage --verbose",
-    "build-ts": "tsc -p tsconfig.json"
+    "build-ts": "tsc -p tsconfig.json",
+    "watch-ts": "tsc -p tsconfig.json -w"
   },
   "repository": {
     "type": "git",
