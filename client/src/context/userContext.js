@@ -4,12 +4,8 @@ import axios from 'axios';
 export const UserContext = createContext();
 
 export function UserProvider(props) {
-  const [change, setChange] = useState();
-  const [contextUser, setCurrentUser] = useState({});
-
-  const logoutUser = props => {
+  const logoutUser = () => {
     localStorage.removeItem('token');
-    setChange(false);
   };
 
   const loginUser = form => {
@@ -18,7 +14,6 @@ export function UserProvider(props) {
         .then(response => {
           if (response.status === 200) {
             localStorage.setItem('token', response.data);
-            setChange(true);
             resolve(true);
           } else {
             reject();
@@ -30,24 +25,23 @@ export function UserProvider(props) {
     });
   };
 
-  useEffect(() => {
-    axios({
-      method: 'post',
-      url: '/auth/current',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+  const getCurrentUser = () => {
+    const jwt = localStorage.getItem('token');
+    let session;
+    try {
+      if (jwt) {
+        const base64Url = jwt.split('.')[1];
+        const base64 = base64Url.replace('-', '+').replace('_', '/');
+        session = JSON.parse(window.atob(base64));
       }
-    })
-      .then(({ data }) => {
-        setCurrentUser(data);
-      })
-      .catch(e => {
-        setCurrentUser({});
-      });
-  }, [change]);
+    } catch (error) {
+      console.error(error);
+    }
+    return session;
+  };
 
   return (
-    <UserContext.Provider value={{ contextUser, logoutUser, loginUser }}>
+    <UserContext.Provider value={{ getCurrentUser, logoutUser, loginUser }}>
       {props.children}
     </UserContext.Provider>
   );

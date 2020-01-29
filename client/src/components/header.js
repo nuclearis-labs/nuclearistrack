@@ -143,8 +143,8 @@ function PublicHeader() {
 }
 
 export default function Header() {
-  const { contextUser } = useContext(UserContext);
+  const { getCurrentUser } = useContext(UserContext);
 
-  if (contextUser.hasOwnProperty('address')) return <LoggedHeader />;
+  if (getCurrentUser()) return <LoggedHeader />;
   return <PublicHeader />;
 }

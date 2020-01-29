@@ -13,7 +13,7 @@ export const Login = () => {
   const history = useHistory();
   const location = useLocation();
 
-  let { from } = location.state || { from: { pathname: '/' } };
+  let { from } = location.state || { from: { pathname: '/projects' } };
 
   function handleInput(e) {
     e.persist();
