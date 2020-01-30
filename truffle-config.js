@@ -31,13 +31,6 @@ module.exports = {
       network_id: '*',
       gas: 6800000,
       gasPrice: 65164000
-    },
-    development: {
-      host: '0.0.0.0',
-      port: 8545,
-      network_id: '*',
-      gas: 6800000,
-      gasPrice: 65164000
     }
   }
 };
