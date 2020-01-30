@@ -6,8 +6,8 @@ import logger from './config/winston';
 
 const app = express();
 
-require('./config/mongoose_connect');
 require('dotenv').config();
+require('./config/mongoose_connect');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
