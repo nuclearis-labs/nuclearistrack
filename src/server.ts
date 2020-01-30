@@ -15,6 +15,14 @@ app.use(express.static(path.resolve(__dirname, '/public')));
 
 // app.use(morgan('common'));
 
+app.use('/api/', require('./routes/index'));
+app.use('/api/doc', require('./routes/documents'));
+app.use('/api/project', require('./routes/proyecto'));
+app.use('/api/process', require('./routes/process'));
+app.use('/api/user', require('./routes/user'));
+app.use('/api/transfer', require('./routes/transfer'));
+app.use('/auth', require('./routes/auth'));
+
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
 
@@ -24,14 +32,6 @@ if (process.env.NODE_ENV === 'production') {
     );
   });
 }
-
-app.use('/api/', require('./routes/index'));
-app.use('/api/doc', require('./routes/documents'));
-app.use('/api/project', require('./routes/proyecto'));
-app.use('/api/process', require('./routes/process'));
-app.use('/api/user', require('./routes/user'));
-app.use('/api/transfer', require('./routes/transfer'));
-app.use('/auth', require('./routes/auth'));
 
 app
   .listen(process.env.PORT, () =>
