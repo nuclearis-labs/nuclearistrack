@@ -9,7 +9,7 @@
     "test": "jest --forceExit --coverage --verbose",
     "build-ts": "tsc -p tsconfig.json",
     "watch-ts": "tsc -p tsconfig.json -w",
-    "postinstall": "npm run build-ts"
+    "postinstall": "npm run build-ts && npm run start-client"
   },
   "repository": {
     "type": "git",

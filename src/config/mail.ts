@@ -12,7 +12,7 @@ export async function sendMail({
 }): Promise<any> {
   const email = new Email({
     message: {
-      from: 'sistemas@nuclearis.com'
+      from: process.env.MAIL_FROM
     },
     send: true,
     preview: false,
@@ -21,8 +21,8 @@ export async function sendMail({
       port: 465,
       secure: true,
       auth: {
-        user: 'sistemas@nuclearis.com',
-        pass: 'vwthkppvxvkyuxyd'
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PWD
       }
     },
     juice: true,
