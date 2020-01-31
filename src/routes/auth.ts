@@ -20,6 +20,8 @@ router.post('/', async (req, res) => {
 
     const address = wallet.generateRSKAddress(decryptedKey);
 
+    logger.info(`DB address ${user.address} decryptedAddress ${address} `);
+
     if (user.address === address) {
       jwt.sign(
         {
