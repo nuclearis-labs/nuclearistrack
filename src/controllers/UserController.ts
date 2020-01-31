@@ -20,7 +20,7 @@ export async function create(req: Request, res: Response) {
     logger.info(`User ${db._id} created {"email":${req.body.newUserEmail}}`);
 
     await sendMail({
-      to: 'smartinez@nuclearis.com',
+      to: req.body.newUserEmail,
       name: req.body.newUserName,
       id: db._id
     });
