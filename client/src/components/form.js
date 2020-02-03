@@ -1,7 +1,7 @@
 // form.js
 import styled from 'styled-components';
 
-const Top = styled.div`
+export const Top = styled.div`
   padding: 0 20px;
   width: 360px;
   margin: 0 auto;
@@ -9,7 +9,7 @@ const Top = styled.div`
   text-align: right;
 `;
 
-const FormWrap = styled.div`
+export const FormWrap = styled.div`
   background: #e6e6e6;
   padding: 10px;
   width: 100%;
@@ -18,8 +18,7 @@ const FormWrap = styled.div`
   margin-bottom: 100px;
 `;
 
-const Form = styled.div`
+export const Form = styled.div`
   width: 700px;
   margin: 0 auto;
 `;
-export { Top, Form, FormWrap };

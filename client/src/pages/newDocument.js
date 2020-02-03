@@ -1,123 +1,71 @@
-// NewProject.js
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// newProvider.js
+import React from 'react';
+import styled from 'styled-components';
+import { Title, Label, Input, TextArea, Button, Wrap, ProcessName, SubTit, Pad } from '../components/components.js';
+import { Top, Form, FormWrap } from '../components/form.js';
+import { ReactComponent as Magni } from '../img/magni.svg';
 import Header from '../components/header.js';
 import Footer from '../components/footer.js';
-import {
-  Title,
-  Label,
-  Input,
-  Select,
-  Button,
-  Wrap
-} from '../components/components.js';
-import { Top, Form, FormWrap } from '../components/form.js';
-import { CustomModal } from '../components/CustomModal';
-import RSKLink from '../components/RSKLink';
 
-export default function NewDocument() {
-  const [form, setForm] = useState({});
-  const [event, setEvent] = useState();
-  const [users, setUsers] = useState();
-  const [modalShow, setModalShow] = useState(false);
+const MapRect = styled.div`
+  width:370px;
+  height:250px;
+  background:#aaa;
+`;
 
-  function handleInput(e) {
-    e.persist();
-    setForm(form => ({ ...form, [e.target.name]: e.target.value }));
+const MagniWrap = styled.a`
+  svg {
+    width:30px;
+    vertical-align:middle;
+    margin-left:10px;
   }
+`;
 
-  useEffect(() => {
-    axios.get('/api/user/get').then(({ data }) => {
-      const clients = data.filter(client => client.type === '0');
-      setUsers(clients);
-    });
-  }, []);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    axios({
-      method: 'post',
-      url: '/api/project/',
-      data: {
-        ...form
-      },
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    })
-      .then(({ data }) => {
-        setEvent(data);
-        setModalShow(true);
-      })
-      .catch(e => {});
-  }
+export default function NewDoc() {
   return (
     <>
-      <Header />
-      <Wrap>
-        <Top>
-          <Title>
-            NUEVO
-            <br />
-            DOCUMENTO
-          </Title>
-        </Top>
-        <FormWrap>
-          <Form>
-            <Label>TITULO</Label>
-            <Input
-              type="text"
-              name="proyectoTitle"
-              value={form.proyectoTitle}
-              onChange={handleInput}
-            ></Input>
-            <Label>CLIENTE</Label>
-            <Select
-              name="clientAddress"
-              value={form.clientAddress}
-              onChange={handleInput}
-            >
-              <option>Select one...</option>
-              {users &&
-                users.map(user => (
-                  <option value={user.address} key={user.address}>
-                    {user.name}
-                  </option>
-                ))}
-            </Select>
-            <Label>EXPEDIENTE</Label>
-            <Input
-              type="number"
-              name="expediente"
-              value={form.expediente}
-              onChange={handleInput}
-            ></Input>
-            <Label>Nº OC</Label>
-            <Input name="oc" value={form.oc} onChange={handleInput}></Input>
-            <Button className="submit" onClick={handleSubmit}>
+    <Header />
+    <Wrap>
+      <Top>
+        <Title>
+          NUEVO<br/>
+          DOCUMENTO
+        </Title>
+      </Top>
+      <FormWrap>
+        <Form>
+          <Pad>
+            <SubTit>PROCESO</SubTit>
+            <ProcessName>MATERIA PRIMA BARRA DE ACERO</ProcessName>
+            <SubTit>PROVEEDOR</SubTit><SubTit className="bold">BGH</SubTit>
+           </Pad>
+            <Label>
+              DESCRIPCION DEL DOCUMENTO
+            </Label>
+            <Input>
+            </Input>
+            <Label>
+              SELECCIONAR ARCHIVO
+            </Label>
+            <Input className="upload">
+            </Input><MagniWrap href="#"><Magni/></MagniWrap>
+            <Label>
+              UBICACION DEL DOCUMENTO
+            </Label>
+            <MapRect>
+            </MapRect>
+            <Label>
+              OBSERVACIONES
+            </Label>
+            <TextArea>
+            </TextArea>
+            <Button className="submit">
               CREAR
             </Button>
-            <CustomModal
-              title="Project Creation Successfull"
-              body={
-                <>
-                  <p>A new project was created successfully</p>
-                  <ul>
-                    <li>Name: {form.proyectoTitle}</li>
-                    <li>
-                      Transaction Hash:{' '}
-                      <RSKLink hash={event} type="tx" testnet />
-                    </li>
-                  </ul>
-                </>
-              }
-              show={modalShow}
-              onHide={() => setModalShow(false)}
-            />
-          </Form>
-        </FormWrap>
-      </Wrap>
-      <Footer />
+        </Form>
+      </FormWrap>
+    </Wrap>
+    <Footer/>
     </>
   );
 }

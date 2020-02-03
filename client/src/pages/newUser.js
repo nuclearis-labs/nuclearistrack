@@ -24,6 +24,8 @@ export default function NewUser() {
   function handleInput(e) {
     e.persist();
     setForm(form => ({ ...form, [e.target.name]: e.target.value }));
+    console.log(contextUser);
+    
   }
 
   function handleSubmit(e) {
