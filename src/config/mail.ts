@@ -47,7 +47,8 @@ export async function sendMail({
       },
       locals: {
         name,
-        id
+        id,
+        host:process.env.HOST
       }
     });
   } catch (e) {
