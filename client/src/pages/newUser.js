@@ -16,7 +16,7 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 
 export default function NewUser() {
-  const { contextUser } = useContext(UserContext);
+  const { getCurrentUser } = useContext(UserContext);
   const [form, setForm] = useState([]);
   const [event, setEvent] = useState();
   const [modalShow, setModalShow] = useState(false);
@@ -24,19 +24,18 @@ export default function NewUser() {
   function handleInput(e) {
     e.persist();
     setForm(form => ({ ...form, [e.target.name]: e.target.value }));
-    console.log(contextUser);
     
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-
+    const user = getCurrentUser();
     axios({
       method: 'post',
       url: '/api/user/',
       data: {
         ...form,
-        email: contextUser.userEmail
+        email: user.userEmail
       },
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
