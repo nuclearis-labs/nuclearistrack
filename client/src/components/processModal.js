@@ -1,10 +1,11 @@
 // modal.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Button, Scroll } from '../components/components.js';
-import { Row, HeadRow, Col4 } from '../components/tableComponents.js';
+import { Button, Scroll } from './components.js';
+import { Row, HeadRow, Col4 } from './tableComponents.js';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const Backdrop = styled.div`
   width: 100%;
@@ -94,10 +95,12 @@ const ScrollBox130 = styled(Scroll)`
   height: 130px;
 `;
 
-function Check() {
+function Check(props) {
   const [checked, setChecked] = useState(false);
 
   function handleCheckboxChange() {
+    console.log(props.id + ' ' + checked);
+
     setChecked(!checked);
   }
 
@@ -122,38 +125,64 @@ function Check() {
   );
 }
 
-function Modal() {
+function ProcessModal({ project }) {
+  const [processes, setProcesses] = useState([]);
+  const [filteredProcesses, setFilteredProcesses] = useState([]);
+  const [input, setInput] = useState();
+
+  useEffect(() => {
+    axios({
+      method: 'get',
+      url: '/api/process/get',
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    }).then(({ data }) => {
+      console.log(data);
+      setFilteredProcesses(data);
+      setProcesses(data);
+    });
+  }, []);
+
+  function handleInput(e) {
+    e.persist();
+    setInput(e.target.value);
+    let filteredProcesses = processes.filter(search => {
+      return search.processName.includes(e.target.value);
+    });
+
+    setFilteredProcesses(filteredProcesses);
+  }
+
   return (
     <Backdrop>
       <ModalWrap>
         <ModalTop>
           <ModalTit>AGREGAR PROCESOS</ModalTit>
-          <ModalInput placeholder="BUSCAR"></ModalInput>
+          <ModalInput placeholder="BUSCAR" onChange={handleInput}></ModalInput>
           <ModalTxt>
             SELECCIONE LOS PROCESOS QUE DESEA AGREGAR AL PROYECTO
           </ModalTxt>
-          <ModalProdName>ANILLOS 2018</ModalProdName>
+          <ModalProdName>{project.title}</ModalProdName>
         </ModalTop>
         <ModalBottom>
           <HeadRow>
             <Col4>NOMBRE</Col4>
             <Col4>PROVEEDOR</Col4>
             <Col4>DOCUMENTOS</Col4>
-            <Col4>FECHA</Col4>
           </HeadRow>
           <ScrollBox130>
-            <Row>
-              <Check />
-              <Col4>MATERIA PRIMA</Col4>
-              <Col4>BGH</Col4>
-              <Col4>
-                <Link>
-                  <Eye />
-                  VER DOC.
-                </Link>
-              </Col4>
-              <Col4>15/02/2019</Col4>
-            </Row>
+            {filteredProcesses.map(process => (
+              <Row>
+                <Check id={process.processContracts} />
+                <Col4>{process.processName}</Col4>
+                <Col4>{process.supplierName}</Col4>
+                <Col4>
+                  <Link>
+                    <Eye />
+                    VER DOC.
+                  </Link>
+                </Col4>
+              </Row>
+            ))}
           </ScrollBox130>
           <Button>+ AGREGAR PROCESOS</Button>
         </ModalBottom>
@@ -161,4 +190,4 @@ function Modal() {
     </Backdrop>
   );
 }
-export default Modal;
+export default ProcessModal;

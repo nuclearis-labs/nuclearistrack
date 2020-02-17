@@ -5,7 +5,7 @@ import Header from '../components/header.js';
 
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import Modal from '../components/modal.js';
+import ProcessModal from '../components/processModal.js';
 import { Title, Button, Wrap, Scroll } from '../components/components.js';
 import {
   Table,
@@ -23,12 +23,16 @@ const FlexWrap = styled.div`
   display: flex;
 `;
 const FlexWrapRight = styled(FlexWrap)`
-  float: right;
-  padding-right: 20px;
+  float: ${props => (props.details.hasOwnProperty('id') ? 'right' : 'left')};
+  padding-right: ${props =>
+    props.details.hasOwnProperty('id') ? '20px' : '0px'};
+  padding-left: ${props =>
+    props.details.hasOwnProperty('id') ? '0px' : '37%'};
 `;
+
 const Left = styled.div`
   padding: 0;
-  width: 60%;
+  width: ${props => (props.details.hasOwnProperty('id') ? '60%' : '100%')};
   background: #fff;
   min-width: 461px;
   ${Row} {
@@ -96,9 +100,17 @@ function Projects() {
 
   const [showModal, setShowModal] = useState(false);
   const [projectDetails, setProjectDetails] = useState({});
+  const [processes, setProcesses] = useState([]);
 
   function handleRowClick(project) {
     setProjectDetails(project);
+    axios({
+      method: 'get',
+      url: '/api/process/getByExpediente?expediente=' + project.id,
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    }).then(({ data }) => {
+      setProcesses(data);
+    });
   }
 
   return (
@@ -106,8 +118,8 @@ function Projects() {
       <Header />
       <Wrap>
         <FlexWrap>
-          <Left>
-            <FlexWrapRight>
+          <Left details={projectDetails}>
+            <FlexWrapRight details={projectDetails}>
               <AddProyectBtn as={Link} to="/projects/add">
                 + NUEVO PROYECTO
               </AddProyectBtn>
@@ -136,47 +148,53 @@ function Projects() {
               </ScrollBox400>
             </Table>
           </Left>
-          <Right>
-            <ResumenTit>RESUMEN DE PROYECTO</ResumenTit>
-            <ResumenName>{projectDetails.title}</ResumenName>
-            <Row>
-              <Col2 className="color">CLIENTE</Col2>
-              <Col2 className="bold">{projectDetails.clientName}</Col2>
-            </Row>
-            <Row>
-              <Col2 className="color">EXPEDIENTE</Col2>
-              <Col2 className="bold">{projectDetails.id}</Col2>
-            </Row>
-            <Row>
-              <Col2 className="color">Nº OC</Col2>
-              <Col2 className="bold">{projectDetails.oc}</Col2>
-            </Row>
-            <ProcesosTit>PROCESOS</ProcesosTit>
-            <HeadRow>
-              <Col3>NOMBRE</Col3>
-              <Col3>PROVEEDOR</Col3>
-              <Col3>DOCUMENTOS</Col3>
-            </HeadRow>
-            <Row>
-              <Col3>MATERIA PRIMA</Col3>
-              <Col3>BGH</Col3>
-              <Col3>
-                <Link>
-                  <Eye />
-                  VER DOC.
-                </Link>
-              </Col3>
-            </Row>
-            <Button
-              onClick={() => {
-                setShowModal(true);
-              }}
-            >
-              + AGREGAR PROCESOS
-            </Button>
-          </Right>
+          {projectDetails && projectDetails.hasOwnProperty('id') && (
+            <Right>
+              <ResumenTit>RESUMEN DE PROYECTO</ResumenTit>
+              <ResumenName>{projectDetails.title}</ResumenName>
+              <Row>
+                <Col2 className="color">CLIENTE</Col2>
+                <Col2 className="bold">{projectDetails.clientName}</Col2>
+              </Row>
+              <Row>
+                <Col2 className="color">EXPEDIENTE</Col2>
+                <Col2 className="bold">{projectDetails.id}</Col2>
+              </Row>
+              <Row>
+                <Col2 className="color">Nº OC</Col2>
+                <Col2 className="bold">{projectDetails.oc}</Col2>
+              </Row>
+              <ProcesosTit>PROCESOS</ProcesosTit>
+              <HeadRow>
+                <Col3>NOMBRE</Col3>
+                <Col3>PROVEEDOR</Col3>
+                <Col3>DOCUMENTOS</Col3>
+              </HeadRow>
+              <Row>
+                {processes.map(process => (
+                  <>
+                    <Col3>{process.processName}</Col3>
+                    <Col3>{process.supplierName}</Col3>
+                    <Col3>
+                      <Link>
+                        <Eye />
+                        VER DOC.
+                      </Link>
+                    </Col3>
+                  </>
+                ))}
+              </Row>
+              <Button
+                onClick={() => {
+                  setShowModal(true);
+                }}
+              >
+                + AGREGAR PROCESOS
+              </Button>
+            </Right>
+          )}
         </FlexWrap>
-        {showModal && <Modal />}
+        {showModal && <ProcessModal project={projectDetails} />}
       </Wrap>
       <Footer />
     </>

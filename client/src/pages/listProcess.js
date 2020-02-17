@@ -19,6 +19,8 @@ export const ListProcess = () => {
       url: '/api/process/get',
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     }).then(({ data }) => {
+      console.log(data);
+
       setProcess(data);
     });
   }, []);
