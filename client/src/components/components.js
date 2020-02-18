@@ -1,21 +1,29 @@
 // components.js
 import styled from 'styled-components';
 export const Scroll = styled.div`
-  overflow:auto;
-  &::-webkit-scrollbar{width:14px;}
-  &::-webkit-scrollbar-thumb{background:#5d5d5d;}
-  &::-webkit-scrollbar-corner{background:transparent;}
+  overflow: auto;
+  &::-webkit-scrollbar {
+    width: 14px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #5d5d5d;
+  }
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
 `;
-export const Wrap = styled(Scroll)`height:calc(100vh - 220px);`;
+export const Wrap = styled(Scroll)`
+  height: calc(100vh - 220px);
+`;
 export const Title = styled.h1`
-color:#5d5d5d;
-font-family: 'Montserrat', sans-serif;
-font-weight:700;
-font-size:34px;
-letter-spacing:2px;
-line-height:37px;
-margin-top:23px;
-margin-bottom:0;
+  color: #5d5d5d;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 34px;
+  letter-spacing: 2px;
+  line-height: 37px;
+  margin-top: 23px;
+  margin-bottom: 0;
 `;
 export const Label = styled.label`
   color: #333;
@@ -31,21 +39,44 @@ export const Label = styled.label`
 
 export const Input = styled.input`
   border: solid 2px #5d5d5d;
-  width:370px;
-  height:36px;
+  width: 370px;
+  height: 36px;
   padding: 5px;
   color: #555;
   cursor: text;
   font-size: 14px;
   font-weight: 300;
   box-sizing: border-box;
-  background:transparent;
+  background: transparent;
   &:active,
   &:focus {
     text-align: left;
   }
-  &.upload {width: 320px;}
+  &.upload {
+    width: 320px;
+  }
 `;
+
+export const FileInput = styled.input`
+  border: solid 2px #5d5d5d;
+  width: 370px;
+  height: 36px;
+  padding: 3px;
+  color: #555;
+  cursor: text;
+  font-size: 14px;
+  font-weight: 300;
+  box-sizing: border-box;
+  background: transparent;
+  &:active,
+  &:focus {
+    text-align: left;
+  }
+  &.upload {
+    width: 320px;
+  }
+`;
+
 export const TextArea = styled.textarea`
   border: solid 2px #5d5d5d;
   width: 370px;
@@ -64,17 +95,20 @@ export const TextArea = styled.textarea`
 `;
 
 export const Button = styled.button`
-	background:#8c6239;
-	color:#fff;
-	font-family: 'Montserrat', sans-serif;
-	font-weight:700;
-	padding: 5px 10px;
-	letter-spacing: 1px;
-	display: block;
-	margin-top:10px;
-	border:none;
-	cursor:pointer;
-	&.submit {position:relative; top:60px; margin-top:0;}
+  background: ${props => (props.disabled ? 'grey' : '#8c6239')}
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  padding: 5px 10px;
+  letter-spacing: 1px;
+  display: block;
+  margin-top: 10px;
+  border: none;
+  &.submit {
+    position: relative;
+    top: 60px;
+    margin-top: 0;
+  }
 `;
 
 export const Checkbox = styled.input.attrs(props => ({
@@ -112,7 +146,6 @@ export const Datepicker = styled.input.attrs(props => ({
   background: transparent;
 `;
 
-
 export const Select = styled.select`
   border: solid 2px #5d5d5d;
   background: transparent;
@@ -130,31 +163,34 @@ export const Select = styled.select`
 `;
 
 export const DocTit = styled(Title)`
-  font-size:16px;
-  line-height:16px;
-  margin:10px 0;
-  color:#333;
-  margin-top:25px;
+  font-size: 16px;
+  line-height: 16px;
+  margin: 10px 0;
+  color: #333;
+  margin-top: 25px;
 `;
 
 export const ProcessName = styled.div`
-  color:#333;
-  font-weight:700;
-  font-size:23px;
-  letter-spacing:1px;
-  margin-bottom:10px;
+  color: #333;
+  font-weight: 700;
+  font-size: 23px;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
 `;
 
 export const SubTit = styled.div`
-  display:inline-block;
-  color:#8c6239;
-  font-size:13px;
-  letter-spacing:1px;
-  width:130px;
-  &.bold{color:#333; font-weight:700;}
+  display: inline-block;
+  color: #8c6239;
+  font-size: 13px;
+  letter-spacing: 1px;
+  width: 130px;
+  &.bold {
+    color: #333;
+    font-weight: 700;
+  }
 `;
 export const Pad = styled.div`
-  width:700px;
-  margin:0 auto;
-  padding:20px 0;
+  width: 700px;
+  margin: 0 auto;
+  padding: 20px 0;
 `;

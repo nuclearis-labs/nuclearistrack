@@ -1,5 +1,5 @@
 // header.js
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../context/userContext';
 import { ReactComponent as Eye } from '../img/eye.svg';
@@ -66,7 +66,7 @@ function DropDownEdit(props) {
   );
 }
 
-function LoggedHeader() {
+function LoggedHeader(props) {
   const { logoutUser } = useContext(UserContext);
   const [indexDropdownOpened, setIndexDropdownOpened] = useState(false);
 
@@ -98,7 +98,7 @@ function LoggedHeader() {
         </NavAbm>
         <NavUser>
           <User />
-          <UserName>Admin Nuclearis</UserName>
+          <UserName>{props.user.userName}</UserName>
           <LogOut as={Link} to="/" onClick={() => logoutUser()}>
             LOGOUT
           </LogOut>
@@ -145,6 +145,6 @@ function PublicHeader() {
 export default function Header() {
   const { getCurrentUser } = useContext(UserContext);
 
-  if (getCurrentUser()) return <LoggedHeader />;
+  if (getCurrentUser()) return <LoggedHeader user={getCurrentUser()} />;
   return <PublicHeader />;
 }
