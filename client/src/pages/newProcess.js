@@ -14,12 +14,14 @@ import { CustomModal } from '../components/CustomModal';
 import RSKLink from '../components/RSKLink';
 import Header from '../components/header.js';
 import Footer from '../components/footer.js';
+import Spinner from 'react-bootstrap/Spinner';
 
 export default function NewProcess() {
   const [users, setUsers] = useState();
   const [form, setForm] = useState([]);
   const [event, setEvent] = useState();
   const [modalShow, setModalShow] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   function handleInput(e) {
     e.persist();
@@ -35,6 +37,8 @@ export default function NewProcess() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    setLoading(true);
+
     axios({
       method: 'post',
       url: '/api/process/',
@@ -44,10 +48,12 @@ export default function NewProcess() {
       }
     })
       .then(({ data }) => {
+        setLoading(false);
+
         setEvent(data);
         setModalShow(true);
       })
-      .catch(e => {});
+      .catch(e => setLoading(false));
   }
   return (
     <>
@@ -75,7 +81,11 @@ export default function NewProcess() {
                 ))}
             </Select>
             <Button className="submit" onClick={handleSubmit}>
-              CREAR
+              {loading ? (
+                <Spinner animation="border" role="status" size="sm"></Spinner>
+              ) : (
+                'CREAR'
+              )}
             </Button>
             <CustomModal
               title="Project Creation Successfull"

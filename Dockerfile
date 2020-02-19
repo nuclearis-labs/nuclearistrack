@@ -8,4 +8,4 @@ RUN npm install -g truffle
 RUN npm run build-ts
 RUN truffle compile
 EXPOSE 6000
-CMD [ "npm", "run", "serve" ]
+CMD [ "npm", "start" ]

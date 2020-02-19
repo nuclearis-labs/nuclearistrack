@@ -44,13 +44,13 @@ function Processes() {
                 <Col4>{process.processName}</Col4>
                 <Col4>{process.supplierName}</Col4>
                 <Col4>
-                  <Link to="/documents/0x1EdcdE414000B0B182761168CC72B4c01B21fD0A">
+                  <Link to={'/documents/' + process.processContracts}>
                     <Eye />
                     VER DOC.
                   </Link>
                 </Col4>
                 <Col4>
-                  <Link to="/documents/add/0x1EdcdE414000B0B182761168CC72B4c01B21fD0A">
+                  <Link to={'/documents/add/' + process.processContracts}>
                     <Pen />
                     AGREGAR DOC.
                   </Link>

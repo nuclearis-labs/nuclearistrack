@@ -14,12 +14,14 @@ import {
 import { Top, Form, FormWrap } from '../components/form.js';
 import { CustomModal } from '../components/CustomModal';
 import RSKLink from '../components/RSKLink';
+import Spinner from 'react-bootstrap/Spinner';
 
 export default function NewProject() {
   const [form, setForm] = useState({});
   const [event, setEvent] = useState();
   const [users, setUsers] = useState();
   const [modalShow, setModalShow] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   function handleInput(e) {
     e.persist();
@@ -35,6 +37,7 @@ export default function NewProject() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    setLoading(true);
     axios({
       method: 'post',
       url: '/api/project/',
@@ -46,6 +49,7 @@ export default function NewProject() {
       }
     })
       .then(({ data }) => {
+        setLoading(false);
         setEvent(data);
         setModalShow(true);
       })
@@ -95,7 +99,11 @@ export default function NewProject() {
             <Label>Nº OC</Label>
             <Input name="oc" value={form.oc} onChange={handleInput}></Input>
             <Button className="submit" onClick={handleSubmit}>
-              CREAR
+              {loading ? (
+                <Spinner animation="border" role="status" size="sm"></Spinner>
+              ) : (
+                'CREAR'
+              )}
             </Button>
             <CustomModal
               title="Project Creation Successfull"

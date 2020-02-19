@@ -3,42 +3,45 @@ import styled from 'styled-components';
 
 export const Table = styled.div`
   padding: 20px 0;
-  margin-top:75px;
-  width:100%;
-  background:#e6e6e6;
-  text-align:left;
+  margin-top: 75px;
+  width: 100%;
+  background: #e6e6e6;
+  text-align: left;
   height: calc(100% - 75px);
   box-sizing: border-box;
 `;
 
 export const Row = styled.div`
   padding: 1px 0;
-  box-sizing:border-box;
-  width:100%;
-  text-align:left;
-  display:flex;
-  font-size:13px;
-  letter-spacing:0.5px;
-  color:#333;
-  &.active{font-weight:700;}
+  box-sizing: border-box;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  color: #333;
+  cursor: pointer;
+  &.active {
+    font-weight: 700;
+  }
 `;
 
 export const HeadRow = styled(Row)`
-  color:#8c6239;
-  font-weight:700;
+  color: #8c6239;
+  font-weight: 700;
   padding: 4px 0;
 `;
 
 export const HeadRowMonsterrat = styled(HeadRow)`
   font-family: Montserrat, sans-serif;
-  width:calc(100% - 14px);
+  width: calc(100% - 14px);
 `;
 
 export const Col = styled.div`
-  width:20%;
-  white-space:nowrap;
-  text-overflow:ellipsis;
-  overflow:hidden;
+  width: 20%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
 export const Col2 = styled.div`
@@ -47,22 +50,31 @@ export const Col2 = styled.div`
   &.color{color:#8c6239; width:130px;}
 `;
 export const Col3 = styled.div`
-  width:33%;
-  font-weight:700;
-  white-space:nowrap;
-  text-overflow:ellipsis;
-  overflow:hidden;
-  a{text-decoration:none; color:#333;}
-  a:hover{color:#8c6239;}
-  svg {
-    width:20px;
-    vertical-align:middle;
-    margin-right:5px;
+  width: 33%;
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  a {
+    text-decoration: none;
+    color: #333;
   }
-  svg .st0{fill:#333;}
-  a:hover svg .st0{fill:#8c6239;}
+  a:hover {
+    color: #8c6239;
+  }
+  svg {
+    width: 20px;
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+  svg .st0 {
+    fill: #333;
+  }
+  a:hover svg .st0 {
+    fill: #8c6239;
+  }
 `;
 
 export const Col4 = styled(Col3)`
-  width:25%;
+  width: 25%;
 `;

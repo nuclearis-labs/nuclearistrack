@@ -6,6 +6,7 @@ import { Row, HeadRow, Col4 } from './tableComponents.js';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Spinner from 'react-bootstrap/Spinner';
 
 const Backdrop = styled.div`
   width: 100%;
@@ -99,7 +100,18 @@ function Check(props) {
   const [checked, setChecked] = useState(false);
 
   function handleCheckboxChange() {
-    console.log(props.id + ' ' + checked);
+    console.log(checked);
+
+    checked === false
+      ? props.setCheckedProcesses(checkedArr => {
+          console.log(checkedArr);
+          return [...checkedArr, props.id];
+        })
+      : props.setCheckedProcesses(checkedArr => {
+          console.log(checkedArr);
+
+          checkedArr.filter(check => check === props.id);
+        });
 
     setChecked(!checked);
   }
@@ -128,7 +140,9 @@ function Check(props) {
 function ProcessModal({ project }) {
   const [processes, setProcesses] = useState([]);
   const [filteredProcesses, setFilteredProcesses] = useState([]);
-  const [input, setInput] = useState();
+  const [, setInput] = useState();
+  const [loading, setLoading] = useState(false);
+  const [checkedProcesses, setCheckedProcesses] = useState([]);
 
   useEffect(() => {
     axios({
@@ -136,7 +150,6 @@ function ProcessModal({ project }) {
       url: '/api/process/get',
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     }).then(({ data }) => {
-      console.log(data);
       setFilteredProcesses(data);
       setProcesses(data);
     });
@@ -150,6 +163,25 @@ function ProcessModal({ project }) {
     });
 
     setFilteredProcesses(filteredProcesses);
+  }
+
+  function handleAsignation(e) {
+    e.persist();
+    setLoading(true);
+    axios({
+      method: 'post',
+      url: '/api/project/assignProcess',
+      data: {
+        passphrase: 'Nuclearis',
+        email: 'info@nuclearis.com',
+        expediente: project.id,
+        processContract: '0x1EdcdE414000B0B182761168CC72B4c01B21fD0A'
+      },
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    }).then(({ data }) => {
+      setLoading(false);
+      console.log('Process Asigned');
+    });
   }
 
   return (
@@ -171,12 +203,15 @@ function ProcessModal({ project }) {
           </HeadRow>
           <ScrollBox130>
             {filteredProcesses.map(process => (
-              <Row>
-                <Check id={process.processContracts} />
+              <Row key={process.processContracts}>
+                <Check
+                  id={process.processContracts}
+                  setCheckedProcesses={setCheckedProcesses}
+                />
                 <Col4>{process.processName}</Col4>
                 <Col4>{process.supplierName}</Col4>
                 <Col4>
-                  <Link>
+                  <Link to={'/documents/' + process.processContracts}>
                     <Eye />
                     VER DOC.
                   </Link>
@@ -184,7 +219,13 @@ function ProcessModal({ project }) {
               </Row>
             ))}
           </ScrollBox130>
-          <Button>+ AGREGAR PROCESOS</Button>
+          <Button onClick={handleAsignation}>
+            {loading ? (
+              <Spinner animation="border" role="status" size="sm"></Spinner>
+            ) : (
+              '+ AGREGAR PROCESOS'
+            )}
+          </Button>
         </ModalBottom>
       </ModalWrap>
     </Backdrop>

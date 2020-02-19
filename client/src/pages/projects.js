@@ -4,7 +4,7 @@ import axios from 'axios';
 import Header from '../components/header.js';
 
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import ProcessModal from '../components/processModal.js';
 import { Title, Button, Wrap, Scroll } from '../components/components.js';
 import {
@@ -39,6 +39,14 @@ const Left = styled.div`
     padding: 4px 60px;
   }
 `;
+const appear = keyframes`
+from {
+  opacity:0;
+}
+to {
+  opacity: 1;
+}`;
+
 const Right = styled.div`
   padding: 30px 40px;
   width: 40%;
@@ -46,7 +54,10 @@ const Right = styled.div`
   min-width: 307px;
   text-align: left;
   box-sizing: border-box;
+  animation: ${appear} 500ms;
+  animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
 `;
+
 const AddProyectBtn = styled.a`
   color: #8c6239;
   font-family: Montserrat, sans-serif;
@@ -135,6 +146,7 @@ function Projects() {
               <ScrollBox400>
                 {projects.map(project => (
                   <Row
+                    key={project.id}
                     onClick={() => {
                       handleRowClick(project);
                     }}
@@ -170,20 +182,18 @@ function Projects() {
                 <Col3>PROVEEDOR</Col3>
                 <Col3>DOCUMENTOS</Col3>
               </HeadRow>
-              <Row>
-                {processes.map(process => (
-                  <>
-                    <Col3>{process.processName}</Col3>
-                    <Col3>{process.supplierName}</Col3>
-                    <Col3>
-                      <Link>
-                        <Eye />
-                        VER DOC.
-                      </Link>
-                    </Col3>
-                  </>
-                ))}
-              </Row>
+              {processes.map(process => (
+                <Row>
+                  <Col3>{process.processName}</Col3>
+                  <Col3>{process.supplierName}</Col3>
+                  <Col3>
+                    <Link to={'/documents/' + process.contractAddress}>
+                      <Eye />
+                      VER DOC.
+                    </Link>
+                  </Col3>
+                </Row>
+              ))}
               <Button
                 onClick={() => {
                   setShowModal(true);

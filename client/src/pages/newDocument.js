@@ -19,23 +19,10 @@ import Header from '../components/header.js';
 import axios from 'axios';
 import Footer from '../components/footer.js';
 
-const MapRect = styled.div`
-  width: 370px;
-  height: 250px;
-  background: #aaa;
-`;
-
-const MagniWrap = styled.a`
-  svg {
-    width: 30px;
-    vertical-align: middle;
-    margin-left: 10px;
-  }
-`;
-
 export default function NewDoc(props) {
   const [processDetail, setProcess] = useState([]);
   const [form, setForm] = useState([]);
+  const [file, setFile] = useState();
   const [location, setLocation] = useState();
   const [enableSubmit, setEnableSubmit] = useState({
     state: false,
@@ -86,14 +73,28 @@ export default function NewDoc(props) {
     setForm(form => ({ ...form, [e.target.name]: e.target.value }));
   }
 
+  function handleFileInput(e) {
+    e.persist();
+    setFile(e.target.files[0]);
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
+    let data = new FormData();
+    data.append('file', file);
+    data.append('email', 'imeco@nuclearis.com');
+    data.append('passphrase', 'imeco');
+    data.append('comment', form.observaciones);
+    data.append('latitude', '-34.4354534');
+    data.append('longitude', '-59.2434234');
     axios({
       method: 'post',
-      url: '/api/document/upload',
-      data: { ...form },
+      url:
+        '/api/doc/upload?contract=0x1EdcdE414000B0B182761168CC72B4c01B21fD0A',
+      data: data,
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'content-type': 'multipart/form-data'
       }
     })
       .then(({ data }) => {
@@ -127,17 +128,16 @@ export default function NewDoc(props) {
                   processDetail.supplierName.toUpperCase()}
               </SubTit>
             </Pad>
-            <Label>DESCRIPCION DEL DOCUMENTO</Label>
-            <Input onChange={handleInput} name="descripcion"></Input>
             <Label>SELECCIONAR ARCHIVO</Label>
             <FileInput
-              onChange={handleInput}
+              onChange={handleFileInput}
               name="file"
               type="file"
             ></FileInput>
             <Label>UBICACION DEL DOCUMENTO</Label>
             <iframe
               frameBorder="0"
+              title="DocumentLocation"
               style={{ border: '0', width: '370px', height: '250px' }}
               src={location}
               allowFullScreen

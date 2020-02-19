@@ -5,6 +5,7 @@ import txModel from '../models/transaction';
 import fs from 'fs';
 import logger from '../config/winston';
 import { Request, Response } from 'express';
+import { IUserOnReq } from '../types/Custom';
 
 const processABI = require('../../build/contracts/Process.json').abi;
 
@@ -123,7 +124,7 @@ export async function getByID(req: Request, res: Response) {
   }
 }
 
-export async function get(req: Request, res: Response) {
+export async function get(req: IUserOnReq, res: Response) {
   try {
     const contract = new Contract();
     const processContracts = await contract.getDataFromContract({

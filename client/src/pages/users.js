@@ -9,7 +9,7 @@ import Footer from '../components/footer.js';
 
 export default function Users() {
   const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
 
   useEffect(() => {
     axios({

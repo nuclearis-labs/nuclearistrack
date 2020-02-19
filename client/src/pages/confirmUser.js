@@ -8,12 +8,14 @@ import { CustomModal } from '../components/CustomModal';
 import RSKLink from '../components/RSKLink';
 import Footer from '../components/footer.js';
 import Header from '../components/header.js';
+import Spinner from 'react-bootstrap/Spinner';
 
 export default function ConfirmUser() {
   const [form, setForm] = useState([]);
   const [event, setEvent] = useState({});
   const { id } = useParams();
   const [modalShow, setModalShow] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   function handleInput(e) {
     e.persist();
@@ -22,6 +24,7 @@ export default function ConfirmUser() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    setLoading(true);
 
     axios({
       method: 'post',
@@ -34,6 +37,8 @@ export default function ConfirmUser() {
       }
     })
       .then(result => {
+        setLoading(false);
+
         if (result.data.error) {
           setEvent(result.data.error);
         } else {
@@ -72,7 +77,11 @@ export default function ConfirmUser() {
               onChange={handleInput}
             ></Input>
             <Button className="submit" onClick={handleSubmit}>
-              CREAR
+              {loading ? (
+                <Spinner animation="border" role="status" size="sm"></Spinner>
+              ) : (
+                'CREAR'
+              )}
             </Button>
             {event.hasOwnProperty('address') && (
               <CustomModal

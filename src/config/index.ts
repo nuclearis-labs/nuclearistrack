@@ -1,8 +1,13 @@
 import jwt from 'jsonwebtoken';
 import niv from '../config/Validator.js';
 import { Response, Request, NextFunction } from 'express';
+import { IUserOnReq } from '../types/Custom';
 
-export function verifyToken(req: Request, res: Response, next: NextFunction) {
+export function verifyToken(
+  req: IUserOnReq,
+  res: Response,
+  next: NextFunction
+) {
   const bearerHeader = req.headers['authorization'];
   if (typeof bearerHeader !== 'undefined') {
     const bearer = bearerHeader.split(' ');
@@ -10,6 +15,7 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
     const bearerToken = bearer[1];
     try {
       const authData = jwt.verify(bearerToken, process.env.JWT_SECRET);
+
       req.user = authData;
       next();
     } catch (e) {

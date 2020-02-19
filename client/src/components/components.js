@@ -1,5 +1,6 @@
 // components.js
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 export const Scroll = styled.div`
   overflow: auto;
   &::-webkit-scrollbar {
@@ -99,6 +100,8 @@ export const Button = styled.button`
   color: #fff;
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
+  width:fit-content;
+  text-align:center;
   padding: 5px 10px;
   letter-spacing: 1px;
   display: block;
@@ -108,6 +111,10 @@ export const Button = styled.button`
     position: relative;
     top: 60px;
     margin-top: 0;
+  }
+  &:hover {
+    text-decoration:none;
+    color:white;
   }
 `;
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Title, Button, Wrap } from '../components/components.js';
@@ -8,19 +9,26 @@ import Header from '../components/header.js';
 import Footer from '../components/footer.js';
 
 export default function Document() {
-  const [users, setUsers] = useState([]);
+  const [documents, setDocuments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { process } = useParams();
 
   useEffect(() => {
     axios({
       method: 'get',
-      url: '/api/user/get',
+      url: '/api/doc/get?contract=' + process,
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     }).then(({ data }) => {
-      setUsers(data);
+      let formattedData = data.map(doc => {
+        let date = new Date(doc.mineTime * 1000);
+        doc.mineTime = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()} +0${date.getTimezoneOffset() /
+          60}:00`;
+        return doc;
+      });
+      setDocuments(formattedData);
       setIsLoading(false);
     });
-  }, []);
+  }, [process]);
 
   return (
     <>
@@ -32,24 +40,18 @@ export default function Document() {
         <FormWrap>
           <Form>
             <HeadRow>
-              <Col4>NOMBRE</Col4>
-              <Col4>TIPO</Col4>
-              <Col4>DIRECCION</Col4>
-              <Col4>ESTADO</Col4>
+              <Col4>NUMERO</Col4>
+              <Col4>FECHA DE SUBIDA</Col4>
+              <Col4>HASH</Col4>
             </HeadRow>
 
-            {users.map(user => (
-              <Row key={user.address}>
-                <Col4>{user.name}</Col4>
-                <Col4>{user.type === '0' ? 'Cliente' : 'Proveedor'}</Col4>
-                <Col4>{user.address}</Col4>
-                <Col4>{user.status === '1' ? 'Activo' : 'Pausado'}</Col4>
+            {documents.map(doc => (
+              <Row key={doc.documentHash}>
+                <Col4>{doc.docNumber}</Col4>
+                <Col4>{doc.mineTime}</Col4>
+                <Col4>{doc.documentHash}</Col4>
               </Row>
             ))}
-
-            <Button as={Link} className="submit" to="/users/add">
-              NUEVO USUARIO
-            </Button>
           </Form>
         </FormWrap>
       </Wrap>

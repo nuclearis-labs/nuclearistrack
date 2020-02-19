@@ -10,10 +10,11 @@ import * as utils from '../config/utils';
 import * as pending from '../config/pendingTx';
 import { Request, Response } from 'express';
 import logger from '../config/winston';
+import { IFileOnReq } from '../types/Custom';
 
 const processABI = require('../../build/contracts/Process.json').abi;
 
-export async function verify(req: Request, res: Response) {
+export async function verify(req: IFileOnReq, res: Response) {
   let documentHash: string;
   try {
     documentHash = createSHA256(req.file.buffer);
@@ -43,7 +44,7 @@ export async function verify(req: Request, res: Response) {
   }
 }
 
-export async function upload(req: Request, res: Response) {
+export async function upload(req: IFileOnReq, res: Response) {
   let documentHash: string;
   try {
     const { address, privateKey } = await utils.getKeys(req.body);

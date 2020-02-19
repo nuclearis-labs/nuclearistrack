@@ -18,6 +18,7 @@ export function pinFileToIPFS(stream): Promise<{ data: { IpfsHash: string } }> {
       .post(url, data, {
         maxContentLength: 100 * 1024 * 1024, //this is needed to prevent axios from erroring out with large files
         headers: {
+          // @ts-ignore: Property '_boundary' does not exist on type 'FormData'.
           'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
           pinata_api_key: process.env.PINATA_API_KEY,
           pinata_secret_api_key: process.env.PINATA_SECRET_API_KEY

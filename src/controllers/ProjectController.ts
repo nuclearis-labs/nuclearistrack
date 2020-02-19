@@ -4,8 +4,9 @@ import * as pending from '../config/pendingTx';
 import txModel from '../models/transaction';
 import logger from '../config/winston';
 import { Request, Response } from 'express';
+import { IUserOnReq } from '../types/Custom';
 
-export async function create(req: Request, res: Response) {
+export async function create(req: IUserOnReq, res: Response) {
   try {
     const { address, privateKey } = await utils.getKeys({
       email: process.env.ADMINEMAIL,
@@ -54,7 +55,7 @@ export async function getDocNumber(req: Request, res: Response) {
   }
 }
 
-export async function get(req: Request, res: Response) {
+export async function get(req: IUserOnReq, res: Response) {
   try {
     const contract = new Contract();
     const contractProjects = await contract.getDataFromContract({

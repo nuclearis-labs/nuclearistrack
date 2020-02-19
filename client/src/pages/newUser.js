@@ -14,21 +14,23 @@ import { Top, Form, FormWrap } from '../components/form.js';
 import { CustomModal } from '../components/CustomModal';
 import Header from '../components/header';
 import Footer from '../components/footer';
+import Spinner from 'react-bootstrap/Spinner';
 
 export default function NewUser() {
   const { getCurrentUser } = useContext(UserContext);
   const [form, setForm] = useState([]);
   const [event, setEvent] = useState();
   const [modalShow, setModalShow] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   function handleInput(e) {
     e.persist();
     setForm(form => ({ ...form, [e.target.name]: e.target.value }));
-    
   }
 
   function handleSubmit(e) {
     e.preventDefault();
+    setLoading(true);
     const user = getCurrentUser();
     axios({
       method: 'post',
@@ -44,6 +46,7 @@ export default function NewUser() {
       .then(result => {
         if (result.data.error) {
         } else {
+          setLoading(false);
           setEvent(result.data);
           setModalShow(true);
         }
@@ -81,7 +84,11 @@ export default function NewUser() {
               <option value="0">Cliente</option>
             </Select>
             <Button className="submit" onClick={handleSubmit}>
-              CREAR
+              {loading ? (
+                <Spinner animation="border" role="status" size="sm"></Spinner>
+              ) : (
+                'CREAR'
+              )}
             </Button>
             <CustomModal
               title="User Creation Successfull"
