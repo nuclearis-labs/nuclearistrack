@@ -1,4 +1,4 @@
-// newProvider.js
+// projects.js
 import React from 'react';
 import styled from 'styled-components';
 import Modal from '../components/modal.js';

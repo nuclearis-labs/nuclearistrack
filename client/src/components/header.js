@@ -102,6 +102,9 @@ function LoggedHeader(props) {
           <LogOut as={Link} to="/" onClick={() => logoutUser()}>
             LOGOUT
           </LogOut>
+          <LogOut as={Link} to="/settings">
+            PREFERENCIAS
+          </LogOut>
         </NavUser>
       </NavHeader>
     </Nav>

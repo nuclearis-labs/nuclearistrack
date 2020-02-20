@@ -1,12 +1,13 @@
-// newProvider.js
+// login.js
 import React from 'react';
 import styled from 'styled-components';
 import { Title, Label, Input, Button, Wrap } from '../components/components.js';
-import { Explain } from '../components/webComponents.js';
+import { Explain, NavPhraseFixed } from '../components/webComponents.js';
 import { Top, Form, FormWrap } from '../components/form.js';
 
 const FormWrapWhite = styled(FormWrap)`
   background:#fafafa;
+  margin-top:100px;
 `;
 
 const ButtonLogin = styled(Button)`
@@ -30,6 +31,13 @@ const PasswordLink = styled.a`
 function Login() {
   return (
     <Wrap>
+      <NavPhraseFixed>
+        <div>
+          PLATAFORMA
+          DESCENTRALIZADA
+          DE TRAZABILIDAD
+        </div>
+      </NavPhraseFixed>
       <FormWrapWhite>
         <Form>
           <Title>

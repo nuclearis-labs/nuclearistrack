@@ -28,12 +28,13 @@ export async function verify(req: IFileOnReq, res: Response) {
     });
 
     res.json({
-      docNumber: details[3],
-      mineTime: details[4],
-      latitude: utils.hexToAscii(details[1]),
-      longitude: utils.hexToAscii(details[2]),
+      name: details[0],
+      docNumber: details[4],
+      mineTime: details[5],
+      latitude: utils.hexToAscii(details[2]),
+      longitude: utils.hexToAscii(details[3]),
       documentHash,
-      comment: details[5]
+      comment: details[6]
     });
   } catch (e) {
     logger.error(`Document could not be verified`, {
@@ -81,6 +82,7 @@ export async function upload(req: IFileOnReq, res: Response) {
           fromAddress: address,
           method: 'addDocument',
           data: [
+            req.body.name,
             hashStream.hash,
             Number(storageFunction),
             Number(storageSize),
@@ -144,11 +146,13 @@ export async function get(req: Request, res: Response) {
       });
 
       documents.push({
-        docNumber: details[3],
-        mineTime: details[4],
-        latitude: utils.hexToAscii(details[1]),
-        longitude: utils.hexToAscii(details[2]),
-        documentHash: result[i]
+        name: details[0],
+        docNumber: details[4],
+        mineTime: details[5],
+        latitude: utils.hexToAscii(details[2]),
+        longitude: utils.hexToAscii(details[3]),
+        documentHash: result[i],
+        comment: details[6]
       });
     }
 
@@ -187,16 +191,18 @@ export async function getOne(req: Request, res: Response) {
     console.log(storageHash);
 
     const file = await getFromPinata(storageHash);
+    console.log(file);
 
     res.json({
-      docNumber: details[3],
-      mineTime: details[4],
-      latitude: utils.hexToAscii(details[1]),
-      longitude: utils.hexToAscii(details[2]),
+      name: details[0],
+      docNumber: details[4],
+      mineTime: details[5],
+      latitude: utils.hexToAscii(details[2]),
+      longitude: utils.hexToAscii(details[3]),
       documentHash: req.query.hash,
       storageHash,
       fileBuffer: file[0].content.toString('base64'),
-      comment: details[5]
+      comment: details[6]
     });
   } catch (e) {
     logger.error(`Document ${req.query.hash} could not be obtained `, {

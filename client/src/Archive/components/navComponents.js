@@ -8,7 +8,6 @@ const NavHeader = styled.div`
   max-width: 1010px;
   padding: 0 20px;
   width: 100%;
-  min-height:90px;
   display: flex;
   align-items: center;
   margin: 0 auto;
@@ -22,6 +21,10 @@ const NavLogo = styled.div`
     margin-right: 20px;
     width:130px;
   }
+  @media (max-width: 880px) {
+    width: auto;
+    padding:10px 0;
+  }
 `;
 const NavPhrase = styled.div`
   width: 25%;
@@ -34,6 +37,7 @@ const NavPhrase = styled.div`
   line-height:23px;
   align-self: start;
   text-align:left;
+  font-family: 'Montserrat',sans-serif;
 `;
 const MenuLink = styled.a``;
 

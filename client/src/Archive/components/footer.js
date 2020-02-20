@@ -31,6 +31,10 @@ const FooterWrap = styled.div`
   font-size:11px;
   line-height:20px;
   letter-spacing:1px;
+  @media (max-width: 640px) {
+    display:block;
+    max-width: 240px;
+  }
 `;
 const FooterLeft = styled.div`
   width: 33.333%;
@@ -38,6 +42,10 @@ const FooterLeft = styled.div`
   svg {
     filter: grayscale(1);
     width:100px;
+  }
+  @media (max-width: 640px) {
+    width: 200px;
+    text-align: left;
   }
 `;
 const FooterRight = styled.div`
@@ -47,6 +55,11 @@ const FooterRight = styled.div`
   font-size:11px;
   align-self: start;
   margin-left: 10px;
+  @media (max-width: 640px) {
+    width: 180px;
+    margin-top:10px;
+    margin-left: 0px;
+  }
 `;
 const FooterLink = styled.a`
   text-align: left;

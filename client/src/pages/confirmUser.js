@@ -88,40 +88,12 @@ export default function ConfirmUser() {
                 title="User Confirmation Successfull"
                 body={
                   <>
-                    <p>
-                      Your account has been successfully generated and sended to
-                      the Blockchain.
-                    </p>
+                    <p>Su cuenta fue creada con exito!</p>
                     <ul>
-                      <li>Name: {event && event.username}</li>
-                      <li>Email: {event && event.email}</li>
-                      <li>
-                        Mnemonic Passphrase:{' '}
-                        <span
-                          title="Click for copy"
-                          style={{
-                            color: 'blue',
-                            'text-decoration': 'underline',
-                            cursor: 'pointer'
-                          }}
-                          onClick={() => {
-                            navigator.clipboard.writeText(event.mnemonic);
-                          }}
-                        >
-                          {event && event.mnemonic}
-                        </span>
-                      </li>
-                      <li>
-                        Address:{' '}
-                        <a
-                          href={
-                            'https://explorer.testnet.rsk.co/address/' +
-                            event.address
-                          }
-                        >
-                          {event && event.address}
-                        </a>
-                      </li>
+                      <li>Nombre: {event && event.username}</li>
+                      <li>Correo electronico: {event && event.email}</li>
+                      <li>Clave Mnemonica: {event && event.mnemonic}</li>
+                      <li>Dirección: {event && event.address}</li>
                       <li>
                         Transaction:{' '}
                         <RSKLink
@@ -134,7 +106,7 @@ export default function ConfirmUser() {
                     <p>
                       Les sugerimos de anotar en un medio seguro la clave
                       mnemonica, ya que es la unica forma de recuperar su cuenta
-                      en caso de que se olvide su clave ingresada.
+                      en caso de que se olvide la clave ingresada.
                     </p>
                   </>
                 }

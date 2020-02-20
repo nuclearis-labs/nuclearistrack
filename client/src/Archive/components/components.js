@@ -6,7 +6,7 @@ const Scroll = styled.div`
   &::-webkit-scrollbar-thumb{background:#5d5d5d;}
   &::-webkit-scrollbar-corner{background:transparent;}
 `;
-const Wrap = styled(Scroll)`height:calc(100vh - 220px);`;
+const Wrap = styled.div`min-height:calc(100vh - 205px); overflow-x:hidden;`;
 const Title = styled.h1`
 color:#5d5d5d;
 font-family: 'Montserrat', sans-serif;
@@ -37,7 +37,7 @@ const Input = styled.input`
   color: #555;
   cursor: text;
   font-size: 14px;
-  font-weight: 300;
+  font-weight: 500;
   box-sizing: border-box;
   background:transparent;
   &:active,
@@ -55,7 +55,7 @@ const TextArea = styled.textarea`
   color: #555;
   cursor: text;
   font-size: 14px;
-  font-weight: 300;
+  font-weight: 500;
   box-sizing: border-box;
   background:transparent;
   &:active,

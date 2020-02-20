@@ -1,7 +1,7 @@
 // globalStyle.js
 import { createGlobalStyle } from 'styled-components';
 const GlobalStyle = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css?family=Montserrat:500,700|Roboto+Condensed&display=swap');
+  @import url('https://fonts.googleapis.com/css?family=Montserrat:300,500,700|Roboto+Condensed&display=swap');
   html {
     min-height:100%;
     display:flex;

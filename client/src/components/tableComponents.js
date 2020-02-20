@@ -78,3 +78,6 @@ export const Col3 = styled.div`
 export const Col4 = styled(Col3)`
   width: 25%;
 `;
+export const Col6 = styled(Col3)`
+  width: 10%;
+`;

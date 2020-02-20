@@ -1,7 +1,7 @@
 // newProvider.js
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { useHistory, useParams } from 'react-router-dom';
+import React, { useEffect, useState, useContext } from 'react';
+import { UserContext } from '../context/userContext';
+import { useParams } from 'react-router-dom';
 import {
   Title,
   Label,
@@ -20,6 +20,10 @@ import axios from 'axios';
 import Footer from '../components/footer.js';
 
 export default function NewDoc(props) {
+  const { getCurrentUser } = useContext(UserContext);
+
+  const [user, setUser] = useState(getCurrentUser());
+
   const [processDetail, setProcess] = useState([]);
   const [form, setForm] = useState([]);
   const [file, setFile] = useState();
@@ -29,13 +33,11 @@ export default function NewDoc(props) {
     text: 'CREAR'
   });
   let { process } = useParams();
-  console.log(process);
 
   useEffect(() => {
     axios({
       method: 'get',
-      url:
-        '/api/process/getOne?contract=0x1EdcdE414000B0B182761168CC72B4c01B21fD0A',
+      url: '/api/process/getOne?contract=' + process,
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     }).then(({ data }) => {
       setProcess(data);
@@ -44,9 +46,7 @@ export default function NewDoc(props) {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         position => {
-          setLocation(
-            `https://www.google.com/maps/embed/v1/view?zoom=13&center=${position.coords.latitude},${position.coords.longitude}&key=AIzaSyCHpdtM1Pvk-nSgdFB02zUeq7TnTy_eGPs`
-          );
+          setLocation(position.coords);
           setForm(form => ({
             ...form,
             longitude: position.coords.longitude,
@@ -75,6 +75,8 @@ export default function NewDoc(props) {
 
   function handleFileInput(e) {
     e.persist();
+    console.log(e.target.files[0]);
+
     setFile(e.target.files[0]);
   }
 
@@ -82,15 +84,15 @@ export default function NewDoc(props) {
     e.preventDefault();
     let data = new FormData();
     data.append('file', file);
-    data.append('email', 'imeco@nuclearis.com');
-    data.append('passphrase', 'imeco');
-    data.append('comment', form.observaciones);
-    data.append('latitude', '-34.4354534');
-    data.append('longitude', '-59.2434234');
+    data.append('name', file.name.substr(0, file.name.length - 4));
+    data.append('email', user.userEmail);
+    data.append('passphrase', form.passphrase);
+    data.append('comment', form.comment);
+    data.append('latitude', location.latitude);
+    data.append('longitude', location.longitude);
     axios({
       method: 'post',
-      url:
-        '/api/doc/upload?contract=0x1EdcdE414000B0B182761168CC72B4c01B21fD0A',
+      url: '/api/doc/upload?contract=' + process,
       data: data,
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -117,7 +119,7 @@ export default function NewDoc(props) {
         <FormWrap>
           <Form>
             <Pad>
-              <SubTit>PROCESO</SubTit>
+              <SubTit>PROCESO {user.userName}</SubTit>
               <ProcessName>
                 {processDetail.processName &&
                   processDetail.processName.toUpperCase()}
@@ -139,18 +141,34 @@ export default function NewDoc(props) {
               frameBorder="0"
               title="DocumentLocation"
               style={{ border: '0', width: '370px', height: '250px' }}
-              src={location}
+              src={`https://www.google.com/maps/embed/v1/view?zoom=13&center=${location &&
+                location.latitude},${location &&
+                location.longitude}&key=AIzaSyCHpdtM1Pvk-nSgdFB02zUeq7TnTy_eGPs`}
               allowFullScreen
             ></iframe>{' '}
             <Label>OBSERVACIONES</Label>
-            <TextArea onChange={handleInput} name="observaciones"></TextArea>
-            <Button
-              onClick={handleSubmit}
-              disabled={enableSubmit.disabled}
-              className="submit"
-            >
-              {enableSubmit.text}
-            </Button>
+            <TextArea onChange={handleInput} name="comment"></TextArea>
+            <div>
+              <Input
+                placeholder="ingresar clave"
+                style={{
+                  width: '100px',
+                  position: 'relative',
+                  top: '60px',
+                  marginRight: '5px'
+                }}
+                name="passphrase"
+                onChange={handleInput}
+              ></Input>
+              <Button
+                style={{ display: 'inline-block', position: 'relative' }}
+                onClick={handleSubmit}
+                disabled={enableSubmit.disabled}
+                className="submit"
+              >
+                {enableSubmit.text}
+              </Button>
+            </div>
           </Form>
         </FormWrap>
       </Wrap>

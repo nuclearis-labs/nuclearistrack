@@ -107,7 +107,7 @@ const LogOut = styled.a`
   color:#8c6239;
   font-family: Montserrat, sans-serif;
   font-size:12px;
-  font-weight:400;
+  font-weight:500;
   text-decoration:none;
   letter-spacing: 1px;
   text-align: left;

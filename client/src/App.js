@@ -20,6 +20,8 @@ import Security from './pages/Security';
 import FAQ from './pages/FAQ';
 import NewDocument from './pages/newDocument';
 import Document from './pages/documents';
+import Settings from './pages/Settings';
+import Documents from './pages/documentsDetail';
 
 const AppWrapper = styled.div`
   background-color: #fafafa;
@@ -42,7 +44,17 @@ function App() {
               path="/documents/add/:process"
               component={NewDocument}
             />
-            <PrivateRoute path="/documents/:process" component={Document} />
+            <PrivateRoute
+              exact
+              path="/documents/:process"
+              component={Document}
+            />
+            <PrivateRoute
+              exact
+              path="/documents/:process/:hash"
+              component={Documents}
+            />
+            <PrivateRoute path="/settings" component={Settings} />
             <Route path="/users/confirm/:id" component={ConfirmUser} />
             <Route path="/login" exact component={Login} />
             <Route path="/benefits" component={Benefits} />

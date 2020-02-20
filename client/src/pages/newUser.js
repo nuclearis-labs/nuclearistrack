@@ -94,21 +94,19 @@ export default function NewUser() {
               title="User Creation Successfull"
               body={
                 <>
-                  <p>
-                    A new user with the following information was successfully
-                    saved in the Database.
-                  </p>
+                  <p>Un nuevo usuario fue guardado en la base de datos.</p>
                   <ul>
                     <li>Identificación: {event && event.userID}</li>
-                    <li>Name: {form.newUserName}</li>
-                    <li>Email: {form.newUserEmail}</li>
+                    <li>Nombre: {form.newUserName}</li>
+                    <li>Correo electronico: {form.newUserEmail}</li>
                     <li>
-                      UserType: {form.userType === '0' ? 'Client' : 'Supplier'}
+                      Tipo de usuario:{' '}
+                      {form.userType === '0' ? 'Cliente' : 'Proveedor'}
                     </li>
                   </ul>
                   <p>
-                    Para completar la registración, el usuario recibe un correo
-                    electronico.
+                    Para completar la registración, el usuario recibirá un
+                    correo electronico.
                     <br />
                     El cual lo va a llevar a ingresar una contraseña secreta,
                     con la cual se genera la wallet del usuario.

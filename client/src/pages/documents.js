@@ -4,7 +4,13 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Title, Button, Wrap } from '../components/components.js';
 import { Top, Form, FormWrap } from '../components/form.js';
-import { Row, HeadRow, Col4 } from '../components/tableComponents.js';
+import {
+  Row,
+  HeadRow,
+  Col3,
+  Col4,
+  Col6
+} from '../components/tableComponents.js';
 import Header from '../components/header.js';
 import Footer from '../components/footer.js';
 
@@ -40,16 +46,16 @@ export default function Document() {
         <FormWrap>
           <Form>
             <HeadRow>
-              <Col4>NUMERO</Col4>
-              <Col4>FECHA DE SUBIDA</Col4>
-              <Col4>HASH</Col4>
+              <Col3>NOMBRE</Col3>
+              <Col6>NUMERO</Col6>
+              <Col3>FECHA DE SUBIDA</Col3>
             </HeadRow>
 
             {documents.map(doc => (
               <Row key={doc.documentHash}>
-                <Col4>{doc.docNumber}</Col4>
-                <Col4>{doc.mineTime}</Col4>
-                <Col4>{doc.documentHash}</Col4>
+                <Col3>{doc.name}</Col3>
+                <Col6>{doc.docNumber}</Col6>
+                <Col3>{doc.mineTime}</Col3>
               </Row>
             ))}
           </Form>
