@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "This repo contains the development of the Nuclear PoE by NUCLEARIS.",
   "main": "src/server.js",
+  "engines": {
+    "node": "10.16.3"
+  },
   "scripts": {
     "start": "node dist/server.js",
     "start-client": "npm start --prefix client",
