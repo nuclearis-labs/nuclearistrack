@@ -27,36 +27,33 @@ export const ListProject = () => {
 
   return (
     <>
-      <Header />
-      <Wrap>
-        <Top>
-          <Title>Listado de proyectos</Title>
-        </Top>
-        <FormWrap>
-          <Form>
-            <table cellPadding={10}>
-              <thead>
+      <Top>
+        <Title>Listado de proyectos</Title>
+      </Top>
+      <FormWrap>
+        <Form>
+          <table cellPadding={10}>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Cliente</th>
+                <th>Expediente</th>
+                <th>OC</th>
+              </tr>
+            </thead>
+            <tbody>
+              {projects.map(({ title, clientName, id, oc }) => (
                 <tr>
-                  <th>Nombre</th>
-                  <th>Cliente</th>
-                  <th>Expediente</th>
-                  <th>OC</th>
+                  <td>{title}</td>
+                  <td>{clientName}</td>
+                  <td>{id}</td>
+                  <td>{oc}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {projects.map(({ title, clientName, id, oc }) => (
-                  <tr>
-                    <td>{title}</td>
-                    <td>{clientName}</td>
-                    <td>{id}</td>
-                    <td>{oc}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </Form>
-        </FormWrap>
-      </Wrap>
+              ))}
+            </tbody>
+          </table>
+        </Form>
+      </FormWrap>
       <Footer />
     </>
   );

@@ -22,10 +22,13 @@ import NewDocument from './pages/newDocument';
 import Document from './pages/documents';
 import Settings from './pages/Settings';
 import Documents from './pages/documentsDetail';
+import Header from './components/header';
 
 const AppWrapper = styled.div`
   background-color: #fafafa;
 `;
+
+const base = '/:locale(en|sp|de)?';
 
 function App() {
   return (
@@ -33,35 +36,51 @@ function App() {
       <Router>
         <GlobalStyle />
         <AppWrapper>
+          <Route path={base} component={Header} />
+
           <Switch>
-            <PrivateRoute path="/projects/add" component={NewProject} />
-            <PrivateRoute exact path="/projects" component={Projects} />
-            <PrivateRoute path="/processes/add" component={NewProcess} />
-            <PrivateRoute exact path="/processes" component={Processes} />
-            <PrivateRoute path="/users/add" component={NewUser} />
-            <PrivateRoute exact path="/users" component={Users} />
             <PrivateRoute
-              path="/documents/add/:process"
+              path={`${base}/projects/add`}
+              component={NewProject}
+            />
+            <PrivateRoute
+              exact
+              path={`${base}/projects`}
+              component={Projects}
+            />
+            <PrivateRoute
+              path={`${base}/processes/add`}
+              component={NewProcess}
+            />
+            <PrivateRoute
+              exact
+              path={`${base}/processes`}
+              component={Processes}
+            />
+            <PrivateRoute path={`${base}/users/add`} component={NewUser} />
+            <PrivateRoute exact path={`${base}/users`} component={Users} />
+            <PrivateRoute
+              path={`${base}/documents/add/:process`}
               component={NewDocument}
             />
             <PrivateRoute
               exact
-              path="/documents/:process"
+              path={`${base}/documents/:process`}
               component={Document}
             />
             <PrivateRoute
               exact
-              path="/documents/:process/:hash"
+              path={`${base}/documents/:process/:hash`}
               component={Documents}
             />
-            <PrivateRoute path="/settings" component={Settings} />
-            <Route path="/users/confirm/:id" component={ConfirmUser} />
-            <Route path="/login" exact component={Login} />
-            <Route path="/benefits" component={Benefits} />
-            <Route path="/security" component={Security} />
-            <Route path="/faq" component={FAQ} />
-            <Route path="/contact" component={Contact} />
-            <Route path="/" exact component={Home} />
+            <PrivateRoute path={`${base}/settings`} component={Settings} />
+            <Route path={`${base}/users/confirm/:id`} component={ConfirmUser} />
+            <Route path={`${base}/login`} exact component={Login} />
+            <Route path={`${base}/benefits`} component={Benefits} />
+            <Route path={`${base}/security`} component={Security} />
+            <Route path={`${base}/faq`} component={FAQ} />
+            <Route path={`${base}/contact`} component={Contact} />
+            <Route path={base} exact component={Home} />
             <Route path="*" component={NoMatch} />
           </Switch>
         </AppWrapper>

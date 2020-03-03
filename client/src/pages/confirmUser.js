@@ -53,70 +53,63 @@ export default function ConfirmUser() {
 
   return (
     <>
-      <Header />
-      <Wrap>
-        <Top>
-          <Title>
-            CONFIRM
-            <br />
-            USER
-          </Title>
-        </Top>
-        <FormWrap>
-          <Form>
-            <Label>PASSPHRASE</Label>
-            <Input
-              type="password"
-              name="passphrase"
-              onChange={handleInput}
-            ></Input>
-            <Label>CONFIRM PASSPHRASE</Label>
-            <Input
-              type="password"
-              name="confirm_passphrase"
-              onChange={handleInput}
-            ></Input>
-            <Button className="submit" onClick={handleSubmit}>
-              {loading ? (
-                <Spinner animation="border" role="status" size="sm"></Spinner>
-              ) : (
-                'CREAR'
-              )}
-            </Button>
-            {event.hasOwnProperty('address') && (
-              <CustomModal
-                title="User Confirmation Successfull"
-                body={
-                  <>
-                    <p>Su cuenta fue creada con exito!</p>
-                    <ul>
-                      <li>Nombre: {event && event.username}</li>
-                      <li>Correo electronico: {event && event.email}</li>
-                      <li>Clave Mnemonica: {event && event.mnemonic}</li>
-                      <li>Dirección: {event && event.address}</li>
-                      <li>
-                        Transaction:{' '}
-                        <RSKLink
-                          hash={event && event.txHash}
-                          type="tx"
-                          testnet
-                        />
-                      </li>
-                    </ul>
-                    <p>
-                      Les sugerimos de anotar en un medio seguro la clave
-                      mnemonica, ya que es la unica forma de recuperar su cuenta
-                      en caso de que se olvide la clave ingresada.
-                    </p>
-                  </>
-                }
-                show={modalShow}
-                onHide={() => setModalShow(false)}
-              />
+      <Top>
+        <Title>
+          CONFIRM
+          <br />
+          USER
+        </Title>
+      </Top>
+      <FormWrap>
+        <Form>
+          <Label>PASSPHRASE</Label>
+          <Input
+            type="password"
+            name="passphrase"
+            onChange={handleInput}
+          ></Input>
+          <Label>CONFIRM PASSPHRASE</Label>
+          <Input
+            type="password"
+            name="confirm_passphrase"
+            onChange={handleInput}
+          ></Input>
+          <Button className="submit" onClick={handleSubmit}>
+            {loading ? (
+              <Spinner animation="border" role="status" size="sm"></Spinner>
+            ) : (
+              'CREAR'
             )}
-          </Form>
-        </FormWrap>
-      </Wrap>
+          </Button>
+          {event.hasOwnProperty('address') && (
+            <CustomModal
+              title="User Confirmation Successfull"
+              body={
+                <>
+                  <p>Su cuenta fue creada con exito!</p>
+                  <ul>
+                    <li>Nombre: {event && event.username}</li>
+                    <li>Correo electronico: {event && event.email}</li>
+                    <li>Clave Mnemonica: {event && event.mnemonic}</li>
+                    <li>Dirección: {event && event.address}</li>
+                    <li>
+                      Transaction:{' '}
+                      <RSKLink hash={event && event.txHash} type="tx" testnet />
+                    </li>
+                  </ul>
+                  <p>
+                    Les sugerimos de anotar en un medio seguro la clave
+                    mnemonica, ya que es la unica forma de recuperar su cuenta
+                    en caso de que se olvide la clave ingresada.
+                  </p>
+                </>
+              }
+              show={modalShow}
+              onHide={() => setModalShow(false)}
+            />
+          )}
+        </Form>
+      </FormWrap>
       <Footer />
     </>
   );

@@ -1,8 +1,6 @@
 // components.js
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 export const Scroll = styled.div`
-  overflow: auto;
   &::-webkit-scrollbar {
     width: 14px;
   }
@@ -13,9 +11,7 @@ export const Scroll = styled.div`
     background: transparent;
   }
 `;
-export const Wrap = styled(Scroll)`
-  height: calc(100vh - 220px);
-`;
+
 export const Title = styled.h1`
   color: #5d5d5d;
   font-family: 'Montserrat', sans-serif;

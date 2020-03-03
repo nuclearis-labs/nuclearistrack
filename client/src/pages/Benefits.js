@@ -15,6 +15,7 @@ import {
   BottomSpace
 } from '../components/webComponents.js';
 import bg from '../img/bgBeneficios.jpg';
+import I18n from '../i18n';
 
 const WebTopBenefits = styled(WebTop)`
   height: 396px;
@@ -24,53 +25,39 @@ const WebTopBenefits = styled(WebTop)`
 export default function Benefits() {
   return (
     <>
-      <Header />
-      <Wrap>
-        <WebTopBenefits>
-          <WidthContent>
-            <WebTopTit>TRANSPARENCIA EN TODOS NUESTROS PROCESOS</WebTopTit>
-          </WidthContent>
-        </WebTopBenefits>
+      <WebTopBenefits>
         <WidthContent>
-          <Title>BENEFICIOS</Title>
-          <ItemTit>SEGURIDAD</ItemTit>
-          <ItemDesc>
-            SISTEMA ENCRIPTADO CON TECNOLOGIA BLOCKCHAIN, EL NUEVO ESTANDARD DE
-            SEGURIDAD INFORMATICA.
-          </ItemDesc>
-
-          <ItemTit>DISPONIBILIDAD DE LA INFORMACION</ItemTit>
-          <ItemDesc>
-            CON SOLO INGRESAR EN LA PLATAFORMA TIENE DISPONIBILIDAD DE TODOS LOS
-            PROCESOS Y CERTIFICADOS
-          </ItemDesc>
-
-          <ItemTit>CONTROL</ItemTit>
-          <ItemDesc>
-            INFORMACION EN TIEMPO REAL DE LOS PROCESOS DE FABRICACION
-          </ItemDesc>
-
-          <ItemTit>SEGURIDAD</ItemTit>
-          <ItemDesc>
-            SISTEMA ENCRIPTADO CON TECNOLOGIA BLOCKCHAIN, EL NUEVO ESTANDARD DE
-            SEGURIDAD INFORMATICA.
-          </ItemDesc>
-
-          <ItemTit>DISPONIBILIDAD DE LA INFORMACION</ItemTit>
-          <ItemDesc>
-            CON SOLO INGRESAR EN LA PLATAFORMA TIENE DISPONIBILIDAD DE TODOS LOS
-            PROCESOS Y CERTIFICADOS
-          </ItemDesc>
-
-          <ItemTit>CONTROL</ItemTit>
-          <ItemDesc>
-            INFORMACION EN TIEMPO REAL DE LOS PROCESOS DE FABRICACION
-            <br />
-            <a href="#">CONOCER +</a>
-          </ItemDesc>
+          <WebTopTit>
+            <I18n t="benefits.bannerTitle" />
+          </WebTopTit>
         </WidthContent>
-        <BottomSpace></BottomSpace>
-      </Wrap>
+      </WebTopBenefits>
+      <WidthContent>
+        <Title>
+          <I18n t="benefits.title" />
+        </Title>
+        <ItemTit>
+          <I18n t="benefits.security.title" />
+        </ItemTit>
+        <ItemDesc>
+          <I18n t="benefits.security.text" />
+        </ItemDesc>
+
+        <ItemTit>
+          <I18n t="benefits.availability.title" />
+        </ItemTit>
+        <ItemDesc>
+          <I18n t="benefits.availability.text" />
+        </ItemDesc>
+
+        <ItemTit>
+          <I18n t="benefits.control.title" />
+        </ItemTit>
+        <ItemDesc>
+          <I18n t="benefits.control.text" />
+        </ItemDesc>
+      </WidthContent>
+      <BottomSpace></BottomSpace>
       <Footer />
     </>
   );

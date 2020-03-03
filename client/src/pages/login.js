@@ -29,36 +29,33 @@ export const Login = () => {
 
   return (
     <>
-      <Header />
-      <Wrap>
-        <Top>
-          <Title>LOGIN</Title>
-        </Top>
-        <FormWrap>
-          <Form>
-            <Label>USUARIO</Label>
-            <Input
-              name="email"
-              autoComplete="username"
-              onChange={handleInput}
-            ></Input>
-            <Label>CLAVE</Label>
-            <Input
-              name="passphrase"
-              autoComplete="current-password"
-              type="password"
-              onChange={handleInput}
-            ></Input>
-            <Button className="submit" onClick={handleLogin}>
-              {loading ? (
-                <Spinner animation="border" role="status" size="sm"></Spinner>
-              ) : (
-                'LOGIN'
-              )}
-            </Button>
-          </Form>
-        </FormWrap>
-      </Wrap>
+      <Top>
+        <Title>LOGIN</Title>
+      </Top>
+      <FormWrap>
+        <Form>
+          <Label>USUARIO</Label>
+          <Input
+            name="email"
+            autoComplete="username"
+            onChange={handleInput}
+          ></Input>
+          <Label>CLAVE</Label>
+          <Input
+            name="passphrase"
+            autoComplete="current-password"
+            type="password"
+            onChange={handleInput}
+          ></Input>
+          <Button className="submit" onClick={handleLogin}>
+            {loading ? (
+              <Spinner animation="border" role="status" size="sm"></Spinner>
+            ) : (
+              'LOGIN'
+            )}
+          </Button>
+        </Form>
+      </FormWrap>
       <Footer />
     </>
   );

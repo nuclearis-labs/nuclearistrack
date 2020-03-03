@@ -1,6 +1,7 @@
 // header.js
 import React, { useState, useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+
+import { Link, NavLink } from 'react-router-i18n';
 import { UserContext } from '../context/userContext';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import { ReactComponent as New } from '../img/new.svg';
@@ -22,6 +23,7 @@ import {
   NavMenu,
   NavLogin
 } from '../styles/Nav.js';
+import I18n from '../i18n';
 
 function DropDownNew(props) {
   return (
@@ -38,8 +40,12 @@ function DropDownNew(props) {
       </AbmLink>
 
       <SubMenuNew className={props.index === 1 ? 'open' : 'closed'}>
-        <Link to="/projects/add">+ PROYECTO</Link>
-        <Link to="/users/add">+ USUARIO</Link>
+        <Link to="/projects/add">
+          + <I18n t="header.projects" />
+        </Link>
+        <Link to="/users/add">
+          + + <I18n t="header.user" />
+        </Link>
         <Link to="/processes/add">+ PROCESO</Link>
       </SubMenuNew>
     </div>
@@ -79,12 +85,7 @@ function LoggedHeader(props) {
           </MenuLink>
         </NavLogo>
         <NavPhrase>
-          PLATAFORMA
-          <br />
-          DESCENTRALIZADA
-          <br />
-          DE TRAZABILIDAD
-          <br />
+          <I18n t="header.navPhrase" />
         </NavPhrase>
         <NavAbm>
           <DropDownNew
@@ -100,7 +101,7 @@ function LoggedHeader(props) {
           <User />
           <UserName>{props.user.userName}</UserName>
           <LogOut as={Link} to="/" onClick={() => logoutUser()}>
-            LOGOUT
+            <I18n t="header.logout" />
           </LogOut>
           <LogOut as={Link} to="/settings">
             PREFERENCIAS
@@ -111,7 +112,23 @@ function LoggedHeader(props) {
   );
 }
 
-function PublicHeader() {
+const stripLocale = (pathname, locale) => {
+  if (!locale) {
+    return pathname;
+  }
+
+  return pathname.replace(`/${locale}`, '');
+};
+
+function PublicHeader({
+  location: { pathname },
+  match: {
+    params: { locale }
+  },
+  history
+}) {
+  console.log(pathname);
+  console.log(locale);
   return (
     <Nav>
       <NavHeader>
@@ -121,33 +138,56 @@ function PublicHeader() {
           </MenuLink>
         </NavLogo>
         <NavMenu>
-          <Link to="/">HOME</Link> | <Link to="/benefits">BENEFICIOS</Link> |
-          <Link to="/security"> SEGURIDAD BC</Link> |{' '}
-          <Link to="/faq">FAQ </Link>|<Link to="/contact"> CONTACTO</Link>
+          <NavLink to="/">
+            {' '}
+            <I18n t="header.home" />
+          </NavLink>{' '}
+          |{' '}
+          <NavLink to="/benefits">
+            <I18n t="header.benefits" />
+          </NavLink>{' '}
+          |
+          <NavLink to="/security">
+            {' '}
+            <I18n t="header.security" />
+          </NavLink>{' '}
+          | <NavLink to="/faq">FAQ </NavLink>|
+          <NavLink to="/contact">
+            {' '}
+            <I18n t="header.contact" />
+          </NavLink>
           <NavPhrase>
-            PLATAFORMA
-            <br />
-            DESCENTRALIZADA
-            <br />
-            DE TRAZABILIDAD
-            <br />
+            <I18n t="header.navPhrase" />
           </NavPhrase>
         </NavMenu>
 
         <NavLogin>
-          <Link to="/?lang=spa" className="active">
-            ESP
+          <Link ignoreLocale to={`/sp${stripLocale(pathname, locale)}`}>
+            ES
           </Link>{' '}
-          / <Link to="/?lang=eng">ENG</Link> | <Link to="/login">LOGIN</Link>
+          /{' '}
+          <Link ignoreLocale to={`/en${stripLocale(pathname, locale)}`}>
+            EN
+          </Link>{' '}
+          /{' '}
+          <Link ignoreLocale to={`/de${stripLocale(pathname, locale)}`}>
+            DE
+          </Link>{' '}
+          |{' '}
+          <Link to="/login">
+            {' '}
+            <I18n t="header.login" />
+          </Link>
         </NavLogin>
       </NavHeader>
     </Nav>
   );
 }
 
-export default function Header() {
+export default function Header(props) {
   const { getCurrentUser } = useContext(UserContext);
 
-  if (getCurrentUser()) return <LoggedHeader user={getCurrentUser()} />;
-  return <PublicHeader />;
+  if (getCurrentUser())
+    return <LoggedHeader {...props} user={getCurrentUser()} />;
+  return <PublicHeader {...props} />;
 }

@@ -38,29 +38,26 @@ export default function Document() {
 
   return (
     <>
-      <Header />
-      <Wrap>
-        <Top>
-          <Title>DOCUMENTOS</Title>
-        </Top>
-        <FormWrap>
-          <Form>
-            <HeadRow>
-              <Col3>NOMBRE</Col3>
-              <Col6>NUMERO</Col6>
-              <Col3>FECHA DE SUBIDA</Col3>
-            </HeadRow>
+      <Top>
+        <Title>DOCUMENTOS</Title>
+      </Top>
+      <FormWrap>
+        <Form>
+          <HeadRow>
+            <Col3>NOMBRE</Col3>
+            <Col6>NUMERO</Col6>
+            <Col3>FECHA DE SUBIDA</Col3>
+          </HeadRow>
 
-            {documents.map(doc => (
-              <Row key={doc.documentHash}>
-                <Col3>{doc.name}</Col3>
-                <Col6>{doc.docNumber}</Col6>
-                <Col3>{doc.mineTime}</Col3>
-              </Row>
-            ))}
-          </Form>
-        </FormWrap>
-      </Wrap>
+          {documents.map(doc => (
+            <Row key={doc.documentHash}>
+              <Col3>{doc.name}</Col3>
+              <Col6>{doc.docNumber}</Col6>
+              <Col3>{doc.mineTime}</Col3>
+            </Row>
+          ))}
+        </Form>
+      </FormWrap>
       <Footer />
     </>
   );

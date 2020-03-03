@@ -6,7 +6,6 @@ import { ReactComponent as Logo } from '../img/logo.svg';
 const Inspiration = styled.div`
   font-family: Montserrat, sans-serif;
   position: relative;
-  top: -24px;
   margin: 0 auto;
   text-align: center;
   color: #8c6239;

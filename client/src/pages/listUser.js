@@ -27,42 +27,39 @@ export const ListUser = () => {
 
   return (
     <>
-      <Header />
-      <Wrap>
-        <Top>
-          <Title>Listado de usuarios</Title>
-        </Top>
-        <FormWrap>
-          <Form>
-            <table cellPadding={10}>
-              <thead>
+      <Top>
+        <Title>Listado de usuarios</Title>
+      </Top>
+      <FormWrap>
+        <Form>
+          <table cellPadding={10}>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Dirección</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              {user.map(({ name, type, address, status }) => (
                 <tr>
-                  <th>Nombre</th>
-                  <th>Tipo</th>
-                  <th>Dirección</th>
-                  <th>Estado</th>
+                  <td>{name}</td>
+                  <td>{type == 0 ? 'Cliente' : 'Proveedor'}</td>
+                  <td>{address}</td>
+                  <td>
+                    {status == 0
+                      ? 'En creación'
+                      : status == 1
+                      ? 'Activado'
+                      : 'Pausado'}
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {user.map(({ name, type, address, status }) => (
-                  <tr>
-                    <td>{name}</td>
-                    <td>{type == 0 ? 'Cliente' : 'Proveedor'}</td>
-                    <td>{address}</td>
-                    <td>
-                      {status == 0
-                        ? 'En creación'
-                        : status == 1
-                        ? 'Activado'
-                        : 'Pausado'}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </Form>
-        </FormWrap>
-      </Wrap>
+              ))}
+            </tbody>
+          </table>
+        </Form>
+      </FormWrap>
       <Footer />
     </>
   );

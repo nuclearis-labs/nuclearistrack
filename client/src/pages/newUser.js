@@ -58,67 +58,60 @@ export default function NewUser() {
 
   return (
     <>
-      <Header />
-      <Wrap>
-        <Top>
-          <Title>
-            NUEVO
-            <br />
-            USUARIO
-          </Title>
-        </Top>
-        <FormWrap>
-          <Form>
-            <Label>NOMBRE</Label>
-            <Input name="newUserName" onChange={handleInput}></Input>
-            <Label>MAIL</Label>
-            <Input
-              type="mail"
-              name="newUserEmail"
-              onChange={handleInput}
-            ></Input>
-            <Label>TIPO</Label>
-            <Select name="userType" onChange={handleInput}>
-              <option>Select one...</option>
-              <option value="1">Proveedor</option>
-              <option value="0">Cliente</option>
-            </Select>
-            <Button className="submit" onClick={handleSubmit}>
-              {loading ? (
-                <Spinner animation="border" role="status" size="sm"></Spinner>
-              ) : (
-                'CREAR'
-              )}
-            </Button>
-            <CustomModal
-              title="User Creation Successfull"
-              body={
-                <>
-                  <p>Un nuevo usuario fue guardado en la base de datos.</p>
-                  <ul>
-                    <li>Identificación: {event && event.userID}</li>
-                    <li>Nombre: {form.newUserName}</li>
-                    <li>Correo electronico: {form.newUserEmail}</li>
-                    <li>
-                      Tipo de usuario:{' '}
-                      {form.userType === '0' ? 'Cliente' : 'Proveedor'}
-                    </li>
-                  </ul>
-                  <p>
-                    Para completar la registración, el usuario recibirá un
-                    correo electronico.
-                    <br />
-                    El cual lo va a llevar a ingresar una contraseña secreta,
-                    con la cual se genera la wallet del usuario.
-                  </p>
-                </>
-              }
-              show={modalShow}
-              onHide={() => setModalShow(false)}
-            />
-          </Form>
-        </FormWrap>
-      </Wrap>
+      <Top>
+        <Title>
+          NUEVO
+          <br />
+          USUARIO
+        </Title>
+      </Top>
+      <FormWrap>
+        <Form>
+          <Label>NOMBRE</Label>
+          <Input name="newUserName" onChange={handleInput}></Input>
+          <Label>MAIL</Label>
+          <Input type="mail" name="newUserEmail" onChange={handleInput}></Input>
+          <Label>TIPO</Label>
+          <Select name="userType" onChange={handleInput}>
+            <option>Select one...</option>
+            <option value="1">Proveedor</option>
+            <option value="0">Cliente</option>
+          </Select>
+          <Button className="submit" onClick={handleSubmit}>
+            {loading ? (
+              <Spinner animation="border" role="status" size="sm"></Spinner>
+            ) : (
+              'CREAR'
+            )}
+          </Button>
+          <CustomModal
+            title="User Creation Successfull"
+            body={
+              <>
+                <p>Un nuevo usuario fue guardado en la base de datos.</p>
+                <ul>
+                  <li>Identificación: {event && event.userID}</li>
+                  <li>Nombre: {form.newUserName}</li>
+                  <li>Correo electronico: {form.newUserEmail}</li>
+                  <li>
+                    Tipo de usuario:{' '}
+                    {form.userType === '0' ? 'Cliente' : 'Proveedor'}
+                  </li>
+                </ul>
+                <p>
+                  Para completar la registración, el usuario recibirá un correo
+                  electronico.
+                  <br />
+                  El cual lo va a llevar a ingresar una contraseña secreta, con
+                  la cual se genera la wallet del usuario.
+                </p>
+              </>
+            }
+            show={modalShow}
+            onHide={() => setModalShow(false)}
+          />
+        </Form>
+      </FormWrap>
       <Footer />
     </>
   );

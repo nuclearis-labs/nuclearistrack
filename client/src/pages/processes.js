@@ -25,45 +25,42 @@ function Processes() {
 
   return (
     <>
-      <Header />
-      <Wrap>
-        <Top>
-          <Title>PROCESOS</Title>
-        </Top>
-        <FormWrap>
-          <Form>
-            <HeadRow>
-              <Col4>NOMBRE</Col4>
-              <Col4>PROVEEDOR</Col4>
-              <Col4>VER DOC.</Col4>
-              <Col4>AGREGAR DOC.</Col4>
-              <Col4>CONTRACT</Col4>
-            </HeadRow>
-            {processes.map(process => (
-              <Row key={process.processContracts}>
-                <Col4>{process.processName}</Col4>
-                <Col4>{process.supplierName}</Col4>
-                <Col4>
-                  <Link to={'/documents/' + process.processContracts}>
-                    <Eye />
-                    VER DOC.
-                  </Link>
-                </Col4>
-                <Col4>
-                  <Link to={'/documents/add/' + process.processContracts}>
-                    <Pen />
-                    AGREGAR DOC.
-                  </Link>
-                </Col4>
-                <Col4>{process.processContracts}</Col4>
-              </Row>
-            ))}
-            <Button as={Link} className="submit" to="/processes/add">
-              NUEVO PROCESO
-            </Button>
-          </Form>
-        </FormWrap>
-      </Wrap>
+      <Top>
+        <Title>PROCESOS</Title>
+      </Top>
+      <FormWrap>
+        <Form>
+          <HeadRow>
+            <Col4>NOMBRE</Col4>
+            <Col4>PROVEEDOR</Col4>
+            <Col4>VER DOC.</Col4>
+            <Col4>AGREGAR DOC.</Col4>
+            <Col4>CONTRACT</Col4>
+          </HeadRow>
+          {processes.map(process => (
+            <Row key={process.processContracts}>
+              <Col4>{process.processName}</Col4>
+              <Col4>{process.supplierName}</Col4>
+              <Col4>
+                <Link to={'/documents/' + process.processContracts}>
+                  <Eye />
+                  VER DOC.
+                </Link>
+              </Col4>
+              <Col4>
+                <Link to={'/documents/add/' + process.processContracts}>
+                  <Pen />
+                  AGREGAR DOC.
+                </Link>
+              </Col4>
+              <Col4>{process.processContracts}</Col4>
+            </Row>
+          ))}
+          <Button as={Link} className="submit" to="/processes/add">
+            NUEVO PROCESO
+          </Button>
+        </Form>
+      </FormWrap>
       <Footer />
     </>
   );

@@ -107,71 +107,68 @@ export default function NewDoc(props) {
 
   return (
     <>
-      <Header />
-      <Wrap>
-        <Top>
-          <Title>
-            NUEVO
-            <br />
-            DOCUMENTO
-          </Title>
-        </Top>
-        <FormWrap>
-          <Form>
-            <Pad>
-              <SubTit>PROCESO {user.userName}</SubTit>
-              <ProcessName>
-                {processDetail.processName &&
-                  processDetail.processName.toUpperCase()}
-              </ProcessName>
-              <SubTit>PROVEEDOR</SubTit>
-              <SubTit className="bold">
-                {processDetail.supplierName &&
-                  processDetail.supplierName.toUpperCase()}
-              </SubTit>
-            </Pad>
-            <Label>SELECCIONAR ARCHIVO</Label>
-            <FileInput
-              onChange={handleFileInput}
-              name="file"
-              type="file"
-            ></FileInput>
-            <Label>UBICACION DEL DOCUMENTO</Label>
-            <iframe
-              frameBorder="0"
-              title="DocumentLocation"
-              style={{ border: '0', width: '370px', height: '250px' }}
-              src={`https://www.google.com/maps/embed/v1/view?zoom=13&center=${location &&
-                location.latitude},${location &&
-                location.longitude}&key=AIzaSyCHpdtM1Pvk-nSgdFB02zUeq7TnTy_eGPs`}
-              allowFullScreen
-            ></iframe>{' '}
-            <Label>OBSERVACIONES</Label>
-            <TextArea onChange={handleInput} name="comment"></TextArea>
-            <div>
-              <Input
-                placeholder="ingresar clave"
-                style={{
-                  width: '100px',
-                  position: 'relative',
-                  top: '60px',
-                  marginRight: '5px'
-                }}
-                name="passphrase"
-                onChange={handleInput}
-              ></Input>
-              <Button
-                style={{ display: 'inline-block', position: 'relative' }}
-                onClick={handleSubmit}
-                disabled={enableSubmit.disabled}
-                className="submit"
-              >
-                {enableSubmit.text}
-              </Button>
-            </div>
-          </Form>
-        </FormWrap>
-      </Wrap>
+      <Top>
+        <Title>
+          NUEVO
+          <br />
+          DOCUMENTO
+        </Title>
+      </Top>
+      <FormWrap>
+        <Form>
+          <Pad>
+            <SubTit>PROCESO {user.userName}</SubTit>
+            <ProcessName>
+              {processDetail.processName &&
+                processDetail.processName.toUpperCase()}
+            </ProcessName>
+            <SubTit>PROVEEDOR</SubTit>
+            <SubTit className="bold">
+              {processDetail.supplierName &&
+                processDetail.supplierName.toUpperCase()}
+            </SubTit>
+          </Pad>
+          <Label>SELECCIONAR ARCHIVO</Label>
+          <FileInput
+            onChange={handleFileInput}
+            name="file"
+            type="file"
+          ></FileInput>
+          <Label>UBICACION DEL DOCUMENTO</Label>
+          <iframe
+            frameBorder="0"
+            title="DocumentLocation"
+            style={{ border: '0', width: '370px', height: '250px' }}
+            src={`https://www.google.com/maps/embed/v1/view?zoom=13&center=${location &&
+              location.latitude},${location &&
+              location.longitude}&key=AIzaSyCHpdtM1Pvk-nSgdFB02zUeq7TnTy_eGPs`}
+            allowFullScreen
+          ></iframe>{' '}
+          <Label>OBSERVACIONES</Label>
+          <TextArea onChange={handleInput} name="comment"></TextArea>
+          <div>
+            <Input
+              placeholder="ingresar clave"
+              style={{
+                width: '100px',
+                position: 'relative',
+                top: '60px',
+                marginRight: '5px'
+              }}
+              name="passphrase"
+              onChange={handleInput}
+            ></Input>
+            <Button
+              style={{ display: 'inline-block', position: 'relative' }}
+              onClick={handleSubmit}
+              disabled={enableSubmit.disabled}
+              className="submit"
+            >
+              {enableSubmit.text}
+            </Button>
+          </div>
+        </Form>
+      </FormWrap>
       <Footer />
     </>
   );

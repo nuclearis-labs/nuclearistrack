@@ -7,20 +7,17 @@ import Footer from '../components/footer';
 export default function Settings() {
   return (
     <>
-      <Header />
-      <Wrap>
-        <Top>
-          <Title>PREFERENCIAS</Title>
-        </Top>
-        <FormWrap>
-          <Form>
-            <ul style={{ padding: '10px' }}>
-              <li>CAMBIO DE CONTRASEÑA</li>
-              <li>CAMBIO DE CORREO ELECTRONICO</li>
-            </ul>
-          </Form>
-        </FormWrap>
-      </Wrap>
+      <Top>
+        <Title>PREFERENCIAS</Title>
+      </Top>
+      <FormWrap>
+        <Form>
+          <ul style={{ padding: '10px' }}>
+            <li>CAMBIO DE CONTRASEÑA</li>
+            <li>CAMBIO DE CORREO ELECTRONICO</li>
+          </ul>
+        </Form>
+      </FormWrap>
       <Footer />
     </>
   );

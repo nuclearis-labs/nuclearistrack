@@ -3,6 +3,7 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 import styled, { keyframes } from 'styled-components';
 import { Title, Wrap } from '../components/components.js';
+import { Link } from 'react-router-i18n';
 import {
   WebTop,
   WidthContent,
@@ -21,6 +22,7 @@ import Hept4 from '../img/hept4.png';
 import Hept5 from '../img/hept5.png';
 import Hept6 from '../img/hept6.png';
 import Hept7 from '../img/hept7.png';
+import I18n from '../i18n';
 
 const WebTopHome = styled(WebTop)`
   background: url(${bg}) #1a1a1a no-repeat center;
@@ -190,55 +192,62 @@ const Icon = styled.img`
 function Home() {
   return (
     <>
-      <Header />
-      <Wrap>
-        <WebTopHome>
-          <WidthContentHome>
-            <PhraseHome>
-              PLATAFORMA DESCENTRALIZADA DE TRAZABILIDAD CON TECNOLOGIA
-            </PhraseHome>
-            <TitHome>BLOCKCHAIN</TitHome>
-            <Heptagram src={Hept1} className="hept1" />
-            <Heptagram src={Hept2} className="hept2" />
-            <Heptagram src={Hept3} className="hept3" />
-            <Heptagram src={Hept4} className="hept4" />
-            <Heptagram src={Hept5} className="hept5" />
-            <Heptagram src={Hept6} className="hept6" />
-            <Heptagram src={Hept7} className="hept7" />
-          </WidthContentHome>
-        </WebTopHome>
-        <WebBottomHome>
-          <WidthContentHome>
-            <ColHome>
-              <Icon src={Icon1} />
-              <ItemTitHome>SEGURIDAD</ItemTitHome>
-              <ItemDescHome>
-                SISTEMA ENCRIPTADO CON TECNOLOGIA BLOCKCHAIN, EL NUEVO ESTANDARD
-                DE SEGURIDAD INFORMATICA.
-                <a href="#">CONOCER +</a>
-              </ItemDescHome>
-            </ColHome>
-            <ColHome>
-              <Icon src={Icon2} />
-              <ItemTitHome>DISPONIBILIDAD DE LA INFORMACION</ItemTitHome>
-              <ItemDescHome>
-                CON SOLO INGRESAR EN LA PLATAFORMA TIENE DISPONIBILIDAD DE TODOS
-                LOS PROCESOS Y CERTIFICADOS.
-                <a href="#">CONOCER +</a>
-              </ItemDescHome>
-            </ColHome>
-            <ColHome>
-              <Icon src={Icon3} />
-              <ItemTitHome>CONTROL</ItemTitHome>
-              <ItemDescHome>
-                INFORMACION EN TIEMPO REAL DE LOS PROCESOS DE FABRICACION.
-                <a href="#">CONOCER +</a>
-              </ItemDescHome>
-            </ColHome>
-            <BottomSpace></BottomSpace>
-          </WidthContentHome>
-        </WebBottomHome>
-      </Wrap>
+      <WebTopHome>
+        <WidthContentHome>
+          <PhraseHome>
+            <I18n t="header.navPhrase" />
+          </PhraseHome>
+          <TitHome>BLOCKCHAIN</TitHome>
+          <Heptagram src={Hept1} className="hept1" />
+          <Heptagram src={Hept2} className="hept2" />
+          <Heptagram src={Hept3} className="hept3" />
+          <Heptagram src={Hept4} className="hept4" />
+          <Heptagram src={Hept5} className="hept5" />
+          <Heptagram src={Hept6} className="hept6" />
+          <Heptagram src={Hept7} className="hept7" />
+        </WidthContentHome>
+      </WebTopHome>
+      <WebBottomHome>
+        <WidthContentHome>
+          <ColHome>
+            <Icon src={Icon1} />
+            <ItemTitHome>
+              <I18n t="home.security.title" />
+            </ItemTitHome>
+            <ItemDescHome>
+              <I18n t="home.security.text" />
+              <Link to="/security">
+                <I18n t="general.more" /> +
+              </Link>
+            </ItemDescHome>
+          </ColHome>
+          <ColHome>
+            <Icon src={Icon2} />
+            <ItemTitHome>
+              <I18n t="home.availability.title" />
+            </ItemTitHome>
+            <ItemDescHome>
+              <I18n t="home.availability.text" />
+              <Link to="/benefits">
+                <I18n t="general.more" /> +
+              </Link>
+            </ItemDescHome>
+          </ColHome>
+          <ColHome>
+            <Icon src={Icon3} />
+            <ItemTitHome>
+              <I18n t="home.control.title" />
+            </ItemTitHome>
+            <ItemDescHome>
+              <Link to="/benefits">
+                <I18n t="home.control.text" />
+                <I18n t="general.more" /> +
+              </Link>
+            </ItemDescHome>
+          </ColHome>
+          <BottomSpace></BottomSpace>
+        </WidthContentHome>
+      </WebBottomHome>
       <Footer />
     </>
   );

@@ -27,36 +27,33 @@ export const ListProcess = () => {
 
   return (
     <>
-      <Header />
-      <Wrap>
-        <Top>
-          <Title>Listado de procesos</Title>
-        </Top>
-        <FormWrap>
-          <Form>
-            <table cellPadding={10}>
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Proveedor</th>
-                  <th>Contrato</th>
-                </tr>
-              </thead>
-              <tbody>
-                {process.map(
-                  ({ processName, supplierName, processContracts }) => (
-                    <tr>
-                      <td>{processName}</td>
-                      <td>{supplierName}</td>
-                      <td>{processContracts}</td>
-                    </tr>
-                  )
-                )}
-              </tbody>
-            </table>
-          </Form>
-        </FormWrap>
-      </Wrap>
+      <Top>
+        <Title>Listado de procesos</Title>
+      </Top>
+      <FormWrap>
+        <Form>
+          <table cellPadding={10}>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Proveedor</th>
+                <th>Contrato</th>
+              </tr>
+            </thead>
+            <tbody>
+              {process.map(
+                ({ processName, supplierName, processContracts }) => (
+                  <tr>
+                    <td>{processName}</td>
+                    <td>{supplierName}</td>
+                    <td>{processContracts}</td>
+                  </tr>
+                )
+              )}
+            </tbody>
+          </table>
+        </Form>
+      </FormWrap>
       <Footer />
     </>
   );

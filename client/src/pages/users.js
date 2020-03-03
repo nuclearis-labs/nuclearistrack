@@ -24,35 +24,32 @@ export default function Users() {
 
   return (
     <>
-      <Header />
-      <Wrap>
-        <Top>
-          <Title>USUARIOS</Title>
-        </Top>
-        <FormWrap>
-          <Form>
-            <HeadRow>
-              <Col4>NOMBRE</Col4>
-              <Col4>TIPO</Col4>
-              <Col4>DIRECCION</Col4>
-              <Col4>ESTADO</Col4>
-            </HeadRow>
+      <Top>
+        <Title>USUARIOS</Title>
+      </Top>
+      <FormWrap>
+        <Form>
+          <HeadRow>
+            <Col4>NOMBRE</Col4>
+            <Col4>TIPO</Col4>
+            <Col4>DIRECCION</Col4>
+            <Col4>ESTADO</Col4>
+          </HeadRow>
 
-            {users.map(user => (
-              <Row key={user.address}>
-                <Col4>{user.name}</Col4>
-                <Col4>{user.type === '0' ? 'Cliente' : 'Proveedor'}</Col4>
-                <Col4>{user.address}</Col4>
-                <Col4>{user.status === '1' ? 'Activo' : 'Pausado'}</Col4>
-              </Row>
-            ))}
+          {users.map(user => (
+            <Row key={user.address}>
+              <Col4>{user.name}</Col4>
+              <Col4>{user.type === '0' ? 'Cliente' : 'Proveedor'}</Col4>
+              <Col4>{user.address}</Col4>
+              <Col4>{user.status === '1' ? 'Activo' : 'Pausado'}</Col4>
+            </Row>
+          ))}
 
-            <Button as={Link} className="submit" to="/users/add">
-              NUEVO USUARIO
-            </Button>
-          </Form>
-        </FormWrap>
-      </Wrap>
+          <Button as={Link} className="submit" to="/users/add">
+            NUEVO USUARIO
+          </Button>
+        </Form>
+      </FormWrap>
       <Footer />
     </>
   );
