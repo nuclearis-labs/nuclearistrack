@@ -49,7 +49,10 @@ export const Login = () => {
           ></Input>
           <Button className="submit" onClick={handleLogin}>
             {loading ? (
-              <Spinner animation="border" role="status" size="sm"></Spinner>
+              <>
+                <Spinner animation="border" role="status" size="sm"></Spinner>{' '}
+                LOADING
+              </>
             ) : (
               'LOGIN'
             )}
