@@ -55,10 +55,6 @@
     "node-input-validator": "4.1.0",
     "nodemailer": "^6.3.1",
     "pdf-lib": "^1.2.1",
-    "react-bootstrap": "^1.0.0-beta.16",
-    "react-loader-spinner": "^3.1.5",
-    "react-router-i18n": "^0.2.0",
-    "truffle-hdwallet-provider": "1.0.17",
     "web3": "1.2.2",
     "winston": "3.2.1"
   },
@@ -79,7 +75,6 @@
     "@typescript-eslint/parser": "2.6.1",
     "chai": "4.2.0",
     "concurrently": "^5.0.1",
-    "npm-run-all": "^4.1.5",
     "prettier": "1.18.2",
     "truffle-assertions": "0.9.2",
     "truffle-typings": "1.0.8",
