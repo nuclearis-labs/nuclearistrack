@@ -239,8 +239,8 @@ function Home() {
               <I18n t="home.control.title" />
             </ItemTitHome>
             <ItemDescHome>
+              <I18n t="home.control.text" />
               <Link to="/benefits">
-                <I18n t="home.control.text" />
                 <I18n t="general.more" /> +
               </Link>
             </ItemDescHome>
