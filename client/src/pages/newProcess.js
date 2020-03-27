@@ -10,7 +10,7 @@ import {
   Wrap
 } from '../components/components.js';
 import { Top, Form, FormWrap } from '../components/form.js';
-import { CustomModal } from '../components/CustomModal';
+import Modal from '../components/Modal';
 import RSKLink from '../components/RSKLink';
 import Header from '../components/header.js';
 import Footer from '../components/footer.js';
@@ -85,22 +85,21 @@ export default function NewProcess() {
               'CREAR'
             )}
           </Button>
-          <CustomModal
-            title="Project Creation Successfull"
-            body={
-              <>
-                <p>A new process was created successfully</p>
-                <ul>
-                  <li>Name: {form.processTitle}</li>
-                  <li>
-                    Transaction Hash: <RSKLink hash={event} type="tx" testnet />
-                  </li>
-                </ul>
-              </>
-            }
+          <Modal
+            title="Nuevo proceso creado"
             show={modalShow}
-            onHide={() => setModalShow(false)}
-          />
+            setShow={setModalShow}
+          >
+            <>
+              <p style={{ textDecoration: 'underline' }}>Detalles</p>
+              <ul>
+                <li>Name: {form.processTitle}</li>
+                <li>
+                  Transaction Hash: <RSKLink hash={event} type="tx" testnet />
+                </li>
+              </ul>
+            </>
+          </Modal>
         </Form>
       </FormWrap>
       <Footer />

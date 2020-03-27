@@ -33,9 +33,21 @@ export const Label = styled.label`
   display: block;
   margin-top: 10px;
 `;
+export const ErrorLabel = styled.label`
+  color: red;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  line-height: 26px;
+  text-align: left;
+  display: block;
+  margin: 0px;
+  padding: 0px;
+`;
 
 export const Input = styled.input`
-  border: solid 2px #5d5d5d;
+  border: solid 2px ${props => (props.error ? 'red' : '#5d5d5d')};
   width: 370px;
   height: 36px;
   padding: 5px;
@@ -150,7 +162,7 @@ export const Datepicker = styled.input.attrs(props => ({
 `;
 
 export const Select = styled.select`
-  border: solid 2px #5d5d5d;
+  border: solid 2px ${props => (props.error ? 'red' : '#5d5d5d')};
   background: transparent;
   width: 370px;
   height: 36px;

@@ -12,7 +12,7 @@ import {
   Wrap
 } from '../components/components.js';
 import { Top, Form, FormWrap } from '../components/form.js';
-import { CustomModal } from '../components/CustomModal';
+import Modal from '../components/Modal';
 import RSKLink from '../components/RSKLink';
 import Spinner from 'react-bootstrap/Spinner';
 
@@ -103,11 +103,14 @@ export default function NewProject() {
               'CREAR'
             )}
           </Button>
-          <CustomModal
-            title="Project Creation Successfull"
-            body={
+          {modalShow && (
+            <Modal
+              title="Nuevo proyecto creado"
+              show={modalShow}
+              setShow={setModalShow}
+            >
               <>
-                <p>A new project was created successfully</p>
+                <p style={{ textDecoration: 'underline' }}>Detalles </p>
                 <ul>
                   <li>Name: {form.proyectoTitle}</li>
                   <li>
@@ -115,10 +118,8 @@ export default function NewProject() {
                   </li>
                 </ul>
               </>
-            }
-            show={modalShow}
-            onHide={() => setModalShow(false)}
-          />
+            </Modal>
+          )}
         </Form>
       </FormWrap>
       <Footer />

@@ -60,6 +60,13 @@ const translations = {
       email: 'EMAIL',
       message: 'MESSAGE',
       submit: 'SEND'
+    },
+    forms: {
+      newUser: 'NEW USER',
+      name: 'NAME',
+      mail: 'EMAIL',
+      type: 'TYPE',
+      selectOne: 'Select one...'
     }
   },
   sp: {
@@ -91,7 +98,9 @@ const translations = {
       }
     },
     general: {
-      more: 'MAS'
+      more: 'MAS',
+      supplier: 'Proveedor',
+      client: 'Cliente'
     },
     benefits: {
       bannerTitle: 'TRANSPARENCIA EN TODOS NUESTROS PROCESOS',
@@ -123,6 +132,14 @@ const translations = {
       email: 'CORREO ELECTRONICO',
       message: 'MENSAJE',
       submit: 'ENVIAR'
+    },
+    forms: {
+      newUser: 'NUEVO USUARIO',
+      name: 'NOMBRE',
+      mail: 'CORREO ELECTRONICO',
+      type: 'TIPO',
+      selectOne: 'Seleccionar...',
+      create: 'CREAR'
     }
   },
   de: {
