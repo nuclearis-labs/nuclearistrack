@@ -21,42 +21,34 @@ import { useForm } from 'react-hook-form';
 
 export default function NewUser() {
   const { getCurrentUser } = useContext(UserContext);
-  const [form, setForm] = useState([]);
   const [event, setEvent] = useState();
   const [loading, setLoading] = useState(false);
   const { register, handleSubmit, watch, errors } = useForm();
 
-  function handleInput(e) {
-    e.persist();
-    setForm(form => ({ ...form, [e.target.name]: e.target.value }));
-  }
-
-  function onSubmit(e) {
-    console.log(e);
-    // e.preventDefault();
-    // setLoading(true);
-    // const user = getCurrentUser();
-    // axios({
-    //   method: 'post',
-    //   url: '/api/user/',
-    //   data: {
-    //     ...form,
-    //     email: user.userEmail
-    //   },
-    //   headers: {
-    //     Authorization: `Bearer ${localStorage.getItem('token')}`
-    //   }
-    // })
-    //   .then(result => {
-    //     if (result.data.error) {
-    //     } else {
-    //       setLoading(false);
-    //       setEvent(result.data);
-    //     }
-    //   })
-    //   .catch(e => {
-    //     setEvent();
-    //   });
+  function onSubmit(data) {
+    setLoading(true);
+    const user = getCurrentUser();
+    axios({
+      method: 'post',
+      url: '/api/user/',
+      data: {
+        ...data,
+        email: user.userEmail
+      },
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+      .then(result => {
+        if (result.data.error) {
+        } else {
+          setLoading(false);
+          setEvent(result.data);
+        }
+      })
+      .catch(e => {
+        setEvent();
+      });
   }
 
   return (

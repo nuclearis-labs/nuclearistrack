@@ -6,6 +6,7 @@ import Footer from '../components/footer.js';
 import {
   Title,
   Label,
+  ErrorLabel,
   Input,
   Select,
   Button,
@@ -15,6 +16,8 @@ import { Top, Form, FormWrap } from '../components/form.js';
 import Modal from '../components/Modal';
 import RSKLink from '../components/RSKLink';
 import Spinner from 'react-bootstrap/Spinner';
+import I18n from '../i18n';
+import { useForm } from 'react-hook-form';
 
 export default function NewProject() {
   const [form, setForm] = useState({});
@@ -22,6 +25,7 @@ export default function NewProject() {
   const [users, setUsers] = useState();
   const [modalShow, setModalShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { register, handleSubmit, watch, errors } = useForm();
 
   function handleInput(e) {
     e.persist();
@@ -35,7 +39,7 @@ export default function NewProject() {
     });
   }, []);
 
-  function handleSubmit(e) {
+  function onSubmit(e) {
     e.preventDefault();
     setLoading(true);
     axios({
@@ -59,25 +63,30 @@ export default function NewProject() {
     <>
       <Top>
         <Title>
-          NUEVO
-          <br />
-          PROYECTO
+          <I18n t="forms.newProject" />
         </Title>
       </Top>
       <FormWrap>
         <Form>
-          <Label>NOMBRE</Label>
+          <Label>
+            <I18n t="forms.projectTitle" />
+          </Label>
           <Input
             type="text"
+            error={errors.proyectoTitle}
+            ref={register({ required: true })}
             name="proyectoTitle"
-            value={form.proyectoTitle}
-            onChange={handleInput}
           ></Input>
-          <Label>CLIENTE</Label>
+          <ErrorLabel>
+            {errors.proyectoTitle && 'Este campo es obligatorio'}
+          </ErrorLabel>
+          <Label>
+            <I18n t="forms.client" />
+          </Label>
           <Select
             name="clientAddress"
-            value={form.clientAddress}
-            onChange={handleInput}
+            error={errors.clientAddress}
+            ref={register({ validate: value => value !== 'Select one...' })}
           >
             <option>Select one...</option>
             {users &&
@@ -87,16 +96,31 @@ export default function NewProject() {
                 </option>
               ))}
           </Select>
-          <Label>EXPEDIENTE</Label>
+          <ErrorLabel>
+            {errors.clientAddress && 'Este campo es obligatorio'}
+          </ErrorLabel>
+          <Label>
+            <I18n t="forms.expediente" />
+          </Label>
           <Input
             type="number"
             name="expediente"
-            value={form.expediente}
-            onChange={handleInput}
+            error={errors.expediente}
+            ref={register({ required: true })}
           ></Input>
-          <Label>Nº OC</Label>
-          <Input name="oc" value={form.oc} onChange={handleInput}></Input>
-          <Button className="submit" onClick={handleSubmit}>
+          <ErrorLabel>
+            {errors.expediente && 'Este campo es obligatorio'}
+          </ErrorLabel>
+          <Label>
+            <I18n t="forms.oc" />
+          </Label>
+          <Input
+            name="oc"
+            error={errors.oc}
+            ref={register({ required: true })}
+          ></Input>
+          <ErrorLabel>{errors.oc && 'Este campo es obligatorio'}</ErrorLabel>
+          <Button className="submit" onClick={handleSubmit(onSubmit)}>
             {loading ? (
               <Spinner animation="border" role="status" size="sm"></Spinner>
             ) : (

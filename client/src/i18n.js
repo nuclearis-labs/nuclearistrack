@@ -139,7 +139,14 @@ const translations = {
       mail: 'CORREO ELECTRONICO',
       type: 'TIPO',
       selectOne: 'Seleccionar...',
-      create: 'CREAR'
+      create: 'CREAR',
+      newProject: 'NUEVO PROYECTO',
+      newProject: 'NUEVO PROCESO',
+      projectTitle: 'TITULO DE PROYECTO',
+      client: 'CLIENTE',
+      supplier: 'PROVEEDOR',
+      expediente: 'EXPEDIENTE',
+      oc: 'Nº DE ORDEN DE COMPRA'
     }
   },
   de: {

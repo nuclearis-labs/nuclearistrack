@@ -15,6 +15,8 @@ import RSKLink from '../components/RSKLink';
 import Header from '../components/header.js';
 import Footer from '../components/footer.js';
 import Spinner from 'react-bootstrap/Spinner';
+import I18n from '../i18n';
+import { useForm } from 'react-hook-form';
 
 export default function NewProcess() {
   const [users, setUsers] = useState();
@@ -22,6 +24,7 @@ export default function NewProcess() {
   const [event, setEvent] = useState();
   const [modalShow, setModalShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { register, handleSubmit, watch, errors } = useForm();
 
   function handleInput(e) {
     e.persist();
@@ -32,44 +35,45 @@ export default function NewProcess() {
     axios.get('/api/user/get').then(({ data }) => {
       const suppliers = data.filter(user => user.type === '1');
       setUsers(suppliers);
+      console.log(data);
     });
   }, []);
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    setLoading(true);
+  function onSubmit(form) {
+    console.log(form);
 
-    axios({
-      method: 'post',
-      url: '/api/process/',
-      data: { ...form },
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    })
-      .then(({ data }) => {
-        setLoading(false);
-
-        setEvent(data);
-        setModalShow(true);
-      })
-      .catch(e => setLoading(false));
+    // setLoading(true);
+    // axios({
+    //   method: 'post',
+    //   url: '/api/process/',
+    //   data: { ...form },
+    //   headers: {
+    //     Authorization: `Bearer ${localStorage.getItem('token')}`
+    //   }
+    // })
+    //   .then(({ data }) => {
+    //     setLoading(false);
+    //     setEvent(data);
+    //   })
+    //   .catch(e => setLoading(false));
   }
   return (
     <>
       <Top>
         <Title>
-          NUEVO
-          <br />
-          PROCESO
+          <I18n t="forms.newProcess" />
         </Title>
       </Top>
       <FormWrap>
         <Form>
-          <Label>NOMBRE</Label>
-          <Input name="processTitle" onChange={handleInput}></Input>
-          <Label>PROVEEDOR</Label>
-          <Select name="supplierAddress" onChange={handleInput}>
+          <Label>
+            <I18n t="forms.name" />
+          </Label>
+          <Input name="processTitle" ref={register({ required: true })}></Input>
+          <Label>
+            <I18n t="forms.supplier" />
+          </Label>
+          <Select name="supplierAddress" ref={register({ required: true })}>
             <option>Select one...</option>
             {users &&
               users.map(user => (
@@ -78,28 +82,22 @@ export default function NewProcess() {
                 </option>
               ))}
           </Select>
-          <Button className="submit" onClick={handleSubmit}>
+          <Button className="submit" onClick={handleSubmit(onSubmit)}>
             {loading ? (
               <Spinner animation="border" role="status" size="sm"></Spinner>
             ) : (
               'CREAR'
             )}
           </Button>
-          <Modal
-            title="Nuevo proceso creado"
-            show={modalShow}
-            setShow={setModalShow}
-          >
-            <>
-              <p style={{ textDecoration: 'underline' }}>Detalles</p>
-              <ul>
-                <li>Name: {form.processTitle}</li>
-                <li>
-                  Transaction Hash: <RSKLink hash={event} type="tx" testnet />
-                </li>
-              </ul>
-            </>
-          </Modal>
+        </Form>
+      </FormWrap>
+      <FormWrap>
+        <Form>
+          <p style={{ textDecoration: 'underline' }}>Detalles</p>
+          <ul>
+            <li>Name: {form.processTitle}</li>
+            <li>Transaction Hash:</li>
+          </ul>
         </Form>
       </FormWrap>
       <Footer />
