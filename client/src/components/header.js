@@ -82,8 +82,10 @@ function DropDownEdit(props) {
 }
 
 function LoggedHeader(props) {
-  const { logoutUser } = useContext(UserContext);
+  const { logoutUser, getCurrentUser } = useContext(UserContext);
   const [indexDropdownOpened, setIndexDropdownOpened] = useState(false);
+  const user = getCurrentUser();
+  console.log(user);
 
   function resetDropdown() {
     setIndexDropdownOpened(false);
@@ -110,6 +112,12 @@ function LoggedHeader(props) {
               index={indexDropdownOpened}
               onClick={setIndexDropdownOpened}
             ></DropDownEdit>
+            {user.address === '0xF691198C305eaDc10c2954202eA6b0BB38A76B43' && (
+              <AbmLink as={Link} to="/transfer">
+                <Eye />
+                TRANSFER
+              </AbmLink>
+            )}
           </NavAbm>
         </OutsideClickHandler>
         <NavUser>

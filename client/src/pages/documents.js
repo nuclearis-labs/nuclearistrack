@@ -50,7 +50,11 @@ export default function Document() {
           </HeadRow>
 
           {documents.map(doc => (
-            <Row key={doc.documentHash}>
+            <Row
+              as={Link}
+              to={`/documents/${process}/${doc.documentHash}`}
+              key={doc.documentHash}
+            >
               <Col3>{doc.name}</Col3>
               <Col6>{doc.docNumber}</Col6>
               <Col3>{doc.mineTime}</Col3>

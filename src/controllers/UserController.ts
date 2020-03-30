@@ -1,29 +1,29 @@
 import UserModel from '../models/user';
 import * as utils from '../config/utils';
 import * as wallet from '../config/wallet';
-import txModel from '../models/transaction';
 import { sendMail } from '../config/mail';
 import web3 from '../config/web3';
 import Contract from '../classes/Contract';
 import logger from '../config/winston';
-import * as pendingTx from '../config/pendingTx';
 import { Request, Response } from 'express';
 
 export async function create(req: Request, res: Response) {
   try {
+    const roles = req.body.roles.split(',');
+
     const db = await UserModel.create({
       username: req.body.newUserName,
       email: req.body.newUserEmail,
-      type: req.body.userType
+      roles
     });
 
     logger.info(`User ${db._id} created {"email":${req.body.newUserEmail}}`);
 
-    await sendMail({
-      to: req.body.newUserEmail,
-      name: req.body.newUserName,
-      id: db._id
-    });
+    // await sendMail({
+    //   to: req.body.newUserEmail,
+    //   name: req.body.newUserName,
+    //   id: db._id
+    // });
 
     res.status(200).json({ userID: db._id });
   } catch (e) {
@@ -31,6 +31,24 @@ export async function create(req: Request, res: Response) {
       message: e.message
     });
     res.status(400).json({ error: e.message });
+  }
+}
+
+export async function checkRole(req: Request, res: Response) {
+  try {
+    const user = await UserModel.findOne({
+      address: req.params.address
+    });
+
+    const contract = new Contract();
+    const isRole = await contract.getDataFromContract({
+      method: 'isAssignedRole',
+      data: [req.params.address, req.params.role]
+    });
+
+    res.json(isRole);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
   }
 }
 
@@ -65,14 +83,8 @@ export async function confirm(req: Request, res: Response) {
     const contract = new Contract({ privateKey });
     const txHash = await contract.sendDataToContract({
       fromAddress: address,
-      method: 'createUser',
-      data: [newAddress, user.type, utils.asciiToHex(user.username)]
-    });
-
-    await pendingTx.create({
-      txHash,
-      subject: 'add-user',
-      data: [user.username, user.type, newAddress]
+      method: 'assignMultipleRoles',
+      data: [newAddress, user.roles]
     });
 
     const db = await UserModel.findByIdAndUpdate(
@@ -175,37 +187,10 @@ export async function change(req: Request, res: Response) {
 
 export async function get(req: Request, res: Response) {
   try {
-    const contract = new Contract();
-    const contractUsers = await contract.getDataFromContract({
-      method: 'getAllUsers'
-    });
-
-    const pendingUser = await pendingTx.sync(contractUsers, 'add-user');
-
-    const allUsers = Object.values(contractUsers).concat(
-      pendingUser.length > 0 ? pendingUser[0]['result'] : []
-    );
-
-    const allUsersDetails = allUsers.map(async (address: string) => {
-      const details = await contract.getDataFromContract({
-        method: 'getUserDetails',
-        data: [address]
-      });
-
-      return {
-        name: utils.hexToAscii(details[0]),
-        type: details[1],
-        status: details[2],
-        address
-      };
-    });
-    Promise.all(allUsersDetails).then(userDetails => {
-      res.json(userDetails);
-    });
+    const userList = await UserModel.find({}, 'username address');
+    res.json(userList);
   } catch (e) {
-    console.log(e);
     logger.error(`Couldn't retrieve userList`, { message: e.message });
-
     res.status(500).json({ error: e.message });
   }
 }
@@ -224,22 +209,15 @@ export async function getBalance(req: Request, res: Response) {
   }
 }
 
-export async function close(req: Request, res: Response) {
+export async function remove(req: Request, res: Response) {
   try {
-    const { address, privateKey } = await utils.getKeys(req.body);
-
-    const contract = new Contract({ privateKey });
-    const txHash = await contract.sendDataToContract({
-      fromAddress: address,
-      method: 'changeUserStatus',
-      data: [req.params.address]
+    const { _id, username, address } = await UserModel.findOneAndRemove({
+      address: req.params.address
     });
-
-    logger.info(`Paused User ${req.params.address}`);
-
-    res.json(txHash);
+    logger.info(`User ${username} removed`);
+    res.json({ _id, username, address });
   } catch (e) {
-    logger.error(`Couldn't pause User ${req.params.address}`, {
+    logger.error(`Couldn't remove User ${req.params.address}`, {
       message: e.message
     });
     res.status(400).json({ error: e.message });
@@ -251,38 +229,25 @@ export async function getOne(req: Request, res: Response) {
     const address = utils.toChecksumAddress(req.params.address);
     const contract = new Contract();
 
-    await UserModel.findOneAndUpdate({ address }, { status: true });
+    const { username } = await UserModel.findOne({ address });
 
-    const userDetails = await contract.getDataFromContract({
-      method: 'getUserDetails',
-      data: [address]
-    });
     const projects = await contract.getDataFromContract({
-      method: userDetails[1] == 0 ? 'getClientProjects' : 'getSupplierProjects',
+      method: 'getProjectsByAddress',
       data: [address]
     });
 
-    let response = [];
-    let balance = await web3.eth.getBalance(address);
-    for (let i = 0; i < projects.length; i++) {
-      let projectDetails = await contract.getDataFromContract({
-        method: 'getProjectDetails',
-        data: [projects[i]]
-      });
+    const processes = await contract.getDataFromContract({
+      method: 'getProcessesByAddress',
+      data: [address]
+    });
 
-      response.push({
-        title: utils.hexToAscii(projectDetails[2]),
-        expediente: projects[i],
-        oc: utils.hexToAscii(projectDetails[3])
-      });
-    }
+    let balance = await web3.eth.getBalance(address);
 
     res.json({
-      userName: utils.hexToAscii(userDetails[0]),
+      username,
       balance: web3.utils.fromWei(balance),
-      type: userDetails[1],
-      status: userDetails[2],
-      proyectos: response
+      projects,
+      processes
     });
   } catch (e) {
     logger.error(`Couldn't get user details ${req.params.address}`, {

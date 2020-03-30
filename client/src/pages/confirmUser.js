@@ -78,8 +78,8 @@ export default function ConfirmUser() {
               que es la unica forma de recuperar su cuenta en caso de que se
               olvide la clave ingresada.
             </p>
-            <Button as={Link} to="/users/add">
-              OTRO USUARIO
+            <Button as={Link} to="/">
+              CONTINUAR
             </Button>
           </Form>
         </FormWrap>

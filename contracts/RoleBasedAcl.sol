@@ -1,4 +1,6 @@
-pragma solidity >=0.5.0 <0.7.0;
+pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
+
 
 contract RoleBasedAcl {
     address public owner;
@@ -10,14 +12,23 @@ contract RoleBasedAcl {
 
     function assignRole(address entity, string calldata role)
         external
-        hasRole('superadmin')
+        hasRole('admin')
     {
         roles[entity][role] = true;
     }
 
+    function assignMultipleRoles(address entity, string[] calldata role)
+        external
+        hasRole('admin')
+    {
+        for (uint256 i = 0; i < role.length; i++) {
+            roles[entity][role[i]] = true;
+        }
+    }
+
     function unassignRole(address entity, string calldata role)
         external
-        hasRole('superadmin')
+        hasRole('admin')
     {
         roles[entity][role] = false;
     }
@@ -33,7 +44,7 @@ contract RoleBasedAcl {
     modifier hasRole(string memory role) {
         require(
             roles[msg.sender][role] || msg.sender == owner,
-            'Sender needs to have role'
+            'Sender does not have the correct role'
         );
         _;
     }

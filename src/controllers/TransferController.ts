@@ -7,8 +7,8 @@ import { Request, Response } from 'express';
 export async function transfer(req: Request, res: Response) {
   try {
     const { address, privateKey } = await getKeys({
-      email: req.body.email,
-      passphrase: req.body.passphrase
+      email: process.env.ADMINEMAIL,
+      passphrase: process.env.ADMINPASSPHRASE
     });
 
     const balance = await web3.eth.getBalance(address);

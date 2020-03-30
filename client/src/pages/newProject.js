@@ -27,11 +27,6 @@ export default function NewProject() {
   const [loading, setLoading] = useState(false);
   const { register, handleSubmit, watch, errors } = useForm();
 
-  function handleInput(e) {
-    e.persist();
-    setForm(form => ({ ...form, [e.target.name]: e.target.value }));
-  }
-
   useEffect(() => {
     axios.get('/api/user/get').then(({ data }) => {
       const clients = data.filter(client => client.type === '0');
@@ -39,8 +34,7 @@ export default function NewProject() {
     });
   }, []);
 
-  function onSubmit(e) {
-    e.preventDefault();
+  function onSubmit(form) {
     setLoading(true);
     axios({
       method: 'post',
@@ -66,86 +60,83 @@ export default function NewProject() {
           <I18n t="forms.newProject" />
         </Title>
       </Top>
-      <FormWrap>
-        <Form>
-          <Label>
-            <I18n t="forms.projectTitle" />
-          </Label>
-          <Input
-            type="text"
-            error={errors.proyectoTitle}
-            ref={register({ required: true })}
-            name="proyectoTitle"
-          ></Input>
-          <ErrorLabel>
-            {errors.proyectoTitle && 'Este campo es obligatorio'}
-          </ErrorLabel>
-          <Label>
-            <I18n t="forms.client" />
-          </Label>
-          <Select
-            name="clientAddress"
-            error={errors.clientAddress}
-            ref={register({ validate: value => value !== 'Select one...' })}
-          >
-            <option>Select one...</option>
-            {users &&
-              users.map(user => (
-                <option value={user.address} key={user.address}>
-                  {user.name}
-                </option>
-              ))}
-          </Select>
-          <ErrorLabel>
-            {errors.clientAddress && 'Este campo es obligatorio'}
-          </ErrorLabel>
-          <Label>
-            <I18n t="forms.expediente" />
-          </Label>
-          <Input
-            type="number"
-            name="expediente"
-            error={errors.expediente}
-            ref={register({ required: true })}
-          ></Input>
-          <ErrorLabel>
-            {errors.expediente && 'Este campo es obligatorio'}
-          </ErrorLabel>
-          <Label>
-            <I18n t="forms.oc" />
-          </Label>
-          <Input
-            name="oc"
-            error={errors.oc}
-            ref={register({ required: true })}
-          ></Input>
-          <ErrorLabel>{errors.oc && 'Este campo es obligatorio'}</ErrorLabel>
-          <Button className="submit" onClick={handleSubmit(onSubmit)}>
-            {loading ? (
-              <Spinner animation="border" role="status" size="sm"></Spinner>
-            ) : (
-              'CREAR'
-            )}
-          </Button>
-          {modalShow && (
-            <Modal
-              title="Nuevo proyecto creado"
-              show={modalShow}
-              setShow={setModalShow}
+      {event ? (
+        <FormWrap>
+          <Form>
+            <p>El proyecto fue creado con exito</p>
+            <ul>
+              <li>
+                Transaction Hash: <RSKLink hash={event} type="tx" testnet />
+              </li>
+            </ul>
+          </Form>
+        </FormWrap>
+      ) : (
+        <FormWrap>
+          <Form>
+            <Label>
+              <I18n t="forms.projectTitle" />
+            </Label>
+            <Input
+              type="text"
+              error={errors.proyectoTitle}
+              ref={register({ required: true })}
+              name="proyectoTitle"
+            ></Input>
+            <ErrorLabel>
+              {errors.proyectoTitle && 'Este campo es obligatorio'}
+            </ErrorLabel>
+            <Label>
+              <I18n t="forms.client" />
+            </Label>
+            <Select
+              name="clientAddress"
+              error={errors.clientAddress}
+              ref={register({ validate: value => value !== 'Select one...' })}
             >
-              <>
-                <p style={{ textDecoration: 'underline' }}>Detalles </p>
-                <ul>
-                  <li>Name: {form.proyectoTitle}</li>
-                  <li>
-                    Transaction Hash: <RSKLink hash={event} type="tx" testnet />
-                  </li>
-                </ul>
-              </>
-            </Modal>
-          )}
-        </Form>
-      </FormWrap>
+              <option>Select one...</option>
+              {users &&
+                users.map(user => (
+                  <option value={user.address} key={user.address}>
+                    {user.name}
+                  </option>
+                ))}
+            </Select>
+            <ErrorLabel>
+              {errors.clientAddress && 'Este campo es obligatorio'}
+            </ErrorLabel>
+            <Label>
+              <I18n t="forms.expediente" />
+            </Label>
+            <Input
+              type="number"
+              name="expediente"
+              error={errors.expediente}
+              ref={register({ required: true })}
+            ></Input>
+            <ErrorLabel>
+              {errors.expediente && 'Este campo es obligatorio'}
+            </ErrorLabel>
+            <Label>
+              <I18n t="forms.oc" />
+            </Label>
+            <Input
+              name="oc"
+              error={errors.oc}
+              ref={register({ required: true })}
+            ></Input>
+            <ErrorLabel>{errors.oc && 'Este campo es obligatorio'}</ErrorLabel>
+            <Button className="submit" onClick={handleSubmit(onSubmit)}>
+              {loading ? (
+                <Spinner animation="border" role="status" size="sm"></Spinner>
+              ) : (
+                'CREAR'
+              )}
+            </Button>
+          </Form>
+        </FormWrap>
+      )}
+
       <Footer />
     </>
   );

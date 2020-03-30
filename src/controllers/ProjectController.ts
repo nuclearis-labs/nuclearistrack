@@ -1,17 +1,14 @@
 import Contract from '../classes/Contract';
 import * as utils from '../config/utils';
 import * as pending from '../config/pendingTx';
-import txModel from '../models/transaction';
+import UserModel from '../models/user';
 import logger from '../config/winston';
 import { Request, Response } from 'express';
 import { IUserOnReq } from '../types/Custom';
 
 export async function create(req: IUserOnReq, res: Response) {
   try {
-    const { address, privateKey } = await utils.getKeys({
-      email: process.env.ADMINEMAIL,
-      passphrase: process.env.ADMINPASSPHRASE
-    });
+    const { address, privateKey } = await utils.getKeys(req.body);
     const nuclear = new Contract({ privateKey });
 
     const oc = utils.asciiToHex(req.body.oc);
@@ -21,17 +18,6 @@ export async function create(req: IUserOnReq, res: Response) {
       fromAddress: address,
       method: 'createProject',
       data: [req.body.expediente, req.body.clientAddress, projectTitle, oc]
-    });
-
-    await pending.create({
-      txHash,
-      subject: 'add-project',
-      data: [
-        req.body.proyectoTitle,
-        req.body.clientAddress,
-        req.body.expediente,
-        req.body.oc
-      ]
     });
 
     logger.info(`Project ${req.body.expediente} created`);
@@ -59,48 +45,27 @@ export async function get(req: IUserOnReq, res: Response) {
   try {
     const contract = new Contract();
     const contractProjects = await contract.getDataFromContract({
-      method: 'getAllProjects'
+      method: 'getProjectsByAddress',
+      data: [req.user.address]
     });
 
-    await txModel.deleteMany({ data: { $in: contractProjects } });
-    const pendingProjects = await txModel.aggregate([
-      {
-        $match: {
-          subject: 'add-project'
-        }
-      },
-      {
-        $group: {
-          _id: null,
-          result: { $push: { $arrayElemAt: ['$data', 2] } }
-        }
-      }
-    ]);
-
-    const allProjects = Object.values(contractProjects).concat(
-      pendingProjects.length > 0 ? pendingProjects[0]['result'] : []
-    );
-
-    const allProjectsDetails = allProjects.map(async (id: string) => {
+    const allProjectsDetails = contractProjects.map(async (id: string) => {
       const details = await contract.getDataFromContract({
         method: 'getProjectDetails',
         data: [id]
       });
 
-      if (
-        details[1] === req.user.address ||
-        req.user.address === process.env.ADMINADDRESS
-      )
-        return {
-          status: details[0],
-          clientAddress: details[1],
-          clientName: utils.hexToAscii(details[2]),
-          title: utils.hexToAscii(details[3]),
-          oc: utils.hexToAscii(details[4]),
-          processContracts: details[5],
-          id
-        };
-      return {};
+      const { username } = await UserModel.findOne({ address: details[1] });
+
+      return {
+        status: details[0],
+        clientAddress: details[1],
+        username,
+        title: utils.hexToAscii(details[2]),
+        oc: utils.hexToAscii(details[3]),
+        processContracts: details[4],
+        id
+      };
     });
 
     Promise.all(allProjectsDetails).then(projectDetails => {

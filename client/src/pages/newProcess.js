@@ -1,9 +1,11 @@
 // newProvider.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import {
   Title,
   Label,
+  ErrorLabel,
   Input,
   Select,
   Button,
@@ -35,27 +37,24 @@ export default function NewProcess() {
     axios.get('/api/user/get').then(({ data }) => {
       const suppliers = data.filter(user => user.type === '1');
       setUsers(suppliers);
-      console.log(data);
     });
   }, []);
 
   function onSubmit(form) {
-    console.log(form);
-
-    // setLoading(true);
-    // axios({
-    //   method: 'post',
-    //   url: '/api/process/',
-    //   data: { ...form },
-    //   headers: {
-    //     Authorization: `Bearer ${localStorage.getItem('token')}`
-    //   }
-    // })
-    //   .then(({ data }) => {
-    //     setLoading(false);
-    //     setEvent(data);
-    //   })
-    //   .catch(e => setLoading(false));
+    setLoading(true);
+    axios({
+      method: 'post',
+      url: '/api/process/',
+      data: { ...form },
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+      .then(({ data }) => {
+        setLoading(false);
+        setEvent(data);
+      })
+      .catch(e => setLoading(false));
   }
   return (
     <>
@@ -64,42 +63,68 @@ export default function NewProcess() {
           <I18n t="forms.newProcess" />
         </Title>
       </Top>
-      <FormWrap>
-        <Form>
-          <Label>
-            <I18n t="forms.name" />
-          </Label>
-          <Input name="processTitle" ref={register({ required: true })}></Input>
-          <Label>
-            <I18n t="forms.supplier" />
-          </Label>
-          <Select name="supplierAddress" ref={register({ required: true })}>
-            <option>Select one...</option>
-            {users &&
-              users.map(user => (
-                <option value={user.address} key={user.address}>
-                  {user.name}
-                </option>
-              ))}
-          </Select>
-          <Button className="submit" onClick={handleSubmit(onSubmit)}>
-            {loading ? (
-              <Spinner animation="border" role="status" size="sm"></Spinner>
-            ) : (
-              'CREAR'
-            )}
-          </Button>
-        </Form>
-      </FormWrap>
-      <FormWrap>
-        <Form>
-          <p style={{ textDecoration: 'underline' }}>Detalles</p>
-          <ul>
-            <li>Name: {form.processTitle}</li>
-            <li>Transaction Hash:</li>
-          </ul>
-        </Form>
-      </FormWrap>
+      {event ? (
+        <FormWrap>
+          <Form>
+            <p>El proceso fue creado con exito</p>
+            <ul>
+              <li>
+                Transaction Hash: <RSKLink hash={event} type="tx" testnet />
+              </li>
+            </ul>
+            <Button as={Link} to="/processes">
+              VER PROCESOS
+            </Button>
+          </Form>
+        </FormWrap>
+      ) : (
+        <FormWrap>
+          <Form>
+            <Label>
+              <I18n t="forms.name" />
+            </Label>
+            <Input
+              error={errors.processTitle}
+              name="processTitle"
+              ref={register({ required: true })}
+            ></Input>
+            <ErrorLabel>
+              {errors.processTitle && 'Este campo es obligatorio'}
+            </ErrorLabel>
+            <Label>
+              <I18n t="forms.supplier" />
+            </Label>
+            <Select
+              error={errors.supplierAddress}
+              name="supplierAddress"
+              ref={register({
+                required: true,
+                validate: value => value !== '0'
+              })}
+            >
+              <option value="0">Select one...</option>
+              {users &&
+                users.map(user => (
+                  <option value={user.address} key={user.address}>
+                    {user.name}
+                  </option>
+                ))}
+            </Select>
+            <ErrorLabel>
+              {errors.supplierAddress &&
+                errors.supplierAddress.type == 'validate' &&
+                'Este campo es obligatorio'}
+            </ErrorLabel>
+            <Button className="submit" onClick={handleSubmit(onSubmit)}>
+              {loading ? (
+                <Spinner animation="border" role="status" size="sm"></Spinner>
+              ) : (
+                'CREAR'
+              )}
+            </Button>
+          </Form>
+        </FormWrap>
+      )}
       <Footer />
     </>
   );

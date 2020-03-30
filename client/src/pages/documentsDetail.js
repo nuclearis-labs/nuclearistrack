@@ -118,14 +118,14 @@ const Fecha = styled.div`
 
 function Documents() {
   const { process, hash } = useParams();
-
+  const [document, setDocument] = useState();
   useEffect(() => {
     axios({
       method: 'get',
       url: '/api/doc/getOne?contract=' + process + '&hash=' + hash,
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     }).then(({ data }) => {
-      console.log(data);
+      setDocument(data);
     });
   }, []);
 
@@ -137,45 +137,24 @@ function Documents() {
             <Title>DOCUMENTO </Title>
           </FlexWrapRight>
           <Table>
-            <DocImgHolder src={DocImg} />
+            <DocImgHolder
+              src={`data:application/pdf;base64,${document &&
+                document.fileBuffer}`}
+            />
           </Table>
         </Left>
         <Right>
           <ResumenTit>DETALLES DE DOCUMENTO</ResumenTit>
           <Row>
             <Col2 className="color">NOMBRE</Col2>
-            <Col2 className="bold">Certificado de barra</Col2>
-          </Row>
-          <Row>
-            <Col2 className="color">USUARIO</Col2>
-            <Col2 className="bold">BGH.nrs</Col2>
+            <Col2 className="bold">{document && document.name}</Col2>
           </Row>
           <Row>
             <Col2 className="color">HASH</Col2>
-            <Col2 className="bold">0xec36349346478eb38358465</Col2>
+            <Col2 className="bold">{document && document.documentHash}</Col2>
           </Row>
-          <ProcesosTit>PROCESO DE CERTIFICACIÓN</ProcesosTit>
-          <RowCenter>
-            <Col3>
-              <Step className="check">1</Step>
-            </Col3>
-            <Col3>
-              <Step>2</Step>
-            </Col3>
-            <Col3>
-              <Step>3</Step>
-            </Col3>
-          </RowCenter>
-          <RowCenter>
-            <Col3>Documento subido</Col3>
-            <Col3>Transferencia emitida</Col3>
-            <Col3>Guardado en Blockchain</Col3>
-          </RowCenter>
           <ProcesosTit>OBSERVACIONES</ProcesosTit>
-          <Nota>
-            Se encontró una fe de erratas en la composición química
-            <Fecha>11/09/2019 / BGH</Fecha>
-          </Nota>
+          <Nota>{document && document.comment}</Nota>
         </Right>
       </FlexWrap>
       <Footer />

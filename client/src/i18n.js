@@ -141,7 +141,7 @@ const translations = {
       selectOne: 'Seleccionar...',
       create: 'CREAR',
       newProject: 'NUEVO PROYECTO',
-      newProject: 'NUEVO PROCESO',
+      newProcess: 'NUEVO PROCESO',
       projectTitle: 'TITULO DE PROYECTO',
       client: 'CLIENTE',
       supplier: 'PROVEEDOR',

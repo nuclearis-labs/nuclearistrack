@@ -165,7 +165,7 @@ export const Select = styled.select`
   border: solid 2px ${props => (props.error ? 'red' : '#5d5d5d')};
   background: transparent;
   width: 370px;
-  height: 36px;
+  height: auto;
   font-size: 14px;
   font-weight: 300;
   box-sizing: border-box;

@@ -12,6 +12,7 @@ import { Login } from './pages/login';
 import Projects from './pages/projects';
 import Processes from './pages/processes';
 import Users from './pages/users';
+import Transfer from './pages/Transfer';
 import NoMatch from './pages/NoMatch';
 import Contact from './pages/Contact';
 import Home from './pages/Home';
@@ -76,6 +77,7 @@ function App() {
             <PrivateRoute path={`${base}/settings`} component={Settings} />
             <Route path={`${base}/users/confirm/:id`} component={ConfirmUser} />
             <Route path={`${base}/login`} exact component={Login} />
+            <Route path={`${base}/transfer`} exact component={Transfer} />
             <Route path={`${base}/benefits`} component={Benefits} />
             <Route path={`${base}/security`} component={Security} />
             <Route path={`${base}/faq`} component={FAQ} />

@@ -1,8 +1,11 @@
-pragma solidity >=0.5.0 <0.7.0;
+pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
 
 import './NuclearPoE.sol';
+import './RoleBasedAcl.sol';
 
-contract Process {
+
+contract Process is RoleBasedAcl {
     address private NuclearPoEAddress;
     bytes32 private processName;
     address private supplierAddress;
@@ -25,7 +28,10 @@ contract Process {
     event AddDocument();
 
     modifier onlySupplier() {
-        require(msg.sender == supplierAddress, 'Has to be supplier of project');
+        require(
+            msg.sender == supplierAddress,
+            'Sender is not supplier of project'
+        );
         _;
     }
 
@@ -70,9 +76,9 @@ contract Process {
     function getDocument(bytes32 _hash)
         external
         view
+        hasRole('document:read')
         returns (
             string memory,
-            bytes32,
             bytes32,
             bytes32,
             uint256,
@@ -83,7 +89,6 @@ contract Process {
         require(document[_hash].mineTime != 0, 'Document does not exist');
         return (
             document[_hash].name,
-            _hash,
             document[_hash].latitude,
             document[_hash].longitude,
             document[_hash].docNumber,
@@ -95,6 +100,7 @@ contract Process {
     function getDocumentStorage(bytes32 _hash)
         external
         view
+        hasRole('document:read')
         returns (bytes32, uint8, uint8)
     {
         require(document[_hash].mineTime != 0, 'Document does not exist');
@@ -119,7 +125,12 @@ contract Process {
         );
     }
 
-    function getAllDocuments() external view returns (bytes32[] memory) {
+    function getAllDocuments()
+        external
+        view
+        hasRole('documents:read')
+        returns (bytes32[] memory)
+    {
         return allDocuments;
     }
 }

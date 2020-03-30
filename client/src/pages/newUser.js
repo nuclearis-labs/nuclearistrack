@@ -103,25 +103,12 @@ export default function NewUser() {
                 errors.newUserEmail.type === 'pattern' &&
                 'Se debe introducir un correo electronico'}
             </ErrorLabel>
-            <Label>
-              <I18n t="forms.type" />
-            </Label>
-            <Select
-              error={errors.userType}
-              name="userType"
-              ref={register({
-                validate: value => value === '0' || value === '1'
-              })}
-            >
-              <option>
-                <I18n t="forms.selectOne" />
-              </option>
-              <option value="1">
-                <I18n t="general.supplier" />
-              </option>
-              <option value="0">
-                <I18n t="general.client" />
-              </option>
+            <Label>PERMISOS</Label>
+            <Select error={errors.roles} multiple name="roles" ref={register}>
+              <option value="project:create">Crear proyectos</option>
+              <option value="project:read">Ver proyectos</option>
+              <option value="process:create">Crear procesos</option>
+              <option value="process:read">Ver procesos</option>
             </Select>
             <ErrorLabel>
               {errors.userType && 'Este campo es obligatorio'}

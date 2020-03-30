@@ -18,7 +18,7 @@ export const FormWrap = styled.div`
   margin-bottom: 100px;
 `;
 
-export const Form = styled.div`
+export const Form = styled.form`
   width: 700px;
   margin: 0 auto;
 `;

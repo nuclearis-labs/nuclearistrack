@@ -22,7 +22,8 @@ export const Login = () => {
     setForm(form => ({ ...form, [e.target.name]: e.target.value }));
   }
 
-  function handleLogin() {
+  function handleLogin(e) {
+    e.preventDefault();
     setLoading(true);
     loginUser(form).then(() => history.replace(from));
   }

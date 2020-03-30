@@ -1,8 +1,7 @@
 const rules = {
   userCreate: {
     'body.newUserName': 'required|unique:User,username|ascii|length:50,3',
-    'body.newUserEmail': 'required|unique:User,email|email|length:100,3',
-    'body.userType': 'required|integer|max:2'
+    'body.newUserEmail': 'required|unique:User,email|email|length:100,3'
   },
   userConfirm: {
     'body.passphrase': 'required|ascii|length:50,4',

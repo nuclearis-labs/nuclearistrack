@@ -188,10 +188,7 @@ export async function getOne(req: Request, res: Response) {
       )
     );
 
-    console.log(storageHash);
-
     const file = await getFromPinata(storageHash);
-    console.log(file);
 
     res.json({
       name: details[0],
@@ -201,7 +198,7 @@ export async function getOne(req: Request, res: Response) {
       longitude: utils.hexToAscii(details[3]),
       documentHash: req.query.hash,
       storageHash,
-      fileBuffer: file[0].content.toString('base64'),
+      fileBuffer: Buffer.from(file.data).toString('base64'),
       comment: details[6]
     });
   } catch (e) {

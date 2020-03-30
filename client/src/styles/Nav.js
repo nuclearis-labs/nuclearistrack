@@ -8,7 +8,7 @@ export const NavAbm = styled.div`
   align-self: start;
   background: #666666;
   color: #333;
-  height: 70px;
+  height: auto;
   position: relative;
   letter-spacing: 1px;
 `;
