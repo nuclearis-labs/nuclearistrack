@@ -1,10 +1,10 @@
 // header.js
-import React, { useState, useContext, useEffect } from 'react';
-
+import React, { useState, useContext } from 'react';
 import { Link, NavLink } from 'react-router-i18n';
 import { UserContext } from '../context/userContext';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { ReactComponent as Eye } from '../img/eye.svg';
+import { ReactComponent as Exchange } from '../img/exchange.svg';
 import { ReactComponent as New } from '../img/new.svg';
 import { ReactComponent as User } from '../img/user.svg';
 import { ReactComponent as Logo } from '../img/logo.svg';
@@ -25,6 +25,7 @@ import {
   NavLogin
 } from '../styles/Nav.js';
 import I18n from '../i18n';
+import RoleBasedACL from './RoleBasedACL';
 
 function DropDownNew(props) {
   return (
@@ -41,15 +42,21 @@ function DropDownNew(props) {
       </AbmLink>
 
       <SubMenuNew className={props.index === 1 ? 'open' : 'closed'}>
-        <Link to="/projects/add" onClick={() => props.onClick(false)}>
-          + <I18n t="header.projects" />
-        </Link>
-        <Link to="/users/add" onClick={() => props.onClick(false)}>
-          + <I18n t="header.user" />
-        </Link>
-        <Link to="/processes/add" onClick={() => props.onClick(false)}>
-          + PROCESO
-        </Link>
+        <RoleBasedACL roles={['project:create']}>
+          <Link to="/projects/add" onClick={() => props.onClick(false)}>
+            + <I18n t="header.projects" />
+          </Link>
+        </RoleBasedACL>
+        <RoleBasedACL roles={['user:create']}>
+          <Link to="/users/add" onClick={() => props.onClick(false)}>
+            + <I18n t="header.user" />
+          </Link>
+        </RoleBasedACL>
+        <RoleBasedACL roles={['process:create']}>
+          <Link to="/processes/add" onClick={() => props.onClick(false)}>
+            + PROCESO
+          </Link>
+        </RoleBasedACL>
       </SubMenuNew>
     </div>
   );
@@ -67,26 +74,29 @@ function DropDownEdit(props) {
       </AbmLink>
 
       <SubMenuEdit className={props.index === 2 ? 'open' : 'closed'}>
-        <Link to="/projects" onClick={() => props.onClick(false)}>
-          + PROYECTO
-        </Link>
-        <Link to="/users" onClick={() => props.onClick(false)}>
-          + USUARIO
-        </Link>
-        <Link to="/processes" onClick={() => props.onClick(false)}>
-          + PROCESO
-        </Link>
+        <RoleBasedACL roles={['project:read']}>
+          <Link to="/projects" onClick={() => props.onClick(false)}>
+            + PROYECTO
+          </Link>
+        </RoleBasedACL>
+        <RoleBasedACL roles={['user:read']}>
+          <Link to="/users" onClick={() => props.onClick(false)}>
+            + USUARIO
+          </Link>
+        </RoleBasedACL>
+        <RoleBasedACL roles={['process:read']}>
+          <Link to="/processes" onClick={() => props.onClick(false)}>
+            + PROCESO
+          </Link>
+        </RoleBasedACL>
       </SubMenuEdit>
     </div>
   );
 }
 
 function LoggedHeader(props) {
-  const { logoutUser, getCurrentUser } = useContext(UserContext);
+  const { logoutUser } = useContext(UserContext);
   const [indexDropdownOpened, setIndexDropdownOpened] = useState(false);
-  const user = getCurrentUser();
-  console.log(user);
-
   function resetDropdown() {
     setIndexDropdownOpened(false);
   }
@@ -104,20 +114,31 @@ function LoggedHeader(props) {
         </NavPhrase>
         <OutsideClickHandler onOutsideClick={resetDropdown} display="contents">
           <NavAbm>
-            <DropDownNew
-              index={indexDropdownOpened}
-              onClick={setIndexDropdownOpened}
-            ></DropDownNew>
-            <DropDownEdit
-              index={indexDropdownOpened}
-              onClick={setIndexDropdownOpened}
-            ></DropDownEdit>
-            {user.address === '0xF691198C305eaDc10c2954202eA6b0BB38A76B43' && (
-              <AbmLink as={Link} to="/transfer">
-                <Eye />
-                TRANSFER
+            <RoleBasedACL
+              roles={['project:create', 'process:create', 'user:create']}
+            >
+              <DropDownNew
+                index={indexDropdownOpened}
+                onClick={setIndexDropdownOpened}
+              />
+            </RoleBasedACL>
+            <RoleBasedACL roles={['project:read', 'process:read', 'user:read']}>
+              <DropDownEdit
+                index={indexDropdownOpened}
+                onClick={setIndexDropdownOpened}
+              />
+            </RoleBasedACL>
+            <RoleBasedACL roles={['admin:transfer']}>
+              <AbmLink>
+                <Link
+                  to="/transfer"
+                  style={{ color: 'unset', textDecoration: 'unset' }}
+                >
+                  <Exchange />
+                  TRANSFER
+                </Link>
               </AbmLink>
-            )}
+            </RoleBasedACL>
           </NavAbm>
         </OutsideClickHandler>
         <NavUser>

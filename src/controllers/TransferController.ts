@@ -33,7 +33,7 @@ export async function transfer(req: Request, res: Response) {
     logger.info(`Transfered ${req.body.value} to ${req.body.to} `, {
       txHash: txHash
     });
-    res.json({ txHash });
+    res.json(txHash);
   } catch (e) {
     logger.error(`Couldn't transfer ${req.body.value} to ${req.body.to} `, {
       message: e.message

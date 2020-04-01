@@ -8,13 +8,10 @@ import {
   ErrorLabel,
   Input,
   Select,
-  Button,
-  Wrap
+  Button
 } from '../components/components.js';
 import { Top, Form, FormWrap } from '../components/form.js';
-import Modal from '../components/Modal';
 import RSKLink from '../components/RSKLink';
-import Header from '../components/header.js';
 import Footer from '../components/footer.js';
 import Spinner from 'react-bootstrap/Spinner';
 import I18n from '../i18n';
@@ -22,22 +19,12 @@ import { useForm } from 'react-hook-form';
 
 export default function NewProcess() {
   const [users, setUsers] = useState();
-  const [form, setForm] = useState([]);
   const [event, setEvent] = useState();
-  const [modalShow, setModalShow] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { register, handleSubmit, watch, errors } = useForm();
-
-  function handleInput(e) {
-    e.persist();
-    setForm(form => ({ ...form, [e.target.name]: e.target.value }));
-  }
+  const { register, handleSubmit, errors } = useForm();
 
   useEffect(() => {
-    axios.get('/api/user/get').then(({ data }) => {
-      const suppliers = data.filter(user => user.type === '1');
-      setUsers(suppliers);
-    });
+    axios.get('/api/user/get').then(({ data }) => setUsers(data));
   }, []);
 
   function onSubmit(form) {
@@ -106,13 +93,13 @@ export default function NewProcess() {
               {users &&
                 users.map(user => (
                   <option value={user.address} key={user.address}>
-                    {user.name}
+                    {user.username}
                   </option>
                 ))}
             </Select>
             <ErrorLabel>
               {errors.supplierAddress &&
-                errors.supplierAddress.type == 'validate' &&
+                errors.supplierAddress.type === 'validate' &&
                 'Este campo es obligatorio'}
             </ErrorLabel>
             <Button className="submit" onClick={handleSubmit(onSubmit)}>

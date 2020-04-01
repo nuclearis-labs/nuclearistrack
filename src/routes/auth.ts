@@ -28,7 +28,8 @@ router.post('/', async (req, res) => {
           userName: user.username,
           userEmail: user.email,
           userType: user.type,
-          address: user.address
+          address: user.address,
+          roles: user.roles
         },
         process.env.JWT_SECRET,
         (err: Error, encoded: string) => {

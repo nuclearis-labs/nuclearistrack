@@ -2,30 +2,28 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Title, Label, Input, Button, Wrap } from '../components/components.js';
+import {
+  Title,
+  Label,
+  Input,
+  Button,
+  ErrorLabel
+} from '../components/components.js';
 import { Top, Form, FormWrap } from '../components/form.js';
 import { Link } from 'react-router-dom';
 import RSKLink from '../components/RSKLink';
 import Footer from '../components/footer.js';
-import Header from '../components/header.js';
 import Spinner from 'react-bootstrap/Spinner';
+import { useForm } from 'react-hook-form';
 
 export default function ConfirmUser() {
-  const [form, setForm] = useState([]);
   const [event, setEvent] = useState({});
   const { id } = useParams();
-  const [modalShow, setModalShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { register, handleSubmit, errors } = useForm();
 
-  function handleInput(e) {
-    e.persist();
-    setForm(form => ({ ...form, [e.target.name]: e.target.value }));
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
+  function onSubmit(form) {
     setLoading(true);
-
     axios({
       method: 'post',
       url: `/api/user/confirm/${id}`,
@@ -42,7 +40,6 @@ export default function ConfirmUser() {
           setEvent(result.data.error);
         } else {
           setEvent(result.data);
-          setForm([]);
         }
       })
       .catch(e => {
@@ -90,15 +87,23 @@ export default function ConfirmUser() {
             <Input
               type="password"
               name="passphrase"
-              onChange={handleInput}
-            ></Input>
+              error={errors.passphrase}
+              ref={register({ required: true })}
+            />
+            <ErrorLabel>
+              {errors.passphrase && 'Este campo es obligatorio'}
+            </ErrorLabel>
             <Label>CONFIRM PASSPHRASE</Label>
             <Input
               type="password"
               name="confirm_passphrase"
-              onChange={handleInput}
-            ></Input>
-            <Button className="submit" onClick={handleSubmit}>
+              error={errors.confirm_passphrase}
+              ref={register({ required: true })}
+            />
+            <ErrorLabel>
+              {errors.confirm_passphrase && 'Este campo es obligatorio'}
+            </ErrorLabel>
+            <Button className="submit" onClick={handleSubmit(onSubmit)}>
               {loading ? (
                 <Spinner animation="border" role="status" size="sm"></Spinner>
               ) : (

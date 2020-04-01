@@ -76,7 +76,6 @@ contract Process is RoleBasedAcl {
     function getDocument(bytes32 _hash)
         external
         view
-        hasRole('document:read')
         returns (
             string memory,
             bytes32,
@@ -100,7 +99,6 @@ contract Process is RoleBasedAcl {
     function getDocumentStorage(bytes32 _hash)
         external
         view
-        hasRole('document:read')
         returns (bytes32, uint8, uint8)
     {
         require(document[_hash].mineTime != 0, 'Document does not exist');
@@ -125,12 +123,7 @@ contract Process is RoleBasedAcl {
         );
     }
 
-    function getAllDocuments()
-        external
-        view
-        hasRole('documents:read')
-        returns (bytes32[] memory)
-    {
+    function getAllDocuments() external view returns (bytes32[] memory) {
         return allDocuments;
     }
 }

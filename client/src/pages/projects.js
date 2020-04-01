@@ -1,12 +1,10 @@
 // newProvider.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Header from '../components/header.js';
-
 import { Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import ProcessModal from '../components/processModal.js';
-import { Title, Button, Wrap, Scroll } from '../components/components.js';
+import { Title, Button, Scroll } from '../components/components.js';
 import {
   Table,
   Row,

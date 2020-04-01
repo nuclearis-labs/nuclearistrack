@@ -1,15 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import Header from '../components/header.js';
-import { Title, Wrap } from '../components/components';
-import { Top, Form, FormWrap } from '../components/form.js';
+import { Title } from '../components/components';
 import Footer from '../components/footer.js';
 import {
-  NavPhraseFixed,
   WebTop,
   WidthContent,
   WebTopTit,
-  ItemTit,
   LongTxt,
   BottomSpace
 } from '../components/webComponents.js';

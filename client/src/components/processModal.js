@@ -142,7 +142,7 @@ function ProcessModal({ project }) {
   const [filteredProcesses, setFilteredProcesses] = useState([]);
   const [, setInput] = useState();
   const [loading, setLoading] = useState(false);
-  const [checkedProcesses, setCheckedProcesses] = useState([]);
+  const [, setCheckedProcesses] = useState([]);
 
   useEffect(() => {
     axios({

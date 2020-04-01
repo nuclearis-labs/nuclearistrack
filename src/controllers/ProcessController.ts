@@ -1,8 +1,6 @@
 import Contract from '../classes/Contract';
 import * as utils from '../config/utils';
-import * as pending from '../config/pendingTx';
-import txModel from '../models/transaction';
-import fs from 'fs';
+import UserModel from '../models/user';
 import logger from '../config/winston';
 import { Request, Response } from 'express';
 import { IUserOnReq } from '../types/Custom';
@@ -26,12 +24,6 @@ export async function create(req: Request, res: Response) {
       fromAddress: address,
       method: 'createProcess',
       data: [supplierAddress, processTitle]
-    });
-
-    await pending.create({
-      txHash,
-      subject: 'add-process',
-      data: [req.body.processTitle, supplierAddress]
     });
 
     logger.info(`Process created `, {
@@ -60,15 +52,12 @@ export async function getOne(req: Request, res: Response) {
       method: 'getDetails'
     });
 
-    const userName = await contract.getDataFromContract({
-      method: 'getUserDetails',
-      data: [details[1]]
-    });
+    const { username } = await UserModel.findOne({ address: details[1] });
 
     res.json({
       NuclearPoEAddress: details[0],
       supplierAddress: details[1],
-      supplierName: utils.hexToAscii(userName[0]),
+      supplierName: username,
       processName: utils.hexToAscii(details[2]),
       allDocuments: details[3],
       contractAddress: details[4]
@@ -126,10 +115,13 @@ export async function getByID(req: Request, res: Response) {
 
 export async function get(req: IUserOnReq, res: Response) {
   try {
+    const query =
+      process.env.ADMINEMAIL === req.user.userEmail
+        ? { method: 'getAllProcessContracts' }
+        : { method: 'getProcessesByAddress', data: [req.user.address] };
+
     const contract = new Contract();
-    const processContracts = await contract.getDataFromContract({
-      method: 'getAllProcessContracts'
-    });
+    const processContracts = await contract.getDataFromContract(query);
 
     const allProcessDetails = processContracts.map(async (address: string) => {
       const processContract = new Contract({
@@ -140,34 +132,19 @@ export async function get(req: IUserOnReq, res: Response) {
         method: 'getDetails'
       });
 
-      await txModel.deleteMany({
-        subject: 'add-process',
-        data: { $in: details[1] }
-      });
+      const { username } = await UserModel.findOne({ address: details[1] });
 
-      const userName = await contract.getDataFromContract({
-        method: 'getUserDetails',
-        data: [details[1]]
-      });
-
-      if (
-        details[1] === req.user.address ||
-        req.user.address === process.env.ADMINADDRESS
-      )
-        return {
-          supplierAddress: details[1],
-          supplierName: utils.hexToAscii(userName[0]),
-          processName: utils.hexToAscii(details[2]),
-          allDocuments: details[3],
-          processContracts: details[4]
-        };
-      return {};
+      return {
+        supplierAddress: details[1],
+        supplierName: username,
+        processName: utils.hexToAscii(details[2]),
+        allDocuments: details[3],
+        processContracts: details[4]
+      };
     });
 
-    const pendingTx = await txModel.find({ subject: 'add-process' });
-
     Promise.all(allProcessDetails).then(processDetails => {
-      res.json(processDetails.concat(pendingTx));
+      res.json(processDetails);
     });
   } catch (e) {
     logger.error(`ProcessList could not be obtained `, { message: e.message });

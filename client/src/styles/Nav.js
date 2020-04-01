@@ -56,7 +56,8 @@ export const SubMenuNew = styled.div`
   transition: all 0.5s ease;
   &.open {
     padding: 10px 0;
-    height: 115px;
+    height: auto;
+    z-index: 10;
   }
   a {
     color: #fff;
@@ -75,7 +76,6 @@ export const SubMenuEdit = styled.div`
   background: #8c6239;
   line-height: 23px;
   position: absolute;
-  top: 60px;
   left: 0;
   width: 100%;
   padding: 0;
@@ -84,7 +84,8 @@ export const SubMenuEdit = styled.div`
   transition: all 0.5s ease;
   &.open {
     padding: 10px 0;
-    height: 115px;
+    height: auto;
+    z-index: 10;
   }
   a {
     color: #fff;

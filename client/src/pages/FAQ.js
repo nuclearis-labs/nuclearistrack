@@ -1,25 +1,13 @@
 import React from 'react';
-import Header from '../components/header.js';
 import { Title } from '../components/components';
-import { Top, Form, FormWrap } from '../components/form.js';
 import Footer from '../components/footer.js';
 import I18n from '../i18n';
-import styled from 'styled-components';
 import {
-  NavPhraseFixed,
-  WebTop,
   WidthContent,
-  WebTopTit,
   ItemTit,
   ItemDesc,
   BottomSpace
 } from '../components/webComponents.js';
-import bg from '../img/bgBeneficios.jpg';
-
-const WebTopBenefits = styled(WebTop)`
-  height: 396px;
-  background: url(${bg}) #000 no-repeat center;
-`;
 
 export default function FAQ() {
   return (

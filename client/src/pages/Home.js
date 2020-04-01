@@ -1,8 +1,6 @@
 import React from 'react';
-import Header from '../components/header';
 import Footer from '../components/footer';
 import styled, { keyframes } from 'styled-components';
-import { Title, Wrap } from '../components/components.js';
 import { Link } from 'react-router-i18n';
 import {
   WebTop,
@@ -151,10 +149,6 @@ const Heptagram = styled.img`
 
 const WebBottomHome = styled.div`
   background: #333;
-`;
-
-const GoldTitle = styled(Title)`
-  color: #8c6239;
 `;
 
 const WidthContentHome = styled(WidthContent)`

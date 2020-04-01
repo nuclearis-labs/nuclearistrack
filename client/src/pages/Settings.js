@@ -1,6 +1,5 @@
 import React from 'react';
-import Header from '../components/header';
-import { Title, Wrap } from '../components/components';
+import { Title } from '../components/components';
 import { Top, Form, FormWrap } from '../components/form.js';
 import Footer from '../components/footer';
 

@@ -2,21 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { Title, Button, Wrap } from '../components/components.js';
+import { Title } from '../components/components.js';
 import { Top, Form, FormWrap } from '../components/form.js';
-import {
-  Row,
-  HeadRow,
-  Col3,
-  Col4,
-  Col6
-} from '../components/tableComponents.js';
-import Header from '../components/header.js';
+import { Row, HeadRow, Col3, Col6 } from '../components/tableComponents.js';
 import Footer from '../components/footer.js';
 
 export default function Document() {
   const [documents, setDocuments] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
   const { process } = useParams();
 
   useEffect(() => {

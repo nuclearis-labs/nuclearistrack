@@ -9,25 +9,25 @@ import {
   FileInput,
   TextArea,
   Button,
-  Wrap,
   ProcessName,
   SubTit,
   Pad
 } from '../components/components.js';
 import { Top, Form, FormWrap } from '../components/form.js';
-import Header from '../components/header.js';
 import axios from 'axios';
+import Spinner from 'react-bootstrap/Spinner';
 import Footer from '../components/footer.js';
 
 export default function NewDoc(props) {
   const { getCurrentUser } = useContext(UserContext);
 
-  const [user, setUser] = useState(getCurrentUser());
+  const [user] = useState(getCurrentUser());
 
   const [processDetail, setProcess] = useState([]);
   const [form, setForm] = useState([]);
   const [file, setFile] = useState();
   const [location, setLocation] = useState();
+  const [loading, setLoading] = useState(false);
   const [enableSubmit, setEnableSubmit] = useState({
     state: false,
     text: 'CREAR'
@@ -35,13 +35,17 @@ export default function NewDoc(props) {
   let { process } = useParams();
 
   useEffect(() => {
+    setLoading(true);
     axios({
       method: 'get',
       url: '/api/process/getOne?contract=' + process,
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    }).then(({ data }) => {
-      setProcess(data);
-    });
+    })
+      .then(({ data }) => {
+        setLoading(false);
+        setProcess(data);
+      })
+      .catch(e => console.error(e));
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -66,7 +70,7 @@ export default function NewDoc(props) {
         text: 'GEOLOCATION NOT SUPPORTED, CHANGE BROWSER'
       });
     }
-  }, []);
+  }, [process]);
 
   function handleInput(e) {
     e.persist();
@@ -135,20 +139,23 @@ export default function NewDoc(props) {
             type="file"
           ></FileInput>
           <Label>UBICACION DEL DOCUMENTO</Label>
-          <iframe
-            frameBorder="0"
-            title="DocumentLocation"
-            style={{ border: '0', width: '370px', height: '250px' }}
-            src={`https://www.google.com/maps/embed/v1/view?zoom=13&center=${location &&
-              location.latitude},${location &&
-              location.longitude}&key=AIzaSyCHpdtM1Pvk-nSgdFB02zUeq7TnTy_eGPs`}
-            allowFullScreen
-          ></iframe>{' '}
+          {location && (
+            <iframe
+              frameBorder="0"
+              title="DocumentLocation"
+              style={{ border: '0', width: '370px', height: '250px' }}
+              src={`https://www.google.com/maps/embed/v1/view?zoom=13&center=${location &&
+                location.latitude},${location &&
+                location.longitude}&key=AIzaSyCHpdtM1Pvk-nSgdFB02zUeq7TnTy_eGPs`}
+              allowFullScreen
+            ></iframe>
+          )}
           <Label>OBSERVACIONES</Label>
           <TextArea onChange={handleInput} name="comment"></TextArea>
           <div>
             <Input
               placeholder="ingresar clave"
+              type="password"
               style={{
                 width: '100px',
                 position: 'relative',
@@ -164,7 +171,11 @@ export default function NewDoc(props) {
               disabled={enableSubmit.disabled}
               className="submit"
             >
-              {enableSubmit.text}
+              {loading ? (
+                <Spinner animation="border" role="status" size="sm"></Spinner>
+              ) : (
+                enableSubmit.text
+              )}
             </Button>
           </div>
         </Form>

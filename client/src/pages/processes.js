@@ -2,13 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { Title, Button, Wrap } from '../components/components.js';
+import { Title, Button } from '../components/components.js';
 import { Top, Form, FormWrap } from '../components/form.js';
 import { Row, HeadRow, Col4 } from '../components/tableComponents.js';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import { ReactComponent as Pen } from '../img/pen.svg';
 import Footer from '../components/footer.js';
-import Header from '../components/header.js';
 
 function Processes() {
   const [processes, setProcesses] = useState([]);

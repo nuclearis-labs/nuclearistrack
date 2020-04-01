@@ -1,12 +1,9 @@
 // benefits.js
 import React from 'react';
-import Header from '../components/header.js';
 import Footer from '../components/footer.js';
 import styled from 'styled-components';
-import { Title, Wrap } from '../components/components.js';
-import { Top, Form, FormWrap } from '../components/form.js';
+import { Title } from '../components/components.js';
 import {
-  NavPhraseFixed,
   WebTop,
   WidthContent,
   WebTopTit,

@@ -19,4 +19,7 @@
 - process:read
 - process:create
 - process:assign
-- admin:manageRoles
+- admin:transfer
+- user:read
+- user:create
+- user:modify

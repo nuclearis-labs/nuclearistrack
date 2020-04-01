@@ -147,12 +147,12 @@ export async function get(req: Request, res: Response) {
 
       documents.push({
         name: details[0],
-        docNumber: details[4],
-        mineTime: details[5],
-        latitude: utils.hexToAscii(details[2]),
-        longitude: utils.hexToAscii(details[3]),
+        docNumber: details[3],
+        mineTime: details[4],
+        latitude: utils.hexToAscii(details[1]),
+        longitude: utils.hexToAscii(details[2]),
         documentHash: result[i],
-        comment: details[6]
+        comment: details[5]
       });
     }
 
@@ -192,14 +192,14 @@ export async function getOne(req: Request, res: Response) {
 
     res.json({
       name: details[0],
-      docNumber: details[4],
-      mineTime: details[5],
-      latitude: utils.hexToAscii(details[2]),
-      longitude: utils.hexToAscii(details[3]),
+      docNumber: details[3],
+      mineTime: details[4],
+      latitude: utils.hexToAscii(details[1]),
+      longitude: utils.hexToAscii(details[2]),
       documentHash: req.query.hash,
       storageHash,
       fileBuffer: Buffer.from(file.data).toString('base64'),
-      comment: details[6]
+      comment: details[5]
     });
   } catch (e) {
     logger.error(`Document ${req.query.hash} could not be obtained `, {

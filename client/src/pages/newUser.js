@@ -7,14 +7,10 @@ import {
   Label,
   ErrorLabel,
   Input,
-  Select,
-  Button,
-  Wrap
+  Button
 } from '../components/components.js';
 import Permits from '../components/Permits.js';
 import { Top, Form, FormWrap } from '../components/form.js';
-import Modal from '../components/Modal';
-import Header from '../components/header';
 import Footer from '../components/footer';
 import Spinner from 'react-bootstrap/Spinner';
 import I18n from '../i18n';
@@ -24,7 +20,7 @@ export default function NewUser() {
   const { getCurrentUser } = useContext(UserContext);
   const [event, setEvent] = useState();
   const [loading, setLoading] = useState(false);
-  const { register, handleSubmit, watch, errors } = useForm();
+  const { register, handleSubmit, errors } = useForm();
 
   function onSubmit(data) {
     setLoading(true);
@@ -166,7 +162,7 @@ export default function NewUser() {
                 <Permits
                   text="Cargar"
                   name="roles"
-                  value="document:upload"
+                  value="document:create"
                   id="uploadDocument"
                   form={register}
                 />
@@ -192,6 +188,13 @@ export default function NewUser() {
                   name="roles"
                   value="admin:manageRoles"
                   id="manageRoles"
+                  form={register}
+                />
+                <Permits
+                  text="Transferir RBTC"
+                  name="roles"
+                  value="admin:transfer"
+                  id="transfer"
                   form={register}
                 />
               </div>

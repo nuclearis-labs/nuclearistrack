@@ -1,7 +1,6 @@
 // NewProject.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Header from '../components/header.js';
 import Footer from '../components/footer.js';
 import {
   Title,
@@ -9,11 +8,9 @@ import {
   ErrorLabel,
   Input,
   Select,
-  Button,
-  Wrap
+  Button
 } from '../components/components.js';
 import { Top, Form, FormWrap } from '../components/form.js';
-import Modal from '../components/Modal';
 import RSKLink from '../components/RSKLink';
 import Spinner from 'react-bootstrap/Spinner';
 import I18n from '../i18n';
@@ -21,9 +18,10 @@ import { useForm } from 'react-hook-form';
 
 export default function NewProject() {
   const [event, setEvent] = useState();
+  const [, setError] = useState();
   const [users, setUsers] = useState();
   const [loading, setLoading] = useState(false);
-  const { register, handleSubmit, watch, errors } = useForm();
+  const { register, handleSubmit, errors } = useForm();
 
   useEffect(() => {
     axios.get('/api/user/get').then(({ data }) => setUsers(data));
@@ -45,7 +43,7 @@ export default function NewProject() {
         setLoading(false);
         setEvent(data);
       })
-      .catch(e => {});
+      .catch(e => setError(e));
   }
   return (
     <>

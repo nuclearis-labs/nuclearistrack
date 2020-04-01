@@ -1,9 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { UserContext } from '../context/userContext';
 import { Route, Redirect } from 'react-router-dom';
 
 export default function PrivateRoute({ ...rest }) {
   const { getCurrentUser } = useContext(UserContext);
+  const user = getCurrentUser();
 
-  return getCurrentUser() ? <Route {...rest} /> : <Redirect to="/login" />;
+  if (!user) return <Redirect to="/login" />;
+  if (user && user.roles.includes(rest.roles)) return <Route {...rest} />;
+  else return <Redirect to="/" />;
 }

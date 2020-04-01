@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Header from '../components/header.js';
-import { Title, Wrap } from '../components/components';
+import { Title } from '../components/components';
 import { Top, Form, FormWrap } from '../components/form.js';
 import Footer from '../components/footer.js';
 

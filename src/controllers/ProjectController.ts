@@ -26,9 +26,9 @@ export async function create(req: IUserOnReq, res: Response) {
     logger.info(`Project ${req.body.expediente} created`);
 
     res.json(txHash);
-  } catch (e) {
+  } catch (error) {
     logger.error(`Project ${req.body.expediente} was not created`);
-    res.status(400).json({ error: e.message });
+    res.status(400).json(error.message);
   }
 }
 

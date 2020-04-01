@@ -1,27 +1,8 @@
 import React from 'react';
-import Header from '../components/header';
-import { Title, Wrap } from '../components/components';
+import { Title } from '../components/components';
 import { Top, Form, FormWrap } from '../components/form.js';
 import Footer from '../components/footer';
-import {
-  NavPhraseFixed,
-  WebTop,
-  WidthContent,
-  WebTopTit,
-  ItemTit,
-  ItemDesc,
-  BottomSpace
-} from '../components/webComponents.js';
-import {
-  Label,
-  Input,
-  FileInput,
-  TextArea,
-  Button,
-  ProcessName,
-  SubTit,
-  Pad
-} from '../components/components.js';
+import { Label, Input, TextArea, Button } from '../components/components.js';
 import I18n from '../i18n';
 
 export default function Contact() {

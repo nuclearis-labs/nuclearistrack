@@ -138,7 +138,7 @@ const translations = {
       name: 'NOMBRE',
       mail: 'CORREO ELECTRONICO',
       type: 'TIPO',
-      selectOne: 'Seleccionar...',
+      selectOne: 'SELECCIONAR UNO...',
       create: 'CREAR',
       newProject: 'NUEVO PROYECTO',
       newProcess: 'NUEVO PROCESO',
@@ -146,7 +146,11 @@ const translations = {
       client: 'CLIENTE',
       supplier: 'PROVEEDOR',
       expediente: 'EXPEDIENTE',
-      oc: 'Nº DE ORDEN DE COMPRA'
+      oc: 'Nº DE ORDEN DE COMPRA',
+      user: 'USUARIO',
+      transfer: 'TRANSFERENCIA',
+      amount: 'MONTO EN RBTC',
+      send: 'ENVIAR'
     }
   },
   de: {
@@ -204,6 +208,13 @@ const translations = {
       email: 'EMAIL',
       message: 'NACHRICHT',
       submit: 'ABSCHICKEN'
+    },
+    forms: {
+      user: 'BENUTZER',
+      transfer: 'ÜBERWEISUNG',
+      amount: 'BETRAG IN RBTC',
+      selectOne: 'WÄHL EINEN AUS..',
+      send: 'SENDEN'
     }
   }
 };
