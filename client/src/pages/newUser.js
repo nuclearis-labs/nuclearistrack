@@ -86,7 +86,7 @@ export default function NewUser() {
               error={errors.newUserEmail}
               ref={register({
                 required: true,
-                pattern: /^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/
+                pattern: /^((?!\.)[\w-_.]*[^.])(@\S+)(\.\w+(\.\w+)?[^.\W])$/
               })}
               type="email"
               name="newUserEmail"

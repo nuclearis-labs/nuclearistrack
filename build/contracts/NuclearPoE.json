@@ -10026,7 +10026,8 @@
             }
           ],
           "name": "CloseProject",
-          "type": "event"
+          "type": "event",
+          "signature": "0xbec9556bb3135b56bce7e5777e4ff2e769e11e11201683c16c952dfc02649177"
         },
         "0x908a1d72896b3c6e31c2e9ac8d65ae9676a54dd26195d4496442c50ff1b0b797": {
           "anonymous": false,
@@ -10039,13 +10040,15 @@
             }
           ],
           "name": "CreateProcess",
-          "type": "event"
+          "type": "event",
+          "signature": "0x908a1d72896b3c6e31c2e9ac8d65ae9676a54dd26195d4496442c50ff1b0b797"
         },
         "0xbab479b5b86675be7215930d13339d95c3af3099f28b31caf6cac1c3a08c3da7": {
           "anonymous": false,
           "inputs": [],
           "name": "CreateProject",
-          "type": "event"
+          "type": "event",
+          "signature": "0xbab479b5b86675be7215930d13339d95c3af3099f28b31caf6cac1c3a08c3da7"
         },
         "0xdf39eb8e1857414a3a40d5964987610c5f80d0d28a16f33fa749ac85d9051666": {
           "anonymous": false,
@@ -10074,8 +10077,8 @@
         }
       },
       "links": {},
-      "address": "0xE8442751A4AFb88f45dE5a149E3Ded1D047fEdD5",
-      "transactionHash": "0x3fc566f2032d7b03bca0043989faf02b4a53f8672e8ae03bc9be89c4908ae245"
+      "address": "0x7D57E7A64D061209D02fd78C47145C8aeDaEbe54",
+      "transactionHash": "0x9e17e1a23777e5d8afd4b9d73d5406acd0e28c86ddf42f3cd2b992adf8183277"
     },
     "5777": {
       "events": {
@@ -10245,7 +10248,8 @@
     }
   },
   "schemaVersion": "3.0.19",
-  "updatedAt": "2020-04-01T14:49:45.960Z",
+  "updatedAt": "2020-04-01T18:30:29.156Z",
+  "networkType": "ethereum",
   "devdoc": {
     "methods": {}
   },
