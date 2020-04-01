@@ -28,16 +28,3 @@ export function pinFileToIPFS(stream): Promise<{ data: { IpfsHash: string } }> {
       .catch(error => reject(error));
   });
 }
-
-export async function getFromPinata(hash: string): Promise<AxiosResponse> {
-  try {
-    return await axios.get('https://gateway.pinata.cloud/ipfs/' + hash, {
-      headers: {
-        pinata_api_key: process.env.PINATA_API_KEY,
-        pinata_secret_api_key: process.env.PINATA_SECRET_API_KEY
-      }
-    });
-  } catch (err) {
-    throw Error(err);
-  }
-}

@@ -67,6 +67,7 @@ const Nota = styled.div`
 
 function Documents() {
   const { process, hash } = useParams();
+  const [details, setDetails] = useState();
   const [document, setDocument] = useState();
   useEffect(() => {
     axios({
@@ -74,7 +75,23 @@ function Documents() {
       url: '/api/doc/getOne?contract=' + process + '&hash=' + hash,
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     }).then(({ data }) => {
-      setDocument(data);
+      setDetails(data);
+      console.log(data.storageHash);
+
+      fetch(`https://gateway.pinata.cloud/ipfs/${data.storageHash}`)
+        .then(response => {
+          if (response.ok) {
+            response.blob().then(pdf => {
+              let objectURL = URL.createObjectURL(pdf);
+              setDocument(objectURL);
+            });
+          }
+        })
+        .catch(function(error) {
+          console.log(
+            'Hubo un problema con la petición Fetch:' + error.message
+          );
+        });
     });
   }, [process, hash]);
 
@@ -85,29 +102,29 @@ function Documents() {
           <FlexWrapRight>
             <Title>DOCUMENTO </Title>
           </FlexWrapRight>
-          <Table>
-            <DocImgHolder
-              src={`data:application/pdf;base64,${document &&
-                document.fileBuffer}`}
-            />
-          </Table>
+          <Table>{document && <DocImgHolder src={document} />}</Table>
         </Left>
         <Right>
-          {document && (
+          {details && (
             <>
               <ResumenTit>DETALLES DE DOCUMENTO</ResumenTit>
               <Row>
                 <Col2 className="color">NOMBRE</Col2>
-                <Col2 className="bold">{document && document.name}</Col2>
+                <Col2 className="bold">{details && details.name}</Col2>
               </Row>
               <Row>
                 <Col2 className="color">HASH</Col2>
                 <Col2 className="bold">
-                  <RSKLink hash={document.documentHash} type="tx" testnet />
+                  {details.documentHash.substr(0, 8)}...
+                  {details.documentHash.substr(-8)}
                 </Col2>
               </Row>
               <ProcesosTit>OBSERVACIONES</ProcesosTit>
-              <Nota>{document && document.comment}</Nota>
+              <Nota>
+                {details &&
+                  details.comment === 'undefined' &&
+                  'No hay comentarios'}
+              </Nota>
             </>
           )}
         </Right>

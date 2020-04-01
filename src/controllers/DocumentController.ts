@@ -1,10 +1,9 @@
 import fs, { truncateSync } from 'fs';
 import bs58 from 'bs58';
 import Contract from '../classes/Contract';
-import stream from 'stream';
 import { HashStream, PDFModStream } from '../config/streams';
 import { pdfFn } from '../config/pdf';
-import { pinFileToIPFS, getFromPinata } from '../config/ipfs';
+import { pinFileToIPFS } from '../config/ipfs';
 import { createSHA256 } from '../config/hash';
 import * as utils from '../config/utils';
 import * as pending from '../config/pendingTx';
@@ -188,8 +187,6 @@ export async function getOne(req: Request, res: Response) {
       )
     );
 
-    const file = await getFromPinata(storageHash);
-
     res.json({
       name: details[0],
       docNumber: details[3],
@@ -198,7 +195,6 @@ export async function getOne(req: Request, res: Response) {
       longitude: utils.hexToAscii(details[2]),
       documentHash: req.query.hash,
       storageHash,
-      fileBuffer: Buffer.from(file.data).toString('base64'),
       comment: details[5]
     });
   } catch (e) {
