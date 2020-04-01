@@ -129,8 +129,6 @@ export const Button = styled.button`
 export const Checkbox = styled.input.attrs(props => ({
   type: 'checkbox'
 }))`
-	display:block;
-
 	& + label span {
 		display: inline-block;
 		width: 23px;

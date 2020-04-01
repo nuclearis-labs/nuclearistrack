@@ -1,7 +1,7 @@
 import React from 'react';
 import Hash from './Hash';
 
-function RSKLink({ hash, type, testnet }) {
+export default function RSKLink({ hash, type, testnet }) {
   return (
     <a
       href={`https://explorer${testnet === true &&
@@ -11,4 +11,3 @@ function RSKLink({ hash, type, testnet }) {
     </a>
   );
 }
-export default RSKLink;

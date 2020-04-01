@@ -9,12 +9,10 @@ import { Request, Response } from 'express';
 
 export async function create(req: Request, res: Response) {
   try {
-    const roles = req.body.roles.split(',');
-
     const db = await UserModel.create({
       username: req.body.newUserName,
       email: req.body.newUserEmail,
-      roles
+      roles: req.body.roles
     });
 
     logger.info(`User ${db._id} created {"email":${req.body.newUserEmail}}`);
@@ -187,7 +185,7 @@ export async function change(req: Request, res: Response) {
 
 export async function get(req: Request, res: Response) {
   try {
-    const userList = await UserModel.find({}, 'username address');
+    const userList = await UserModel.find({}, 'username address email');
     res.json(userList);
   } catch (e) {
     logger.error(`Couldn't retrieve userList`, { message: e.message });

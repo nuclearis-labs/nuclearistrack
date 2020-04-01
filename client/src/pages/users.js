@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { Title, Button, Wrap } from '../components/components.js';
+import RSKLink from '../components/RSKLink';
+import { Title, Button } from '../components/components.js';
 import { Top, Form, FormWrap } from '../components/form.js';
 import { Row, HeadRow, Col4 } from '../components/tableComponents.js';
-import Header from '../components/header.js';
 import Footer from '../components/footer.js';
 
 export default function Users() {
@@ -31,17 +31,17 @@ export default function Users() {
         <Form>
           <HeadRow>
             <Col4>NOMBRE</Col4>
-            <Col4>TIPO</Col4>
+            <Col4>MAIL</Col4>
             <Col4>DIRECCION</Col4>
-            <Col4>ESTADO</Col4>
           </HeadRow>
 
           {users.map(user => (
             <Row key={user.address}>
-              <Col4>{user.name}</Col4>
-              <Col4>{user.type === '0' ? 'Cliente' : 'Proveedor'}</Col4>
-              <Col4>{user.address}</Col4>
-              <Col4>{user.status === '1' ? 'Activo' : 'Pausado'}</Col4>
+              <Col4>{user.username}</Col4>
+              <Col4>{user.email}</Col4>
+              <Col4>
+                <RSKLink hash={user.address} type="address" testnet />
+              </Col4>
             </Row>
           ))}
 

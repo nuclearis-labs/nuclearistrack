@@ -20,18 +20,13 @@ import I18n from '../i18n';
 import { useForm } from 'react-hook-form';
 
 export default function NewProject() {
-  const [form, setForm] = useState({});
   const [event, setEvent] = useState();
   const [users, setUsers] = useState();
-  const [modalShow, setModalShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const { register, handleSubmit, watch, errors } = useForm();
 
   useEffect(() => {
-    axios.get('/api/user/get').then(({ data }) => {
-      const clients = data.filter(client => client.type === '0');
-      setUsers(clients);
-    });
+    axios.get('/api/user/get').then(({ data }) => setUsers(data));
   }, []);
 
   function onSubmit(form) {
@@ -49,7 +44,6 @@ export default function NewProject() {
       .then(({ data }) => {
         setLoading(false);
         setEvent(data);
-        setModalShow(true);
       })
       .catch(e => {});
   }
@@ -98,7 +92,7 @@ export default function NewProject() {
               {users &&
                 users.map(user => (
                   <option value={user.address} key={user.address}>
-                    {user.name}
+                    {user.username}
                   </option>
                 ))}
             </Select>
@@ -126,13 +120,31 @@ export default function NewProject() {
               ref={register({ required: true })}
             ></Input>
             <ErrorLabel>{errors.oc && 'Este campo es obligatorio'}</ErrorLabel>
-            <Button className="submit" onClick={handleSubmit(onSubmit)}>
-              {loading ? (
-                <Spinner animation="border" role="status" size="sm"></Spinner>
-              ) : (
-                'CREAR'
-              )}
-            </Button>
+            <div>
+              <Input
+                placeholder="ingresar clave"
+                style={{
+                  width: '100px',
+                  position: 'relative',
+                  top: '60px',
+                  marginRight: '5px'
+                }}
+                error={errors.oc}
+                ref={register({ required: true })}
+                name="passphrase"
+              ></Input>
+              <Button
+                style={{ display: 'inline-block', position: 'relative' }}
+                className="submit"
+                onClick={handleSubmit(onSubmit)}
+              >
+                {loading ? (
+                  <Spinner animation="border" role="status" size="sm"></Spinner>
+                ) : (
+                  'CREAR'
+                )}
+              </Button>
+            </div>
           </Form>
         </FormWrap>
       )}

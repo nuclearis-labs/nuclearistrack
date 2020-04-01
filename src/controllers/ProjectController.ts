@@ -8,7 +8,10 @@ import { IUserOnReq } from '../types/Custom';
 
 export async function create(req: IUserOnReq, res: Response) {
   try {
-    const { address, privateKey } = await utils.getKeys(req.body);
+    const { address, privateKey } = await utils.getKeys({
+      email: req.user.userEmail,
+      passphrase: req.body.passphrase
+    });
     const nuclear = new Contract({ privateKey });
 
     const oc = utils.asciiToHex(req.body.oc);
@@ -43,11 +46,12 @@ export async function getDocNumber(req: Request, res: Response) {
 
 export async function get(req: IUserOnReq, res: Response) {
   try {
+    const query =
+      process.env.ADMINEMAIL === req.user.userEmail
+        ? { method: 'getAllProjects' }
+        : { method: 'getProjectsByAddress', data: [req.user.address] };
     const contract = new Contract();
-    const contractProjects = await contract.getDataFromContract({
-      method: 'getProjectsByAddress',
-      data: [req.user.address]
-    });
+    const contractProjects = await contract.getDataFromContract(query);
 
     const allProjectsDetails = contractProjects.map(async (id: string) => {
       const details = await contract.getDataFromContract({
@@ -60,7 +64,7 @@ export async function get(req: IUserOnReq, res: Response) {
       return {
         status: details[0],
         clientAddress: details[1],
-        username,
+        clientName: username,
         title: utils.hexToAscii(details[2]),
         oc: utils.hexToAscii(details[3]),
         processContracts: details[4],

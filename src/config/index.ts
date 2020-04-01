@@ -15,7 +15,6 @@ export function verifyToken(
     const bearerToken = bearer[1];
     try {
       const authData = jwt.verify(bearerToken, process.env.JWT_SECRET);
-
       req.user = authData;
       next();
     } catch (e) {

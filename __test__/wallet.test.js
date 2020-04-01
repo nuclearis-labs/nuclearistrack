@@ -1,4 +1,4 @@
-const wallet = require('../config/wallet.js');
+const wallet = require('../dist/config/wallet.js');
 
 const toBeType = require('jest-tobetype');
 expect.extend(toBeType);

@@ -1,7 +1,7 @@
 const fs = require('fs');
-const { saveToIPFS, getFromIPFS } = require('../config/ipfs');
+const { saveToIPFS, getFromIPFS } = require('../dist/config/ipfs.js');
 
-const { createSHA256 } = require('../config/hash');
+const { createSHA256 } = require('../dist/config/hash.js');
 
 const toBeType = require('jest-tobetype');
 expect.extend(toBeType);
@@ -9,7 +9,7 @@ expect.extend(toBeType);
 const file = { buffer: fs.readFileSync('./LICENSE') };
 
 const desiredHashOutput =
-  '0xc7e211ac55da7975448d2d722ba995b764e0bd1860878c41e1762468d3d98a04';
+  '0xf0b655778d4d1605f062800ee6053b648e0907279461f8c187bbf92684fcd6fe';
 
 let docHash;
 
@@ -21,7 +21,7 @@ describe('Hash Functions', () => {
 });
 let storageHash;
 describe('IPFS File Storage', () => {
-  test('Should upload the file as stream to Swarm', async () => {
+  test('Should upload the file as stream to IPFS', async () => {
     storageHash = await saveToIPFS(file.buffer);
     expect(storageHash).toBeType('string');
   });

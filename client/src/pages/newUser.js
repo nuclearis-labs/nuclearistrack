@@ -11,6 +11,7 @@ import {
   Button,
   Wrap
 } from '../components/components.js';
+import Permits from '../components/Permits.js';
 import { Top, Form, FormWrap } from '../components/form.js';
 import Modal from '../components/Modal';
 import Header from '../components/header';
@@ -27,6 +28,7 @@ export default function NewUser() {
 
   function onSubmit(data) {
     setLoading(true);
+
     const user = getCurrentUser();
     axios({
       method: 'post',
@@ -104,12 +106,96 @@ export default function NewUser() {
                 'Se debe introducir un correo electronico'}
             </ErrorLabel>
             <Label>PERMISOS</Label>
-            <Select error={errors.roles} multiple name="roles" ref={register}>
-              <option value="project:create">Crear proyectos</option>
-              <option value="project:read">Ver proyectos</option>
-              <option value="process:create">Crear procesos</option>
-              <option value="process:read">Ver procesos</option>
-            </Select>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyItems: 'space-around'
+              }}
+            >
+              <div style={{ paddingRight: '50px' }}>
+                <Label>Proyectos</Label>
+                <Permits
+                  text="Crear"
+                  name="roles"
+                  value="project:create"
+                  id="createProjects"
+                  form={register}
+                />
+                <Permits
+                  text="Ver"
+                  name="roles"
+                  value="project:read"
+                  id="readProjects"
+                  form={register}
+                />
+                <Permits
+                  text="Cambiar estados"
+                  name="roles"
+                  value="project:changeState"
+                  id="readProjects"
+                  form={register}
+                />
+              </div>
+              <div style={{ paddingRight: '50px' }}>
+                <Label>Procesos</Label>
+                <Permits
+                  text="Ver"
+                  name="roles"
+                  value="process:read"
+                  id="readProcess"
+                  form={register}
+                />
+                <Permits
+                  text="Crear"
+                  name="roles"
+                  value="process:create"
+                  id="createProcess"
+                  form={register}
+                />
+                <Permits
+                  text="Asignar"
+                  name="roles"
+                  value="process:assign"
+                  id="createProcess"
+                  form={register}
+                />
+              </div>
+              <div style={{ paddingRight: '50px' }}>
+                <Label>Documentos</Label>
+                <Permits
+                  text="Cargar"
+                  name="roles"
+                  value="document:upload"
+                  id="uploadDocument"
+                  form={register}
+                />
+                <Permits
+                  text="Ver detalles"
+                  name="roles"
+                  value="document:read"
+                  id="readDocument"
+                  form={register}
+                />
+                <Permits
+                  text="Ver todos"
+                  name="roles"
+                  value="documents:read"
+                  id="readAllDocument"
+                  form={register}
+                />
+              </div>
+              <div style={{ paddingRight: '50px' }}>
+                <Label>Admin</Label>
+                <Permits
+                  text="Gestionar usuarios"
+                  name="roles"
+                  value="admin:manageRoles"
+                  id="manageRoles"
+                  form={register}
+                />
+              </div>
+            </div>
             <ErrorLabel>
               {errors.userType && 'Este campo es obligatorio'}
             </ErrorLabel>
