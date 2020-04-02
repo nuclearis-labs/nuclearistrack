@@ -9,9 +9,6 @@ contract('Document Storage', accounts => {
   let processInstance;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    await instance.createUser(accounts[1], 0, web3.utils.asciiToHex('NA-SA'));
-    await instance.createUser(accounts[2], 1, web3.utils.asciiToHex('IMECO'));
-
     await instance.createProject(
       41955,
       accounts[1],
@@ -26,6 +23,7 @@ contract('Document Storage', accounts => {
     processInstance = await Process.at(processAddress);
 
     await processInstance.addDocument(
+      'Documento',
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
       12,
       20,

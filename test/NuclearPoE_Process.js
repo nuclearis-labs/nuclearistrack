@@ -1,8 +1,3 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-undef */
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable node/no-unpublished-require */
-
 const NuclearPoE = artifacts.require('../contracts/NuclearPoE.sol');
 const Process = artifacts.require('../contracts/Process.sol');
 const { assert } = require('chai');
@@ -15,8 +10,6 @@ contract('Process', accounts => {
   let processInstance;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    await instance.createUser(accounts[1], 0, web3.utils.asciiToHex('NA-SA'));
-    await instance.createUser(accounts[2], 1, web3.utils.asciiToHex('IMECO'));
 
     await instance.createProject(
       41955,
@@ -31,7 +24,7 @@ contract('Process', accounts => {
       instance.createProcess(accounts[2], web3.utils.asciiToHex('Mecanizado'), {
         from: accounts[1]
       }),
-      'Ownable: caller is not the owner.'
+      'Sender does not have the correct role'
     );
   });
 
@@ -45,13 +38,6 @@ contract('Process', accounts => {
     processInstance = await Process.at(processAddress);
 
     truffleAssert.eventEmitted(result, 'CreateProcess');
-  });
-
-  it('REVERT: Add a process with non-existing User', async () => {
-    truffleAssert.reverts(
-      instance.createProcess(accounts[3], web3.utils.asciiToHex('Mecanizado')),
-      'User does not exist'
-    );
   });
 
   it('Get Process Details', async () => {

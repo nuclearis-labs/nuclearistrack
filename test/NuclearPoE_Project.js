@@ -1,8 +1,3 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-undef */
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable node/no-unpublished-require */
-
 const NuclearPoE = artifacts.require('../contracts/NuclearPoE.sol');
 const Process = artifacts.require('../contracts/Process.sol');
 const { assert } = require('chai');
@@ -15,7 +10,6 @@ contract('Create Project', accounts => {
     instance = await NuclearPoE.deployed();
   });
   it('EVENT: Create a new project', async () => {
-    await instance.createUser(accounts[1], 0, web3.utils.asciiToHex('NA-SA'));
     const result = await instance.createProject(
       41955,
       accounts[1],
@@ -37,17 +31,7 @@ contract('Create Project', accounts => {
       'Project already created'
     );
   });
-  it('REVERT: Create project with non-existing User', async () => {
-    await truffleAssert.reverts(
-      instance.createProject(
-        54322,
-        accounts[4],
-        web3.utils.asciiToHex('Conjunto Soporte'),
-        web3.utils.asciiToHex('23423423 / 23423423')
-      ),
-      'User does not exist'
-    );
-  });
+
   it('REVERT: Create new project as non-owner', async () => {
     await truffleAssert.reverts(
       instance.createProject(
@@ -57,7 +41,7 @@ contract('Create Project', accounts => {
         web3.utils.asciiToHex('23423423 / 23423423'),
         { from: accounts[1] }
       ),
-      'Ownable: caller is not the owner.'
+      'Sender does not have the correct role'
     );
   });
 });
@@ -66,8 +50,6 @@ contract('Return Projects', accounts => {
   let instance;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    await instance.createUser(accounts[1], 0, web3.utils.asciiToHex('NA-SA'));
-    await instance.createUser(accounts[2], 1, web3.utils.asciiToHex('IMECO'));
     await instance.createProject(
       41955,
       accounts[1],
@@ -91,8 +73,6 @@ contract('Close Project', accounts => {
   let instance;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    await instance.createUser(accounts[1], 0, web3.utils.asciiToHex('NA-SA'));
-    await instance.createUser(accounts[2], 1, web3.utils.asciiToHex('IMECO'));
     await instance.createProject(
       41955,
       accounts[1],
@@ -139,8 +119,6 @@ contract('Doc Number', accounts => {
   let processAddress;
   before(async () => {
     instance = await NuclearPoE.deployed();
-    await instance.createUser(accounts[1], 0, web3.utils.asciiToHex('NA-SA'));
-    await instance.createUser(accounts[2], 1, web3.utils.asciiToHex('IMECO'));
     await instance.createProject(
       41955,
       accounts[1],
