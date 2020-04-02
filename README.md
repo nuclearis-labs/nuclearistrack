@@ -7,12 +7,12 @@
 
 ## Table of Contents
 
--   [Description](#description)
--   [Installation](#installation)
--   [Usage](#usage)
--   [Appreciation](#appreciation)
--   [External resources](#external)
--   [License](#license)
+- [Description](#description)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Appreciation](#appreciation)
+- [External resources](#external)
+- [License](#license)
 
 <a name="description"></a>
 
@@ -25,15 +25,16 @@ This repo contains the development of the Nuclear PoE by [NUCLEARIS](https://nuc
 ## Installation
 
 ```shell
-git clone https://github.com/sebastinez/NUCLEARIS-Material-Organization.git
-cd NUCLEARIS-Material-Organization
-npm client
-npm start
+git clone https://github.com/NRS-Soft/NUCLEARIS-PoE.git
+cd NUCLEARIS-PoE
+mongod
+npm run env-deploy
+npm run deploy
 ```
 
 <a name="usage"></a>
 
-## Usage
+## Abstract
 
 The nuclear components used in nuclear installations require a lot of documentation to **verify the high standards** under which those components were fabricated.
 
@@ -48,15 +49,15 @@ And at the same time the client should be able to find and verify the documentat
 ## Appreciation
 
 This project would not exist in this form without the help of the people of [RSK Labs](https://github.com/rsksmart).  
-So thank you very much for your support on the way!
+So thank you very much for your support!
 
 <a name="external"></a>
 
 ## External resources
 
--   [ethereum/web3.js](https://github.com/ethereum/web3.js)
--   [facebook/create-react-app](https://github.com/facebook/create-react-app)
--   [expressjs/multer](https://github.com/expressjs/multer)
+- [ethereum/web3.js](https://github.com/ethereum/web3.js)
+- [facebook/create-react-app](https://github.com/facebook/create-react-app)
+- [expressjs/multer](https://github.com/expressjs/multer)
 
 <a name="license"></a>
 
