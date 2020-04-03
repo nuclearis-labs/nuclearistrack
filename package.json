@@ -12,7 +12,7 @@
   "scripts": {
     "start": "node dist/server.js",
     "start-client": "npm start --prefix client",
-    "test": "mocha \"./test/node/*.js\"",
+    "test": "mocha \"./test_node/*.js\"",
     "build-ts": "tsc -p tsconfig.json",
     "watch-ts": "tsc -p tsconfig.json -w",
     "postinstall": "npm run build-ts",

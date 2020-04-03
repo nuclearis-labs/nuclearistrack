@@ -1,8 +1,8 @@
 const fs = require('fs');
 const expect = require('chai').expect;
-const { pinFileToIPFS } = require('../../dist/config/ipfs.js');
+const { pinFileToIPFS } = require('../dist/config/ipfs.js');
 
-const { createSHA256 } = require('../../dist/config/hash.js');
+const { createSHA256 } = require('../dist/config/hash.js');
 
 const file = { buffer: fs.readFileSync('./LICENSE') };
 const fileStream = fs.createReadStream('./LICENSE');

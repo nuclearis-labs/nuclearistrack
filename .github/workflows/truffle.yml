@@ -18,3 +18,5 @@ jobs:
           npm install -g truffle
       - name: Run truffle test on development network
         run: truffle test
+      - name: Run mocha tests
+        run: npm test
