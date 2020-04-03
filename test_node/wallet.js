@@ -1,4 +1,4 @@
-const wallet = require('../../dist/config/wallet.js');
+const wallet = require('../dist/config/wallet.js');
 const expect = require('chai').expect;
 
 let mnemonic;
