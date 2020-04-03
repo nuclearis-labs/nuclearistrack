@@ -15,7 +15,7 @@ const translations = {
       contact: 'CONTACT',
       login: 'LOGIN',
       logout: 'LOGOUT',
-      navPhrase: 'DECENTRALIZED SUPPLY CHAIN PLATFORM'
+      navPhrase: 'NUCLEAR DOCUMENTATION BASED ON'
     },
     home: {
       security: {
@@ -73,13 +73,13 @@ const translations = {
     header: {
       home: 'INICIO',
       benefits: 'BENEFICIOS',
-      security: 'SEGURIDAD',
+      security: 'ABSTRACT',
       projects: 'PROYECTOS',
       user: 'USUARIOS',
       contact: 'CONTACTO',
       login: 'ACCEDER',
       logout: 'SALIR',
-      navPhrase: 'PLATAFORMA DESCENTRALIZADA DE TRAZABILIDAD'
+      navPhrase: 'DOCUMENTACIÓN NUCLEAR BASADA EN'
     },
     home: {
       security: {
@@ -121,10 +121,14 @@ const translations = {
       }
     },
     security: {
-      bannerTitle: 'UN NUEVO STANDARD EN SEGURIDAD',
+      bannerTitle: 'UN NUEVO STANDARD EN EL AREA DE DOCUMENTACION',
       title: 'BLOCKCHAIN',
-      text:
-        'BLOCKCHAIN ES UNA TECNOLOGÍA QUE PERMITE LA TRANSFERENCIA DE DATOS DIGITALES CON UNA CODIFICACIÓN MUY SOFISTICADA Y DE UNA MANERA COMPLETAMENTE SEGURA. SERÍA COMO EL LIBRO DE ASIENTOS DE CONTABILIDAD DE UNA EMPRESA EN DONDE SE REGISTRAN TODAS LAS ENTRADAS Y SALIDAS DE DINERO; EN ESTE CASO HABLAMOS DE UN LIBRO DE ACONTECIMIENTOS DIGITALES. PERO ADEMÁS, CONTRIBUYE CON UNA TREMENDA NOVEDAD: ESTA TRANSFERENCIA NO REQUIERE DE UN INTERMEDIARIO CENTRALIZADO QUE IDENTIFIQUE Y CERTIFIQUE LA INFORMACIÓN, SINO QUE ESTÁ DISTRIBUIDA EN MÚLTIPLES NODOS INDEPENDIENTES ENTRE SÍ QUE LA REGISTRAN Y LA VALIDAN SIN NECESIDAD DE QUE HAYA CONFIANZA ENTRE ELLOS. UNA VEZ INTRODUCIDA, LA INFORMACIÓN NO PUEDE SER BORRADA, SOLO SE PODRÁN AÑADIR NUEVOS REGISTROS, Y NO SERÁ LEGITIMADA A MENOS QUE LA MAYORÍA DE ELLOS SE PONGAN DE ACUERDO PARA HACERLO. JUNTO AL NIVEL DE SEGURIDAD QUE PROPORCIONA ESTE SISTEMA FRENTE A HACKEOS, ENCONTRAMOS OTRA ENORME VENTAJA: AUNQUE LA RED SE CAYERA, CON QUE SOLO UNO DE ESOS ORDENADORES O NODOS NO LO HICIERA, LA INFORMACIÓN NUNCA SE PERDERÍA O EL SERVICIO, SEGÚN EL CASO DEL QUE HABLEMOS, SEGUIRÍA FUNCIONANDO.'
+      first_paragraph:
+        'En el futuro cercano, las metodologías de registro de documentacion migrarán hacia una tecnología digital que agregara confiabilidad a la trazabilidad de los procesos productivos de sus componentes mecánicos. El actual sistema de registro de documentación (en papel) resulta insuficientemente fiable y las grandes reguladoras mundiales están comenzando a observar a la tecnología Blockchain como la evolución natural en la tarea de otorgar confiabilidad a una actividad industrial tan sensible y crítica como lo es la generación de energía nuclear.',
+      second_paragraph:
+        'La metodología actual involucra la generación de documentos en cada una de las instancias productivas. Esto significa que hay Técnicos o Ingenieros cargando información en formularios preestablecidos los cuales se imprimen en papel y se adjuntan a una carpeta que continuamente acompaña las materias primas, materiales, semielaborados y productos terminados. Estar transportando papeles junto con los componentes mecánicos, posiblemente parezca una metodología “arcaica” pero es así como se realiza la trazabilidad de componentes mecánicos en la industria nuclear mundial y así lo exigen las normativas internacionales.',
+      third_paragraph:
+        'No se persigue romper con el statu quo de la “metodología papel”, sino que se pretende agregar una capa de confiabilidad digital basada en Blockchain para que cada vez que se elabore un documento también se guarde un hash criptográfico relacionado unívocamente y al mismo tiempo que ese documento digital sea guardado en un sistema de almacenamiento descentralizado para que permanezca allí durante las décadas que dure la vida útil del Reactor Nuclear.'
     },
     contact: {
       title: 'CONTACTO',
@@ -163,7 +167,7 @@ const translations = {
       contact: 'KONTAKT',
       login: 'ANMELDEN',
       logout: 'ABMELDEN',
-      navPhrase: 'DEZENTRALISIERTE PLATFORM FÜR DIE RÜCKVERFOLGBARKEIT'
+      navPhrase: 'NUKLEARE DOKUMENTATION BASIERT AUF'
     },
     home: {
       security: {

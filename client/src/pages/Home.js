@@ -210,7 +210,7 @@ function Home() {
             </ItemTitHome>
             <ItemDescHome>
               <I18n t="home.security.text" />
-              <Link to="/security">
+              <Link to="/benefits/#security">
                 <I18n t="general.more" /> +
               </Link>
             </ItemDescHome>
@@ -222,7 +222,7 @@ function Home() {
             </ItemTitHome>
             <ItemDescHome>
               <I18n t="home.availability.text" />
-              <Link to="/benefits">
+              <Link to="/benefits/#availability">
                 <I18n t="general.more" /> +
               </Link>
             </ItemDescHome>
@@ -234,7 +234,7 @@ function Home() {
             </ItemTitHome>
             <ItemDescHome>
               <I18n t="home.control.text" />
-              <Link to="/benefits">
+              <Link to="/benefits/#control">
                 <I18n t="general.more" /> +
               </Link>
             </ItemDescHome>

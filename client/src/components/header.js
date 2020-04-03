@@ -171,14 +171,12 @@ function PublicHeader({
   },
   history
 }) {
-  console.log(pathname);
-  console.log(locale);
   return (
     <Nav>
       <NavHeader>
         <NavLogo>
           <MenuLink as={Link} to="/">
-            <Logo />
+            <Logo style={{ width: '150px', marginTop: '7px' }} />
           </MenuLink>
         </NavLogo>
         <NavMenu>
@@ -200,9 +198,6 @@ function PublicHeader({
             {' '}
             <I18n t="header.contact" />
           </NavLink>
-          <NavPhrase>
-            <I18n t="header.navPhrase" />
-          </NavPhrase>
         </NavMenu>
 
         <NavLogin>

@@ -21,7 +21,7 @@ const GoldTitle = styled(Title)`
   color: #8c6239;
 `;
 
-export default function Security() {
+export default function Security({ location }) {
   return (
     <>
       <WebTopSecurity>
@@ -36,29 +36,22 @@ export default function Security() {
           <I18n t="security.title" />
         </GoldTitle>
         <LongTxt>
-          BLOCKCHAIN ES UNA TECNOLOGÍA QUE PERMITE LA TRANSFERENCIA DE DATOS
-          DIGITALES CON UNA CODIFICACIÓN MUY SOFISTICADA Y DE UNA MANERA
-          COMPLETAMENTE SEGURA. SERÍA COMO EL LIBRO DE ASIENTOS DE CONTABILIDAD
-          DE UNA EMPRESA EN DONDE SE REGISTRAN TODAS LAS ENTRADAS Y SALIDAS DE
-          DINERO; EN ESTE CASO HABLAMOS DE UN LIBRO DE ACONTECIMIENTOS
-          DIGITALES.
+          {I18n.getTranslation(
+            location,
+            'security.first_paragraph'
+          ).toUpperCase()}
           <br />
           <br />
-          PERO ADEMÁS, CONTRIBUYE CON UNA TREMENDA NOVEDAD: ESTA TRANSFERENCIA
-          NO REQUIERE DE UN INTERMEDIARIO CENTRALIZADO QUE IDENTIFIQUE Y
-          CERTIFIQUE LA INFORMACIÓN, SINO QUE ESTÁ DISTRIBUIDA EN MÚLTIPLES
-          NODOS INDEPENDIENTES ENTRE SÍ QUE LA REGISTRAN Y LA VALIDAN SIN
-          NECESIDAD DE QUE HAYA CONFIANZA ENTRE ELLOS. UNA VEZ INTRODUCIDA, LA
-          INFORMACIÓN NO PUEDE SER BORRADA, SOLO SE PODRÁN AÑADIR NUEVOS
-          REGISTROS, Y NO SERÁ LEGITIMADA A MENOS QUE LA MAYORÍA DE ELLOS SE
-          PONGAN DE ACUERDO PARA HACERLO.
+          {I18n.getTranslation(
+            location,
+            'security.second_paragraph'
+          ).toUpperCase()}
           <br />
           <br />
-          JUNTO AL NIVEL DE SEGURIDAD QUE PROPORCIONA ESTE SISTEMA FRENTE A
-          HACKEOS, ENCONTRAMOS OTRA ENORME VENTAJA: AUNQUE LA RED SE CAYERA, CON
-          QUE SOLO UNO DE ESOS ORDENADORES O NODOS NO LO HICIERA, LA INFORMACIÓN
-          NUNCA SE PERDERÍA O EL SERVICIO, SEGÚN EL CASO DEL QUE HABLEMOS,
-          SEGUIRÍA FUNCIONANDO.
+          {I18n.getTranslation(
+            location,
+            'security.third_paragraph'
+          ).toUpperCase()}
         </LongTxt>
       </WidthContent>
       <BottomSpace></BottomSpace>

@@ -55,10 +55,9 @@ const FooterLink = styled.a`
 export default function Footer() {
   return (
     <FooterBg>
-      <Inspiration>NUCLEAR INSPIRATION</Inspiration>
       <FooterWrap>
         <FooterLeft>
-          <Logo />
+          <Logo style={{ position: 'relative', bottom: '5px' }} />
           <br />
           INGENIERÍA Y FABRICACIÓN DE
           <br />
@@ -68,7 +67,8 @@ export default function Footer() {
           <br />
         </FooterLeft>
         <FooterRight>
-          © 2019. Nuclearis. NRS, S.A. Todos los derechos reservados.
+          © {new Date().getFullYear()}. Nuclearis. NRS, S.A. Todos los derechos
+          reservados.
           <FooterLink href="http://www.nuclearis.com">
             WWW.NUCLEARIS.COM
           </FooterLink>

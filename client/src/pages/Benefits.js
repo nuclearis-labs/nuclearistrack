@@ -33,21 +33,21 @@ export default function Benefits() {
         <Title>
           <I18n t="benefits.title" />
         </Title>
-        <ItemTit>
+        <ItemTit id="security">
           <I18n t="benefits.security.title" />
         </ItemTit>
         <ItemDesc>
           <I18n t="benefits.security.text" />
         </ItemDesc>
 
-        <ItemTit>
+        <ItemTit id="availability">
           <I18n t="benefits.availability.title" />
         </ItemTit>
         <ItemDesc>
           <I18n t="benefits.availability.text" />
         </ItemDesc>
 
-        <ItemTit>
+        <ItemTit id="control">
           <I18n t="benefits.control.title" />
         </ItemTit>
         <ItemDesc>

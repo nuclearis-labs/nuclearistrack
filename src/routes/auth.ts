@@ -6,7 +6,6 @@ import logger from '../config/winston';
 import { verifyToken, validateForm } from '../config/index';
 import UserModel from '../models/user';
 import * as wallet from '../config/wallet';
-import rules from '../config/validationRules';
 
 const router = express.Router({ mergeParams: true });
 
@@ -27,7 +26,6 @@ router.post('/', async (req, res) => {
         {
           userName: user.username,
           userEmail: user.email,
-          userType: user.type,
           address: user.address,
           roles: user.roles
         },
