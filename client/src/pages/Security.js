@@ -35,24 +35,11 @@ export default function Security({ location }) {
         <GoldTitle>
           <I18n t="security.title" />
         </GoldTitle>
-        <LongTxt>
-          {I18n.getTranslation(
-            location,
-            'security.first_paragraph'
-          ).toUpperCase()}
-          <br />
-          <br />
-          {I18n.getTranslation(
-            location,
-            'security.second_paragraph'
-          ).toUpperCase()}
-          <br />
-          <br />
-          {I18n.getTranslation(
-            location,
-            'security.third_paragraph'
-          ).toUpperCase()}
-        </LongTxt>
+        <LongTxt
+          dangerouslySetInnerHTML={{
+            __html: I18n.getTranslation(location, 'security.text').toUpperCase()
+          }}
+        ></LongTxt>
       </WidthContent>
       <BottomSpace></BottomSpace>
       <Footer />

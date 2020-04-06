@@ -19,7 +19,7 @@ const WebTopBenefits = styled(WebTop)`
   background: url(${bg}) #000 no-repeat center;
 `;
 
-export default function Benefits() {
+export default function Benefits(props) {
   return (
     <>
       <WebTopBenefits>
@@ -29,30 +29,41 @@ export default function Benefits() {
           </WebTopTit>
         </WidthContent>
       </WebTopBenefits>
-      <WidthContent>
+      <WidthContent style={{ textTransform: 'uppercase' }}>
         <Title>
           <I18n t="benefits.title" />
         </Title>
         <ItemTit id="security">
           <I18n t="benefits.security.title" />
         </ItemTit>
-        <ItemDesc>
-          <I18n t="benefits.security.text" />
-        </ItemDesc>
-
+        <ItemDesc
+          dangerouslySetInnerHTML={{
+            __html: I18n.getTranslation(
+              props.location,
+              'benefits.security.text'
+            )
+          }}
+        ></ItemDesc>
         <ItemTit id="availability">
           <I18n t="benefits.availability.title" />
         </ItemTit>
-        <ItemDesc>
-          <I18n t="benefits.availability.text" />
-        </ItemDesc>
+        <ItemDesc
+          dangerouslySetInnerHTML={{
+            __html: I18n.getTranslation(
+              props.location,
+              'benefits.availability.text'
+            )
+          }}
+        ></ItemDesc>
 
         <ItemTit id="control">
           <I18n t="benefits.control.title" />
         </ItemTit>
-        <ItemDesc>
-          <I18n t="benefits.control.text" />
-        </ItemDesc>
+        <ItemDesc
+          dangerouslySetInnerHTML={{
+            __html: I18n.getTranslation(props.location, 'benefits.control.text')
+          }}
+        ></ItemDesc>
       </WidthContent>
       <BottomSpace></BottomSpace>
       <Footer />
