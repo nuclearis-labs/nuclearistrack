@@ -40,8 +40,10 @@ export function UserProvider(props) {
     return session;
   };
 
+  currentUser = getCurrentUser();
+
   return (
-    <UserContext.Provider value={{ getCurrentUser, logoutUser, loginUser }}>
+    <UserContext.Provider value={{ currentUser, logoutUser, loginUser }}>
       {props.children}
     </UserContext.Provider>
   );
