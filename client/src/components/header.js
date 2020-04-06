@@ -224,9 +224,8 @@ function PublicHeader({
 }
 
 export default function Header(props) {
-  const { getCurrentUser } = useContext(UserContext);
+  const { currentUser } = useContext(UserContext);
 
-  if (getCurrentUser())
-    return <LoggedHeader {...props} user={getCurrentUser()} />;
+  if (currentUser) return <LoggedHeader {...props} user={currentUser} />;
   return <PublicHeader {...props} />;
 }

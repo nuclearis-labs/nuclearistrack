@@ -5,9 +5,8 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import Footer from '../components/footer';
-import { Title, Scroll } from '../Archive/components/components.js';
-import { Table, Row, Col2 } from '../Archive/components/tableComponents.js';
-import RSKLink from '../components/RSKLink';
+import { Title, Scroll } from '../components/components.js';
+import { Table, Row, Col2 } from '../components/tableComponents.js';
 
 const FlexWrap = styled.div`
   display: flex;
