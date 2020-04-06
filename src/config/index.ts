@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import niv from '../config/Validator.js';
 import { Response, Request, NextFunction } from 'express';
-import { IUserOnReq } from '../types/Custom';
+import { IUserOnReq, AuthData } from '../types/Custom';
 
 export function verifyToken(
   req: IUserOnReq,
@@ -14,8 +14,7 @@ export function verifyToken(
 
     const bearerToken = bearer[1];
     try {
-      const authData = jwt.verify(bearerToken, process.env.JWT_SECRET);
-      req.user = authData;
+      req.user = jwt.verify(bearerToken, process.env.JWT_SECRET) as AuthData;
       next();
     } catch (e) {
       res.sendStatus(403);

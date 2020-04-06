@@ -8,6 +8,14 @@ export interface IUserOnReq extends Request {
     roles: Object;
   };
 }
+
+export interface AuthData {
+  userName: string;
+  userEmail: string;
+  address: string;
+  roles: Object;
+}
+
 export interface IFileOnReq extends Request {
   file?: { buffer: Buffer; stream: any };
 }
