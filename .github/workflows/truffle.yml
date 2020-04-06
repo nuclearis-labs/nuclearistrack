@@ -20,3 +20,7 @@ jobs:
         run: truffle test
       - name: Run mocha tests
         run: npm test
+        env:
+          CI: true
+          PINATA_API_KEY: ${{ secrets.PINATA_API_KEY }}
+          PINATA_SECRET_API_KEY: ${{ secrets.PINATA_SECRET_API_KEY }}
