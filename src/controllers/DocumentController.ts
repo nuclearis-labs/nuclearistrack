@@ -10,6 +10,7 @@ import * as pending from '../config/pendingTx';
 import { Request, Response } from 'express';
 import logger from '../config/winston';
 import { IFileOnReq } from '../types/Custom';
+import encrypt from '../utils/encrypt';
 
 const processABI = require('../../build/contracts/Process.json').abi;
 
