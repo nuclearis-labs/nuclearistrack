@@ -1,5 +1,6 @@
 // header.js
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
+import { RouteComponentProps } from 'react-router';
 import { Link, NavLink } from 'react-router-i18n';
 import { useAuth } from '../hooks/useAuth';
 import OutsideClickHandler from 'react-outside-click-handler';
@@ -27,7 +28,7 @@ import {
 import I18n from '../i18n';
 import RoleBasedACL from './RoleBasedACL';
 
-function DropDownNew(props) {
+function DropDownNew(props: any) {
   return (
     <div>
       <AbmLink
@@ -61,7 +62,7 @@ function DropDownNew(props) {
     </div>
   );
 }
-function DropDownEdit(props) {
+function DropDownEdit(props: any) {
   return (
     <div>
       <AbmLink
@@ -94,7 +95,7 @@ function DropDownEdit(props) {
   );
 }
 
-function LoggedHeader(props) {
+function LoggedHeader(props: any) {
   const { logout } = useAuth();
   const [indexDropdownOpened, setIndexDropdownOpened] = useState(false);
   function resetDropdown() {
@@ -156,7 +157,7 @@ function LoggedHeader(props) {
   );
 }
 
-const stripLocale = (pathname, locale) => {
+const stripLocale = (pathname: string, locale: string) => {
   if (!locale) {
     return pathname;
   }
@@ -164,13 +165,27 @@ const stripLocale = (pathname, locale) => {
   return pathname.replace(`/${locale}`, '');
 };
 
+interface PublicHeader {
+  location: PublicHeaderLocation;
+  match: {
+    params: PublicHeaderMatchLocale;
+  };
+}
+
+interface PublicHeaderLocation {
+  pathname: string;
+}
+
+interface PublicHeaderMatchLocale {
+  locale: string;
+}
+
 function PublicHeader({
   location: { pathname },
   match: {
     params: { locale }
-  },
-  history
-}) {
+  }
+}: PublicHeader) {
   return (
     <Nav>
       <NavHeader>
@@ -223,10 +238,9 @@ function PublicHeader({
   );
 }
 
-export default function Header(props) {
+export default function Header(props: RouteComponentProps<any>) {
   const auth = useAuth();
 
   if (auth.user) return <LoggedHeader {...props} user={auth.user} />;
   return <PublicHeader {...props} />;
-  return null;
 }

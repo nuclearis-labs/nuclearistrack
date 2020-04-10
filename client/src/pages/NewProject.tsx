@@ -15,11 +15,12 @@ import I18n from '../i18n';
 import { useForm } from 'react-hook-form';
 import { useAsync } from '../hooks/useAsync';
 import useSWR from 'swr';
+import { IUser } from '../types/user';
 
 export default function NewProject() {
   const { register, handleSubmit, errors, getValues } = useForm();
   const { execute, pending, value } = useAsync(onSubmit, false);
-  const { data, error } = useSWR('/api/user/get', url =>
+  const { data } = useSWR('/api/user/get', url =>
     axios.get(url).then(result => result.data)
   );
 
@@ -83,8 +84,7 @@ export default function NewProject() {
               ref={register({ validate: value => value !== 'Select one...' })}
             >
               <option>Select one...</option>
-              {data &&
-                data.map(user => (
+              {data?.map((user:IUser) => (
                   <option value={user.address} key={user.address}>
                     {user.username}
                   </option>

@@ -3,17 +3,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { ReactComponent as Logo } from '../img/logo.svg';
 
-const Inspiration = styled.div`
-  font-family: Montserrat, sans-serif;
-  position: relative;
-  margin: 0 auto;
-  text-align: center;
-  color: #8c6239;
-  font-size: 25px;
-  letter-spacing: 10px;
-  font-weight: 700;
-`;
-
 const FooterBg = styled.div`
   background-color: #4d4d4d;
 `;

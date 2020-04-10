@@ -1,13 +1,20 @@
 import { useAuth } from '../hooks/useAuth';
+import { FunctionComponent } from 'react';
 
-export default function RoleBasedACL(props) {
+type IRoleBasedACL = {
+  roles: string[];
+  children: JSX.Element;
+};
+
+const RoleBasedACL: FunctionComponent<IRoleBasedACL> = props => {
   const { user } = useAuth();
 
-  if (user) {
+  if (user?.roles) {
     if (props.roles.some(element => user.roles.includes(element)))
       return props.children;
     else return null;
-  } else {
-    return null;
   }
-}
+  return null;
+};
+
+export default RoleBasedACL;

@@ -1,18 +1,23 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 
-function Table({ body, columns }) {
+type ITable = {
+  columns: string[];
+  children: JSX.Element;
+};
+
+const Table: FunctionComponent<ITable> = ({ children, columns }) => {
   return (
     <table className="table mt-5">
       <thead className="thead-dark">
         <tr>
-          {columns.map(keys => {
+          {columns.map((keys: string) => {
             return <th key={keys}>{keys}</th>;
           })}
         </tr>
       </thead>
-      <tbody>{body}</tbody>
+      <tbody>{children}</tbody>
     </table>
   );
-}
+};
 
 export default Table;

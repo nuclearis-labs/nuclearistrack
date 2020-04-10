@@ -1,12 +1,14 @@
 // modal.js
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Button, Scroll } from '../styles/components';
 import { Row, HeadRow, Col4 } from '../styles/tableComponents';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import Spinner from 'react-bootstrap/Spinner';
+import useSWR from 'swr';
+import { useForm } from 'react-hook-form';
+import { useAsync } from '../hooks/useAsync';
 
 const Backdrop = styled.div`
   width: 100%;
@@ -96,22 +98,23 @@ const ScrollBox130 = styled(Scroll)`
   height: 130px;
 `;
 
-function Check(props) {
+interface CheckProps {
+  setCheckedProcesses: any;
+  id: string;
+}
+
+function Check(props: CheckProps) {
   const [checked, setChecked] = useState(false);
 
   function handleCheckboxChange() {
-    console.log(checked);
-
     checked === false
-      ? props.setCheckedProcesses(checkedArr => {
-          console.log(checkedArr);
-          return [...checkedArr, props.id];
-        })
-      : props.setCheckedProcesses(checkedArr => {
-          console.log(checkedArr);
-
-          checkedArr.filter(check => check === props.id);
-        });
+      ? props.setCheckedProcesses((checkedArr: string[]) => [
+          ...checkedArr,
+          props.id
+        ])
+      : props.setCheckedProcesses((checkedArr: string[]) =>
+          checkedArr.filter((check: string) => check === props.id)
+        );
 
     setChecked(!checked);
   }
@@ -122,14 +125,13 @@ function Check(props) {
     border: 1px solid #333;
     box-sizing: border-box;
     margin: 1px 7px 1px 0;
-    &.checked {
-      background: #333;
-    }
+    background: ${(props: { checked: boolean }) =>
+      props.checked ? 'background: #333' : 'background:transparent;'};
   `;
 
   return (
     <Checkbox
-      className={checked && 'checked'}
+      checked={checked}
       onClick={() => {
         handleCheckboxChange();
       }}
@@ -137,50 +139,30 @@ function Check(props) {
   );
 }
 
-function ProcessModal({ project }) {
-  const [processes, setProcesses] = useState([]);
-  const [filteredProcesses, setFilteredProcesses] = useState([]);
-  const [, setInput] = useState();
-  const [loading, setLoading] = useState(false);
-  const [, setCheckedProcesses] = useState([]);
+function ProcessModal({ project }: { project: { id: string; title: string } }) {
+  const { register, handleSubmit, getValues } = useForm();
+  const { execute, pending } = useAsync(onSubmit, false);
+  const { data } = useSWR('/api/process/get', url =>
+    axios
+      .get(url, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      })
+      .then(result => result.data)
+  );
 
-  useEffect(() => {
-    axios({
-      method: 'get',
-      url: '/api/process/get',
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    }).then(({ data }) => {
-      setFilteredProcesses(data);
-      setProcesses(data);
-    });
-  }, []);
-
-  function handleInput(e) {
-    e.persist();
-    setInput(e.target.value);
-    let filteredProcesses = processes.filter(search => {
-      return search.processName.includes(e.target.value);
-    });
-
-    setFilteredProcesses(filteredProcesses);
-  }
-
-  function handleAsignation(e) {
-    e.persist();
-    setLoading(true);
-    axios({
-      method: 'post',
-      url: '/api/project/assignProcess',
-      data: {
-        passphrase: 'Nuclearis',
-        email: 'info@nuclearis.com',
-        expediente: project.id,
-        processContract: '0x1EdcdE414000B0B182761168CC72B4c01B21fD0A'
-      },
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    }).then(({ data }) => {
-      setLoading(false);
-      console.log('Process Asigned');
+  function onSubmit() {
+    return new Promise((resolve, reject) => {
+      const form = getValues();
+      axios({
+        method: 'post',
+        url: '/api/project/assignProcess',
+        data: {
+          ...form
+        },
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      })
+        .then(({ data }) => resolve(data))
+        .catch(e => reject(e.message));
     });
   }
 
@@ -189,7 +171,7 @@ function ProcessModal({ project }) {
       <ModalWrap>
         <ModalTop>
           <ModalTit>AGREGAR PROCESOS</ModalTit>
-          <ModalInput placeholder="BUSCAR" onChange={handleInput}></ModalInput>
+          <ModalInput placeholder="BUSCAR" ref={register}></ModalInput>
           <ModalTxt>
             SELECCIONE LOS PROCESOS QUE DESEA AGREGAR AL PROYECTO
           </ModalTxt>
@@ -202,29 +184,31 @@ function ProcessModal({ project }) {
             <Col4>DOCUMENTOS</Col4>
           </HeadRow>
           <ScrollBox130>
-            {filteredProcesses.map(process => (
-              <Row key={process.processContracts}>
-                <Check
-                  id={process.processContracts}
-                  setCheckedProcesses={setCheckedProcesses}
-                />
-                <Col4>{process.processName}</Col4>
-                <Col4>{process.supplierName}</Col4>
-                <Col4>
-                  <Link to={'/documents/' + process.processContracts}>
-                    <Eye />
-                    VER DOC.
-                  </Link>
-                </Col4>
-              </Row>
-            ))}
-          </ScrollBox130>
-          <Button onClick={handleAsignation}>
-            {loading ? (
-              <Spinner animation="border" role="status" size="sm"></Spinner>
-            ) : (
-              '+ AGREGAR PROCESOS'
+            {data?.map(
+              (process: {
+                processContracts: string;
+                processName: string;
+                supplierName: string;
+              }) => (
+                <Row key={process.processContracts}>
+                  <Check
+                    id={process.processContracts}
+                    setCheckedProcesses={() => {}}
+                  />
+                  <Col4>{process.processName}</Col4>
+                  <Col4>{process.supplierName}</Col4>
+                  <Col4>
+                    <Link to={'/documents/' + process.processContracts}>
+                      <Eye />
+                      VER DOC.
+                    </Link>
+                  </Col4>
+                </Row>
+              )
             )}
+          </ScrollBox130>
+          <Button disabled={pending} onClick={handleSubmit(execute)}>
+            {pending ? 'LOADING' : '+ AGREGAR PROCESOS'}
           </Button>
         </ModalBottom>
       </ModalWrap>

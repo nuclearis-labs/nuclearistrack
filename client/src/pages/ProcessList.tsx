@@ -1,5 +1,5 @@
 // processes.js
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Title, Button } from '../styles/components';
@@ -8,19 +8,24 @@ import { Row, HeadRow, Col4 } from '../styles/tableComponents';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import { ReactComponent as Pen } from '../img/pen.svg';
 import Footer from '../components/Footer';
+import useSWR from 'swr';
+
+interface IProcess {
+  processContracts: string;
+  processName: string;
+  supplierName: string;
+}
 
 export default function ProcessList() {
-  const [processes, setProcesses] = useState([]);
-
-  useEffect(() => {
+  const { data } = useSWR('/api/process/get', url =>
     axios({
       method: 'get',
-      url: '/api/process/get',
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    }).then(({ data }) => {
-      setProcesses(data);
-    });
-  }, []);
+      url,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    }).then(result => result.data)
+  );
 
   return (
     <>
@@ -36,7 +41,7 @@ export default function ProcessList() {
             <Col4>AGREGAR DOC.</Col4>
             <Col4>CONTRACT</Col4>
           </HeadRow>
-          {processes.map(process => (
+          {data?.map((process: IProcess) => (
             <Row key={process.processContracts}>
               <Col4>{process.processName}</Col4>
               <Col4>{process.supplierName}</Col4>

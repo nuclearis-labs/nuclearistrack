@@ -1,9 +1,8 @@
 # Backend
 
 - [ ] Investigar la implementacion de tokens para acceso a API
+- [ ] Realizar la encriptacion y desencriptacion de los archivos antes de enviarlos a IPFS
 
-# FAQ
+# General
 
-- [ ] Sacar como funciona la blockchain
-- [ ] Agregar la posibilidad de que la red de RSK desaparezca
-- [ ] Es hackeable?
+- [ ] Poder modificar como administrador los roles de cada usuario.

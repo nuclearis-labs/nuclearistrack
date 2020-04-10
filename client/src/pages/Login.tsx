@@ -1,33 +1,30 @@
-import React, { useState, useContext } from 'react';
+import React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useAsync } from '../hooks/useAsync';
 import { Title, Label, ErrorLabel, Input, Button } from '../styles/components';
-import Spinner from 'react-bootstrap/Spinner';
 import { Top, Form, FormWrap } from '../styles/form';
 import Footer from '../components/Footer';
 import { useForm } from 'react-hook-form';
 
-export const Login = () => {
+export default function Login() {
   const { login } = useAuth();
 
   const history = useHistory();
   const location = useLocation();
-  const { register, handleSubmit, errors } = useForm();
-  const { execute, pending, value, error } = useAsync(
-    handleSubmit(onSubmit),
-    false
-  );
-  let { from } = location.state || { from: { pathname: '/' } };
+  const { register, handleSubmit, errors, getValues } = useForm();
+  const { execute, pending } = useAsync(onSubmit, false);
+  let from = location.state || { pathname: '/' };
 
-  function onSubmit(form) {
+  function onSubmit() {
     return new Promise((resolve, reject) => {
+      const form = getValues();
       login(form)
         .then(() => {
           history.replace(from);
           resolve();
         })
-        .catch(e => reject(e));
+        .catch((e: Error) => reject(e.message));
     });
   }
 
@@ -59,7 +56,11 @@ export const Login = () => {
           <ErrorLabel>
             {errors.passphrase && 'Este campo es obligatorio'}
           </ErrorLabel>
-          <Button className="submit" disabled={pending} onClick={execute}>
+          <Button
+            className="submit"
+            disabled={pending}
+            onClick={handleSubmit(execute)}
+          >
             {!pending ? 'LOGIN' : 'LOGIN IN...'}
           </Button>
         </Form>
@@ -67,4 +68,4 @@ export const Login = () => {
       <Footer />
     </>
   );
-};
+}

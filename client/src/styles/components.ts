@@ -47,7 +47,8 @@ export const ErrorLabel = styled.label`
 `;
 
 export const Input = styled.input`
-  border: solid 2px ${props => (props.error ? 'red' : '#5d5d5d')};
+  border: solid 2px
+    ${(props: { error: boolean }) => (props.error ? 'red' : '#5d5d5d')};
   width: 370px;
   height: 36px;
   padding: 5px;
@@ -67,7 +68,8 @@ export const Input = styled.input`
 `;
 
 export const FileInput = styled.input`
-  border: solid 2px #5d5d5d;
+  border: solid 2px
+    ${(props: { error: boolean }) => (props.error ? 'red' : '#5d5d5d')};
   width: 370px;
   height: 36px;
   padding: 3px;
@@ -87,7 +89,8 @@ export const FileInput = styled.input`
 `;
 
 export const TextArea = styled.textarea`
-  border: solid 2px #5d5d5d;
+  border: solid 2px
+    ${(props: { error: boolean }) => (props.error ? 'red' : '#5d5d5d')};
   width: 370px;
   height: 200px;
   padding: 5px;
@@ -160,7 +163,8 @@ export const Datepicker = styled.input.attrs(props => ({
 `;
 
 export const Select = styled.select`
-  border: solid 2px ${props => (props.error ? 'red' : '#5d5d5d')};
+  border: solid 2px
+    ${(props: { error: boolean }) => (props.error ? 'red' : '#5d5d5d')};
   background: transparent;
   width: 370px;
   height: auto;

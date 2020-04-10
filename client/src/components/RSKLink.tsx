@@ -1,13 +1,24 @@
 import React from 'react';
-import Hash from './Hash';
 
-export default function RSKLink({ hash, type, testnet }) {
+interface IRSKLink {
+  hash: string;
+  type: string;
+  testnet: boolean;
+}
+
+function hashFunction(hash: string, lengthBothSides: number = 6) {
+  const start = hash.substr(0, lengthBothSides);
+  const end = hash.substr(-lengthBothSides);
+  return `${start}...${end}`;
+}
+
+export default function RSKLink({ hash, type, testnet }: IRSKLink) {
   return (
     <a
       href={`https://explorer${testnet === true &&
         '.testnet'}.rsk.co/${type}/${hash}`}
     >
-      <Hash hash={hash} lengthBothSides={6} />
+      {hashFunction(hash, 6)}
     </a>
   );
 }

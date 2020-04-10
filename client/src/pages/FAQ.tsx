@@ -1,7 +1,6 @@
 import React from 'react';
 import { Title } from '../styles/components';
 import Footer from '../components/Footer';
-import I18n from '../i18n';
 import {
   WidthContent,
   ItemTit,

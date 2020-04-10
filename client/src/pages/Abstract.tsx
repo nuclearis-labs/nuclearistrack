@@ -11,6 +11,7 @@ import {
 } from '../styles/webComponents';
 import bg from '../img/bgSeguridad.jpg';
 import I18n from '../i18n';
+import { RouteProps } from 'react-router';
 
 const WebTopSecurity = styled(WebTop)`
   height: 396px;
@@ -21,7 +22,7 @@ const GoldTitle = styled(Title)`
   color: #8c6239;
 `;
 
-export default function Security({ location }) {
+export default function Security({ location }: RouteProps) {
   return (
     <>
       <WebTopSecurity>

@@ -9,7 +9,7 @@ import Footer from '../components/Footer';
 import I18n from '../i18n';
 import { useForm } from 'react-hook-form';
 
-export default function NewUser() {
+export default function EditUser() {
   const { user } = useAuth();
   const { register, handleSubmit, errors, getValues } = useForm();
   const { execute, pending, value } = useAsync(onSubmit, false);

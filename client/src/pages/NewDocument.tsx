@@ -1,5 +1,5 @@
 // newProvider.js
-import React, { useEffect, useState, useContext } from 'react';
+import React from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useNavLocation } from '../hooks/useNavLocation';
 import { useParams } from 'react-router-dom';
@@ -21,13 +21,14 @@ import { useForm } from 'react-hook-form';
 import { useAsync } from '../hooks/useAsync';
 import useSWR from 'swr';
 import I18n from '../i18n';
+import { RouteProps } from 'react-router';
 
-export default function NewDocument(props) {
+export default function NewDocument(props: RouteProps) {
   let { process } = useParams();
   const { user } = useAuth();
   const { register, handleSubmit, errors, getValues } = useForm();
-  const { execute, pending, value } = useAsync(onSubmit, false);
-  const { data, error } = useSWR(
+  const { execute, pending } = useAsync(onSubmit, false);
+  const { data } = useSWR(
     '/api/process/getOne?contract=' + process,
     url =>
       axios
@@ -40,6 +41,9 @@ export default function NewDocument(props) {
 
   function onSubmit() {
     return new Promise((resolve, reject) => {
+      if (user === undefined) {
+        reject('No user logged in');
+      }
       const form = getValues();
       let data = new FormData();
       data.append('file', form.file[0]);
@@ -47,11 +51,11 @@ export default function NewDocument(props) {
         'name',
         form.file[0].name.substr(0, form.file[0].name.length - 4)
       );
-      data.append('email', user.userEmail);
+      data.append('email', user?.userEmail);
       data.append('passphrase', form.passphrase);
       data.append('comment', form.comment);
-      data.append('latitude', location.latitude);
-      data.append('longitude', location.longitude);
+      data.append('latitude', location.latitude.toString());
+      data.append('longitude', location.longitude.toString());
       axios({
         method: 'post',
         url: '/api/doc/upload?contract=' + process,
@@ -114,6 +118,7 @@ export default function NewDocument(props) {
           ></TextArea>
           <div>
             <Input
+              error={errors.passphrase}
               placeholder="ingresar clave"
               type="password"
               style={{

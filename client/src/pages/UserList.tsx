@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import RSKLink from '../components/RSKLink';
@@ -9,7 +9,7 @@ import Footer from '../components/Footer';
 import useSWR from 'swr';
 
 export default function UserList() {
-  const { data, error } = useSWR('/api/user/get', url =>
+  const { data } = useSWR('/api/user/get', url =>
     axios({
       method: 'get',
       url: '/api/user/get',
@@ -30,8 +30,11 @@ export default function UserList() {
             <Col4>DIRECCION</Col4>
           </HeadRow>
 
-          {data &&
-            data.map((user, i) => (
+          {data?.map(
+            (
+              user: { username: string; email: string; address: string },
+              i: number
+            ) => (
               <Row key={i}>
                 <Col4>{user.username}</Col4>
                 <Col4>{user.email}</Col4>
@@ -41,7 +44,8 @@ export default function UserList() {
                   )}
                 </Col4>
               </Row>
-            ))}
+            )
+          )}
 
           <Button as={Link} className="submit" to="/users/add">
             NUEVO USUARIO

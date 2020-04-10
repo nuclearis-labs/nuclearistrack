@@ -1,5 +1,5 @@
 // newProvider.js
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
@@ -16,21 +16,28 @@ import {
 } from '../styles/tableComponents';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import Footer from '../components/Footer';
+import useSWR from 'swr';
+
+interface IFlexWrap {
+  details: { title: string; clientName: string; id: string; oc: string };
+}
 
 const FlexWrap = styled.div`
   display: flex;
 `;
 const FlexWrapRight = styled(FlexWrap)`
-  float: ${props => (props.details.hasOwnProperty('id') ? 'right' : 'left')};
-  padding-right: ${props =>
-    props.details.hasOwnProperty('id') ? '20px' : '0px'};
-  padding-left: ${props =>
-    props.details.hasOwnProperty('id') ? '0px' : '37%'};
+  float: ${(props: IFlexWrap) =>
+    props.details?.id ? 'right' : 'left'};
+  padding-right: ${(props: IFlexWrap) =>
+    props.details?.id ? '20px' : '0px'};
+  padding-left: ${(props: IFlexWrap) =>
+    props.details?.id ? '0px' : '37%'};
 `;
 
 const Left = styled.div`
   padding: 0;
-  width: ${props => (props.details.hasOwnProperty('id') ? '60%' : '100%')};
+  width: ${(props: IFlexWrap) =>
+    props.details?.id ? '60%' : '100%'};
   background: #fff;
   min-width: 461px;
   ${Row} {
@@ -94,24 +101,38 @@ const ScrollBox400 = styled(Scroll)`
   height: 400px;
 `;
 
-export default function ProjectList() {
-  const [projects, setProjects] = useState([]);
+interface IProject {
+  title: string;
+  clientName: string;
+  id: string;
+  oc: string;
+}
 
-  useEffect(() => {
+interface IProcess {
+  processName:string;
+  supplierName:string;
+  contractAddress:string;
+}
+
+export default function ProjectList() {
+  const { data } = useSWR('/api/project/get', url =>
     axios({
-      method: 'get',
-      url: '/api/project/get',
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    }).then(({ data }) => {
-      setProjects(data);
-    });
-  }, []);
+      method:"get",
+      url,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    }).then(({data}) => {
+      console.log(data);
+      return data
+    })
+  );
 
   const [showModal, setShowModal] = useState(false);
-  const [projectDetails, setProjectDetails] = useState({});
-  const [processes, setProcesses] = useState([]);
+  const [projectDetails, setProjectDetails] = useState<any>(null);
+  const [processes, setProcesses] = useState<any>(null);
 
-  function handleRowClick(project) {
+  function handleRowClick(project: IProject) {
     setProjectDetails(project);
     axios({
       method: 'get',
@@ -125,7 +146,7 @@ export default function ProjectList() {
   return (
     <>
       <FlexWrap>
-        <Left details={projectDetails}>
+         <Left details={projectDetails}>
           <FlexWrapRight details={projectDetails}>
             <AddProyectBtn as={Link} to="/projects/add">
               + NUEVO PROYECTO
@@ -140,7 +161,7 @@ export default function ProjectList() {
               <Col>N°OC</Col>
             </HeadRowMonsterrat>
             <ScrollBox400>
-              {projects.map(project => (
+              {data?.map((project: IProject) => (
                 <Row
                   key={project.id}
                   onClick={() => {
@@ -156,7 +177,7 @@ export default function ProjectList() {
             </ScrollBox400>
           </Table>
         </Left>
-        {projectDetails && projectDetails.hasOwnProperty('id') && (
+        {projectDetails?.hasOwnProperty('id') && (
           <Right>
             <ResumenTit>RESUMEN DE PROYECTO</ResumenTit>
             <ResumenName>{projectDetails.title}</ResumenName>
@@ -178,7 +199,7 @@ export default function ProjectList() {
               <Col3>PROVEEDOR</Col3>
               <Col3>DOCUMENTOS</Col3>
             </HeadRow>
-            {processes.map(process => (
+            {processes?.map((process:IProcess) => (
               <Row>
                 <Col3>{process.processName}</Col3>
                 <Col3>{process.supplierName}</Col3>

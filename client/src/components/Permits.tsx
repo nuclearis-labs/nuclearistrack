@@ -1,7 +1,15 @@
 import React from 'react';
 import { Checkbox } from '../styles/components';
 
-export default function Permits(props) {
+interface IPermits {
+  id: string;
+  name: string;
+  value: string;
+  form: any;
+  text: string;
+}
+
+export default function Permits(props: IPermits) {
   return (
     <div>
       <Checkbox
@@ -9,8 +17,6 @@ export default function Permits(props) {
         id={props.id}
         name={props.name}
         value={props.value}
-        ref={props.form}
-        checked={props.checked}
       />
       <label style={{ paddingLeft: '20px' }} htmlFor={props.id}>
         {props.text}

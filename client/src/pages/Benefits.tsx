@@ -13,13 +13,14 @@ import {
 } from '../styles/webComponents';
 import bg from '../img/bgBeneficios.jpg';
 import I18n from '../i18n';
+import { RouteProps } from 'react-router';
 
 const WebTopBenefits = styled(WebTop)`
   height: 396px;
   background: url(${bg}) #000 no-repeat center;
 `;
 
-export default function Benefits(props) {
+export default function Benefits(props: RouteProps) {
   return (
     <>
       <WebTopBenefits>

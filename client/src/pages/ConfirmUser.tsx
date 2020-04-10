@@ -1,5 +1,5 @@
 // newProvider.js
-import React, { useState } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Title, Label, Input, Button, ErrorLabel } from '../styles/components';
@@ -7,38 +7,36 @@ import { Top, Form, FormWrap } from '../styles/form';
 import { Link } from 'react-router-dom';
 import RSKLink from '../components/RSKLink';
 import Footer from '../components/Footer';
-import Spinner from 'react-bootstrap/Spinner';
 import { useForm } from 'react-hook-form';
+import { useAsync } from '../hooks/useAsync';
 
 export default function ConfirmUser() {
-  const [event, setEvent] = useState({});
   const { id } = useParams();
-  const [loading, setLoading] = useState(false);
-  const { register, handleSubmit, errors } = useForm();
+  const { execute, pending, value } = useAsync(onSubmit, false);
+  const { register, handleSubmit, errors, getValues } = useForm();
 
-  function onSubmit(form) {
-    setLoading(true);
-    axios({
-      method: 'post',
-      url: `/api/user/confirm/${id}`,
-      data: {
-        ...form
-      },
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    })
-      .then(result => {
-        setLoading(false);
-        if (result.data.error) {
-          setEvent(result.data.error);
-        } else {
-          setEvent(result.data);
+  function onSubmit() {
+    return new Promise((resolve, reject) => {
+      const form = getValues();
+      axios({
+        method: 'post',
+        url: `/api/user/confirm/${id}`,
+        data: {
+          ...form
+        },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       })
-      .catch(e => {
-        setEvent('Not able to save User to the Blockchain, try later again');
-      });
+        .then(result => {
+          if (result.data.error) {
+            reject(result.data.error);
+          } else {
+            resolve(result.data);
+          }
+        })
+        .catch(e => resolve(e.message));
+    });
   }
 
   return (
@@ -50,18 +48,18 @@ export default function ConfirmUser() {
           USER
         </Title>
       </Top>
-      {event.hasOwnProperty('address') ? (
+      {value ? (
         <FormWrap>
           <Form>
             <p>Su cuenta fue creada con exito!</p>
             <ul>
-              <li>Nombre: {event && event.username}</li>
-              <li>Correo electronico: {event && event.email}</li>
-              <li>Clave Mnemonica: {event && event.mnemonic}</li>
-              <li>Dirección: {event && event.address}</li>
+              <li>Nombre: {value?.username}</li>
+              <li>Correo electronico: {value?.email}</li>
+              <li>Clave Mnemonica: {value?.mnemonic}</li>
+              <li>Dirección: {value?.address}</li>
               <li>
                 Transaction:{' '}
-                <RSKLink hash={event && event.txHash} type="tx" testnet />
+                <RSKLink hash={value?.txHash} type="tx" testnet />
               </li>
             </ul>
             <p>
@@ -81,7 +79,7 @@ export default function ConfirmUser() {
             <Input
               type="password"
               name="passphrase"
-              error={errors.passphrase}
+              error={errors.passphrase ? true : false}
               ref={register({ required: true })}
             />
             <ErrorLabel>
@@ -97,12 +95,12 @@ export default function ConfirmUser() {
             <ErrorLabel>
               {errors.confirm_passphrase && 'Este campo es obligatorio'}
             </ErrorLabel>
-            <Button className="submit" onClick={handleSubmit(onSubmit)}>
-              {loading ? (
-                <Spinner animation="border" role="status" size="sm"></Spinner>
-              ) : (
-                'CREAR'
-              )}
+            <Button
+              className="submit"
+              disabled={pending}
+              onClick={handleSubmit(execute)}
+            >
+              {pending ? 'LOADING' : 'CREAR'}
             </Button>
           </Form>
         </FormWrap>

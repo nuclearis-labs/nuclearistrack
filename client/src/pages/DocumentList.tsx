@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -8,16 +8,23 @@ import { Row, HeadRow, Col3, Col6 } from '../styles/tableComponents';
 import Footer from '../components/Footer';
 import useSWR from 'swr';
 
+interface IDocument {
+  name: string;
+  docNumber: number;
+  documentHash: string;
+  mineTime: string;
+}
+
 export default function DocumentList() {
   const { process } = useParams();
-  const { data, error } = useSWR('/api/doc/get?contract=' + process, url =>
+  const { data } = useSWR('/api/doc/get?contract=' + process, url =>
     axios
       .get(url, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       })
       .then(({ data }) => {
-        return data.map(doc => {
-          let date = new Date(doc.mineTime * 1000);
+        return data.map((doc: IDocument) => {
+          let date = new Date(parseInt(doc.mineTime) * 1000);
           doc.mineTime = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()} +0${date.getTimezoneOffset() /
             60}:00`;
           return doc;
@@ -39,7 +46,7 @@ export default function DocumentList() {
           </HeadRow>
 
           {data &&
-            data.map(doc => (
+            data.map((doc: IDocument) => (
               <Row
                 as={Link}
                 to={`/documents/${process}/${doc.documentHash}`}

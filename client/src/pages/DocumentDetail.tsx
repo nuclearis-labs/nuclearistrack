@@ -64,10 +64,18 @@ const Nota = styled.div`
   margin: 10px 0;
 `;
 
+interface IDetailsDocument {
+  name:string;
+  documentHash:string;
+  comment:string;
+}
+
 export default function DocumentList() {
   const { process, hash } = useParams();
-  const [details, setDetails] = useState();
-  const [document, setDocument] = useState();
+
+
+  const [details, setDetails] = useState<IDetailsDocument | null>(null);
+  const [document, setDocument] = useState<string | null>(null);
   useEffect(() => {
     axios({
       method: 'get',
@@ -108,19 +116,19 @@ export default function DocumentList() {
               <ResumenTit>DETALLES DE DOCUMENTO</ResumenTit>
               <Row>
                 <Col2 className="color">NOMBRE</Col2>
-                <Col2 className="bold">{details && details.name}</Col2>
+                <Col2 className="bold">{details?.name}</Col2>
               </Row>
               <Row>
                 <Col2 className="color">HASH</Col2>
                 <Col2 className="bold">
-                  {details.documentHash.substr(0, 8)}...
-                  {details.documentHash.substr(-8)}
+                  {details?.documentHash.substr(0, 8)}...
+                  {details?.documentHash.substr(-8)}
                 </Col2>
               </Row>
               <ProcesosTit>OBSERVACIONES</ProcesosTit>
               <Nota>
-                {details &&
-                  details.comment === 'undefined' &&
+                {
+                  details?.comment === 'undefined' &&
                   'No hay comentarios'}
               </Nota>
             </>

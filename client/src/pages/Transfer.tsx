@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import RSKLink from '../components/RSKLink';
 import {
@@ -13,15 +13,16 @@ import { Top, Form, FormWrap } from '../styles/form';
 import axios from 'axios';
 import Footer from '../components/Footer';
 import { useForm } from 'react-hook-form';
-import Spinner from 'react-bootstrap/Spinner';
 import I18n from '../i18n';
 import useSWR from 'swr';
 import { useAsync } from '../hooks/useAsync';
+import { RouteProps } from 'react-router';
+import { IUser } from '../types/user';
 
-export default function Transfer(props) {
+export default function Transfer(props: RouteProps) {
   const { register, handleSubmit, errors, getValues } = useForm();
   const { execute, pending, value } = useAsync(onSubmit, false);
-  const { data, error } = useSWR('/api/user/get', url =>
+  const { data } = useSWR('/api/user/get', url =>
     axios
       .get(url, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
@@ -77,13 +78,12 @@ export default function Transfer(props) {
                 required: true,
                 validate: value => value !== '0'
               })}
-              type="text"
             >
               <option value="0">
                 {I18n.getTranslation(props.location, 'forms.selectOne')}
               </option>
               {data &&
-                data.map(user => (
+                data.map((user: IUser) => (
                   <option key={user.address} value={user.address}>
                     {user.username}
                   </option>

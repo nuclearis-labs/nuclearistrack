@@ -2,7 +2,12 @@ import { Modal } from 'react-bootstrap';
 import React from 'react';
 import { Button } from '../styles/components';
 
-export function CustomModal(props) {
+export interface CustomModalProps {
+  title: string;
+  body: string;
+  onHide: any;
+}
+export function CustomModal(props: CustomModalProps) {
   return (
     <Modal
       {...props}
