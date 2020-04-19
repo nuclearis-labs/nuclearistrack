@@ -5,8 +5,8 @@ interface IPermits {
   id: string;
   name: string;
   value: string;
-  form: any;
   text: string;
+  onChange: any;
 }
 
 export default function Permits(props: IPermits) {
@@ -15,6 +15,7 @@ export default function Permits(props: IPermits) {
       <Checkbox
         type="checkbox"
         id={props.id}
+        onChange={props.onChange}
         name={props.name}
         value={props.value}
       />

@@ -30,22 +30,23 @@ export default function UserList() {
             <Col4>DIRECCION</Col4>
           </HeadRow>
 
-          {data?.map(
-            (
-              user: { username: string; email: string; address: string },
-              i: number
-            ) => (
-              <Row key={i}>
-                <Col4>{user.username}</Col4>
-                <Col4>{user.email}</Col4>
-                <Col4>
-                  {user.address && (
-                    <RSKLink hash={user.address} type="address" testnet />
-                  )}
-                </Col4>
-              </Row>
-            )
-          )}
+          {data &&
+            data.map(
+              (
+                user: { username: string; email: string; address: string },
+                i: number
+              ) => (
+                <Row key={i}>
+                  <Col4>{user.username}</Col4>
+                  <Col4>{user.email}</Col4>
+                  <Col4>
+                    {user.address && (
+                      <RSKLink hash={user.address} type="address" testnet />
+                    )}
+                  </Col4>
+                </Row>
+              )
+            )}
 
           <Button as={Link} className="submit" to="/users/add">
             NUEVO USUARIO

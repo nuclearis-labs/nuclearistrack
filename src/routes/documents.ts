@@ -31,5 +31,6 @@ router.get(
   validateForm(rules.documentGetOne),
   DocumentController.getOne
 );
+router.get('/getOneFile', DocumentController.getOneFile);
 
 module.exports = router;

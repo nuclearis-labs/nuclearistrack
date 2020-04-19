@@ -17,5 +17,10 @@ export interface AuthData {
 }
 
 export interface IFileOnReq extends Request {
-  file?: { buffer: Buffer; stream: any };
+  file?: {
+    buffer: Buffer;
+    originalName: string;
+    detectedFileExtension: string;
+    stream: any;
+  };
 }

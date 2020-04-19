@@ -3,16 +3,14 @@ import { createHash, Hash } from 'crypto';
 
 export class HashStream extends stream.Transform {
   hash: string;
-  length: number;
   digester: Hash;
 
-  constructor(algo) {
-    super();
+  constructor(algo, opts?: Object) {
+    super(opts);
     this.digester = createHash(algo);
   }
   _transform(chunk, encoding, cb) {
     this.digester.update(chunk);
-    this.length += chunk.length;
     this.push(chunk);
     cb();
   }
@@ -24,12 +22,10 @@ export class HashStream extends stream.Transform {
 }
 
 export class PDFModStream extends stream.Transform {
-  fn: Function;
   buffer: Buffer[];
-  text: string;
 
-  constructor(fn: Function, text: string) {
-    super();
+  constructor(private fn: Function, private text: string, opts?: Object) {
+    super(opts);
     this.fn = fn;
     this.buffer = [];
     this.text = text;
@@ -43,5 +39,26 @@ export class PDFModStream extends stream.Transform {
       this.push(result);
       cb();
     });
+  }
+}
+
+export class AppendInitVect extends stream.Transform {
+  constructor(
+    private initVect: Buffer,
+    private appended?: boolean,
+    opts?: Object
+  ) {
+    super(opts);
+    this.initVect = initVect;
+    this.appended = false;
+  }
+
+  _transform(chunk, encoding, cb) {
+    if (!this.appended) {
+      this.push(this.initVect);
+      this.appended = true;
+    }
+    this.push(chunk);
+    cb();
   }
 }

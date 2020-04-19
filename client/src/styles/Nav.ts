@@ -130,8 +130,9 @@ export const UserName = styled.div`
   text-align: left;
   text-transform: uppercase;
 `;
-export const LogOut = styled.a`
+export const LogOut = styled.span`
   color: #8c6239;
+  cursor: pointer;
   font-family: Montserrat, sans-serif;
   font-size: 12px;
   font-weight: 400;
@@ -143,6 +144,7 @@ export const LogOut = styled.a`
   padding: 1px 50px;
   :hover {
     color: #fff;
+    text-decoration: underline;
   }
 `;
 

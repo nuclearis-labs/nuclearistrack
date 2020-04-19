@@ -27,17 +27,17 @@ const FlexWrap = styled.div`
 `;
 const FlexWrapRight = styled(FlexWrap)`
   float: ${(props: IFlexWrap) =>
-    props.details?.id ? 'right' : 'left'};
+    props.details && props.details.id ? 'right' : 'left'};
   padding-right: ${(props: IFlexWrap) =>
-    props.details?.id ? '20px' : '0px'};
+    props.details && props.details.id ? '20px' : '0px'};
   padding-left: ${(props: IFlexWrap) =>
-    props.details?.id ? '0px' : '37%'};
+    props.details && props.details.id ? '0px' : '37%'};
 `;
 
 const Left = styled.div`
   padding: 0;
   width: ${(props: IFlexWrap) =>
-    props.details?.id ? '60%' : '100%'};
+    props.details && props.details.id ? '60%' : '100%'};
   background: #fff;
   min-width: 461px;
   ${Row} {
@@ -103,29 +103,29 @@ const ScrollBox400 = styled(Scroll)`
 
 interface IProject {
   title: string;
+  clientAddress: string;
   clientName: string;
   id: string;
   oc: string;
 }
 
 interface IProcess {
-  processName:string;
-  supplierName:string;
-  contractAddress:string;
+  processName: string;
+  supplierName: string;
+  contractAddress: string;
 }
 
 export default function ProjectList() {
   const { data } = useSWR('/api/project/get', url =>
     axios({
-      method:"get",
+      method: 'get',
       url,
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
-    }).then(({data}) => {
-      console.log(data);
-      return data
     })
+      .then(({ data }) => data)
+      .catch(e => console.error(e.message))
   );
 
   const [showModal, setShowModal] = useState(false);
@@ -146,7 +146,7 @@ export default function ProjectList() {
   return (
     <>
       <FlexWrap>
-         <Left details={projectDetails}>
+        <Left details={projectDetails}>
           <FlexWrapRight details={projectDetails}>
             <AddProyectBtn as={Link} to="/projects/add">
               + NUEVO PROYECTO
@@ -159,25 +159,33 @@ export default function ProjectList() {
               <Col>CLIENTE</Col>
               <Col>EXPEDIENTE</Col>
               <Col>N°OC</Col>
+              <Col>ESTADO</Col>
             </HeadRowMonsterrat>
             <ScrollBox400>
-              {data?.map((project: IProject) => (
-                <Row
-                  key={project.id}
-                  onClick={() => {
-                    handleRowClick(project);
-                  }}
-                >
-                  <Col>{project.title}</Col>
-                  <Col>{project.clientName}</Col>
-                  <Col>{project.id}</Col>
-                  <Col>{project.oc}</Col>
-                </Row>
-              ))}
+              {data &&
+                // @ts-ignore
+                data.map((project: IProject) => (
+                  <Row
+                    key={project.id}
+                    onClick={() => {
+                      handleRowClick(project);
+                    }}
+                  >
+                    <Col>{project.title}</Col>
+                    <Col>
+                      {project.clientName
+                        ? project.clientName
+                        : project.clientAddress}
+                    </Col>
+                    <Col>{project.id}</Col>
+                    <Col>{project.oc}</Col>
+                    <Col>{!project.clientName ? '⏱' : '✅'}</Col>
+                  </Row>
+                ))}
             </ScrollBox400>
           </Table>
         </Left>
-        {projectDetails?.hasOwnProperty('id') && (
+        {projectDetails && projectDetails.hasOwnProperty('id') && (
           <Right>
             <ResumenTit>RESUMEN DE PROYECTO</ResumenTit>
             <ResumenName>{projectDetails.title}</ResumenName>
@@ -199,18 +207,19 @@ export default function ProjectList() {
               <Col3>PROVEEDOR</Col3>
               <Col3>DOCUMENTOS</Col3>
             </HeadRow>
-            {processes?.map((process:IProcess) => (
-              <Row>
-                <Col3>{process.processName}</Col3>
-                <Col3>{process.supplierName}</Col3>
-                <Col3>
-                  <Link to={'/documents/' + process.contractAddress}>
-                    <Eye />
-                    VER DOC.
-                  </Link>
-                </Col3>
-              </Row>
-            ))}
+            {processes &&
+              processes.map((process: IProcess) => (
+                <Row>
+                  <Col3>{process.processName}</Col3>
+                  <Col3>{process.supplierName}</Col3>
+                  <Col3>
+                    <Link to={'/documents/' + process.contractAddress}>
+                      <Eye />
+                      VER DOC.
+                    </Link>
+                  </Col3>
+                </Row>
+              ))}
             <Button
               onClick={() => {
                 setShowModal(true);

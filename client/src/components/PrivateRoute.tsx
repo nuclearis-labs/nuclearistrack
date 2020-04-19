@@ -1,21 +1,21 @@
 import React from 'react';
-import { useAuth } from '../hooks/useAuth';
 import { Route, Redirect } from 'react-router-dom';
-import { RouteProps } from 'react-router';
+import { connect } from 'react-redux';
+import { getCurrentUser } from '../actions/actionCreators';
 
-interface IPrivateRoute extends RouteProps {
-  roles: string;
-  path: string;
-  component: (props: any) => JSX.Element;
-  exact?: boolean;
+function PrivateRoute(props: any) {
+  return localStorage.getItem('token') ? (
+    <Route {...props} />
+  ) : (
+    <Redirect to="/login" />
+  );
 }
 
-export default function PrivateRoute(props: IPrivateRoute) {
-  const { user } = useAuth();
-console.log(user?.roles);
-console.log(props.roles);
-
-  if (!user) return <Redirect to="/login" />;
-  if (user?.roles?.includes(props.roles)) return <Route {...props} />;
-  else return <Redirect to="/" />;
+function mapStateToProps(reduxState: any) {
+  return { user: reduxState.user };
 }
+
+export default connect(
+  mapStateToProps,
+  { getCurrentUser }
+)(PrivateRoute);

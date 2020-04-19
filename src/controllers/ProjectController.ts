@@ -5,6 +5,12 @@ import UserModel from '../models/user';
 import logger from '../config/winston';
 import { Request, Response } from 'express';
 import { IUserOnReq } from '../types/Custom';
+import txModel from '../models/transaction';
+
+async function getUserNameByAddress(address: any) {
+  const { username } = await UserModel.findOne({ address });
+  return username;
+}
 
 export async function create(req: IUserOnReq, res: Response) {
   try {
@@ -21,6 +27,17 @@ export async function create(req: IUserOnReq, res: Response) {
       fromAddress: address,
       method: 'createProject',
       data: [req.body.expediente, req.body.clientAddress, projectTitle, oc]
+    });
+
+    await pending.create({
+      txHash,
+      subject: 'add-project',
+      data: [
+        req.body.proyectoTitle,
+        req.body.clientAddress,
+        req.body.expediente,
+        req.body.oc
+      ]
     });
 
     logger.info(`Project ${req.body.expediente} created`);
@@ -50,8 +67,36 @@ export async function get(req: IUserOnReq, res: Response) {
       process.env.ADMINEMAIL === req.user.userEmail
         ? { method: 'getAllProjects' }
         : { method: 'getProjectsByAddress', data: [req.user.address] };
+
     const contract = new Contract();
     const contractProjects = await contract.getDataFromContract(query);
+
+    await txModel.deleteMany({ data: { $in: contractProjects } });
+    const pendingProjects = await txModel.aggregate([
+      {
+        $match: {
+          subject: 'add-project'
+        }
+      },
+      {
+        $project: {
+          status: '0',
+          title: {
+            $arrayElemAt: ['$data', 0]
+          },
+          clientAddress: {
+            $arrayElemAt: ['$data', 1]
+          },
+          id: {
+            $arrayElemAt: ['$data', 2]
+          },
+          oc: {
+            $arrayElemAt: ['$data', 3]
+          },
+          processContracts: []
+        }
+      }
+    ]);
 
     const allProjectsDetails = contractProjects.map(async (id: string) => {
       const details = await contract.getDataFromContract({
@@ -59,7 +104,7 @@ export async function get(req: IUserOnReq, res: Response) {
         data: [id]
       });
 
-      const { username } = await UserModel.findOne({ address: details[1] });
+      const username = await getUserNameByAddress(details[1]);
 
       return {
         status: details[0],
@@ -73,6 +118,7 @@ export async function get(req: IUserOnReq, res: Response) {
     });
 
     Promise.all(allProjectsDetails).then(projectDetails => {
+      projectDetails.push(...pendingProjects);
       res.json(projectDetails);
     });
   } catch (e) {

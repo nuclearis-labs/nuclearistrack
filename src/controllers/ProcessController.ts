@@ -1,9 +1,11 @@
 import Contract from '../classes/Contract';
 import * as utils from '../config/utils';
+import * as pending from '../config/pendingTx';
 import UserModel from '../models/user';
 import logger from '../config/winston';
 import { Request, Response } from 'express';
 import { IUserOnReq } from '../types/Custom';
+import txModel from '../models/transaction';
 
 const processABI = require('../../build/contracts/Process.json').abi;
 
@@ -24,6 +26,12 @@ export async function create(req: Request, res: Response) {
       fromAddress: address,
       method: 'createProcess',
       data: [supplierAddress, processTitle]
+    });
+
+    await pending.create({
+      txHash,
+      subject: 'add-process',
+      data: [txHash, req.body.processTitle, req.body.supplierAddress]
     });
 
     logger.info(`Process created `, {
@@ -122,6 +130,25 @@ export async function get(req: IUserOnReq, res: Response) {
 
     const contract = new Contract();
     const processContracts = await contract.getDataFromContract(query);
+    console.log(processContracts);
+
+    await txModel.deleteMany({ data: { $in: processContracts } });
+    const pendingProcesses = await txModel.aggregate([
+      {
+        $match: {
+          subject: 'add-process'
+        }
+      },
+      {
+        $project: {
+          processName: {
+            $arrayElemAt: ['$data', 0]
+          },
+          supplierAddress: { $arrayElemAt: ['$data', 1] },
+          allDocuments: []
+        }
+      }
+    ]);
 
     const allProcessDetails = processContracts.map(async (address: string) => {
       const processContract = new Contract({
@@ -138,12 +165,13 @@ export async function get(req: IUserOnReq, res: Response) {
         supplierAddress: details[1],
         supplierName: username,
         processName: utils.hexToAscii(details[2]),
-        allDocuments: details[3],
-        processContracts: details[4]
+        allDocuments: details[3]
       };
     });
 
     Promise.all(allProcessDetails).then(processDetails => {
+      processDetails.push(...pendingProcesses);
+
       res.json(processDetails);
     });
   } catch (e) {

@@ -1,7 +1,7 @@
 import fs, { truncateSync } from 'fs';
 import bs58 from 'bs58';
 import Contract from '../classes/Contract';
-import { HashStream, PDFModStream } from '../config/streams';
+import { HashStream, PDFModStream, AppendInitVect } from '../config/streams';
 import { pdfFn } from '../config/pdf';
 import { pinFileToIPFS } from '../config/ipfs';
 import { createSHA256 } from '../config/hash';
@@ -10,7 +10,9 @@ import * as pending from '../config/pendingTx';
 import { Request, Response } from 'express';
 import logger from '../config/winston';
 import { IFileOnReq } from '../types/Custom';
-import encrypt from '../utils/encrypt';
+import zlib from 'zlib';
+import crypto from 'crypto';
+import axios from 'axios';
 
 const processABI = require('../../build/contracts/Process.json').abi;
 
@@ -59,64 +61,97 @@ export async function upload(req: IFileOnReq, res: Response) {
       method: 'docNumber'
     });
 
+    let iv = Buffer.alloc(16); // iv should be 16
+    let key = Buffer.alloc(32); // key should be 32 bytes
+    key = Buffer.concat(
+      [Buffer.from(process.env.ENCRYPTION_PASSPHRASE)],
+      key.length
+    );
+    let cipher;
+
+    // randomize the iv, for best results
+    (iv = Buffer.from(
+      Array.prototype.map.call(iv, () => {
+        return Math.floor(Math.random() * 256);
+      })
+    )),
+      // make the cipher with the current suite, key, and iv
+      (cipher = crypto.createCipheriv('aes-256-cbc', key, iv));
+
     const pdfStream = new PDFModStream(pdfFn, `B-${rawDocNumber}`);
     const hashStream = new HashStream('sha256');
+    const appendVect = new AppendInitVect(iv);
 
-    req.file.stream.pipe(pdfStream).pipe(hashStream);
+    let bufs = [];
+    let buffer;
 
-    hashStream.on('finish', () => {
-      pinFileToIPFS(hashStream).then(result => {
-        const hexStorage = bs58.decode(result.data.IpfsHash).toString('hex');
+    req.file.stream
+      .pipe(pdfStream)
+      .pipe(hashStream)
+      .pipe(zlib.createGzip())
+      .pipe(cipher)
+      .pipe(appendVect)
+      .on('data', chunk => {
+        bufs.push(chunk);
+      })
+      .on('finish', () => {
+        buffer = Buffer.concat(bufs);
 
-        const storageFunction = hexStorage.substr(0, 2);
-        const storageSize = hexStorage.substr(2, 2);
-        const storageHash = hexStorage.substr(4);
+        pinFileToIPFS(buffer, hashStream.hash).then(({ data }) => {
+          const hexStorage = bs58.decode(data.IpfsHash).toString('hex');
+          const storageFunction = hexStorage.substr(0, 2);
+          const storageSize = hexStorage.substr(2, 2);
+          const storageHash = hexStorage.substr(4);
 
-        const ProcessContract = new Contract({
-          privateKey,
-          abi: processABI,
-          contractAddress
-        });
-
-        ProcessContract.sendDataToContract({
-          fromAddress: address,
-          method: 'addDocument',
-          data: [
-            req.body.name,
-            hashStream.hash,
-            Number(storageFunction),
-            Number(storageSize),
-            `0x${storageHash}`,
-            latitude,
-            longitude,
-            req.body.comment
-          ]
-        })
-          .then(txHash => {
-            pending
-              .create({
-                txHash,
-                subject: 'add-document',
-                data: [hashStream.hash, `B-${rawDocNumber}`]
-              })
-              .then(() => {
-                res.json(txHash);
-              })
-              .catch(e => {
-                logger.error(e.message, {
-                  documentHash
-                });
-                res.json({ error: e.message });
-              });
-          })
-          .catch(e => {
-            logger.error(e.message, {
-              documentHash
-            });
-            res.json({ error: e.message });
+          const ProcessContract = new Contract({
+            privateKey,
+            abi: processABI,
+            contractAddress
           });
+
+          ProcessContract.sendDataToContract({
+            fromAddress: address,
+            method: 'addDocument',
+            data: [
+              req.file.originalName.substr(
+                0,
+                req.file.originalName.length -
+                  req.file.detectedFileExtension.length
+              ),
+              hashStream.hash,
+              Number(storageFunction),
+              Number(storageSize),
+              `0x${storageHash}`,
+              latitude,
+              longitude,
+              req.body.comment
+            ]
+          })
+            .then(txHash => {
+              pending
+                .create({
+                  txHash,
+                  subject: 'add-document',
+                  data: [hashStream.hash, `B-${rawDocNumber}`]
+                })
+                .then(() => {
+                  res.json(txHash);
+                })
+                .catch(e => {
+                  logger.error(e.message, {
+                    documentHash
+                  });
+                  res.json({ error: e.message });
+                });
+            })
+            .catch(e => {
+              logger.error(e.message, {
+                documentHash
+              });
+              res.json({ error: e.message });
+            });
+        });
       });
-    });
   } catch (e) {
     console.log(e);
 
@@ -165,6 +200,34 @@ export async function get(req: Request, res: Response) {
   }
 }
 
+export async function getOneFile(req: Request, res: Response) {
+  try {
+    let key = Buffer.alloc(32);
+    key = Buffer.concat(
+      [Buffer.from(process.env.ENCRYPTION_PASSPHRASE)],
+      key.length
+    );
+
+    const { data } = await axios({
+      method: 'get',
+      responseType: 'stream',
+      url: `https://gateway.pinata.cloud/ipfs/${req.query.storageHash}`
+    });
+
+    let iv = Buffer.from(data.read(16), 'hex');
+
+    data
+      .pipe(crypto.createDecipheriv('aes-256-cbc', key, iv))
+      .pipe(zlib.createGunzip())
+      .pipe(res);
+  } catch (e) {
+    logger.error(`Document ${req.query.hash} could not be obtained `, {
+      message: e.message
+    });
+    res.status(404).json({ error: e.message });
+  }
+}
+
 export async function getOne(req: Request, res: Response) {
   try {
     const contract = new Contract({
@@ -199,9 +262,12 @@ export async function getOne(req: Request, res: Response) {
       comment: details[5]
     });
   } catch (e) {
-    logger.error(`Document ${req.query.hash} could not be obtained `, {
-      message: e.message
-    });
+    logger.error(
+      `Documentinformation ${req.query.hash} could not be obtained `,
+      {
+        message: e.message
+      }
+    );
     res.status(404).json({ error: e.message });
   }
 }

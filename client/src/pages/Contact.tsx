@@ -32,29 +32,15 @@ export default function Contact() {
           <Label>
             <I18n t="contact.name" />
           </Label>
-          <Input
-            name="name"
-            error={errors.name}
-            ref={register({ required: true })}
-            type="text"
-          ></Input>
+          <Input name="name" type="text"></Input>
           <Label>
             <I18n t="contact.email" />
           </Label>
-          <Input
-            name="email"
-            error={errors.email}
-            ref={register({ required: true })}
-            type="email"
-          ></Input>
+          <Input name="email" type="email"></Input>
           <Label>
             <I18n t="contact.message" />
           </Label>
-          <TextArea
-            error={errors.message}
-            name="message"
-            ref={register({ required: true })}
-          ></TextArea>
+          <TextArea name="message"></TextArea>
           <Button
             type="submit"
             disabled={pending}

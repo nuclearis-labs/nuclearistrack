@@ -1,6 +1,5 @@
 // newProvider.js
 import React from 'react';
-import { useAuth } from '../hooks/useAuth';
 import { useNavLocation } from '../hooks/useNavLocation';
 import { useParams } from 'react-router-dom';
 import {
@@ -25,49 +24,42 @@ import { RouteProps } from 'react-router';
 
 export default function NewDocument(props: RouteProps) {
   let { process } = useParams();
-  const { user } = useAuth();
   const { register, handleSubmit, errors, getValues } = useForm();
   const { execute, pending } = useAsync(onSubmit, false);
-  const { data } = useSWR(
-    '/api/process/getOne?contract=' + process,
-    url =>
-      axios
-        .get(url, {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-        })
-        .then(({ data }) => data)
+  const { data } = useSWR('/api/process/getOne?contract=' + process, url =>
+    axios
+      .get(url, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      })
+      .then(({ data }) => data)
   );
   const { location } = useNavLocation();
 
   function onSubmit() {
-    return new Promise((resolve, reject) => {
-      if (user === undefined) {
-        reject('No user logged in');
-      }
-      const form = getValues();
-      let data = new FormData();
-      data.append('file', form.file[0]);
-      data.append(
-        'name',
-        form.file[0].name.substr(0, form.file[0].name.length - 4)
-      );
-      data.append('email', user?.userEmail);
-      data.append('passphrase', form.passphrase);
-      data.append('comment', form.comment);
-      data.append('latitude', location.latitude.toString());
-      data.append('longitude', location.longitude.toString());
-      axios({
-        method: 'post',
-        url: '/api/doc/upload?contract=' + process,
-        data: data,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-          'content-type': 'multipart/form-data'
-        }
-      })
-        .then(({ data }) => resolve(data))
-        .catch(e => reject(e.message));
-    });
+    //   return new Promise((resolve, reject) => {
+    //     if (user === undefined) {
+    //       reject('No user logged in');
+    //     }
+    //     const form = getValues();
+    //     let data = new FormData();
+    //     data.append('file', form.file[0]);
+    //     data.append('email', user?.userEmail);
+    //     data.append('passphrase', form.passphrase);
+    //     data.append('comment', form.comment);
+    //     data.append('latitude', location.latitude.toString());
+    //     data.append('longitude', location.longitude.toString());
+    //     axios({
+    //       method: 'post',
+    //       url: '/api/doc/upload?contract=' + process,
+    //       data: data,
+    //       headers: {
+    //         Authorization: `Bearer ${localStorage.getItem('token')}`,
+    //         'content-type': 'multipart/form-data'
+    //       }
+    //     })
+    //       .then(({ data }) => resolve(data))
+    //       .catch(e => reject(e.message));
+    //   });
   }
 
   return (
@@ -111,14 +103,9 @@ export default function NewDocument(props: RouteProps) {
             ></iframe>
           )}
           <Label>OBSERVACIONES</Label>
-          <TextArea
-            ref={register}
-            error={errors.comment}
-            name="comment"
-          ></TextArea>
+          <TextArea name="comment"></TextArea>
           <div>
             <Input
-              error={errors.passphrase}
               placeholder="ingresar clave"
               type="password"
               style={{
@@ -128,7 +115,6 @@ export default function NewDocument(props: RouteProps) {
                 marginRight: '5px'
               }}
               name="passphrase"
-              ref={register({ required: true })}
             ></Input>
             <Button
               style={{ display: 'inline-block', position: 'relative' }}
