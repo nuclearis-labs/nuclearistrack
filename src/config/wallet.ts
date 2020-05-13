@@ -7,6 +7,7 @@ import { networks } from 'bitcoinjs-lib';
 import * as bip39 from 'bip39';
 import * as bip32 from 'bip32';
 import { AssertionError } from 'assert';
+import logger from './winston';
 
 function generateWifPrivateKey(
   privKey: Buffer,
@@ -31,7 +32,7 @@ export async function decryptBIP38(
     const { privateKey } = bip38.decrypt(encryptedKey, passphrase);
     return privateKey;
   } catch (e) {
-    console.log(e.message);
+    logger.error(`Private Key Decryption: `, { message: e.message });
 
     if (e instanceof AssertionError) {
       throw Error('Passphrase or User incorrect');
@@ -63,6 +64,6 @@ export function generateRSKAddress(privateKey: Buffer): string {
   try {
     return toChecksumAddress(privateToAddress(privateKey).toString('hex'));
   } catch (e) {
-    console.log(e);
+    logger.error(`RSK Address Generation: `, { message: e.message });
   }
 }
