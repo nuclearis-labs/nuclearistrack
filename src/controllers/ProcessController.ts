@@ -1,11 +1,9 @@
 import Contract from '../classes/Contract';
 import * as utils from '../config/utils';
-import * as pending from '../config/pendingTx';
 import UserModel from '../models/user';
 import logger from '../config/winston';
 import { Request, Response } from 'express';
 import { IUserOnReq } from '../types/Custom';
-import txModel from '../models/transaction';
 
 const processABI = require('../../build/contracts/Process.json').abi;
 
@@ -28,12 +26,6 @@ export async function create(req: Request, res: Response) {
       data: [supplierAddress, processTitle]
     });
 
-    await pending.create({
-      txHash,
-      subject: 'add-process',
-      data: [txHash, req.body.processTitle, req.body.supplierAddress]
-    });
-
     logger.info(`Process created `, {
       title: req.body.processTitle,
       supplier: req.body.supplierAddress
@@ -49,8 +41,6 @@ export async function create(req: Request, res: Response) {
 }
 export async function getOne(req: Request, res: Response) {
   try {
-    const contract = new Contract();
-
     const process = new Contract({
       abi: processABI,
       contractAddress: req.query.contract
@@ -130,25 +120,6 @@ export async function get(req: IUserOnReq, res: Response) {
 
     const contract = new Contract();
     const processContracts = await contract.getDataFromContract(query);
-    console.log(processContracts);
-
-    await txModel.deleteMany({ data: { $in: processContracts } });
-    const pendingProcesses = await txModel.aggregate([
-      {
-        $match: {
-          subject: 'add-process'
-        }
-      },
-      {
-        $project: {
-          processName: {
-            $arrayElemAt: ['$data', 0]
-          },
-          supplierAddress: { $arrayElemAt: ['$data', 1] },
-          allDocuments: []
-        }
-      }
-    ]);
 
     const allProcessDetails = processContracts.map(async (address: string) => {
       const processContract = new Contract({
@@ -159,19 +130,20 @@ export async function get(req: IUserOnReq, res: Response) {
         method: 'getDetails'
       });
 
+      console.log(details);
+
       const { username } = await UserModel.findOne({ address: details[1] });
 
       return {
         supplierAddress: details[1],
         supplierName: username,
         processName: utils.hexToAscii(details[2]),
-        allDocuments: details[3]
+        allDocuments: details[3],
+        processContracts: details[4]
       };
     });
 
     Promise.all(allProcessDetails).then(processDetails => {
-      processDetails.push(...pendingProcesses);
-
       res.json(processDetails);
     });
   } catch (e) {

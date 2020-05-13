@@ -1,11 +1,9 @@
 import Contract from '../classes/Contract';
 import * as utils from '../config/utils';
-import * as pending from '../config/pendingTx';
 import UserModel from '../models/user';
 import logger from '../config/winston';
 import { Request, Response } from 'express';
 import { IUserOnReq } from '../types/Custom';
-import txModel from '../models/transaction';
 
 async function getUserNameByAddress(address: any) {
   const { username } = await UserModel.findOne({ address });
@@ -29,35 +27,12 @@ export async function create(req: IUserOnReq, res: Response) {
       data: [req.body.expediente, req.body.clientAddress, projectTitle, oc]
     });
 
-    await pending.create({
-      txHash,
-      subject: 'add-project',
-      data: [
-        req.body.proyectoTitle,
-        req.body.clientAddress,
-        req.body.expediente,
-        req.body.oc
-      ]
-    });
-
     logger.info(`Project ${req.body.expediente} created`);
 
     res.json(txHash);
   } catch (error) {
     logger.error(`Project ${req.body.expediente} was not created`);
     res.status(400).json(error.message);
-  }
-}
-
-export async function getDocNumber(req: Request, res: Response) {
-  try {
-    const contract = new Contract();
-    const result = await contract.getDataFromContract({ method: 'docNumber' });
-
-    res.json(result);
-  } catch (e) {
-    logger.error(`Doc Number could not be retrieved `, { message: e.message });
-    res.json({ error: e.message });
   }
 }
 
@@ -71,59 +46,36 @@ export async function get(req: IUserOnReq, res: Response) {
     const contract = new Contract();
     const contractProjects = await contract.getDataFromContract(query);
 
-    await txModel.deleteMany({ data: { $in: contractProjects } });
-    const pendingProjects = await txModel.aggregate([
-      {
-        $match: {
-          subject: 'add-project'
-        }
-      },
-      {
-        $project: {
-          status: '0',
-          title: {
-            $arrayElemAt: ['$data', 0]
-          },
-          clientAddress: {
-            $arrayElemAt: ['$data', 1]
-          },
-          id: {
-            $arrayElemAt: ['$data', 2]
-          },
-          oc: {
-            $arrayElemAt: ['$data', 3]
-          },
-          processContracts: []
-        }
-      }
-    ]);
-
     const allProjectsDetails = contractProjects.map(async (id: string) => {
-      const details = await contract.getDataFromContract({
-        method: 'getProjectDetails',
-        data: [id]
-      });
+      try {
+        const details = await contract.getDataFromContract({
+          method: 'getProjectDetails',
+          data: [id]
+        });
 
-      const username = await getUserNameByAddress(details[1]);
+        const username = await getUserNameByAddress(details[1]);
 
-      return {
-        status: details[0],
-        clientAddress: details[1],
-        clientName: username,
-        title: utils.hexToAscii(details[2]),
-        oc: utils.hexToAscii(details[3]),
-        processContracts: details[4],
-        id
-      };
+        return {
+          status: details[0],
+          clientAddress: details[1],
+          clientName: username,
+          title: utils.hexToAscii(details[2]),
+          oc: utils.hexToAscii(details[3]),
+          processContracts: details[4],
+          id
+        };
+      } catch (e) {
+        logger.error(`Project Detail could not be obtained `, {
+          message: e.message
+        });
+      }
     });
 
     Promise.all(allProjectsDetails).then(projectDetails => {
-      projectDetails.push(...pendingProjects);
       res.json(projectDetails);
     });
   } catch (e) {
     logger.error(`ProjectList could not be obtained `, { message: e.message });
-
     res.status(500).json({ error: e.message });
   }
 }
@@ -182,11 +134,6 @@ export async function assignProcess(req: Request, res: Response) {
       data: [Number(req.body.expediente), req.body.processContract]
     });
 
-    await pending.create({
-      txHash,
-      subject: 'assign-process',
-      data: [req.body.expediente, req.body.processContract]
-    });
     logger.info(
       `Process ${req.body.processContract} was assigned to project ${req.body.expediente} `
     );

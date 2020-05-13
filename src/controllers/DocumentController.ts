@@ -1,9 +1,9 @@
 import bs58 from 'bs58';
 import Contract from '../classes/Contract';
+import { HashStream, AppendInitVect } from '../config/streams';
 import { pinFileToIPFS } from '../config/ipfs';
 import { createSHA256 } from '../config/hash';
 import * as utils from '../config/utils';
-import * as pending from '../config/pendingTx';
 import { Request, Response } from 'express';
 import logger from '../config/winston';
 import { IFileOnReq } from '../types/Custom';
@@ -58,21 +58,19 @@ export async function upload(req: IFileOnReq, res: Response) {
       method: 'docNumber'
     });
 
-    let iv = Buffer.alloc(16); // iv should be 16
+    let iv = Buffer.alloc(16); // iv should be 16 bytes
     let key = Buffer.alloc(32); // key should be 32 bytes
     key = Buffer.concat(
       [Buffer.from(process.env.ENCRYPTION_PASSPHRASE)],
       key.length
     );
-    let cipher;
 
-    // randomize the iv, for best results
+    let cipher;
     (iv = Buffer.from(
       Array.prototype.map.call(iv, () => {
         return Math.floor(Math.random() * 256);
       })
     )),
-      // make the cipher with the current suite, key, and iv
       (cipher = crypto.createCipheriv('aes-256-cbc', key, iv));
 
     const hashStream = new HashStream('sha256');
@@ -123,19 +121,7 @@ export async function upload(req: IFileOnReq, res: Response) {
             ]
           })
             .then(txHash => {
-              pending
-                .create({
-                  txHash,
-                  subject: 'add-document',
-                  data: [hashStream.hash, `B-${rawDocNumber}`]
-                })
-                })
-                .catch(e => {
-                  logger.error(e.message, {
-                    documentHash
-                  });
-                  res.json({ error: e.message });
-                });
+              res.json(txHash);
             })
             .catch(e => {
               logger.error(e.message, {
@@ -146,8 +132,6 @@ export async function upload(req: IFileOnReq, res: Response) {
         });
       });
   } catch (e) {
-    console.log(e);
-
     logger.error(`Document could not be uploaded `, {
       documentHash
     });
