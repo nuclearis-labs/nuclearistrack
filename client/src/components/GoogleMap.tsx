@@ -1,5 +1,4 @@
 import React from 'react';
-import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
 
 export function GoogleMap(props: { coords: Coordinates }): JSX.Element | null {
   if (props.coords) {
