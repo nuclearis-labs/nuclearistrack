@@ -99,6 +99,7 @@ export default function NewProject() {
           <Input onChange={handleChange} name="oc"></Input>
           <div>
             <Input
+              type="password"
               placeholder="ingresar clave"
               style={{
                 width: '100px',
