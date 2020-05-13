@@ -22,10 +22,13 @@ import useSWR from 'swr';
 import I18n from '../i18n';
 import { RouteProps } from 'react-router';
 import { GoogleMap } from '../components/GoogleMap';
+import { getCurrentUser } from '../actions/actionCreators';
+import { connect } from 'react-redux';
 
-export default function NewDocument(props: RouteProps) {
+function NewDocument(props: any) {
   let { process } = useParams();
   const { register, handleSubmit, errors, getValues } = useForm();
+  const [form, setForm] = useState<any>([]);
   const [loading, setLoading] = useState(true);
   const [location, setLocation] = useState<Coordinates | undefined>();
   const { execute, pending } = useAsync(onSubmit, false);
@@ -38,34 +41,53 @@ export default function NewDocument(props: RouteProps) {
   );
   useNavLocation().then(coords => setLocation(coords));
 
-  useEffect(() => {
-    console.log(location);
+  function handleChange(evt: any) {
+    evt.persist();
+    setForm((form: any) => ({
+      ...form,
+      [evt.target.name]: evt.target.value
+    }));
+  }
+  function handleFileInput(evt: any) {
+    evt.persist();
+    setForm((form: any) => ({
+      ...form,
+      [evt.target.name]: evt.target.files[0]
+    }));
+  }
 
+  useEffect(() => {
     setLoading(false);
   }, [location]);
 
   function onSubmit() {
-      return new Promise((resolve, reject) => {
-        const form = getValues();
-        let data = new FormData();
-        data.append('file', form.file[0]);
-        data.append('email', user?.userEmail);
-        data.append('passphrase', form.passphrase);
-        data.append('comment', form.comment);
-        data.append('latitude', location.latitude.toString());
-        data.append('longitude', location.longitude.toString());
-        axios({
-          method: 'post',
-          url: '/api/doc/upload?contract=' + process,
-          data: data,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'content-type': 'multipart/form-data'
-          }
-        })
-          .then(({ data }) => resolve(data))
-          .catch(e => reject(e.message));
-      });
+    return new Promise((resolve, reject) => {
+      if (location == undefined) {
+        reject('No location provided');
+        return;
+      }
+
+      let data = new FormData();
+      data.append('file', form.file);
+      data.append('email', props.user.userEmail);
+      data.append('passphrase', form.passphrase);
+      data.append('comment', form.comment);
+      data.append('latitude', location.latitude.toString());
+      data.append('longitude', location.longitude.toString());
+      console.log(data);
+
+      axios({
+        method: 'post',
+        url: '/api/doc/upload?contract=' + process,
+        data,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'content-type': 'multipart/form-data'
+        }
+      })
+        .then(({ data }) => resolve(data))
+        .catch(e => reject(e.message));
+    });
   }
 
   return (
@@ -96,11 +118,12 @@ export default function NewDocument(props: RouteProps) {
               name="file"
               error={errors.file}
               type="file"
+              onChange={handleFileInput}
             ></FileInput>
             <Label>UBICACION DEL DOCUMENTO</Label>
             {location && <GoogleMap coords={location} />}
             <Label>OBSERVACIONES</Label>
-            <TextArea name="comment"></TextArea>
+            <TextArea name="comment" onChange={handleChange}></TextArea>
             <div>
               <Input
                 placeholder="ingresar clave"
@@ -112,6 +135,7 @@ export default function NewDocument(props: RouteProps) {
                   marginRight: '5px'
                 }}
                 name="passphrase"
+                onChange={handleChange}
               ></Input>
               <Button
                 style={{ display: 'inline-block', position: 'relative' }}
@@ -131,3 +155,12 @@ export default function NewDocument(props: RouteProps) {
     </>
   );
 }
+
+function mapStateToProps(reduxState: any) {
+  return { user: reduxState.user };
+}
+
+export default connect(
+  mapStateToProps,
+  { getCurrentUser }
+)(NewDocument);

@@ -84,7 +84,7 @@ export default function DocumentList() {
     }).then(({ data }) => {
       setDetails(data);
 
-      fetch(`/api/doc/getOne?storageHash=${data.storageHash}`)
+      fetch(`/api/doc/getOneFile?storageHash=${data.storageHash}`)
         .then(response => {
           if (response.ok) {
             response.blob().then(pdf => {

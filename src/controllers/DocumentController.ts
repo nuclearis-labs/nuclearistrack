@@ -190,6 +190,8 @@ export async function getOneFile(req: Request, res: Response) {
 
     let iv = Buffer.from(data.read(16), 'hex');
 
+    res.set({ 'Content-Type': 'application/pdf' });
+
     data
       .pipe(crypto.createDecipheriv('aes-256-cbc', key, iv))
       .pipe(zlib.createGunzip())
