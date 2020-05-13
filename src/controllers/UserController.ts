@@ -32,24 +32,6 @@ export async function create(req: Request, res: Response) {
   }
 }
 
-export async function checkRole(req: Request, res: Response) {
-  try {
-    const user = await UserModel.findOne({
-      address: req.params.address
-    });
-
-    const contract = new Contract();
-    const isRole = await contract.getDataFromContract({
-      method: 'isAssignedRole',
-      data: [req.params.address, req.params.role]
-    });
-
-    res.json(isRole);
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-}
-
 export async function confirm(req: Request, res: Response) {
   let user: { _id: string };
 
@@ -105,9 +87,41 @@ export async function confirm(req: Request, res: Response) {
     });
   } catch (e) {
     logger.error(`User Confirmation: `, { message: e.message });
-    console.log(e);
 
     res.status(500).json({ error: e.message });
+  }
+}
+
+export async function change(req: Request, res: Response) {
+  let user: { _id: string };
+
+  try {
+    const user = await UserModel.findOne({
+      email: req.body.email,
+      address: { $ne: null }
+    });
+
+    const decryptedKey = await wallet.decryptBIP38(
+      user.encryptedPrivateKey,
+      req.body.passphrase
+    );
+    const encryptedPrivateKey = wallet.encryptBIP38(
+      decryptedKey,
+      req.body.newPassphrase
+    );
+
+    await UserModel.findByIdAndUpdate(user._id, {
+      encryptedPrivateKey
+    });
+    logger.info(`User ${user._id} changed passphrase`);
+
+    res.sendStatus(200);
+  } catch (e) {
+    logger.error(`User not able to change passphrase`, {
+      error: e.message
+    });
+
+    res.status(400).json({ error: e.message });
   }
 }
 
@@ -150,39 +164,6 @@ export async function restore(req: Request, res: Response) {
   }
 }
 
-export async function change(req: Request, res: Response) {
-  let user: { _id: string };
-
-  try {
-    const user = await UserModel.findOne({
-      email: req.body.email,
-      address: { $ne: null }
-    });
-
-    const decryptedKey = await wallet.decryptBIP38(
-      user.encryptedPrivateKey,
-      req.body.passphrase
-    );
-    const encryptedPrivateKey = wallet.encryptBIP38(
-      decryptedKey,
-      req.body.newPassphrase
-    );
-
-    await UserModel.findByIdAndUpdate(user._id, {
-      encryptedPrivateKey
-    });
-    logger.info(`User ${user._id} changed passphrase`);
-
-    res.sendStatus(200);
-  } catch (e) {
-    logger.error(`User not able to change passphrase`, {
-      error: e.message
-    });
-
-    res.status(400).json({ error: e.message });
-  }
-}
-
 export async function get(req: Request, res: Response) {
   try {
     const userList = await UserModel.find({}, 'username address email');
@@ -190,35 +171,6 @@ export async function get(req: Request, res: Response) {
   } catch (e) {
     logger.error(`Couldn't retrieve userList`, { message: e.message });
     res.status(500).json({ error: e.message });
-  }
-}
-
-export async function getBalance(req: Request, res: Response) {
-  try {
-    web3.eth.getBalance(req.params.address).then(balance => {
-      res.json(web3.utils.fromWei(balance));
-    });
-  } catch (e) {
-    logger.error(`Couldn't get balance of ${req.params.address} `, {
-      message: e.message
-    });
-
-    res.sendStatus(500);
-  }
-}
-
-export async function remove(req: Request, res: Response) {
-  try {
-    const { _id, username, address } = await UserModel.findOneAndRemove({
-      address: req.params.address
-    });
-    logger.info(`User ${username} removed`);
-    res.json({ _id, username, address });
-  } catch (e) {
-    logger.error(`Couldn't remove User ${req.params.address}`, {
-      message: e.message
-    });
-    res.status(400).json({ error: e.message });
   }
 }
 
@@ -251,6 +203,38 @@ export async function getOne(req: Request, res: Response) {
     logger.error(`Couldn't get user details ${req.params.address}`, {
       message: e.message
     });
+    res.status(500).json({ error: e.message });
+  }
+}
+
+export async function getBalance(req: Request, res: Response) {
+  try {
+    web3.eth.getBalance(req.params.address).then(balance => {
+      res.json(web3.utils.fromWei(balance));
+    });
+  } catch (e) {
+    logger.error(`Couldn't get balance of ${req.params.address} `, {
+      message: e.message
+    });
+
+    res.sendStatus(500);
+  }
+}
+
+export async function checkRole(req: Request, res: Response) {
+  try {
+    const user = await UserModel.findOne({
+      address: req.params.address
+    });
+
+    const contract = new Contract();
+    const isRole = await contract.getDataFromContract({
+      method: 'isAssignedRole',
+      data: [req.params.address, req.params.role]
+    });
+
+    res.json(isRole);
+  } catch (e) {
     res.status(500).json({ error: e.message });
   }
 }

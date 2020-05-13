@@ -8,7 +8,6 @@ import {
   change,
   get,
   checkRole,
-  remove,
   getOne,
   getBalance
 } from '../controllers/UserController';
@@ -31,13 +30,6 @@ router.get(
   '/getBalance/:address',
   validateForm(rules.userVerifyAddress),
   getBalance
-);
-
-router.post(
-  '/remove/:address',
-  verifyToken,
-  validateForm(rules.userClose),
-  remove
 );
 
 router.get('/getOne/:address', validateForm(rules.userVerifyAddress), getOne);
