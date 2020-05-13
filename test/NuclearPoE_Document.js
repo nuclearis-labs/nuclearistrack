@@ -40,7 +40,6 @@ contract('Add Document', accounts => {
     );
 
     truffleAssert.eventEmitted(result, 'AddDocument');
-    assert.equal(1, await instance.docNumber());
   });
   it('REVERT: Add a document as non-supplier', async () => {
     await truffleAssert.reverts(

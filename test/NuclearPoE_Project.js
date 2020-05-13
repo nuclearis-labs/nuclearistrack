@@ -113,28 +113,3 @@ contract('Close Project', accounts => {
     );
   });
 });
-
-contract('Doc Number', accounts => {
-  let instance;
-  let processAddress;
-  before(async () => {
-    instance = await NuclearPoE.deployed();
-    await instance.createProject(
-      41955,
-      accounts[1],
-      web3.utils.asciiToHex('Conjunto Soporte'),
-      web3.utils.asciiToHex('23423423 / 23423423')
-    );
-    const result = await instance.createProcess(
-      accounts[2],
-      web3.utils.asciiToHex('Mecanizado')
-    );
-
-    processAddress = result.logs[0].args[0];
-    processInstance = await Process.at(processAddress);
-  });
-  it('Get Doc Number', async () => {
-    const result = await instance.docNumber();
-    assert(result, 0);
-  });
-});

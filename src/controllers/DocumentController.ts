@@ -1,8 +1,5 @@
-import fs, { truncateSync } from 'fs';
 import bs58 from 'bs58';
 import Contract from '../classes/Contract';
-import { HashStream, PDFModStream, AppendInitVect } from '../config/streams';
-import { pdfFn } from '../config/pdf';
 import { pinFileToIPFS } from '../config/ipfs';
 import { createSHA256 } from '../config/hash';
 import * as utils from '../config/utils';
@@ -78,7 +75,6 @@ export async function upload(req: IFileOnReq, res: Response) {
       // make the cipher with the current suite, key, and iv
       (cipher = crypto.createCipheriv('aes-256-cbc', key, iv));
 
-    const pdfStream = new PDFModStream(pdfFn, `B-${rawDocNumber}`);
     const hashStream = new HashStream('sha256');
     const appendVect = new AppendInitVect(iv);
 
@@ -86,7 +82,6 @@ export async function upload(req: IFileOnReq, res: Response) {
     let buffer;
 
     req.file.stream
-      .pipe(pdfStream)
       .pipe(hashStream)
       .pipe(zlib.createGzip())
       .pipe(cipher)

@@ -3,7 +3,6 @@ import { verifyToken, validateForm } from '../config/index';
 import rules from '../config/validationRules';
 import {
   create,
-  getDocNumber,
   get,
   close,
   getOne,
@@ -13,8 +12,6 @@ import {
 const router = express.Router({ mergeParams: true });
 
 router.post('/', verifyToken, validateForm(rules.projectCreate), create);
-
-router.get('/getDocNumber', verifyToken, getDocNumber);
 
 router.get('/get', verifyToken, get);
 

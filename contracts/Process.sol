@@ -17,7 +17,6 @@ contract Process is RoleBasedAcl {
         bytes32 storageHash;
         uint8 storageFunction;
         uint8 storageSize;
-        uint256 docNumber;
         uint256 mineTime;
         string comment;
     }
@@ -53,8 +52,6 @@ contract Process is RoleBasedAcl {
     ) external onlySupplier() {
         require(document[_hash].mineTime == 0, 'Document already created');
 
-        NuclearPoE main = NuclearPoE(NuclearPoEAddress);
-
         document[_hash] = Document(
             _name,
             _latitude,
@@ -62,13 +59,10 @@ contract Process is RoleBasedAcl {
             _storageHash,
             _storageFunction,
             _storageSize,
-            main.docNumber(),
             now,
             _comment
         );
         allDocuments.push(_hash);
-
-        main.incrementDocNumber(address(this));
 
         emit AddDocument();
     }
@@ -76,21 +70,13 @@ contract Process is RoleBasedAcl {
     function getDocument(bytes32 _hash)
         external
         view
-        returns (
-            string memory,
-            bytes32,
-            bytes32,
-            uint256,
-            uint256,
-            string memory
-        )
+        returns (string memory, bytes32, bytes32, uint256, string memory)
     {
         require(document[_hash].mineTime != 0, 'Document does not exist');
         return (
             document[_hash].name,
             document[_hash].latitude,
             document[_hash].longitude,
-            document[_hash].docNumber,
             document[_hash].mineTime,
             document[_hash].comment
         );

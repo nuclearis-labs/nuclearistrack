@@ -6,7 +6,6 @@ import './Process.sol';
 
 
 contract NuclearPoE is RoleBasedAcl {
-    uint256 public docNumber = 0;
     enum State {Null, Created, Closed}
 
     struct Project {
@@ -23,14 +22,6 @@ contract NuclearPoE is RoleBasedAcl {
     mapping(address => uint256[]) public projectsByAddress;
     mapping(address => address[]) public processesByAddress;
     mapping(uint256 => Project) private project;
-
-    modifier onlyProcessContract(address _processAddress) {
-        require(
-            msg.sender == _processAddress,
-            'Sender has to be project Contract'
-        );
-        _;
-    }
 
     event CreateProject();
     event CreateProcess(address ProcessContractAddress);
@@ -100,16 +91,6 @@ contract NuclearPoE is RoleBasedAcl {
         else project[_id].status = State.Created;
 
         emit CloseProject(_id);
-    }
-
-    // Receives input from corresponding Process Contract and returns new Doc Number
-    function incrementDocNumber(address _processAddress)
-        external
-        onlyProcessContract(_processAddress)
-        returns (uint256)
-    {
-        docNumber++;
-        return docNumber;
     }
 
     function getAllProcessContracts() external view returns (address[] memory) {
