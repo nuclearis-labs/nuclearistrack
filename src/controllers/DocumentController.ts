@@ -53,11 +53,6 @@ export async function upload(req: IFileOnReq, res: Response) {
     const longitude = utils.asciiToHex(req.body.longitude);
     const contractAddress = utils.toChecksumAddress(req.query.contract);
 
-    const NuclearPoEContract = new Contract();
-    const rawDocNumber = await NuclearPoEContract.getDataFromContract({
-      method: 'docNumber'
-    });
-
     let iv = Buffer.alloc(16); // iv should be 16 bytes
     let key = Buffer.alloc(32); // key should be 32 bytes
     key = Buffer.concat(
@@ -135,6 +130,8 @@ export async function upload(req: IFileOnReq, res: Response) {
     logger.error(`Document could not be uploaded `, {
       documentHash
     });
+    console.error(e);
+
     res.json({ error: e.message });
   }
 }
@@ -230,13 +227,12 @@ export async function getOne(req: Request, res: Response) {
 
     res.json({
       name: details[0],
-      docNumber: details[3],
-      mineTime: details[4],
+      mineTime: details[3],
       latitude: utils.hexToAscii(details[1]),
       longitude: utils.hexToAscii(details[2]),
       documentHash: req.query.hash,
       storageHash,
-      comment: details[5]
+      comment: details[4]
     });
   } catch (e) {
     logger.error(
