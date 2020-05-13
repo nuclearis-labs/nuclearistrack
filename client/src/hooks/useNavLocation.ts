@@ -1,12 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-export const useNavLocation = () => {
-  const [location, setLocation] = useState<Coordinates | null>(null);
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(({ coords }) => {
-      setLocation(coords);
-    });
-  } else throw Error('No se pudo obtener la geolocalizacion');
-  if (location !== null) return { location };
-  else throw Error('No se pudo obtener la geolocalizacion');
+export const useNavLocation = (): Promise<Coordinates | undefined> => {
+  return new Promise((resolve, reject) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(({ coords }) => resolve(coords));
+    } else {
+      return reject(undefined);
+    }
+  });
 };
