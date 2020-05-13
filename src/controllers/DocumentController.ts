@@ -129,7 +129,6 @@ export async function upload(req: IFileOnReq, res: Response) {
                   subject: 'add-document',
                   data: [hashStream.hash, `B-${rawDocNumber}`]
                 })
-                .then(() => {
                   res.json(txHash);
                 })
                 .catch(e => {
