@@ -14,9 +14,9 @@ const store = createStore(
   compose(
     applyMiddleware(thunk, logger)
     // @ts-ignore "Devtools hook into the window object"
-    //   window.__REDUX_DEVTOOLS_EXTENSION__ &&
-    //     // @ts-ignore "Devtools hook into the window object"
-    //     window.__REDUX_DEVTOOLS_EXTENSION__({ trace: true, traceLimit: 25 })
+    // window.__REDUX_DEVTOOLS_EXTENSION__ &&
+    // @ts-ignore "Devtools hook into the window object"
+    // window.__REDUX_DEVTOOLS_EXTENSION__({ trace: true, traceLimit: 25 })
   )
 );
 
