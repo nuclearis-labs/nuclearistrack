@@ -1,58 +1,48 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
-import { Title, Label, ErrorLabel, Input, Select } from '../styles/components';
-import SubmitButton from '../components/SubmitButton';
+import { Title, Label, Button, Input, Select } from '../styles/components';
 import Permits from '../components/Permits';
-import { Top, Form, FormWrap } from '../styles/form';
+import { Top, Form, FormWrap, ErrorForm } from '../styles/form';
 import Footer from '../components/Footer';
 import I18n from '../i18n';
 import { connect } from 'react-redux';
 import { getCurrentUser } from '../actions/actionCreators';
 import { useHistory } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { useAsync } from '../hooks/useAsync';
 
 function NewUser(props: any) {
-  const [form, setForm] = React.useState<any>({ roles: [] });
-  const [submitting, setSubmitting] = React.useState(false);
-  const [error, setError] = React.useState<null | string>(null);
-  let history = useHistory();
+  const { register, handleSubmit, errors, setError, getValues } = useForm();
+  const { execute, pending, value, error } = useAsync(onSubmit, false);
+  const history = useHistory();
 
-  function handleChange(evt: any) {
-    evt.persist();
-    if (submitting) setSubmitting(false);
-    if (evt.target.name === 'roles') {
-      const options = Array.from(evt.target.selectedOptions).map(
-        (option: any) => option.value
-      );
-      setForm((form: any) => ({
-        ...form,
-        [evt.target.name]: [...options]
-      }));
-    } else {
-      setForm((form: any) => ({
-        ...form,
-        [evt.target.name]: evt.target.value
-      }));
-    }
+  async function onSubmit() {
+    return new Promise((resolve, reject) => {
+      axios({
+        method: 'post',
+        url: '/api/user/',
+        data: getValues(),
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+        .then(({ data }) => resolve(data))
+        .catch(e => reject(e.response.data));
+    });
   }
 
-  function handleSubmit(evt: any) {
-    evt.preventDefault();
-    setSubmitting(true);
-    setError(null);
-    axios({
-      method: 'post',
-      url: '/api/user/',
-      data: {
-        ...form,
-        email: props.user.userEmail
-      },
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+  useEffect(() => {
+    if (error !== null) {
+      for (const key in error) {
+        setError(key.replace('body.', ''), 'duplicate', error[key].message);
       }
-    })
-      .then(result => history.push('/users'))
-      .catch(e => setError('ERROR: USUARIO YA EXISTE O REPETIR'));
-  }
+      console.log(error);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (value !== null) history.push('/users');
+  }, [value]);
 
   return (
     <>
@@ -62,21 +52,35 @@ function NewUser(props: any) {
         </Title>
       </Top>
       <FormWrap>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit(execute)}>
           <Label>
             <I18n t="forms.name" />
           </Label>
-          <Input type="text" onChange={handleChange} name="newUserName"></Input>
+          <Input
+            type="text"
+            ref={register({ required: 'This field is required' })}
+            name="newUserName"
+          ></Input>
+          <ErrorForm>
+            {errors.newUserName && errors.newUserName.message}
+          </ErrorForm>
           <Label>
             <I18n t="forms.mail" />
           </Label>
           <Input
             type="email"
-            onChange={handleChange}
+            ref={register({ required: 'This field is required' })}
             name="newUserEmail"
           ></Input>
+          <ErrorForm>
+            {errors.newUserEmail && errors.newUserEmail.message}
+          </ErrorForm>
           <Label>PERMISOS</Label>
-          <Select name="roles" multiple={true} onChange={handleChange}>
+          <Select
+            name="roles"
+            multiple={true}
+            ref={register({ required: 'This field is required' })}
+          >
             <option>project:create</option>
             <option>project:read</option>
             <option>project:changeState</option>
@@ -89,12 +93,10 @@ function NewUser(props: any) {
             <option>admin:manageRoles</option>
             <option>admin:transfer</option>
           </Select>
-          <SubmitButton
-            submitting={submitting}
-            error={error}
-            text="CREAR"
-            loadingText="CREANDO..."
-          />
+          <ErrorForm>{errors.roles && errors.roles.message}</ErrorForm>
+          <Button disabled={pending} type="submit">
+            CREAR
+          </Button>
         </Form>
       </FormWrap>
       )}

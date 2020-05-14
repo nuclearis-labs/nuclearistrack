@@ -11,7 +11,6 @@ import {
   getOne,
   getBalance
 } from '../controllers/UserController';
-
 const router = express.Router({ mergeParams: true });
 
 router.post('/', verifyToken, validateForm(rules.userCreate), create);
