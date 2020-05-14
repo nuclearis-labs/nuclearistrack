@@ -36,7 +36,6 @@ function NewUser(props: any) {
       for (const key in error) {
         setError(key.replace('body.', ''), 'duplicate', error[key].message);
       }
-      console.log(error);
     }
   }, [error]);
 
