@@ -4,6 +4,15 @@ import web3 from './web3';
 import { validateMnemonic } from 'bip39';
 import { isSHA256 } from './utils';
 
+niv.niceNames({
+  'body.email': 'email',
+  'params.id': 'database id',
+  'params.expediente': 'expediente',
+  'body.newUserName': 'name',
+  'body.newUserEmail': 'email',
+  newPassphrase: 'passphrase'
+});
+
 niv.extendMessages(
   {
     required: 'The :attribute field must not be empty.',
@@ -16,15 +25,6 @@ niv.extendMessages(
   },
   'en'
 );
-
-niv.niceNames({
-  'body.email': 'email',
-  'params.id': 'database id',
-  'params.expediente': 'expediente',
-  newUserName: 'name',
-  newUserEmail: 'email',
-  newPassphrase: 'passphrase'
-});
 
 interface ValueParam {
   value: string;
