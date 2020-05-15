@@ -1,60 +1,64 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import Footer from '../components/Footer';
 import {
   Title,
   Label,
-  ErrorLabel,
   Input,
+  PassphraseInput,
   Select,
   Button
 } from '../styles/components';
-import SubmitButton from '../components/SubmitButton';
-import { Top, Form, FormWrap } from '../styles/form';
-import RSKLink from '../components/RSKLink';
+import { Top, Form, FormWrap, ErrorForm } from '../styles/form';
 import I18n from '../i18n';
 import useSWR from 'swr';
 import { useHistory } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { useAsync } from '../hooks/useAsync';
 
 export default function NewProject() {
-  const [form, setForm] = React.useState<any>({ roles: [] });
-  const [submitting, setSubmitting] = React.useState(false);
-  const [error, setError] = React.useState<null | string>(null);
+  const { register, handleSubmit, errors, setError, getValues } = useForm();
+  const { execute, pending, value, error } = useAsync(onSubmit, false);
   let history = useHistory();
 
   const { data } = useSWR('/api/user/get', url =>
-    axios.get(url).then(result => result.data)
-  );
-
-  function handleChange(evt: any) {
-    evt.persist();
-    if (submitting) setSubmitting(false);
-    setForm((form: any) => ({
-      ...form,
-      [evt.target.name]: evt.target.value
-    }));
-  }
-
-  function handleSubmit(evt: any) {
-    evt.preventDefault();
-    setSubmitting(true);
-    setError(null);
     axios({
-      method: 'post',
-      url: '/api/project/',
-      data: {
-        ...form
-      },
+      url,
+      method: 'get',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
-    })
-      .then(({ data }) => {
-        localStorage.setItem('pendingTx', data);
-        history.push('/projects');
+    }).then(result => result.data)
+  );
+
+  function onSubmit() {
+    return new Promise((resolve, reject) => {
+      axios({
+        method: 'post',
+        url: '/api/project/',
+        data: getValues(),
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
       })
-      .catch(e => setError('ERROR: NO SE PUDO CREAR EL PROYECTO'));
+        .then(({ data }) => resolve(data))
+        .catch(e => reject(e.response.data));
+    });
   }
+
+  useEffect(() => {
+    if (error !== null) {
+      console.log(error);
+
+      for (const key in error) {
+        setError(key.replace('body.', ''), 'duplicate', error[key].message);
+      }
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (value !== null) history.push('/projects');
+  }, [value]);
 
   return (
     <>
@@ -64,20 +68,29 @@ export default function NewProject() {
         </Title>
       </Top>
       <FormWrap>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit(execute)}>
           <Label>
             <I18n t="forms.projectTitle" />
           </Label>
           <Input
             type="text"
-            onChange={handleChange}
+            ref={register({ required: 'This field is required' })}
             name="proyectoTitle"
           ></Input>
+          <ErrorForm>
+            {errors.proyectoTitle && errors.proyectoTitle.message}
+          </ErrorForm>
           <Label>
             <I18n t="forms.client" />
           </Label>
-          <Select name="clientAddress" onChange={handleChange}>
-            <option>Select one...</option>
+          <Select
+            name="clientAddress"
+            defaultValue=""
+            ref={register({ required: 'This field is required' })}
+          >
+            <option disabled hidden value="">
+              Select one...
+            </option>
             {data &&
               data.map((user: any) => (
                 <option value={user.address} key={user.address}>
@@ -85,37 +98,41 @@ export default function NewProject() {
                 </option>
               ))}
           </Select>
+          <ErrorForm>
+            {errors.clientAddress && errors.clientAddress.message}
+          </ErrorForm>
           <Label>
             <I18n t="forms.expediente" />
           </Label>
           <Input
             type="number"
-            onChange={handleChange}
             name="expediente"
+            ref={register({ required: 'This field is required' })}
           ></Input>
+          <ErrorForm>
+            {errors.expediente && errors.expediente.message}
+          </ErrorForm>
           <Label>
             <I18n t="forms.oc" />
           </Label>
-          <Input onChange={handleChange} name="oc"></Input>
-          <div>
-            <Input
+          <Input
+            ref={register({ required: 'This field is required' })}
+            name="oc"
+          ></Input>
+          <ErrorForm>{errors.oc && errors.oc.message}</ErrorForm>
+          <div style={{ marginTop: '30px' }}>
+            <PassphraseInput
               type="password"
-              placeholder="ingresar clave"
-              style={{
-                width: '100px',
-                position: 'relative',
-                top: '60px',
-                marginRight: '5px'
-              }}
-              onChange={handleChange}
+              placeholder="Ingresar clave"
+              ref={register({ required: 'This field is required' })}
               name="passphrase"
-            ></Input>
-            <SubmitButton
-              submitting={submitting}
-              error={error}
-              text="CREAR"
-              loadingText="CREANDO..."
-            />
+            ></PassphraseInput>
+            <Button disabled={pending} type="submit">
+              CREAR
+            </Button>
+            <ErrorForm>
+              {errors.passphrase && errors.passphrase.message}
+            </ErrorForm>
           </div>
         </Form>
       </FormWrap>
