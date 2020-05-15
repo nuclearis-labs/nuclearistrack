@@ -104,16 +104,22 @@ export const TextArea = styled.textarea`
   }
 `;
 
+export const PassphraseInput = styled(Input)`
+  display: inline;
+  width: 150px;
+`;
+
 export const Button = styled.button`
-  background: ${props => (props.disabled ? 'grey' : '#8c6239')}
+  background: #8c6239;
   color: #fff;
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
-  width:fit-content;
-  text-align:center;
+  width: 220px;
+  height: 36px;
+  text-align: center;
   padding: 5px 10px;
   letter-spacing: 1px;
-  display: block;
+  display: inline;
   margin-top: 10px;
   border: none;
   &.submit {
@@ -122,9 +128,20 @@ export const Button = styled.button`
     margin-top: 0;
   }
   &:hover {
-    text-decoration:none;
-    color:white;
+    text-decoration: none;
+    color: white;
   }
+  &:disabled {
+    background: grey;
+  }
+`;
+
+export const CopyButton = styled(Button)`
+  height: 19px;
+  padding: 0px 10px;
+  font-size: 11px;
+  width: fit-content;
+  margin: 0 0 0 10px;
 `;
 
 export const Checkbox = styled.input.attrs(props => ({

@@ -1,12 +1,12 @@
 // documents.js
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
 import styled from 'styled-components';
 import axios from 'axios';
 import Footer from '../components/Footer';
-import { Title, Scroll } from '../styles/components';
-import { Table, Row, Col2 } from '../styles/tableComponents';
+import { Title, Scroll,CopyButton } from '../styles/components';
+import { Table, Row, Col2,Col4 } from '../styles/tableComponents';
+import Clipboard from "clipboard"
 
 const FlexWrap = styled.div`
   display: flex;
@@ -72,7 +72,7 @@ interface IDetailsDocument {
 
 export default function DocumentList() {
   const { process, hash } = useParams();
-
+const clipboard = new Clipboard(".btn")
 
   const [details, setDetails] = useState<IDetailsDocument | null>(null);
   const [document, setDocument] = useState<string | null>(null);
@@ -115,14 +115,15 @@ export default function DocumentList() {
             <>
               <ResumenTit>DETALLES DE DOCUMENTO</ResumenTit>
               <Row>
-                <Col2 className="color">NOMBRE</Col2>
+                <Col4 className="color">NOMBRE</Col4>
                 <Col2 className="bold">{details?.name}</Col2>
               </Row>
               <Row>
-                <Col2 className="color">HASH</Col2>
-                <Col2 className="bold">
-                  {details?.documentHash.substr(0, 8)}...
-                  {details?.documentHash.substr(-8)}
+                <Col4 className="color">HASH</Col4>
+                <Col2 className="bold" id="hash">
+                  {details?.documentHash.substr(0, 10)}...
+                  {details?.documentHash.substr(-10)}
+                <CopyButton className="btn" data-clipboard-text={details?.documentHash}>Copy</CopyButton>
                 </Col2>
               </Row>
               <ProcesosTit>OBSERVACIONES</ProcesosTit>

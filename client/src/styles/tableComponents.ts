@@ -77,6 +77,8 @@ export const Col3 = styled.div`
 
 export const Col4 = styled(Col3)`
   width: 25%;
+  &.bold{font-weight:700; calc(100% - 120px);}
+  &.color{color:#8c6239; width:130px;}
 `;
 export const Col6 = styled(Col3)`
   width: 10%;
