@@ -38,6 +38,6 @@ export async function transfer(req: Request, res: Response) {
     logger.error(`Couldn't transfer ${req.body.value} to ${req.body.to} `, {
       message: e.message
     });
-    res.status(400).json({ error: e.message });
+    res.status(500).json({ error: e.message });
   }
 }

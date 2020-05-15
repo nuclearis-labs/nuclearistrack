@@ -27,7 +27,7 @@ const rules = {
   },
   transfer: {
     'body.to': 'required',
-    'body.value': `required|integer`
+    'body.value': `required|numeric`
   },
   projectCreate: {
     'body.expediente': 'required|integer',

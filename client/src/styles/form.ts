@@ -22,3 +22,8 @@ export const Form = styled.form`
   width: 700px;
   margin: 0 auto;
 `;
+
+export const ErrorForm = styled.span`
+  display: block;
+  color: red;
+`;
