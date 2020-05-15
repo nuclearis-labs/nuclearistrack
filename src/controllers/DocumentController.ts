@@ -156,12 +156,11 @@ export async function get(req: Request, res: Response) {
 
       documents.push({
         name: details[0],
-        docNumber: details[3],
-        mineTime: details[4],
+        mineTime: details[3],
         latitude: utils.hexToAscii(details[1]),
         longitude: utils.hexToAscii(details[2]),
         documentHash: result[i],
-        comment: details[5]
+        comment: details[4]
       });
     }
 

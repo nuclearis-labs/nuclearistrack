@@ -41,7 +41,6 @@ export default function DocumentList() {
         <Form>
           <HeadRow>
             <Col3>NOMBRE</Col3>
-            <Col6>NUMERO</Col6>
             <Col3>FECHA DE SUBIDA</Col3>
           </HeadRow>
 
@@ -53,7 +52,6 @@ export default function DocumentList() {
                 key={doc.documentHash}
               >
                 <Col3>{doc.name}</Col3>
-                <Col6>{doc.docNumber}</Col6>
                 <Col3>{doc.mineTime}</Col3>
               </Row>
             ))}
