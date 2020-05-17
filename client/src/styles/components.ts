@@ -115,18 +115,13 @@ export const Button = styled.button`
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   width: 220px;
+  display: block;
   height: 36px;
   text-align: center;
   padding: 5px 10px;
   letter-spacing: 1px;
-  display: inline;
   margin-top: 10px;
   border: none;
-  &.submit {
-    position: relative;
-    top: 60px;
-    margin-top: 0;
-  }
   &:hover {
     text-decoration: none;
     color: white;
@@ -134,6 +129,10 @@ export const Button = styled.button`
   &:disabled {
     background: grey;
   }
+`;
+
+export const PassphraseButton = styled(Button)`
+  display: inline;
 `;
 
 export const CopyButton = styled(Button)`
