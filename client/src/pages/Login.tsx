@@ -1,35 +1,21 @@
 import React, { useEffect } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
-import { useAsync } from '../hooks/useAsync';
-import { Title, Label, ErrorLabel, Input, Button } from '../styles/components';
-import { Top, FormWrap, Form } from '../styles/form';
+import { useHistory } from 'react-router-dom';
+import { Title, Label, Input, Button } from '../styles/components';
+import { Top, FormWrap, Form, ErrorForm } from '../styles/form';
 import Footer from '../components/Footer';
+import Spinner from '../components/Spinner';
 import { loginUser } from '../actions/actionCreators';
 import { connect } from 'react-redux';
-import SubmitButton from '../components/SubmitButton';
+import { useForm } from 'react-hook-form';
+import { useAsync } from '../hooks/useAsync';
 
 function Login(props: any) {
-  const [form, setForm] = React.useState({ email: '', passphrase: '' });
-  const [submitting, setSubmitting] = React.useState(false);
-  const [error, setError] = React.useState<null | string>(null);
-  let history = useHistory();
-
-  function handleChange(evt: any) {
-    evt.persist();
-    if (submitting) setSubmitting(false);
-    setForm(form => ({ ...form, [evt.target.name]: evt.target.value }));
-  }
-
-  function handleSubmit(evt: any) {
-    evt.preventDefault();
-    setSubmitting(true);
-    setError(null);
-    props.loginUser(form);
-  }
-
-  useEffect(() => {
-    setError('ERROR: INTENTAR DE NUEVO');
-  }, [props.error]);
+  const { register, handleSubmit, errors, setError, getValues } = useForm();
+  const { execute, pending, value, error } = useAsync(
+    async () => props.loginUser(getValues()),
+    false
+  );
+  const history = useHistory();
 
   useEffect(() => {
     if (props.user !== null) history.push('/');
@@ -41,28 +27,27 @@ function Login(props: any) {
         <Title>LOGIN</Title>
       </Top>
       <FormWrap>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit(execute)}>
           <Label>USUARIO</Label>
           <Input
             name="email"
-            onChange={handleChange}
-            value={form && form.email}
+            ref={register({ required: 'This field is required' })}
             autoComplete="username"
           />
+          <ErrorForm>{errors.email && errors.email.message}</ErrorForm>
           <Label>CLAVE</Label>
           <Input
             name="passphrase"
-            onChange={handleChange}
-            value={form && form.passphrase}
+            ref={register({ required: 'This field is required' })}
             autoComplete="current-password"
             type="password"
           />
-          <SubmitButton
-            submitting={submitting}
-            error={error}
-            text="LOGIN"
-            loadingText="LOGIN IN..."
-          />
+          <ErrorForm>
+            {errors.passphrase && errors.passphrase.message}
+          </ErrorForm>
+          <Button type="submit" disabled={pending}>
+            {pending ? <Spinner /> : 'LOGIN'}
+          </Button>
         </Form>
       </FormWrap>
       <Footer />
