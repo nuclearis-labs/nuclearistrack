@@ -8,9 +8,12 @@ import { loginUser } from '../actions/actionCreators';
 import { connect } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { useAsync } from '../hooks/useAsync';
+import { LoginSchema } from '../validationSchemas/index';
 
 function Login(props: any) {
-  const { register, handleSubmit, errors, setError, getValues } = useForm();
+  const { register, handleSubmit, errors, setError, getValues } = useForm({
+    validationSchema: LoginSchema
+  });
   const { execute, pending, value, error } = useAsync(
     async () => props.loginUser(getValues()),
     false
@@ -46,7 +49,7 @@ function Login(props: any) {
             {errors.passphrase && errors.passphrase.message}
           </ErrorForm>
           <Button type="submit" disabled={pending}>
-            {pending ? <Spinner /> : 'LOGIN'}
+            {pending ? <Spinner size="sm" /> : 'LOGIN'}
           </Button>
         </Form>
       </FormWrap>

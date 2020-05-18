@@ -7,11 +7,11 @@ import { IUserOnReq } from '../types/Custom';
 
 const processABI = require('../../build/contracts/Process.json').abi;
 
-export async function create(req: Request, res: Response) {
+export async function create(req: IUserOnReq, res: Response) {
   try {
     const { address, privateKey } = await utils.getKeys({
-      email: process.env.ADMINEMAIL,
-      passphrase: process.env.ADMINPASSPHRASE
+      email: req.user.userEmail,
+      passphrase: req.body.passphrase
     });
 
     const processTitle = utils.asciiToHex(req.body.processTitle);
@@ -20,6 +20,7 @@ export async function create(req: Request, res: Response) {
     const contract = new Contract({
       privateKey
     });
+
     const txHash = await contract.sendDataToContract({
       fromAddress: address,
       method: 'createProcess',

@@ -2,50 +2,38 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Title, Label, Input, Button, ErrorLabel } from '../styles/components';
-import { Top, Form, FormWrap } from '../styles/form';
-import SubmitButton from '../components/SubmitButton';
+import { Title, Label, Input, Button } from '../styles/components';
+import { Top, Form, FormWrap, ErrorForm } from '../styles/form';
 import { Link } from 'react-router-dom';
 import RSKLink from '../components/RSKLink';
 import Footer from '../components/Footer';
 import { useHistory } from 'react-router-dom';
+import Spinner from '../components/Spinner';
+import { useForm } from 'react-hook-form';
+import { useAsync } from '../hooks/useAsync';
+import { ConfirmSchema } from '../validationSchemas/index';
 
 export default function ConfirmUser() {
   const { id } = useParams();
-  const [form, setForm] = React.useState<any>();
-  const [result, setResult] = React.useState<any>(null);
-  const [submitting, setSubmitting] = React.useState(false);
-  const [error, setError] = React.useState<null | string>(null);
+  const { register, handleSubmit, errors, setError, getValues } = useForm({
+    validationSchema: ConfirmSchema
+  });
+  const { execute, pending, value, error } = useAsync(onSubmit, false);
   let history = useHistory();
 
-  function handleChange(evt: any) {
-    evt.persist();
-    if (submitting) setSubmitting(false);
-    setForm((form: any) => ({
-      ...form,
-      [evt.target.name]: evt.target.value
-    }));
-  }
-
-  function handleSubmit(evt: any) {
-    evt.preventDefault();
-    setSubmitting(true);
-    setError(null);
-    axios({
-      method: 'post',
-      url: `/api/user/confirm/${id}`,
-      data: {
-        ...form
-      },
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    })
-      .then(({ data }) => {
-        localStorage.setItem('pendingTx', `[${data.txHash}]`);
-        setResult(data);
+  function onSubmit(evt: any) {
+    return new Promise((resolve, reject) => {
+      axios({
+        method: 'post',
+        url: `/api/user/confirm/${id}`,
+        data: getValues(),
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
       })
-      .catch(e => setError('ERROR: NO SE LOGRO CONFIRMAR EL USUARIO'));
+        .then(({ data }) => resolve(data))
+        .catch(e => reject(e.response.data));
+    });
   }
 
   return (
@@ -57,25 +45,32 @@ export default function ConfirmUser() {
           USER
         </Title>
       </Top>
-      {result ? (
-        <Confirmation {...result} />
+      {value ? (
+        <Confirmation {...value} />
       ) : (
         <FormWrap>
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit(execute)}>
             <Label>PASSPHRASE</Label>
-            <Input type="password" onChange={handleChange} name="passphrase" />
+            <Input
+              type="password"
+              ref={register({ required: 'Se requiere elegir una contraseña' })}
+              name="passphrase"
+            />
+            <ErrorForm>
+              {errors.passphrase && errors.passphrase.message}
+            </ErrorForm>
             <Label>CONFIRM PASSPHRASE</Label>
             <Input
               type="password"
-              onChange={handleChange}
+              ref={register({ required: 'Se requiere elegir una contraseña' })}
               name="confirm_passphrase"
             />
-            <SubmitButton
-              submitting={submitting}
-              error={error}
-              text="CONFIRMAR"
-              loadingText="CONFIRMANDO...."
-            />
+            <ErrorForm>
+              {errors.confirm_passphrase && errors.confirm_passphrase.message}
+            </ErrorForm>
+            <Button type="submit" disabled={pending}>
+              {pending ? <Spinner /> : 'CONFIRMAR'}
+            </Button>
           </Form>
         </FormWrap>
       )}
@@ -85,7 +80,6 @@ export default function ConfirmUser() {
 }
 
 function Confirmation(props: any) {
-  debugger;
   return (
     <FormWrap>
       <Form>

@@ -67,8 +67,7 @@ export const Input = styled.input`
 `;
 
 export const FileInput = styled.input`
-  border: solid 2px
-    ${(props: { error: boolean }) => (props.error ? 'red' : '#5d5d5d')};
+  border: solid 2px #5d5d5d;
   width: 370px;
   height: 36px;
   padding: 3px;

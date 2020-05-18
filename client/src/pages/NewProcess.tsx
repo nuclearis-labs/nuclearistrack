@@ -1,5 +1,5 @@
 // newProvider.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import {
@@ -8,51 +8,51 @@ import {
   ErrorLabel,
   Input,
   Select,
-  Button
+  Button,
+  PassphraseButton,
+  PassphraseInput
 } from '../styles/components';
-import SubmitButton from '../components/SubmitButton';
-import { Top, Form, FormWrap } from '../styles/form';
+import Spinner from '../components/Spinner';
+import { Top, Form, FormWrap, ErrorForm } from '../styles/form';
 import RSKLink from '../components/RSKLink';
 import Footer from '../components/Footer';
 import I18n from '../i18n';
 import useSWR from 'swr';
 import { IUser } from '../types/user';
 import { useHistory } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { useAsync } from '../hooks/useAsync';
+import { ProcessSchema } from '../validationSchemas/index';
 
 export default function NewProcess() {
-  const [form, setForm] = React.useState<any>({ roles: [] });
-  const [submitting, setSubmitting] = React.useState(false);
-  const [error, setError] = React.useState<null | string>(null);
+  const { register, handleSubmit, errors, setError, getValues } = useForm({
+    validationSchema: ProcessSchema
+  });
+  const { execute, pending, value, error } = useAsync(onSubmit, false);
   let history = useHistory();
 
   const { data } = useSWR('/api/user/get', url =>
     axios.get(url).then(result => result.data)
   );
 
-  function handleChange(evt: any) {
-    evt.persist();
-    if (submitting) setSubmitting(false);
-    setForm((form: any) => ({
-      ...form,
-      [evt.target.name]: evt.target.value
-    }));
+  function onSubmit() {
+    return new Promise((resolve, reject) => {
+      axios({
+        method: 'post',
+        url: '/api/process/',
+        data: getValues(),
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+        .then(({ data }) => resolve(data))
+        .catch(e => reject(e.response.data));
+    });
   }
 
-  function handleSubmit(evt: any) {
-    evt.preventDefault();
-    setSubmitting(true);
-    setError(null);
-    axios({
-      method: 'post',
-      url: '/api/process/',
-      data: { ...form },
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    })
-      .then(({ data }) => history.push('/processes'))
-      .catch(e => setError('ERROR: NO SE PUDO CREAR EL PROCESO'));
-  }
+  useEffect(() => {
+    if (value !== null) history.push('/processes');
+  }, [value]);
 
   return (
     <>
@@ -62,16 +62,21 @@ export default function NewProcess() {
         </Title>
       </Top>
       <FormWrap>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit(execute)}>
           <Label>
             <I18n t="forms.name" />
           </Label>
-          <Input onChange={handleChange} name="processTitle"></Input>
+          <Input ref={register} name="processTitle"></Input>
+          <ErrorForm>
+            {errors.processTitle && errors.processTitle.message}
+          </ErrorForm>
           <Label>
             <I18n t="forms.supplier" />
           </Label>
-          <Select onChange={handleChange} name="supplierAddress">
-            <option value="0">Select one...</option>
+          <Select ref={register} name="supplierAddress" defaultValue="">
+            <option disabled hidden value="">
+              Select one...
+            </option>
             {data &&
               data.map((user: IUser) => (
                 <option value={user.address} key={user.address}>
@@ -79,12 +84,23 @@ export default function NewProcess() {
                 </option>
               ))}
           </Select>
-          <SubmitButton
-            submitting={submitting}
-            error={error}
-            text="CREAR"
-            loadingText="CREANDO..."
-          />
+          <ErrorForm>
+            {errors.supplierAddress && errors.supplierAddress.message}
+          </ErrorForm>
+          <div style={{ marginTop: '30px' }}>
+            <PassphraseInput
+              type="password"
+              placeholder="Ingresar clave"
+              ref={register}
+              name="passphrase"
+            ></PassphraseInput>
+            <PassphraseButton disabled={pending} type="submit">
+              {pending ? <Spinner /> : 'CREAR'}
+            </PassphraseButton>
+            <ErrorForm>
+              {errors.passphrase && errors.passphrase.message}
+            </ErrorForm>
+          </div>
         </Form>
       </FormWrap>
       <Footer />

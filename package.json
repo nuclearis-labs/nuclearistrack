@@ -19,8 +19,7 @@
     "mongo-seed": "mongoimport --host localhost:27017 --db nrspoe --collection users --drop --file ./mongo-seed.json --jsonArray",
     "contract-deploy": "node ./contract-deploy.js",
     "ganache": "ganache-cli -m \"speak card review photo quote endless alpha metal long reflect angle rare\" -l 6800000 -g 65164000",
-    "env-deploy": "concurrently \"npm:mongo-seed\" \"npm:ganache\" \"truffle compile\"",
-    "deploy": "concurrently \"npm:contract-deploy && npm start\" \"npm:start-client\"",
+    "deploy": "npm run mongo-seed && npx truffle compile && npm run contract-deploy && concurrently \"npm start\" \"npm run start-client\"",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "repository": {

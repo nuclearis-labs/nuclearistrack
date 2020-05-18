@@ -103,42 +103,6 @@ interface CheckProps {
   id: string;
 }
 
-function Check(props: CheckProps) {
-  const [checked, setChecked] = useState(false);
-
-  function handleCheckboxChange() {
-    checked === false
-      ? props.setCheckedProcesses((checkedArr: string[]) => [
-          ...checkedArr,
-          props.id
-        ])
-      : props.setCheckedProcesses((checkedArr: string[]) =>
-          checkedArr.filter((check: string) => check === props.id)
-        );
-
-    setChecked(!checked);
-  }
-
-  const Checkbox = styled.div`
-    width: 13px;
-    height: 13px;
-    border: 1px solid #333;
-    box-sizing: border-box;
-    margin: 1px 7px 1px 0;
-    background: ${(props: { checked: boolean }) =>
-      props.checked ? 'background: #333' : 'background:transparent;'};
-  `;
-
-  return (
-    <Checkbox
-      checked={checked}
-      onClick={() => {
-        handleCheckboxChange();
-      }}
-    ></Checkbox>
-  );
-}
-
 function ProcessModal({ project }: { project: { id: string; title: string } }) {
   const { register, handleSubmit, getValues } = useForm();
   const { execute, pending } = useAsync(onSubmit, false);
@@ -152,17 +116,14 @@ function ProcessModal({ project }: { project: { id: string; title: string } }) {
 
   function onSubmit() {
     return new Promise((resolve, reject) => {
-      const form = getValues();
       axios({
         method: 'post',
         url: '/api/project/assignProcess',
-        data: {
-          ...form
-        },
+        data: getValues(),
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       })
         .then(({ data }) => resolve(data))
-        .catch(e => reject(e.message));
+        .catch(e => reject(e.response.data));
     });
   }
 
@@ -191,9 +152,10 @@ function ProcessModal({ project }: { project: { id: string; title: string } }) {
                 supplierName: string;
               }) => (
                 <Row key={process.processContracts}>
-                  <Check
+                  <input type="checkbox"
+                     style={{"width":"15px","height":"15px"}}
                     id={process.processContracts}
-                    setCheckedProcesses={() => {}}
+                    ref={register}
                   />
                   <Col4>{process.processName}</Col4>
                   <Col4>{process.supplierName}</Col4>
@@ -207,7 +169,7 @@ function ProcessModal({ project }: { project: { id: string; title: string } }) {
               )
             )}
           </ScrollBox130>
-          <Button disabled={pending} onClick={handleSubmit(execute)}>
+          <Button style={{width:"fit-content"}} disabled={pending} onClick={handleSubmit(execute)}>
             {pending ? 'LOADING' : '+ AGREGAR PROCESOS'}
           </Button>
         </ModalBottom>

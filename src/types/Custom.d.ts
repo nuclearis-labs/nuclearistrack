@@ -23,4 +23,10 @@ export interface IFileOnReq extends Request {
     detectedFileExtension: string;
     stream: any;
   };
+  user?: {
+    userName: string;
+    userEmail: string;
+    address: string;
+    roles: Object;
+  };
 }

@@ -11,10 +11,15 @@ import {
   Button,
   ProcessName,
   SubTit,
-  Pad
+  Pad,
+  PassphraseButton,
+  PassphraseInput
 } from '../styles/components';
-import { Top, Form, FormWrap } from '../styles/form';
+import Spinner from '../components/Spinner';
+import { Top, Form, FormWrap, ErrorForm } from '../styles/form';
 import axios from 'axios';
+import RSKLink from '../components/RSKLink';
+import { Link } from 'react-router-dom';
 import Footer from '../components/Footer';
 import { useForm } from 'react-hook-form';
 import { useAsync } from '../hooks/useAsync';
@@ -24,14 +29,16 @@ import { RouteProps } from 'react-router';
 import { GoogleMap } from '../components/GoogleMap';
 import { getCurrentUser } from '../actions/actionCreators';
 import { connect } from 'react-redux';
+import { DocumentSchema } from '../validationSchemas/index';
 
 function NewDocument(props: any) {
+  const [loading, setLoading] = useState<any>(true);
   let { process } = useParams();
-  const { register, handleSubmit, errors, getValues } = useForm();
-  const [form, setForm] = useState<any>([]);
-  const [loading, setLoading] = useState(true);
+  const { register, handleSubmit, errors, getValues } = useForm({
+    validationSchema: DocumentSchema
+  });
   const [location, setLocation] = useState<Coordinates | undefined>();
-  const { execute, pending } = useAsync(onSubmit, false);
+  const { execute, pending, value } = useAsync(onSubmit, false);
   const { data } = useSWR('/api/process/getOne?contract=' + process, url =>
     axios
       .get(url, {
@@ -40,21 +47,6 @@ function NewDocument(props: any) {
       .then(({ data }) => data)
   );
   useNavLocation().then(coords => setLocation(coords));
-
-  function handleChange(evt: any) {
-    evt.persist();
-    setForm((form: any) => ({
-      ...form,
-      [evt.target.name]: evt.target.value
-    }));
-  }
-  function handleFileInput(evt: any) {
-    evt.persist();
-    setForm((form: any) => ({
-      ...form,
-      [evt.target.name]: evt.target.files[0]
-    }));
-  }
 
   useEffect(() => {
     setLoading(false);
@@ -67,14 +59,14 @@ function NewDocument(props: any) {
         return;
       }
 
+      const form = getValues();
+
       let data = new FormData();
-      data.append('file', form.file);
-      data.append('email', props.user.userEmail);
+      data.append('file', form.file[0]);
       data.append('passphrase', form.passphrase);
       data.append('comment', form.comment);
       data.append('latitude', location.latitude.toString());
       data.append('longitude', location.longitude.toString());
-      console.log(data);
 
       axios({
         method: 'post',
@@ -86,7 +78,7 @@ function NewDocument(props: any) {
         }
       })
         .then(({ data }) => resolve(data))
-        .catch(e => reject(e.message));
+        .catch(e => reject(e.response.data));
     });
   }
 
@@ -99,60 +91,65 @@ function NewDocument(props: any) {
           DOCUMENTO
         </Title>
       </Top>
-      <FormWrap>
-        {loading === false ? (
-          <Form>
-            <Pad>
-              <SubTit>PROCESO</SubTit>
-              <ProcessName>
-                {data && data.processName && data.processName.toUpperCase()}
-              </ProcessName>
-              <SubTit>PROVEEDOR</SubTit>
-              <SubTit className="bold">
-                {data && data.supplierName && data.supplierName.toUpperCase()}
-              </SubTit>
-            </Pad>
-            <Label>SELECCIONAR ARCHIVO</Label>
-            <FileInput
-              ref={register({ required: true })}
-              name="file"
-              error={errors.file}
-              type="file"
-              onChange={handleFileInput}
-            ></FileInput>
-            <Label>UBICACION DEL DOCUMENTO</Label>
-            {location && <GoogleMap coords={location} />}
-            <Label>OBSERVACIONES</Label>
-            <TextArea name="comment" onChange={handleChange}></TextArea>
-            <div>
-              <Input
-                placeholder="ingresar clave"
-                type="password"
-                style={{
-                  width: '100px',
-                  position: 'relative',
-                  top: '60px',
-                  marginRight: '5px'
-                }}
-                name="passphrase"
-                onChange={handleChange}
-              ></Input>
-              <Button
-                style={{ display: 'inline-block', position: 'relative' }}
-                onClick={handleSubmit(execute)}
-                disabled={pending}
-                className="submit"
-              >
-                {!pending ? <I18n t="forms.create" /> : 'LOADING'}
-              </Button>
-            </div>
-          </Form>
-        ) : (
-          <h2>Loading</h2>
-        )}
-      </FormWrap>
+      {value ? (
+        <Confirmation hash={value} />
+      ) : (
+        <FormWrap>
+          {loading === false && (
+            <Form onSubmit={handleSubmit(execute)}>
+              <Pad>
+                <SubTit>PROCESO</SubTit>
+                <ProcessName>
+                  {data && data.processName && data.processName.toUpperCase()}
+                </ProcessName>
+                <SubTit>PROVEEDOR</SubTit>
+                <SubTit className="bold">
+                  {data && data.supplierName && data.supplierName.toUpperCase()}
+                </SubTit>
+              </Pad>
+              <Label>SELECCIONAR ARCHIVO</Label>
+              <FileInput ref={register} name="file" type="file" />
+              <ErrorForm>{errors.file && errors.file.message}</ErrorForm>
+              <Label>UBICACION DEL DOCUMENTO</Label>
+              {location && <GoogleMap coords={location} />}
+              <Label>OBSERVACIONES</Label>
+              <TextArea name="comment" ref={register}></TextArea>
+              <div>
+                <PassphraseInput
+                  placeholder="Ingresar clave"
+                  type="password"
+                  name="passphrase"
+                  ref={register}
+                ></PassphraseInput>
+                <PassphraseButton disabled={pending} type="submit">
+                  {pending ? <Spinner size="sm" /> : 'CREAR'}
+                </PassphraseButton>
+                <ErrorForm>
+                  {errors.passphrase && errors.passphrase.message}
+                </ErrorForm>
+              </div>
+            </Form>
+          )}
+        </FormWrap>
+      )}
       <Footer />
     </>
+  );
+}
+
+function Confirmation(props: any) {
+  return (
+    <FormWrap>
+      <Form>
+        <p>El documento fue subido con exito!</p>
+        <p>
+          Transaction: <RSKLink hash={props.hash} type="tx" testnet />
+        </p>
+        <Button as={Link} to="/">
+          CONTINUAR
+        </Button>
+      </Form>
+    </FormWrap>
   );
 }
 

@@ -4,9 +4,11 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import Footer from '../components/Footer';
-import { Title, Scroll,CopyButton } from '../styles/components';
-import { Table, Row, Col2,Col4 } from '../styles/tableComponents';
-import Clipboard from "clipboard"
+import { Title, Scroll, CopyButton } from '../styles/components';
+import { Table, Row, Col2, Col4 } from '../styles/tableComponents';
+import Clipboard from 'clipboard';
+import Spinner from '../components/Spinner';
+import { GoogleMap } from '../components/GoogleMap';
 
 const FlexWrap = styled.div`
   display: flex;
@@ -22,7 +24,7 @@ const DocImgHolder = styled.iframe`
   float: right;
   margin-right: 20px;
   margin-bottom: 50px;
-  width: 800px;
+  width: 90%;
   height: 600px;
 `;
 
@@ -65,15 +67,21 @@ const Nota = styled.div`
 `;
 
 interface IDetailsDocument {
-  name:string;
-  documentHash:string;
-  comment:string;
+  name: string;
+  documentHash: string;
+  longitude: number;
+  latitude: number;
+  comment: string;
+  mineTime: string;
 }
 
 export default function DocumentList() {
+  const [loading, setLoading] = useState(true);
+  const [docLoading, setDocLoading] = useState(true);
   const { process, hash } = useParams();
-const clipboard = new Clipboard(".btn")
+  const clipboard = new Clipboard('.btn');
 
+  const [verified, setVerified] = useState<boolean | null>();
   const [details, setDetails] = useState<IDetailsDocument | null>(null);
   const [document, setDocument] = useState<string | null>(null);
   useEffect(() => {
@@ -82,7 +90,15 @@ const clipboard = new Clipboard(".btn")
       url: '/api/doc/getOne?contract=' + process + '&hash=' + hash,
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     }).then(({ data }) => {
+      const date = new Date(data.mineTime * 1000);
+
+      data.mineTime = `${date.getDate()}/${date.getMonth() +
+        1}/${date.getFullYear()} ${('0' + date.getHours()).slice(-2)}:${(
+        '0' + date.getMinutes()
+      ).slice(-2)}`;
+
       setDetails(data);
+      setLoading(false);
 
       fetch(`/api/doc/getOneFile?storageHash=${data.storageHash}`)
         .then(response => {
@@ -90,6 +106,7 @@ const clipboard = new Clipboard(".btn")
             response.blob().then(pdf => {
               let objectURL = URL.createObjectURL(pdf);
               setDocument(objectURL);
+              setDocLoading(false);
             });
           }
         })
@@ -101,6 +118,23 @@ const clipboard = new Clipboard(".btn")
     });
   }, [process, hash]);
 
+  function handleVerification(e: any) {
+    e.persist();
+    let body = new FormData();
+    //@ts-ignore
+    body.append('file', e.target.files[0]);
+    fetch(`/api/doc/verify?contract=${process}&hash=${hash}`, {
+      method: 'POST',
+      body,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    }).then(res => {
+      if (res.status === 200) setVerified(true);
+      else setVerified(false);
+    });
+  }
+
   return (
     <>
       <FlexWrap>
@@ -108,29 +142,75 @@ const clipboard = new Clipboard(".btn")
           <FlexWrapRight>
             <Title>DOCUMENTO </Title>
           </FlexWrapRight>
-          <Table>{document && <DocImgHolder src={document} />}</Table>
+          <Table>
+            {!docLoading && document !== null ? (
+              <DocImgHolder src={document} />
+            ) : (
+              <div className="d-flex justify-content-center">
+                <Spinner size="lg" />
+              </div>
+            )}
+          </Table>
         </Left>
         <Right>
-          {details && (
+          {details == null ? (
+            <div className="d-flex justify-content-center">
+              <Spinner size="lg" />
+            </div>
+          ) : (
             <>
               <ResumenTit>DETALLES DE DOCUMENTO</ResumenTit>
               <Row>
                 <Col4 className="color">NOMBRE</Col4>
-                <Col2 className="bold">{details?.name}</Col2>
+                <Col2 className="bold">{details.name}</Col2>
               </Row>
               <Row>
                 <Col4 className="color">HASH</Col4>
                 <Col2 className="bold" id="hash">
-                  {details?.documentHash.substr(0, 10)}...
-                  {details?.documentHash.substr(-10)}
-                <CopyButton className="btn" data-clipboard-text={details?.documentHash}>Copy</CopyButton>
+                  {details.documentHash.substr(0, 10)}...
+                  {details.documentHash.substr(-10)}
+                  <CopyButton
+                    className="btn"
+                    style={{ display: 'inline' }}
+                    data-clipboard-text={details.documentHash}
+                  >
+                    Copy
+                  </CopyButton>
                 </Col2>
               </Row>
+              <Row>
+                <Col4 className="color">TIME</Col4>
+                <Col2 className="bold">{details.mineTime}</Col2>
+              </Row>
+              <Row>
+                <Col4 className="color">VERIFICAR</Col4>
+                <Col2 className="bold">
+                  {verified === true ? (
+                    'Documento es autentico'
+                  ) : verified === false ? (
+                    'Documento no verifica'
+                  ) : (
+                    <input
+                      type="file"
+                      name="file"
+                      onChange={handleVerification}
+                    />
+                  )}
+                </Col2>
+              </Row>
+              <ProcesosTit>UBICACIÓN</ProcesosTit>
+              <GoogleMap
+                coords={{
+                  longitude: Number(details.longitude),
+                  latitude: Number(details.latitude)
+                }}
+              />
+
               <ProcesosTit>OBSERVACIONES</ProcesosTit>
               <Nota>
-                {
-                  details?.comment === 'undefined' &&
-                  'No hay comentarios'}
+                {details.comment == undefined
+                  ? 'No hay comentarios'
+                  : details.comment}
               </Nota>
             </>
           )}

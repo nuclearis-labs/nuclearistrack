@@ -1,18 +1,27 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
-import { Title, Label, Button, Input, Select } from '../styles/components';
+import {
+  Title,
+  Label,
+  Button,
+  Input,
+  Select,
+  PassphraseButton
+} from '../styles/components';
+import Spinner from '../components/Spinner';
 import Permits from '../components/Permits';
 import { Top, Form, FormWrap, ErrorForm } from '../styles/form';
 import Footer from '../components/Footer';
 import I18n from '../i18n';
-import { connect } from 'react-redux';
-import { getCurrentUser } from '../actions/actionCreators';
 import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useAsync } from '../hooks/useAsync';
+import { UserSchema } from '../validationSchemas/index';
 
-function NewUser(props: any) {
-  const { register, handleSubmit, errors, setError, getValues } = useForm();
+export default function NewUser(props: any) {
+  const { register, handleSubmit, errors, setError, getValues } = useForm({
+    validationSchema: UserSchema
+  });
   const { execute, pending, value, error } = useAsync(onSubmit, false);
   const history = useHistory();
 
@@ -55,22 +64,14 @@ function NewUser(props: any) {
           <Label>
             <I18n t="forms.name" />
           </Label>
-          <Input
-            type="text"
-            ref={register({ required: 'This field is required' })}
-            name="newUserName"
-          ></Input>
+          <Input type="text" ref={register} name="newUserName"></Input>
           <ErrorForm>
             {errors.newUserName && errors.newUserName.message}
           </ErrorForm>
           <Label>
             <I18n t="forms.mail" />
           </Label>
-          <Input
-            type="email"
-            ref={register({ required: 'This field is required' })}
-            name="newUserEmail"
-          ></Input>
+          <Input type="email" ref={register} name="newUserEmail"></Input>
           <ErrorForm>
             {errors.newUserEmail && errors.newUserEmail.message}
           </ErrorForm>
@@ -78,7 +79,8 @@ function NewUser(props: any) {
           <Select
             name="roles"
             multiple={true}
-            ref={register({ required: 'This field is required' })}
+            style={{ height: '250px' }}
+            ref={register}
           >
             <option>project:create</option>
             <option>project:read</option>
@@ -94,7 +96,7 @@ function NewUser(props: any) {
           </Select>
           <ErrorForm>{errors.roles && errors.roles.message}</ErrorForm>
           <Button disabled={pending} type="submit">
-            CREAR
+            {pending ? <Spinner /> : 'CREAR'}
           </Button>
         </Form>
       </FormWrap>
@@ -103,12 +105,3 @@ function NewUser(props: any) {
     </>
   );
 }
-
-function mapStateToProps(reduxState: any) {
-  return { user: reduxState.user };
-}
-
-export default connect(
-  mapStateToProps,
-  { getCurrentUser }
-)(NewUser);

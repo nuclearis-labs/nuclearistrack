@@ -16,25 +16,18 @@ const processABI = require('../../build/contracts/Process.json').abi;
 export async function verify(req: IFileOnReq, res: Response) {
   let documentHash: string;
   try {
-    documentHash = createSHA256(req.file.buffer);
-    const contract = new Contract({
-      abi: processABI,
-      contractAddress: req.query.contract
-    });
-    const details = await contract.getDataFromContract({
-      method: 'getDocument',
-      data: [documentHash]
-    });
+    const hashStream = new HashStream('sha256');
 
-    res.json({
-      name: details[0],
-      docNumber: details[4],
-      mineTime: details[5],
-      latitude: utils.hexToAscii(details[2]),
-      longitude: utils.hexToAscii(details[3]),
-      documentHash,
-      comment: details[6]
-    });
+    req.file.stream
+      .pipe(hashStream)
+      .on('data', () => console.log('streaming'))
+      .on('finish', () => {
+        if (hashStream.hash === req.query.hash) {
+          res.status(200).json({ hash: hashStream.hash });
+        } else {
+          res.status(404).json({ hash: hashStream.hash });
+        }
+      });
   } catch (e) {
     logger.error(`Document could not be verified`, {
       hash: documentHash,
@@ -47,7 +40,10 @@ export async function verify(req: IFileOnReq, res: Response) {
 export async function upload(req: IFileOnReq, res: Response) {
   let documentHash: string;
   try {
-    const { address, privateKey } = await utils.getKeys(req.body);
+    const { address, privateKey } = await utils.getKeys({
+      email: req.user.userEmail,
+      passphrase: req.body.passphrase
+    });
 
     const latitude = utils.asciiToHex(req.body.latitude);
     const longitude = utils.asciiToHex(req.body.longitude);

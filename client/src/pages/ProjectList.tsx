@@ -221,6 +221,7 @@ export default function ProjectList() {
                 </Row>
               ))}
             <Button
+              style={{ width: 'fit-content' }}
               onClick={() => {
                 setShowModal(true);
               }}

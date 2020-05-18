@@ -7,17 +7,22 @@ import {
   Input,
   PassphraseInput,
   Select,
-  Button
+  Button,
+  PassphraseButton
 } from '../styles/components';
+import Spinner from '../components/Spinner';
 import { Top, Form, FormWrap, ErrorForm } from '../styles/form';
 import I18n from '../i18n';
 import useSWR from 'swr';
 import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useAsync } from '../hooks/useAsync';
+import { ProjectSchema } from '../validationSchemas/index';
 
 export default function NewProject() {
-  const { register, handleSubmit, errors, setError, getValues } = useForm();
+  const { register, handleSubmit, errors, setError, getValues } = useForm({
+    validationSchema: ProjectSchema
+  });
   const { execute, pending, value, error } = useAsync(onSubmit, false);
   let history = useHistory();
 
@@ -48,8 +53,6 @@ export default function NewProject() {
 
   useEffect(() => {
     if (error !== null) {
-      console.log(error);
-
       for (const key in error) {
         setError(key.replace('body.', ''), 'duplicate', error[key].message);
       }
@@ -72,22 +75,14 @@ export default function NewProject() {
           <Label>
             <I18n t="forms.projectTitle" />
           </Label>
-          <Input
-            type="text"
-            ref={register({ required: 'This field is required' })}
-            name="proyectoTitle"
-          ></Input>
+          <Input type="text" ref={register} name="proyectoTitle"></Input>
           <ErrorForm>
             {errors.proyectoTitle && errors.proyectoTitle.message}
           </ErrorForm>
           <Label>
             <I18n t="forms.client" />
           </Label>
-          <Select
-            name="clientAddress"
-            defaultValue=""
-            ref={register({ required: 'This field is required' })}
-          >
+          <Select name="clientAddress" defaultValue="" ref={register}>
             <option disabled hidden value="">
               Select one...
             </option>
@@ -104,32 +99,25 @@ export default function NewProject() {
           <Label>
             <I18n t="forms.expediente" />
           </Label>
-          <Input
-            type="number"
-            name="expediente"
-            ref={register({ required: 'This field is required' })}
-          ></Input>
+          <Input type="text" name="expediente" ref={register}></Input>
           <ErrorForm>
             {errors.expediente && errors.expediente.message}
           </ErrorForm>
           <Label>
             <I18n t="forms.oc" />
           </Label>
-          <Input
-            ref={register({ required: 'This field is required' })}
-            name="oc"
-          ></Input>
+          <Input ref={register} name="oc"></Input>
           <ErrorForm>{errors.oc && errors.oc.message}</ErrorForm>
           <div style={{ marginTop: '30px' }}>
             <PassphraseInput
               type="password"
               placeholder="Ingresar clave"
-              ref={register({ required: 'This field is required' })}
+              ref={register}
               name="passphrase"
             ></PassphraseInput>
-            <Button disabled={pending} type="submit">
-              CREAR
-            </Button>
+            <PassphraseButton disabled={pending} type="submit">
+              {pending ? <Spinner /> : 'CREAR'}
+            </PassphraseButton>
             <ErrorForm>
               {errors.passphrase && errors.passphrase.message}
             </ErrorForm>
