@@ -93,6 +93,7 @@ contract NuclearPoE is RoleBasedAcl {
         emit CloseProject(_id);
     }
 
+    // TODO: Add hasRole modifier
     function getAllProcessContracts() external view returns (address[] memory) {
         return processContractsArray;
     }

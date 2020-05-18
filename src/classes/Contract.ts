@@ -29,12 +29,19 @@ class Contract {
 
   async getDataFromContract({
     method,
-    data
+    data,
+    fromAddress
   }: {
     method: string;
     data?: string[];
+    fromAddress?: string;
   }) {
-    const tx = new Transaction({ contract: this.instance, method, data });
+    const tx = new Transaction({
+      fromAddress,
+      contract: this.instance,
+      method,
+      data
+    });
     return await tx.call();
   }
 

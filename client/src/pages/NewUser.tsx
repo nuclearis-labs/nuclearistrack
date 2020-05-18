@@ -83,6 +83,7 @@ export default function NewUser(props: any) {
             ref={register}
           >
             <option>project:create</option>
+            <option>project:readAll</option>
             <option>project:read</option>
             <option>project:changeState</option>
             <option>process:read</option>

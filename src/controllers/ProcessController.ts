@@ -116,8 +116,12 @@ export async function get(req: IUserOnReq, res: Response) {
   try {
     const query =
       process.env.ADMINEMAIL === req.user.userEmail
-        ? { method: 'getAllProcessContracts' }
-        : { method: 'getProcessesByAddress', data: [req.user.address] };
+        ? { method: 'getAllProcessContracts', fromAddress: req.user.address }
+        : {
+            method: 'getProcessesByAddress',
+            fromAddress: req.user.address,
+            data: [req.user.address]
+          };
 
     const contract = new Contract();
     const processContracts = await contract.getDataFromContract(query);
@@ -128,10 +132,9 @@ export async function get(req: IUserOnReq, res: Response) {
         contractAddress: address
       });
       const details = await processContract.getDataFromContract({
-        method: 'getDetails'
+        method: 'getDetails',
+        fromAddress: req.user.address
       });
-
-      console.log(details);
 
       const { username } = await UserModel.findOne({ address: details[1] });
 

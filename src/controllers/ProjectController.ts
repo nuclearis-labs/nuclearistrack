@@ -38,10 +38,19 @@ export async function create(req: IUserOnReq, res: Response) {
 
 export async function get(req: IUserOnReq, res: Response) {
   try {
+    const { address, privateKey } = await utils.getKeys({
+      email: req.user.userEmail,
+      passphrase: req.body.passphrase
+    });
+
     const query =
       process.env.ADMINEMAIL === req.user.userEmail
-        ? { method: 'getAllProjects' }
-        : { method: 'getProjectsByAddress', data: [req.user.address] };
+        ? { method: 'getAllProjects', fromAddress: req.user.address }
+        : {
+            method: 'getProjectsByAddress',
+            fromAddress: req.user.address,
+            data: [req.user.address]
+          };
 
     const contract = new Contract();
     const contractProjects = await contract.getDataFromContract(query);
