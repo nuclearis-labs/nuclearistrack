@@ -1,0 +1,38 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  background-color: #e6e6e6;
+  font-family: Lato, sans-serif;
+}
+
+p {
+  margin: 0;
+}
+
+.panel {
+  min-width: 300px;
+  background-color: #fafafa;
+  border-radius: 5px;
+  padding: 10px;
+  text-align: center;
+  margin: 0 10%;
+}
+
+.logo img {
+  display: block;
+  margin: 30px auto;
+}
+
+a {
+  display: block;
+  border: 1px solid black;
+  text-decoration: none;
+  width: 200px;
+  margin: 40px auto;
+  background-color: #8c6239;
+  color: #fff;
+  font-weight: 700;
+  padding: 5px 10px;
+  letter-spacing: 1px;
+}
