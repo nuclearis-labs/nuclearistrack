@@ -1,0 +1,288 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.6.0;
+
+import './Process.sol';
+import './Ownable.sol';
+
+/// @title Main Contract for Nuclearis Track
+/// @author Sebastian A. Martinez
+/// @notice This contract is the main entrypoint for the Nuclearis Track Platform
+contract NuclearPoE is Ownable {
+    enum State {Null, Created, Closed}
+    enum Type {Admin, Client, Supplier}
+
+    struct Project {
+        State status;
+        address clientAddress;
+        bytes32 title;
+        bytes32 purchaseOrder;
+        address[] processContracts;
+    }
+    struct User {
+        State status;
+        Type userType;
+        bytes32 name;
+    }
+
+    address[] public processContractsArray;
+    address[] private users;
+    uint256[] public projectsArray;
+
+    mapping(address => uint256[]) public projectsByAddress;
+    mapping(address => address[]) public processesByAddress;
+    mapping(address => User) private user;
+    mapping(uint256 => Project) private project;
+
+    event CreateProject(uint256 id);
+    event CreateUser(address userAddress);
+    event CreateProcess(address ProcessContractAddress);
+    event AssignProcess(uint256 project, address ProcessContractAddress);
+    event ChangeProjectStatus(uint256 id, State newState);
+
+    modifier onlyUser() {
+        require(
+            user[msg.sender].status == State.Created,
+            'Sender is not whitelisted'
+        );
+        _;
+    }
+
+    constructor(bytes32 _name) public {
+        // Creates the admin user, similar to an owner
+        user[msg.sender] = User(State.Created, Type.Admin, _name);
+        users.push(msg.sender);
+    }
+
+    /// @notice Creates a new project
+    /// @param _id Id of a new project
+    /// @param _client Address of client
+    /// @param _title Title of new project
+    /// @param _purchaseOrder Purchase Order Id of project
+    function createProject(
+        uint256 _id,
+        address _client,
+        bytes32 _title,
+        bytes32 _purchaseOrder
+    ) external onlyOwner {
+        require(
+            project[_id].status == State.Null,
+            'Project already created or closed'
+        );
+
+        address[] memory processContracts = new address[](0);
+        project[_id] = Project(
+            State.Created,
+            _client,
+            _title,
+            _purchaseOrder,
+            processContracts
+        );
+        projectsByAddress[_client].push(_id);
+        projectsArray.push(_id);
+
+        emit CreateProject(_id);
+    }
+
+    /// @notice Creates a new user
+    /// @param _type Type of user
+    /// @param _address Address of user
+    /// @param _name Name of user
+    function createUser(
+        Type _type,
+        address _address,
+        bytes32 _name
+    ) external onlyOwner {
+        user[_address] = User(State.Created, _type, _name);
+        users.push(_address);
+        emit CreateUser(_address);
+    }
+
+    /// @notice Returns specific information about one user
+    /// @param _address User Address
+    /// @return Type User Type (supplier or client)
+    /// @return bytes32 Name of user
+    function getUser(address _address)
+        external
+        view
+        onlyUser
+        returns (
+            State,
+            Type,
+            bytes32,
+            address
+        )
+    {
+        if (user[_address].status == State.Created)
+            return (
+                user[_address].status,
+                user[_address].userType,
+                user[_address].name,
+                _address
+            );
+        else return (State.Null, Type.Client, 0, address(0));
+    }
+
+    /// @notice Returns all saved users
+    /// @return address[] Returns array of all created users
+    function getAllUsers() external view onlyOwner returns (address[] memory) {
+        return users;
+    }
+
+    /// @notice Toggles a user status
+    /// @param _address Address of user to be toggled
+    function changeUserStatus(address _address) external onlyOwner {
+        require(
+            user[_address].status == State.Created,
+            'User does not exist or is already paused'
+        );
+
+        if (user[_address].status == State.Created)
+            user[_address].status = State.Closed;
+        else user[_address].status = State.Created;
+    }
+
+    /// @notice Creates a new process and deploys contract
+    /// @param _supplier Supplier Address
+    /// @param _processName Name of supplier of process
+    function createProcess(address _supplier, bytes32 _processName)
+        external
+        onlyOwner
+    {
+        address ProcessContractAddress = address(
+            new Process(_supplier, _processName)
+        );
+        processesByAddress[_supplier].push(ProcessContractAddress);
+        processContractsArray.push(ProcessContractAddress);
+
+        emit CreateProcess(ProcessContractAddress);
+    }
+
+    /// @notice Adds a process address to a specific project
+    /// @param _id The id of a project
+    /// @param _processContract The address of a process contract
+    function addProcessToProject(uint256 _id, address _processContract)
+        external
+        onlyOwner
+    {
+        require(
+            project[_id].status == State.Created,
+            'Project does not exist or is closed'
+        );
+
+        project[_id].processContracts.push(_processContract);
+
+        emit AssignProcess(_id, _processContract);
+    }
+
+    /// @notice Toggles a project status
+    /// @param _id The id of a project
+    function changeProjectStatus(uint256 _id) external onlyOwner {
+        require(
+            project[_id].status == State.Created,
+            'Project does not exist or is already closed'
+        );
+
+        if (project[_id].status == State.Created)
+            project[_id].status = State.Closed;
+        else project[_id].status = State.Created;
+
+        emit ChangeProjectStatus(_id, project[_id].status);
+    }
+
+    /// @notice Returns all process contract addresses
+    /// @return address[] Array of process contract addresses
+    function getAllProcessContracts()
+        external
+        view
+        onlyOwner
+        returns (address[] memory)
+    {
+        return processContractsArray;
+    }
+
+    /// @notice Returns all processes
+    /// @return address[] Array of all process contracts
+    function getProcessContractsByProject(uint256 _id)
+        external
+        view
+        returns (address[] memory)
+    {
+        require(
+            user[_msgSender()].userType == Type.Client,
+            'User has to be client'
+        );
+        return project[_id].processContracts;
+    }
+
+    /// @notice Returns all projects
+    /// @return uint256[] Array of all project ids
+    function getAllProjects()
+        external
+        view
+        onlyOwner
+        returns (uint256[] memory)
+    {
+        return projectsArray;
+    }
+
+    /// @notice Returns processes assigned to a supplier
+    /// @param _address The address of the supplier
+    /// @return address[] Array of process contract addresses specified to a supplier
+    function getProcessesByAddress(address _address)
+        external
+        view
+        returns (address[] memory)
+    {
+        require(
+            user[_msgSender()].userType == Type.Supplier,
+            'User has to be supplier'
+        );
+        return (processesByAddress[_address]);
+    }
+
+    /// @notice Returns projects assigned to a client
+    /// @param _address The address of the supplier
+    /// @return uint256[] Array of projects ids specified to a client
+    function getProjectsByAddress(address _address)
+        external
+        view
+        returns (uint256[] memory)
+    {
+        require(
+            _msgSender() == _address || _msgSender() == owner(),
+            'User has to be supplier or admin'
+        );
+        return (projectsByAddress[_address]);
+    }
+
+    /// @notice Returns details of a project id
+    /// @param _id The id of the project
+    /// @return status Current State of project
+    /// @return address Client assigned to project
+    /// @return bytes32 Title of project
+    /// @return bytes32 Purchase order of project
+    /// @return address[] Array of process contract addresses assigned to project
+    function getProjectDetails(uint256 _id)
+        external
+        view
+        returns (
+            State,
+            address,
+            bytes32,
+            bytes32,
+            address[] memory
+        )
+    {
+        require(
+            _msgSender() == project[_id].clientAddress || msg.sender == owner(),
+            'User has to be assigned client or admin'
+        );
+        return (
+            project[_id].status,
+            project[_id].clientAddress,
+            project[_id].title,
+            project[_id].purchaseOrder,
+            project[_id].processContracts
+        );
+    }
+}
