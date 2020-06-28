@@ -1,7 +1,7 @@
-const NuclearPoE = artifacts.require('../contracts/NuclearPoE.sol');
+const NuclearPoE = artifacts.require('../NuclearPoE.sol');
 const truffleAssert = require('truffle-assertions');
 
-contract('Create Project', accounts => {
+contract('Create Project', (accounts) => {
   let instance;
   before(async () => {
     instance = await NuclearPoE.new();
@@ -30,7 +30,7 @@ contract('Create Project', accounts => {
   });
 });
 
-contract('Return Projects', accounts => {
+contract('Return Projects', (accounts) => {
   let instance;
   before(async () => {
     instance = await NuclearPoE.new();
@@ -53,7 +53,7 @@ contract('Return Projects', accounts => {
   });
 });
 
-contract('Change Project Status', accounts => {
+contract('Change Project Status', (accounts) => {
   let instance;
   before(async () => {
     instance = await NuclearPoE.new();
@@ -73,25 +73,25 @@ contract('Change Project Status', accounts => {
 
   it('EVENT: Close Project', async () => {
     const result = await instance.changeProjectStatus(41955, {
-      from: accounts[0]
+      from: accounts[0],
     });
     truffleAssert.eventEmitted(result, 'ChangeProjectStatus');
   });
   it('REVERT: Close non existant Project', async () => {
     await truffleAssert.reverts(
       instance.changeProjectStatus(12333, {
-        from: accounts[0]
+        from: accounts[0],
       }),
       'Project does not exist or is already closed'
     );
   });
   it('REVERT: Close already closed Project', async () => {
     await instance.changeProjectStatus(41956, {
-      from: accounts[0]
+      from: accounts[0],
     });
     await truffleAssert.reverts(
       instance.changeProjectStatus(41956, {
-        from: accounts[0]
+        from: accounts[0],
       }),
       'Project does not exist or is already closed'
     );

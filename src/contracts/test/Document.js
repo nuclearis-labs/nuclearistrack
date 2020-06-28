@@ -1,8 +1,8 @@
 const truffleAssert = require('truffle-assertions');
-const NuclearPoE = artifacts.require('../contracts/NuclearPoE.sol');
-const Process = artifacts.require('../contracts/Process.sol');
+const NuclearPoE = artifacts.require('../NuclearPoE.sol');
+const Process = artifacts.require('../Process.sol');
 
-contract('Add Document', accounts => {
+contract('Add Document', (accounts) => {
   let instance;
   let processAddress;
   let processInstance;
@@ -62,7 +62,7 @@ contract('Add Document', accounts => {
   });
 });
 
-contract('Find Document', accounts => {
+contract('Find Document', (accounts) => {
   let instance;
   let processAddress;
   let processInstance;
@@ -106,7 +106,7 @@ contract('Find Document', accounts => {
   });
 });
 
-contract('Return Documents', accounts => {
+contract('Return Documents', (accounts) => {
   let processInstance;
   let processAddress;
   let instance;

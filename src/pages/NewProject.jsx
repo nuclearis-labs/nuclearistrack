@@ -49,7 +49,7 @@ export default function NewProject() {
               Select one...
             </option>
 
-            <option value="0x741F6730D3333d062FCA9ef0F3419E3348415552">
+            <option value="0x9b4453Fa524904a427D8065FD6c9b12f943EfdbA">
               NA-SA
             </option>
           </Select>

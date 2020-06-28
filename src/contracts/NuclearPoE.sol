@@ -214,17 +214,6 @@ contract NuclearPoE is Ownable {
         return project[_id].processContracts;
     }
 
-    /// @notice Returns all projects
-    /// @return uint256[] Array of all project ids
-    function getAllProjects()
-        external
-        view
-        onlyOwner
-        returns (uint256[] memory)
-    {
-        return projectsArray;
-    }
-
     /// @notice Returns processes assigned to a supplier
     /// @param _address The address of the supplier
     /// @return address[] Array of process contract addresses specified to a supplier
@@ -234,7 +223,7 @@ contract NuclearPoE is Ownable {
         returns (address[] memory)
     {
         require(
-            user[_msgSender()].userType == Type.Supplier,
+            user[msg.sender].userType == Type.Supplier,
             'User has to be supplier'
         );
         return (processesByAddress[_address]);
@@ -248,11 +237,17 @@ contract NuclearPoE is Ownable {
         view
         returns (uint256[] memory)
     {
-        require(
-            _msgSender() == _address || _msgSender() == owner(),
-            'User has to be supplier or admin'
-        );
-        return (projectsByAddress[_address]);
+        if(msg.sender == owner()) {
+            return projectsArray;
+        }
+        else if(user[msg.sender].userType == Type.Client) {
+            return (projectsByAddress[_address]);
+        }
+
+        else {
+            uint256[] memory empty;
+            return empty;
+        }
     }
 
     /// @notice Returns details of a project id

@@ -1,8 +1,8 @@
-const NuclearPoE = artifacts.require('../contracts/NuclearPoE.sol');
-const Process = artifacts.require('../contracts/Process.sol');
+const NuclearPoE = artifacts.require('../NuclearPoE.sol');
+const Process = artifacts.require('../Process.sol');
 const truffleAssert = require('truffle-assertions');
 
-contract('Process', accounts => {
+contract('Process', (accounts) => {
   let instance;
   let processAddress;
   let processInstance;
