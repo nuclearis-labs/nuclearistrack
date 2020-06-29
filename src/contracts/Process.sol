@@ -2,7 +2,6 @@
 pragma solidity ^0.6.0;
 
 import './NuclearPoE.sol';
-import './Ownable.sol';
 
 /// @title Process Contract
 /// @author Sebastian A. Martinez
@@ -10,6 +9,7 @@ import './Ownable.sol';
 contract Process {
     bytes32 private processName;
     address private supplierAddress;
+    address private owner;
 
     struct Document {
         string name;
@@ -32,9 +32,14 @@ contract Process {
         _;
     }
 
-    constructor(address _supplierAddress, bytes32 _processName) public {
+    constructor(
+        address _supplierAddress,
+        bytes32 _processName,
+        address _ownerAddress
+    ) public {
         supplierAddress = _supplierAddress;
         processName = _processName;
+        owner = _ownerAddress;
     }
 
     /// @notice Creates a new document
@@ -72,6 +77,7 @@ contract Process {
             string memory,
             bytes32,
             bytes32,
+            bytes32,
             uint256,
             string memory
         )
@@ -79,6 +85,7 @@ contract Process {
         require(document[_hash].mineTime != 0, 'Document does not exist');
         return (
             document[_hash].name,
+            _hash,
             document[_hash].latitude,
             document[_hash].longitude,
             document[_hash].mineTime,
@@ -101,6 +108,10 @@ contract Process {
             address
         )
     {
+        require(
+            msg.sender == supplierAddress || msg.sender == owner,
+            'User has to be assigned client or owner'
+        );
         return (supplierAddress, processName, allDocuments, address(this));
     }
 }

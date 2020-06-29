@@ -7,7 +7,7 @@ contract('Add Document', (accounts) => {
   let processAddress;
   let processInstance;
   before(async () => {
-    instance = await NuclearPoE.new();
+    instance = await NuclearPoE.new(accounts[0]);
     await instance.createProject(
       41955,
       accounts[1],
@@ -34,7 +34,7 @@ contract('Add Document', (accounts) => {
 
     truffleAssert.eventEmitted(result, 'AddDocument');
   });
-  it('REVERT: Add a document as non-supplier', async () => {
+  it('REVERT: Add a document as owner', async () => {
     await truffleAssert.reverts(
       processInstance.addDocument(
         'Documento',
@@ -43,6 +43,19 @@ contract('Add Document', (accounts) => {
         web3.utils.asciiToHex('-54,324234234'),
         'Este es un comentario',
         { from: accounts[0] }
+      ),
+      'Sender is not supplier of project'
+    );
+  });
+  it('REVERT: Add a document as non-supplier', async () => {
+    await truffleAssert.reverts(
+      processInstance.addDocument(
+        'Documento',
+        '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
+        web3.utils.asciiToHex('-31,324234234'),
+        web3.utils.asciiToHex('-54,324234234'),
+        'Este es un comentario',
+        { from: accounts[4] }
       ),
       'Sender is not supplier of project'
     );
@@ -60,42 +73,26 @@ contract('Add Document', (accounts) => {
       'Document already created'
     );
   });
-});
-
-contract('Find Document', (accounts) => {
-  let instance;
-  let processAddress;
-  let processInstance;
-
-  before(async () => {
-    instance = await NuclearPoE.new();
-    await instance.createProject(
-      41955,
-      accounts[1],
-      web3.utils.asciiToHex('Conjunto Soporte'),
-      web3.utils.asciiToHex('234342 / 3453453')
-    );
-    const result = await instance.createProcess(
-      accounts[2],
-      web3.utils.asciiToHex('Mecanizado')
-    );
-    processAddress = result.logs[0].args[0];
-    processInstance = await Process.at(processAddress);
-    await processInstance.addDocument(
-      'Documento',
-      '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
-      web3.utils.asciiToHex('-31,324234234'),
-      web3.utils.asciiToHex('-54,324234234'),
-      'Este es un comentario',
-      { from: accounts[2] }
-    );
-  });
   it('Find a document', async () => {
     const result = await processInstance.getDocument(
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd'
     );
     assert.equal(result[0], 'Documento');
+    assert.equal(
+      result[1],
+      '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd'
+    );
+    assert.equal(
+      result[2],
+      web3.utils.padRight(web3.utils.asciiToHex('-31,324234234'), 64)
+    );
+    assert.equal(
+      result[3],
+      web3.utils.padRight(web3.utils.asciiToHex('-54,324234234'), 64)
+    );
+    assert.equal(result[5], 'Este es un comentario');
   });
+
   it('REVERT: Find a non-existent document', async () => {
     await truffleAssert.reverts(
       processInstance.getDocument(
@@ -111,7 +108,7 @@ contract('Return Documents', (accounts) => {
   let processAddress;
   let instance;
   before(async () => {
-    instance = await NuclearPoE.new();
+    instance = await NuclearPoE.new(accounts[0]);
     await instance.createProject(
       41955,
       accounts[1],

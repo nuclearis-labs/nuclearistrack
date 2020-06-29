@@ -26,7 +26,6 @@ export default function PublicHeader({
         </NavLogo>
         <NavMenu>
           <NavLink to="/">
-            {' '}
             <I18n t="header.home" />
           </NavLink>{' '}
           |{' '}

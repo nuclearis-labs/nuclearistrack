@@ -4,7 +4,19 @@ const truffleAssert = require('truffle-assertions');
 contract('Create Project', (accounts) => {
   let instance;
   before(async () => {
-    instance = await NuclearPoE.new();
+    instance = await NuclearPoE.new(accounts[0]);
+  });
+  it('REVERT: Create project as non-owner', async () => {
+    await truffleAssert.reverts(
+      instance.createProject(
+        41955,
+        accounts[1],
+        web3.utils.asciiToHex('Conjunto Soporte'),
+        web3.utils.asciiToHex('23423423 / 23423423'),
+        { from: accounts[1] }
+      ),
+      'Ownable: caller is not the owner'
+    );
   });
   it('EVENT: Create a new project', async () => {
     const result = await instance.createProject(
@@ -25,7 +37,7 @@ contract('Create Project', (accounts) => {
         web3.utils.asciiToHex('Conjunto Soporte'),
         web3.utils.asciiToHex('23423423 / 23423423')
       ),
-      'Project already created'
+      'Project already created or closed'
     );
   });
 });
@@ -33,7 +45,7 @@ contract('Create Project', (accounts) => {
 contract('Return Projects', (accounts) => {
   let instance;
   before(async () => {
-    instance = await NuclearPoE.new();
+    instance = await NuclearPoE.new(accounts[0]);
     await instance.createProject(
       41955,
       accounts[1],
@@ -46,17 +58,81 @@ contract('Return Projects', (accounts) => {
       web3.utils.asciiToHex('Anillos 2019'),
       web3.utils.asciiToHex('23423423 / 23423423')
     );
+    await instance.createProject(
+      51233,
+      accounts[2],
+      web3.utils.asciiToHex('Anillos 2019'),
+      web3.utils.asciiToHex('23423423 / 23423423')
+    );
   });
-  it('Return projects contracts', async () => {
-    const result = await instance.getAllProjects();
+  it('Return projects contracts as owner', async () => {
+    const result = await instance.getProjectsByAddress();
+    assert.lengthOf(result, 3, 'Result should be array of 3 projects');
+  });
+  it('Return projects contracts as client', async () => {
+    const result = await instance.getProjectsByAddress({ from: accounts[1] });
     assert.lengthOf(result, 2, 'Result should be array of 2 projects');
+  });
+  it('Return empty array if called by address without corresponding projects', async () => {
+    const result = await instance.getProjectsByAddress({ from: accounts[3] });
+    assert.lengthOf(result, 0, 'Result should be an empty array');
+  });
+  it('REVERT: Get project details as non-owner or non-assigned client', async () => {
+    await truffleAssert.reverts(
+      instance.getProjectDetails(41955, { from: accounts[3] }),
+      'User has to be assigned client or owner'
+    );
+  });
+  it('Return details of project as client', async () => {
+    const result = await instance.getProjectDetails(41955, {
+      from: accounts[1],
+    });
+    const expectedTitle = web3.utils.padRight(
+      web3.utils.asciiToHex('Conjunto Soporte'),
+      64
+    );
+    const expectedPurchaseOrder = web3.utils.padRight(
+      web3.utils.asciiToHex('23423423 / 23423423'),
+      64
+    );
+
+    assert.deepEqual(result, {
+      '0': web3.utils.toBN(1),
+      '1': web3.utils.toBN(41955),
+      '2': accounts[1],
+      '3': expectedTitle,
+      '4': expectedPurchaseOrder,
+      '5': [],
+    });
+  });
+  it('Return details of project as owner', async () => {
+    const result = await instance.getProjectDetails(41800, {
+      from: accounts[0],
+    });
+    const expectedTitle = web3.utils.padRight(
+      web3.utils.asciiToHex('Anillos 2019'),
+      64
+    );
+    const expectedPurchaseOrder = web3.utils.padRight(
+      web3.utils.asciiToHex('23423423 / 23423423'),
+      64
+    );
+
+    assert.deepEqual(result, {
+      '0': web3.utils.toBN(1),
+      '1': web3.utils.toBN(41800),
+      '2': accounts[1],
+      '3': expectedTitle,
+      '4': expectedPurchaseOrder,
+      '5': [],
+    });
   });
 });
 
-contract('Change Project Status', (accounts) => {
+contract('Toggle Project Status', (accounts) => {
   let instance;
   before(async () => {
-    instance = await NuclearPoE.new();
+    instance = await NuclearPoE.new(accounts[0]);
     await instance.createProject(
       41955,
       accounts[1],
@@ -70,30 +146,30 @@ contract('Change Project Status', (accounts) => {
       web3.utils.asciiToHex('23423423 / 23423423')
     );
   });
-
+  it('REVERT: Toggle project as non-owner', async () => {
+    await truffleAssert.reverts(
+      instance.toggleProjectStatus(41955, { from: accounts[1] }),
+      'Ownable: caller is not the owner'
+    );
+  });
   it('EVENT: Close Project', async () => {
-    const result = await instance.changeProjectStatus(41955, {
+    const result = await instance.toggleProjectStatus(41955, {
       from: accounts[0],
     });
-    truffleAssert.eventEmitted(result, 'ChangeProjectStatus');
+    truffleAssert.eventEmitted(result, 'ToggleProjectStatus');
   });
   it('REVERT: Close non existant Project', async () => {
     await truffleAssert.reverts(
-      instance.changeProjectStatus(12333, {
+      instance.toggleProjectStatus(12333, {
         from: accounts[0],
       }),
-      'Project does not exist or is already closed'
+      'Project does not exist'
     );
   });
-  it('REVERT: Close already closed Project', async () => {
-    await instance.changeProjectStatus(41956, {
+  it('EVENT: Reopen closed Project', async () => {
+    const result = await instance.toggleProjectStatus(41956, {
       from: accounts[0],
     });
-    await truffleAssert.reverts(
-      instance.changeProjectStatus(41956, {
-        from: accounts[0],
-      }),
-      'Project does not exist or is already closed'
-    );
+    truffleAssert.eventEmitted(result, 'ToggleProjectStatus');
   });
 });

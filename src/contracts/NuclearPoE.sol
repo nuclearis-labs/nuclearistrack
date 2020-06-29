@@ -37,7 +37,7 @@ contract NuclearPoE is Ownable {
     event CreateUser(address userAddress);
     event CreateProcess(address ProcessContractAddress);
     event AssignProcess(uint256 project, address ProcessContractAddress);
-    event ChangeProjectStatus(uint256 id, State newState);
+    event ToggleProjectStatus(uint256 id, State newState);
 
     modifier onlyUser() {
         require(
@@ -130,11 +130,8 @@ contract NuclearPoE is Ownable {
 
     /// @notice Toggles a user status
     /// @param _address Address of user to be toggled
-    function changeUserStatus(address _address) external onlyOwner {
-        require(
-            user[_address].status == State.Created,
-            'User does not exist or is already paused'
-        );
+    function toggleUserStatus(address _address) external onlyOwner {
+        require(user[_address].status != State.Null, 'User does not exist');
 
         if (user[_address].status == State.Created)
             user[_address].status = State.Closed;
@@ -144,12 +141,13 @@ contract NuclearPoE is Ownable {
     /// @notice Creates a new process and deploys contract
     /// @param _supplier Supplier Address
     /// @param _processName Name of supplier of process
+    /// @param _processName Name of supplier of process
     function createProcess(address _supplier, bytes32 _processName)
         external
         onlyOwner
     {
         address ProcessContractAddress = address(
-            new Process(_supplier, _processName)
+            new Process(_supplier, _processName, owner())
         );
         processesByAddress[_supplier].push(ProcessContractAddress);
         processContractsArray.push(ProcessContractAddress);
@@ -176,28 +174,14 @@ contract NuclearPoE is Ownable {
 
     /// @notice Toggles a project status
     /// @param _id The id of a project
-    function changeProjectStatus(uint256 _id) external onlyOwner {
-        require(
-            project[_id].status == State.Created,
-            'Project does not exist or is already closed'
-        );
+    function toggleProjectStatus(uint256 _id) external onlyOwner {
+        require(project[_id].status != State.Null, 'Project does not exist');
 
         if (project[_id].status == State.Created)
             project[_id].status = State.Closed;
         else project[_id].status = State.Created;
 
-        emit ChangeProjectStatus(_id, project[_id].status);
-    }
-
-    /// @notice Returns all process contract addresses
-    /// @return address[] Array of process contract addresses
-    function getAllProcessContracts()
-        external
-        view
-        onlyOwner
-        returns (address[] memory)
-    {
-        return processContractsArray;
+        emit ToggleProjectStatus(_id, project[_id].status);
     }
 
     /// @notice Returns all processes
@@ -208,45 +192,29 @@ contract NuclearPoE is Ownable {
         returns (address[] memory)
     {
         require(
-            user[_msgSender()].userType == Type.Client,
-            'User has to be client'
+            project[_id].clientAddress == msg.sender || msg.sender == owner(),
+            'Project and Client do not match'
         );
         return project[_id].processContracts;
     }
 
     /// @notice Returns processes assigned to a supplier
-    /// @param _address The address of the supplier
     /// @return address[] Array of process contract addresses specified to a supplier
-    function getProcessesByAddress(address _address)
-        external
-        view
-        returns (address[] memory)
-    {
-        require(
-            user[msg.sender].userType == Type.Supplier,
-            'User has to be supplier'
-        );
-        return (processesByAddress[_address]);
+    function getProcessesByAddress() external view returns (address[] memory) {
+        if (msg.sender == owner()) {
+            return processContractsArray;
+        } else {
+            return (processesByAddress[msg.sender]);
+        }
     }
 
     /// @notice Returns projects assigned to a client
-    /// @param _address The address of the supplier
     /// @return uint256[] Array of projects ids specified to a client
-    function getProjectsByAddress(address _address)
-        external
-        view
-        returns (uint256[] memory)
-    {
-        if(msg.sender == owner()) {
+    function getProjectsByAddress() external view returns (uint256[] memory) {
+        if (msg.sender == owner()) {
             return projectsArray;
-        }
-        else if(user[msg.sender].userType == Type.Client) {
-            return (projectsByAddress[_address]);
-        }
-
-        else {
-            uint256[] memory empty;
-            return empty;
+        } else {
+            return (projectsByAddress[msg.sender]);
         }
     }
 
@@ -262,6 +230,7 @@ contract NuclearPoE is Ownable {
         view
         returns (
             State,
+            uint256,
             address,
             bytes32,
             bytes32,
@@ -269,11 +238,12 @@ contract NuclearPoE is Ownable {
         )
     {
         require(
-            _msgSender() == project[_id].clientAddress || msg.sender == owner(),
-            'User has to be assigned client or admin'
+            msg.sender == project[_id].clientAddress || msg.sender == owner(),
+            'User has to be assigned client or owner'
         );
         return (
             project[_id].status,
+            _id,
             project[_id].clientAddress,
             project[_id].title,
             project[_id].purchaseOrder,
