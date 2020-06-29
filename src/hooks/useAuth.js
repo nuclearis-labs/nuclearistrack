@@ -38,11 +38,7 @@ export default function useAuth() {
           setUser({});
         });
     }
-  }, [
-    state,
-    initialized,
-    drizzle.web3.utils,
-    drizzle.contracts.NuclearPoE.methods,
-  ]);
+    // eslint-disable-next-line
+  }, [state, initialized]);
   return [isUser, user];
 }
