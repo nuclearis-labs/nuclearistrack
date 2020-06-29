@@ -1,13 +1,10 @@
 // documents.js
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React from 'react';
 import styled from 'styled-components';
 import Footer from '../components/Footer';
 import { Title, Scroll, CopyButton } from '../styles/components';
 import { Table, Row, Col2, Col4 } from '../styles/tableComponents';
-import Clipboard from 'clipboard';
-import Spinner from '../components/Spinner';
-import { GoogleMap } from '../components/GoogleMap';
+// import { GoogleMap } from '../components/GoogleMap';
 
 const FlexWrap = styled.div`
   display: flex;
@@ -17,14 +14,6 @@ const FlexWrapRight = styled(FlexWrap)`
   float: right;
   padding-right: 20px;
   height: auto;
-`;
-
-const DocImgHolder = styled.iframe`
-  float: right;
-  margin-right: 20px;
-  margin-bottom: 50px;
-  width: 90%;
-  height: 600px;
 `;
 
 const Left = styled.div`
@@ -64,15 +53,6 @@ const Nota = styled.div`
   line-height: 16px;
   margin: 10px 0;
 `;
-
-interface IDetailsDocument {
-  name: string;
-  documentHash: string;
-  longitude: number;
-  latitude: number;
-  comment: string;
-  mineTime: string;
-}
 
 export default function DocumentList() {
   return (

@@ -1,40 +1,20 @@
 // newProvider.js
-import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import {
-  Title,
-  Label,
-  ErrorLabel,
-  Input,
-  Select,
-  Button,
-  PassphraseButton,
-  PassphraseInput,
-} from '../styles/components';
-import Spinner from '../components/Spinner';
+import React from 'react';
+import { Title, Label, Input, Select } from '../styles/components';
 import { Top, Form, FormWrap, ErrorForm } from '../styles/form';
-import RSKLink from '../components/RSKLink';
 import Footer from '../components/Footer';
 import I18n from '../i18n';
-import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useAsync } from '../hooks/useAsync';
 import { ProcessSchema } from '../validationSchemas/index';
 
 export default function NewProcess() {
-  const { register, handleSubmit, errors, setError, getValues } = useForm({
+  const { register, handleSubmit, errors } = useForm({
     validationSchema: ProcessSchema,
   });
-  const { execute, pending, value, error } = useAsync(onSubmit, false);
-  let history = useHistory();
 
-  function onSubmit() {
+  function onSubmit(data) {
     console.log('submit');
   }
-
-  useEffect(() => {
-    if (value !== null) history.push('/processes');
-  }, [value]);
 
   return (
     <>
@@ -44,7 +24,7 @@ export default function NewProcess() {
         </Title>
       </Top>
       <FormWrap>
-        <Form onSubmit={handleSubmit(execute)}>
+        <Form onSubmit={handleSubmit(onSubmit)}>
           <Label>
             <I18n t="forms.name" />
           </Label>
@@ -65,20 +45,6 @@ export default function NewProcess() {
           <ErrorForm>
             {errors.supplierAddress && errors.supplierAddress.message}
           </ErrorForm>
-          <div style={{ marginTop: '30px' }}>
-            <PassphraseInput
-              type="password"
-              placeholder="Ingresar clave"
-              ref={register}
-              name="passphrase"
-            ></PassphraseInput>
-            <PassphraseButton disabled={pending} type="submit">
-              {pending ? <Spinner size="sm" color="white" /> : 'CREAR'}
-            </PassphraseButton>
-            <ErrorForm>
-              {errors.passphrase && errors.passphrase.message}
-            </ErrorForm>
-          </div>
         </Form>
       </FormWrap>
       <Footer />

@@ -1,21 +1,6 @@
 import React from 'react';
-import {
-  Nav,
-  NavHeader,
-  NavLogo,
-  NavPhrase,
-  MenuLink,
-  AbmLink,
-  SubMenuNew,
-  SubMenuEdit,
-  NavAbm,
-  NavUser,
-  UserName,
-  LogOut,
-  NavMenu,
-  NavLogin,
-} from '../styles/Nav';
-import { Link, NavLink } from 'react-router-i18n';
+import { AbmLink, SubMenuNew } from '../styles/Nav';
+import { Link } from 'react-router-i18n';
 import { ReactComponent as New } from '../img/new.svg';
 import I18n from '../i18n';
 

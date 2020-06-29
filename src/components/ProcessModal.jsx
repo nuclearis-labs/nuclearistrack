@@ -1,21 +1,12 @@
 // modal.js
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import {
-  Button,
-  Scroll,
-  PassphraseButton,
-  PassphraseInput,
-} from '../styles/components';
-import { ErrorForm } from '../styles/form';
+import { Scroll } from '../styles/components';
 import { Row, HeadRow, Col4 } from '../styles/tableComponents';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import { Link } from 'react-router-dom';
-import useSWR from 'swr';
 import { useForm } from 'react-hook-form';
-import { useAsync } from '../hooks/useAsync';
 import OutsideClickHandler from 'react-outside-click-handler';
-import Spinner from './Spinner';
 
 const ModalWrap = styled.div`
   width: 540px;
@@ -97,17 +88,16 @@ const ScrollBox130 = styled(Scroll)`
 `;
 
 function ProcessModal(props: any) {
-  const { register, handleSubmit, getValues } = useForm();
-  const { execute, pending, error } = useAsync(onSubmit, false);
+  const { register, handleSubmit } = useForm();
 
-  function onSubmit() {
+  function onSubmit(data) {
     console.log('submit');
   }
 
   return (
     <OutsideClickHandler onOutsideClick={props.closeModal} display="contents">
       <ModalWrap>
-        <form onSubmit={handleSubmit(execute)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <ModalTop>
             <ModalTit>AGREGAR PROCESOS</ModalTit>
             <ModalInput placeholder="BUSCAR" ref={register}></ModalInput>
@@ -146,28 +136,6 @@ function ProcessModal(props: any) {
                 </Col4>
               </Row>
             </ScrollBox130>
-            <div>
-              <PassphraseInput
-                type="password"
-                name="passphrase"
-                autoComplete="password"
-                ref={register}
-                style={{ background: 'white' }}
-                placeholder="Ingresar clave"
-              />
-              <PassphraseButton
-                type="submit"
-                style={{ width: 'fit-content' }}
-                disabled={pending}
-              >
-                {pending ? (
-                  <Spinner size="sm" color="primary" />
-                ) : (
-                  '+ AGREGAR PROCESOS'
-                )}
-              </PassphraseButton>
-              <ErrorForm>{error && error.error}</ErrorForm>
-            </div>
           </ModalBottom>
         </form>
       </ModalWrap>

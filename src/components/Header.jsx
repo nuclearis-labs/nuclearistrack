@@ -1,5 +1,5 @@
 // header.js
-import React, { useContext } from 'react';
+import React from 'react';
 import PublicHeader from './PublicHeader';
 import LoggedHeader from './LoggedHeader';
 import useAuth from '../hooks/useAuth';

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import Footer from '../components/Footer';
 import { Title, Label, Input, Button, Select } from '../styles/components';
 import { Top, Form, FormWrap, ErrorForm } from '../styles/form';

@@ -1,21 +1,10 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 import { Title } from '../styles/components';
 import { Top, Form, FormWrap } from '../styles/form';
-import { Row, HeadRow, Col3, Col2 } from '../styles/tableComponents';
+import { Row, HeadRow, Col3 } from '../styles/tableComponents';
 import Footer from '../components/Footer';
 
-interface IDocument {
-  name: string;
-  docNumber: number;
-  documentHash: string;
-  mineTime: string;
-}
-
 export default function DocumentList() {
-  const { process } = useParams();
-
   return (
     <>
       <Top>

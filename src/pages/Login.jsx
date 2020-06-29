@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { DrizzleContext } from '@drizzle/react-plugin';
 import {
   WebTop,
@@ -11,9 +11,8 @@ import useAuth from '../hooks/useAuth';
 import { Redirect } from 'react-router';
 
 export default function Login() {
-  const { drizzle, initialized } = useContext(DrizzleContext.Context);
-  const state = drizzle.store.getState();
-  const [isUser, user] = useAuth();
+  const { initialized } = useContext(DrizzleContext.Context);
+  const [isUser] = useAuth();
 
   if (initialized) {
     if (isUser === true) return <Redirect to="/" />;

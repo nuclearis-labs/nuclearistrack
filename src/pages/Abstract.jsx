@@ -11,7 +11,6 @@ import {
 } from '../styles/webComponents';
 import bg from '../img/bgSeguridad.jpg';
 import I18n from '../i18n';
-import { RouteProps } from 'react-router';
 
 const WebTopSecurity = styled(WebTop)`
   height: 396px;

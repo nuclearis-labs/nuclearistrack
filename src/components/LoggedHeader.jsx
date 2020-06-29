@@ -4,22 +4,13 @@ import {
   NavHeader,
   NavLogo,
   NavPhrase,
-  MenuLink,
-  AbmLink,
-  SubMenuNew,
-  SubMenuEdit,
   NavAbm,
   NavUser,
   UserName,
-  LogOut,
-  NavMenu,
-  NavLogin,
 } from '../styles/Nav';
 import { ReactComponent as Logo } from '../img/logo.svg';
-import { Link, NavLink } from 'react-router-i18n';
 import I18n from '../i18n';
 import OutsideClickHandler from 'react-outside-click-handler';
-import { ReactComponent as Exchange } from '../img/exchange.svg';
 import { ReactComponent as User } from '../img/user.svg';
 import DropDownNew from './DropDownNew';
 import DropDownEdit from './DropDownEdit';

@@ -8,14 +8,7 @@ import { ReactComponent as Eye } from '../img/eye.svg';
 import { ReactComponent as Pen } from '../img/pen.svg';
 import Footer from '../components/Footer';
 
-interface IProcess {
-  processContracts: string;
-  processName: string;
-  supplierName: string;
-  supplierAddress: string;
-}
-
-function ProcessList(props: any) {
+function ProcessList() {
   return (
     <>
       <Top>

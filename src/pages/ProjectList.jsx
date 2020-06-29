@@ -99,7 +99,7 @@ export default function ProjectList() {
   const state = drizzle.store.getState();
   const [showModal, setShowModal] = useState(false);
   const [projectDetails, setProjectDetails] = useState(null);
-  const [processes, setProcesses] = useState(null);
+  const [processes] = useState(null);
   useEffect(() => {
     if (initialized)
       drizzle.contracts.NuclearPoE.methods
@@ -120,7 +120,7 @@ export default function ProjectList() {
           });
         })
         .catch((error) => console.error(error));
-  }, [initialized]);
+  }, [initialized, state.accounts, drizzle.contracts.NuclearPoE.methods]);
 
   function handleRowClick(project) {
     setProjectDetails(project);
@@ -149,12 +149,12 @@ export default function ProjectList() {
             <ScrollBox400>
               {projectDetails &&
                 projectDetails.map((project) => (
-                  <Row>
+                  <Row onClick={handleRowClick}>
                     <Col>{drizzle.web3.utils.hexToAscii(project[2])}</Col>
                     <Col>{project[1]}</Col>
                     <Col>id</Col>
                     <Col>{drizzle.web3.utils.hexToAscii(project[3])}</Col>
-                    <Col>{project[0] == 1 ? 'Activo' : 'Cerrado'}</Col>
+                    <Col>{project[0] === 1 ? 'Activo' : 'Cerrado'}</Col>
                   </Row>
                 ))}
             </ScrollBox400>

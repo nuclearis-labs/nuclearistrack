@@ -21,8 +21,8 @@ module.exports = {
           testNode
         ),
       network_id: '*',
-      gas: 6800000,
-      gasPrice: 60240000,
+      gas: 4000000,
+      gasPrice: 65000000,
     },
     // mainnet: {
     //   provider: () =>

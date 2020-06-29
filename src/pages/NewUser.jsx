@@ -8,7 +8,7 @@ import { UserSchema } from '../validationSchemas/index';
 import { DrizzleContext } from '@drizzle/react-plugin';
 
 export default function NewUser() {
-  const { drizzle, initialized } = useContext(DrizzleContext.Context);
+  const { drizzle } = useContext(DrizzleContext.Context);
 
   const { register, handleSubmit, errors } = useForm({
     validationSchema: UserSchema,

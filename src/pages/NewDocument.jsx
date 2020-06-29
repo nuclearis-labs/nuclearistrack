@@ -1,34 +1,24 @@
 // newProvider.js
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import {
   Title,
   Label,
-  Input,
   FileInput,
   TextArea,
-  Button,
   ProcessName,
   SubTit,
   Pad,
-  PassphraseButton,
-  PassphraseInput,
 } from '../styles/components';
-import Spinner from '../components/Spinner';
 import { Top, Form, FormWrap, ErrorForm } from '../styles/form';
-import RSKLink from '../components/RSKLink';
-import { Link } from 'react-router-dom';
 import Footer from '../components/Footer';
 import { useForm } from 'react-hook-form';
-import I18n from '../i18n';
-import { RouteProps } from 'react-router';
 import { GoogleMap } from '../components/GoogleMap';
 import { DocumentSchema } from '../validationSchemas/index';
 
 function NewDocument(props) {
   const [loading, setLoading] = useState(true);
-  let { process } = useParams();
-  const { register, handleSubmit, errors, getValues } = useForm({
+  // let { process } = useParams();
+  const { register, handleSubmit, errors } = useForm({
     validationSchema: DocumentSchema,
   });
   const [location, setLocation] = useState();
@@ -53,14 +43,12 @@ function NewDocument(props) {
     setLoading(false);
   }, [location]);
 
-  function onSubmit() {
+  function onSubmit(data) {
     return new Promise((resolve, reject) => {
-      if (location == undefined) {
+      if (location === undefined) {
         reject('No location provided');
         return;
       }
-
-      const form = getValues();
     });
   }
 
@@ -75,7 +63,7 @@ function NewDocument(props) {
       </Top>
       <FormWrap>
         {loading === false && (
-          <Form /* onSubmit */>
+          <Form onSubmit={handleSubmit(onSubmit)}>
             <Pad>
               <SubTit>PROCESO</SubTit>
               <ProcessName></ProcessName>
@@ -92,23 +80,9 @@ function NewDocument(props) {
           </Form>
         )}
       </FormWrap>
-      )}
+
       <Footer />
     </>
-  );
-}
-
-function Confirmation(props) {
-  return (
-    <FormWrap>
-      <Form>
-        <p>El documento fue subido con exito!</p>
-        <p>
-          Transaction: <RSKLink hash={props.hash} type="tx" testnet />
-        </p>
-        <Button>CONTINUAR</Button>
-      </Form>
-    </FormWrap>
   );
 }
 

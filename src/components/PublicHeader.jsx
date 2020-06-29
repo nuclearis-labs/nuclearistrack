@@ -1,12 +1,5 @@
-import React, { useContext } from 'react';
-import {
-  Nav,
-  NavHeader,
-  NavLogo,
-  MenuLink,
-  NavMenu,
-  NavLogin,
-} from '../styles/Nav';
+import React from 'react';
+import { Nav, NavHeader, NavLogo, NavMenu, NavLogin } from '../styles/Nav';
 import { ReactComponent as Logo } from '../img/logo.svg';
 import { Link, NavLink } from 'react-router-i18n';
 import I18n from '../i18n';

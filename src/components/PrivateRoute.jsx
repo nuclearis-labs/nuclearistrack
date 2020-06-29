@@ -3,7 +3,7 @@ import { Route } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 
 function PrivateRoute(props) {
-  const [isUser, user] = useAuth();
+  const [isUser] = useAuth();
 
   return isUser && <Route {...props} />;
 }

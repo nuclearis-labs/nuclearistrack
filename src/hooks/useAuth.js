@@ -20,7 +20,7 @@ export default function useAuth() {
         .getUser(state.accounts[0])
         .call({ from: state.accounts[0] })
         .then((result) => {
-          if (result[0] == '1') {
+          if (result[0] === '1') {
             setIsUser(true);
             setUser({
               status: result[0],
@@ -38,6 +38,11 @@ export default function useAuth() {
           setUser({});
         });
     }
-  }, [state]);
+  }, [
+    state,
+    initialized,
+    drizzle.web3.utils,
+    drizzle.contracts.NuclearPoE.methods,
+  ]);
   return [isUser, user];
 }

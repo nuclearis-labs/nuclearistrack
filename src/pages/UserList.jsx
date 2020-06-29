@@ -15,15 +15,36 @@ export default function UserList() {
         .getAllUsers()
         .call()
         .then((addresses) => {
-          const arr = addresses.map((address) =>
-            drizzle.contracts.NuclearPoE.methods.getUser(address).call()
-          );
-          Promise.all(arr).then((users) => {
-            setUsers(users);
-          });
+          Promise.all(
+            addresses.map((address) =>
+              drizzle.contracts.NuclearPoE.methods.getUser(address).call()
+            )
+          ).then((users) => setUsers(users));
         })
         .catch((error) => console.error(error));
-  }, [initialized]);
+  }, [
+    initialized,
+    drizzle.web3.eth,
+    drizzle.web3.utils,
+    drizzle.contracts.NuclearPoE.methods,
+  ]);
+
+  useEffect(() => {
+    if (initialized && users.length > 0 && !users[0].hasOwnProperty('4'))
+      Promise.all(
+        users.map(async (user) => {
+          const bal = await drizzle.web3.eth.getBalance(user[3]);
+          return {
+            ...user,
+            '4': parseFloat(drizzle.web3.utils.fromWei(bal)).toFixed(6),
+          };
+        })
+      ).then((users) => {
+        console.log(users);
+
+        setUsers(users);
+      });
+  }, [users, initialized, drizzle.web3.utils, drizzle.web3.eth]);
 
   return (
     <>
@@ -37,6 +58,7 @@ export default function UserList() {
             <Col4>DIRECCION</Col4>
             <Col4>TIPO</Col4>
             <Col4>ESTADO</Col4>
+            <Col4>BALANCE</Col4>
           </HeadRow>
           {users.length > 0 &&
             users.map((user) => (
@@ -46,13 +68,14 @@ export default function UserList() {
                   <RSKLink type="address" hash={user[3]} />
                 </Col4>
                 <Col4>
-                  {user[1] == 0
+                  {user[1] === 0
                     ? 'Administrador'
-                    : user[1] == 1
+                    : user[1] === 1
                     ? 'Cliente'
                     : 'Proveedor'}
                 </Col4>
-                <Col4>{user[0] == 1 ? 'Activo' : 'Pausado'}</Col4>
+                <Col4>{user[0] === 1 ? 'Activo' : 'Pausado'}</Col4>
+                <Col4>{user[4]} RBTC</Col4>
               </Row>
             ))}
         </Form>
