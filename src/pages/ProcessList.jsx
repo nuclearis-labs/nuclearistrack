@@ -80,14 +80,14 @@ function ProcessList() {
                 <Col4>{web3.utils.hexToAscii(process[1])}</Col4>
                 <Col4>{web3.utils.hexToAscii(process.userName)}</Col4>
                 <Col4>
-                  <Link to="/">
+                  <Link to={'/documents/' + process[3]}>
                     <Eye />
                     VER DOC.
                   </Link>
                 </Col4>
 
                 <Col4>
-                  <Link to="/">
+                  <Link to={'/documents/add/' + process[3]}>
                     <Pen />
                     AGREGAR DOC.
                   </Link>
