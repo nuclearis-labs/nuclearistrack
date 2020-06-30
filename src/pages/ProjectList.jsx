@@ -101,6 +101,7 @@ export default function ProjectList() {
   const [projects, setProjects] = useState([]);
   const [projectDetails, setProjectDetails] = useState(null);
   const [processes] = useState(null);
+
   useEffect(() => {
     async function getProjectList() {
       const msgSender = await web3.eth.getCoinbase();

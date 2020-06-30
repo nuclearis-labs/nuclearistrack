@@ -45,7 +45,6 @@ export const ProjectSchema = yup.object().shape({
 export const ProcessSchema = yup.object().shape({
   processTitle: yup.string().required('Se requiere un nombre de proceso'),
   supplierAddress: yup.string().required('Se requiere elegir un proveedor'),
-  passphrase: yup.string().required('Se requiere su contraseña'),
 });
 
 export const UserSchema = yup.object().shape({
