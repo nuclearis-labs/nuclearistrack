@@ -19,7 +19,6 @@ import NewDocument from './pages/NewDocument';
 import Document from './pages/DocumentList';
 import Login from './pages/Login';
 import Documents from './pages/DocumentDetail';
-import Header from './components/Header';
 const AppWrapper = styled.div`
   background-color: #fafafa;
 `;
@@ -31,7 +30,6 @@ function App() {
     <Router>
       <GlobalStyle />
       <AppWrapper>
-        <Route path={base} component={Header} />
         <Switch>
           <PrivateRoute path={`${base}/projects/add`} component={NewProject} />
           <PrivateRoute

@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import Footer from "../components/Footer";
+import React from 'react';
+import styled from 'styled-components';
+import Footer from '../components/Footer';
 import {
   WebTop,
   WidthContent,
@@ -8,18 +8,20 @@ import {
   ItemTit,
   ItemDesc,
   BottomSpace,
-} from "../styles/webComponents";
-import bg from "../img/bgfaq.jpg";
-import I18n from "../i18n";
+} from '../styles/webComponents';
+import bg from '../img/bgfaq.jpg';
+import I18n from '../i18n';
+import PublicHeader from '../components/PublicHeader';
 
 const WebTopFAQ = styled(WebTop)`
-  height: 298px;
+  height: 396px;
   background: url(${bg}) #000 no-repeat center;
 `;
 
 export default function FAQ() {
   return (
     <>
+      <PublicHeader />
       <WebTopFAQ>
         <WidthContent>
           <WebTopTit>
@@ -27,7 +29,7 @@ export default function FAQ() {
           </WebTopTit>
         </WidthContent>
       </WebTopFAQ>
-      <WidthContent style={{ textTransform: "uppercase" }}>
+      <WidthContent style={{ textTransform: 'uppercase' }}>
         <ItemTit>Donde se guardan mis datos?</ItemTit>
         <ItemDesc>
           Qui fugiat Lorem consectetur id veniam velit consectetur consequat in.

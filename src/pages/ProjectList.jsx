@@ -1,5 +1,5 @@
 // newProvider.js
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import ProcessModal from '../components/ProcessModal';
@@ -15,7 +15,7 @@ import {
 } from '../styles/tableComponents';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import Footer from '../components/Footer';
-import { DrizzleContext } from '@drizzle/react-plugin';
+import LoggedHeader from '../components/LoggedHeader';
 
 const FlexWrap = styled.div`
   display: flex;
@@ -95,32 +95,32 @@ const ScrollBox400 = styled(Scroll)`
 `;
 
 export default function ProjectList() {
-  const { drizzle, initialized } = useContext(DrizzleContext.Context);
-  const state = drizzle.store.getState();
+  // const { drizzle, initialized } = useContext(DrizzleContext.Context);
+  // const state = drizzle.store.getState();
   const [showModal, setShowModal] = useState(false);
   const [projectDetails, setProjectDetails] = useState(null);
   const [processes] = useState(null);
-  useEffect(() => {
-    if (initialized)
-      drizzle.contracts.NuclearPoE.methods
-        .getProjectsByAddress(state.accounts[0])
-        .call({ from: state.accounts[0] })
-        .then((projects) => {
-          console.log(projects);
+  // useEffect(() => {
+  //   if (initialized)
+  //     drizzle.contracts.NuclearPoE.methods
+  //       .getProjectsByAddress(state.accounts[0])
+  //       .call({ from: state.accounts[0] })
+  //       .then((projects) => {
+  //         console.log(projects);
 
-          const arr = projects.map((project) =>
-            drizzle.contracts.NuclearPoE.methods
-              .getProjectDetails(project)
-              .call()
-          );
-          Promise.all(arr).then((project) => {
-            console.log(project);
+  //         const arr = projects.map((project) =>
+  //           drizzle.contracts.NuclearPoE.methods
+  //             .getProjectDetails(project)
+  //             .call()
+  //         );
+  //         Promise.all(arr).then((project) => {
+  //           console.log(project);
 
-            setProjectDetails(project);
-          });
-        })
-        .catch((error) => console.error(error));
-  }, [initialized, state.accounts, drizzle.contracts.NuclearPoE.methods]);
+  //           setProjectDetails(project);
+  //         });
+  //       })
+  //       .catch((error) => console.error(error));
+  // }, [initialized, state.accounts, drizzle.contracts.NuclearPoE.methods]);
 
   function handleRowClick(project) {
     setProjectDetails(project);
@@ -132,6 +132,7 @@ export default function ProjectList() {
 
   return (
     <>
+      <LoggedHeader />
       <FlexWrap>
         <Left details={projectDetails}>
           <FlexWrapRight details={projectDetails}>
@@ -150,11 +151,11 @@ export default function ProjectList() {
               {projectDetails &&
                 projectDetails.map((project) => (
                   <Row onClick={handleRowClick}>
-                    <Col>{drizzle.web3.utils.hexToAscii(project[2])}</Col>
+                    {/* <Col>{drizzle.web3.utils.hexToAscii(project[2])}</Col>
                     <Col>{project[1]}</Col>
                     <Col>id</Col>
                     <Col>{drizzle.web3.utils.hexToAscii(project[3])}</Col>
-                    <Col>{project[0] === 1 ? 'Activo' : 'Cerrado'}</Col>
+                    <Col>{project[0] === 1 ? 'Activo' : 'Cerrado'}</Col> */}
                   </Row>
                 ))}
             </ScrollBox400>

@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import I18n from '../i18n';
 import { useForm } from 'react-hook-form';
 import { ProcessSchema } from '../validationSchemas/index';
+import LoggedHeader from '../components/LoggedHeader';
 
 export default function NewProcess() {
   const { register, handleSubmit, errors } = useForm({
@@ -18,6 +19,7 @@ export default function NewProcess() {
 
   return (
     <>
+      <LoggedHeader />
       <Top>
         <Title>
           <I18n t="forms.newProcess" />

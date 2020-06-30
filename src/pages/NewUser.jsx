@@ -1,30 +1,38 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Title, Label, Button, Input } from '../styles/components';
 import { Top, Form, FormWrap, ErrorForm } from '../styles/form';
 import Footer from '../components/Footer';
 import I18n from '../i18n';
 import { useForm } from 'react-hook-form';
 import { UserSchema } from '../validationSchemas/index';
-import { DrizzleContext } from '@drizzle/react-plugin';
+import useWeb3 from '../hooks/useWeb3';
+import LoggedHeader from '../components/LoggedHeader';
 
 export default function NewUser() {
-  const { drizzle } = useContext(DrizzleContext.Context);
+  const [web3, contract] = useWeb3();
 
   const { register, handleSubmit, errors } = useForm({
     validationSchema: UserSchema,
   });
+
   function onSubmit(data) {
-    drizzle.contracts.NuclearPoE.methods
-      .createUser(
-        data.newUserType,
-        data.newUserAddress,
-        drizzle.web3.utils.asciiToHex(data.newUserName)
-      )
-      .send();
+    if (contract && web3)
+      web3.eth
+        .getCoinbase()
+        .then((msgSender) =>
+          contract.methods
+            .createUser(
+              data.newUserType,
+              data.newUserAddress,
+              web3.utils.asciiToHex(data.newUserName)
+            )
+            .send({ from: msgSender })
+        );
   }
 
   return (
     <>
+      <LoggedHeader />
       <Top>
         <Title>
           <I18n t="forms.newUser" />

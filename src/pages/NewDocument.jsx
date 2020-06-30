@@ -14,6 +14,7 @@ import Footer from '../components/Footer';
 import { useForm } from 'react-hook-form';
 import { GoogleMap } from '../components/GoogleMap';
 import { DocumentSchema } from '../validationSchemas/index';
+import LoggedHeader from '../components/LoggedHeader';
 
 function NewDocument(props) {
   const [loading, setLoading] = useState(true);
@@ -54,6 +55,7 @@ function NewDocument(props) {
 
   return (
     <>
+      <LoggedHeader />
       <Top>
         <Title>
           NUEVO

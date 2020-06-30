@@ -1,7 +1,7 @@
 // benefits.js
-import React from "react";
-import Footer from "../components/Footer";
-import styled from "styled-components";
+import React from 'react';
+import Footer from '../components/Footer';
+import styled from 'styled-components';
 import {
   WebTop,
   WidthContent,
@@ -9,10 +9,11 @@ import {
   ItemTit,
   ItemDesc,
   BottomSpace,
-} from "../styles/webComponents";
-import bg from "../img/bgBeneficios.jpg";
-import I18n from "../i18n";
-import { RouteProps } from "react-router";
+} from '../styles/webComponents';
+import bg from '../img/bgBeneficios.jpg';
+import I18n from '../i18n';
+import { RouteProps } from 'react-router';
+import PublicHeader from '../components/PublicHeader';
 
 const WebTopBenefits = styled(WebTop)`
   height: 396px;
@@ -22,6 +23,7 @@ const WebTopBenefits = styled(WebTop)`
 export default function Benefits(props: RouteProps) {
   return (
     <>
+      <PublicHeader />
       <WebTopBenefits>
         <WidthContent>
           <WebTopTit>
@@ -29,7 +31,7 @@ export default function Benefits(props: RouteProps) {
           </WebTopTit>
         </WidthContent>
       </WebTopBenefits>
-      <WidthContent style={{ textTransform: "uppercase" }}>
+      <WidthContent style={{ textTransform: 'uppercase' }}>
         <ItemTit id="security">
           <I18n t="benefits.security.title" />
         </ItemTit>
@@ -37,7 +39,7 @@ export default function Benefits(props: RouteProps) {
           dangerouslySetInnerHTML={{
             __html: I18n.getTranslation(
               props.location,
-              "benefits.security.text"
+              'benefits.security.text'
             ),
           }}
         ></ItemDesc>
@@ -48,7 +50,7 @@ export default function Benefits(props: RouteProps) {
           dangerouslySetInnerHTML={{
             __html: I18n.getTranslation(
               props.location,
-              "benefits.availability.text"
+              'benefits.availability.text'
             ),
           }}
         ></ItemDesc>
@@ -60,7 +62,7 @@ export default function Benefits(props: RouteProps) {
           dangerouslySetInnerHTML={{
             __html: I18n.getTranslation(
               props.location,
-              "benefits.control.text"
+              'benefits.control.text'
             ),
           }}
         ></ItemDesc>

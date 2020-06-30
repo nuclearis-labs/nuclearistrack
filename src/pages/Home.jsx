@@ -21,6 +21,7 @@ import Hept5 from '../img/hept5.png';
 import Hept6 from '../img/hept6.png';
 import Hept7 from '../img/hept7.png';
 import I18n from '../i18n';
+import PublicHeader from '../components/PublicHeader';
 
 const WebTopHome = styled(WebTop)`
   background: url(${bg}) #1a1a1a no-repeat center;
@@ -84,7 +85,7 @@ const TitHome = styled.div`
     height: 60px;
     background-image: linear-gradient(
       to bottom,
-      rgba(26, 26, 26, 0.6) 0%,
+      rgba(26, 26, 26, 0.9) 0%,
       rgba(26, 26, 26, 1) 90%
     );
     z-index: 2;
@@ -183,9 +184,10 @@ const Icon = styled.img`
   margin-bottom: -20px;
 `;
 
-function Home(props: any) {
+function Home(props) {
   return (
     <>
+      <PublicHeader />
       <WebTopHome>
         <WidthContentHome>
           <PhraseHome>

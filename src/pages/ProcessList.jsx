@@ -7,10 +7,12 @@ import { Row, HeadRow, Col4 } from '../styles/tableComponents';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import { ReactComponent as Pen } from '../img/pen.svg';
 import Footer from '../components/Footer';
+import LoggedHeader from '../components/LoggedHeader';
 
 function ProcessList() {
   return (
     <>
+      <LoggedHeader />
       <Top>
         <Title>PROCESOS</Title>
       </Top>

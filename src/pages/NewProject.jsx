@@ -1,39 +1,41 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Footer from '../components/Footer';
 import { Title, Label, Input, Button, Select } from '../styles/components';
 import { Top, Form, FormWrap, ErrorForm } from '../styles/form';
 import I18n from '../i18n';
 import { useForm } from 'react-hook-form';
 import { ProjectSchema } from '../validationSchemas/index';
-import { DrizzleContext } from '@drizzle/react-plugin';
+import LoggedHeader from '../components/LoggedHeader';
+import useWeb3 from '../hooks/useWeb3';
 
 export default function NewProject() {
-  const { drizzle, initialized } = useContext(DrizzleContext.Context);
+  const [web3, contract] = useWeb3();
+
   const { register, handleSubmit, errors } = useForm({
     validationSchema: ProjectSchema,
   });
 
-  function submit(data) {
-    console.log(data);
-    if (initialized)
-      drizzle.contracts.NuclearPoE.methods
-        .createProject(
-          data.expediente,
-          data.clientAddress,
-          drizzle.web3.utils.asciiToHex(data.proyectoTitle),
-          drizzle.web3.utils.asciiToHex(data.oc)
-        )
-        .send();
+  function onSubmit(data) {
+    contract.methods
+      .createProject(
+        data.expediente,
+        data.clientAddress,
+        web3.utils.asciiToHex(data.proyectoTitle),
+        web3.utils.asciiToHex(data.oc)
+      )
+      .send();
   }
+
   return (
     <>
+      <LoggedHeader />
       <Top>
         <Title>
           <I18n t="forms.newProject" />
         </Title>
       </Top>
       <FormWrap>
-        <Form onSubmit={handleSubmit(submit)}>
+        <Form onSubmit={handleSubmit(onSubmit)}>
           <Label>
             <I18n t="forms.projectTitle" />
           </Label>

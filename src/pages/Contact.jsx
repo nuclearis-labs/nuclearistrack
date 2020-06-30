@@ -12,7 +12,7 @@ import { Label, Input, TextArea, Button } from '../styles/components';
 import I18n from '../i18n';
 import bg from '../img/bgHome.jpg';
 import { useForm } from 'react-hook-form';
-import { useAsync } from '../hooks/useAsync';
+import PublicHeader from '../components/PublicHeader';
 
 const WebTopContact = styled(WebTop)`
   height: 370px;
@@ -21,13 +21,13 @@ const WebTopContact = styled(WebTop)`
 
 export default function Contact() {
   const { handleSubmit } = useForm();
-  const { execute, pending } = useAsync(onSubmit, false);
 
   function onSubmit(data) {
     console.log('submit');
   }
   return (
     <>
+      <PublicHeader />
       <WebTopContact>
         <WidthContent>
           <WebTopTit>
@@ -49,11 +49,7 @@ export default function Contact() {
             <I18n t="contact.message" />
           </Label>
           <TextArea name="message"></TextArea>
-          <Button
-            type="submit"
-            disabled={pending}
-            onClick={handleSubmit(execute)}
-          >
+          <Button type="submit" onClick={handleSubmit(onSubmit)}>
             <I18n t="contact.submit" />
           </Button>
         </Form>

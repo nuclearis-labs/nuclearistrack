@@ -11,6 +11,7 @@ import {
 } from '../styles/webComponents';
 import bg from '../img/bgSeguridad.jpg';
 import I18n from '../i18n';
+import PublicHeader from '../components/PublicHeader';
 
 const WebTopSecurity = styled(WebTop)`
   height: 396px;
@@ -20,6 +21,7 @@ const WebTopSecurity = styled(WebTop)`
 export default function Abstract({ location }) {
   return (
     <>
+      <PublicHeader />
       <WebTopSecurity>
         <WidthContent>
           <WebTopTit>

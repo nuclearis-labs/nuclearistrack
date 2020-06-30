@@ -1,47 +1,63 @@
-import React, { useContext } from 'react';
-import { DrizzleContext } from '@drizzle/react-plugin';
-import {
-  WebTop,
-  WidthContent,
-  WebTopTit,
-  BottomSpace,
-} from '../styles/webComponents';
+import React from 'react';
+import styled from 'styled-components';
+import { WebTop, WidthContent, WebTopTit } from '../styles/webComponents';
 import Footer from '../components/Footer';
-import useAuth from '../hooks/useAuth';
-import { Redirect } from 'react-router';
+import useWeb3 from '../hooks/useWeb3';
+import mask from '../img/metamask.png';
+import PublicHeader from '../components/PublicHeader';
+import LoggedHeader from '../components/LoggedHeader';
+
+const Metamask = styled.img`
+  display: block;
+  width: 50%;
+  padding-top: 30px;
+`;
 
 export default function Login() {
-  const { initialized } = useContext(DrizzleContext.Context);
-  const [isUser] = useAuth();
+  const [web3] = useWeb3();
 
-  if (initialized) {
-    if (isUser === true) return <Redirect to="/" />;
-    else
-      return (
-        <>
-          <WebTop>
-            <WidthContent>
-              <WebTopTit>Login</WebTopTit>
-            </WidthContent>
-          </WebTop>
+  if (web3 === null) {
+    return (
+      <>
+        <PublicHeader />
+        <WebTop>
           <WidthContent>
-            <p>No se puede loguear</p>
+            <WebTopTit style={{ paddingBottom: '100px' }}>
+              Para poder acceder por favor descargue Metamask
+              <a href="https://metamask.io/">
+                <Metamask src={mask} />
+              </a>
+            </WebTopTit>
           </WidthContent>
-          <BottomSpace />
-          <Footer />
-        </>
-      );
+        </WebTop>
+        <Footer />
+      </>
+    );
+  } else if (web3 === undefined)
+    return (
+      <>
+        <PublicHeader />
+        <WebTop>
+          <WidthContent>
+            <WebTopTit style={{ paddingBottom: '150px' }}>
+              Conectando a la Blockchain...
+            </WebTopTit>
+          </WidthContent>
+        </WebTop>
+        <Footer />
+      </>
+    );
+  else {
+    return (
+      <>
+        <LoggedHeader />
+        <WebTop>
+          <WidthContent>
+            <WebTopTit style={{ paddingBottom: '150px' }}>Conectado!</WebTopTit>
+          </WidthContent>
+        </WebTop>
+        <Footer />
+      </>
+    );
   }
-  return (
-    <>
-      <WebTop>
-        <WidthContent>
-          <WebTopTit style={{ paddingBottom: '150px' }}>
-            Conectando a la Blockchain...
-          </WebTopTit>
-        </WidthContent>
-      </WebTop>
-      <Footer />
-    </>
-  );
 }
