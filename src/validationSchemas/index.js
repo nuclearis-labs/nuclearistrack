@@ -39,10 +39,7 @@ export const ProjectSchema = yup.object().shape({
     .number()
     .typeError('Expediente debe ser un numero')
     .required('Se requiere un numero de expediente'),
-  oc: yup
-    .number()
-    .typeError('Orden de compra debe ser un numero')
-    .required('Se requiere un numero de orden de compra'),
+  oc: yup.string().required('Se requiere una orden de compra'),
 });
 
 export const ProcessSchema = yup.object().shape({

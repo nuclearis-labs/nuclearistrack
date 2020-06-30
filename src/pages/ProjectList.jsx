@@ -1,5 +1,5 @@
 // newProvider.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import ProcessModal from '../components/ProcessModal';
@@ -16,6 +16,7 @@ import {
 import { ReactComponent as Eye } from '../img/eye.svg';
 import Footer from '../components/Footer';
 import LoggedHeader from '../components/LoggedHeader';
+import useWeb3 from '../hooks/useWeb3';
 
 const FlexWrap = styled.div`
   display: flex;
@@ -95,34 +96,50 @@ const ScrollBox400 = styled(Scroll)`
 `;
 
 export default function ProjectList() {
-  // const { drizzle, initialized } = useContext(DrizzleContext.Context);
-  // const state = drizzle.store.getState();
+  const [web3, contract] = useWeb3();
   const [showModal, setShowModal] = useState(false);
+  const [projects, setProjects] = useState([]);
   const [projectDetails, setProjectDetails] = useState(null);
   const [processes] = useState(null);
-  // useEffect(() => {
-  //   if (initialized)
-  //     drizzle.contracts.NuclearPoE.methods
-  //       .getProjectsByAddress(state.accounts[0])
-  //       .call({ from: state.accounts[0] })
-  //       .then((projects) => {
-  //         console.log(projects);
+  useEffect(() => {
+    async function getProjectList() {
+      const msgSender = await web3.eth.getCoinbase();
+      const projects = await contract.methods
+        .getProjectsByAddress()
+        .call({ from: msgSender });
+      Promise.all(
+        projects.map((project) =>
+          contract.methods.getProjectDetails(project).call({ from: msgSender })
+        )
+      ).then((project) => setProjects(project));
+    }
+    if (web3 && contract) getProjectList();
+  }, [web3, contract]);
 
-  //         const arr = projects.map((project) =>
-  //           drizzle.contracts.NuclearPoE.methods
-  //             .getProjectDetails(project)
-  //             .call()
-  //         );
-  //         Promise.all(arr).then((project) => {
-  //           console.log(project);
-
-  //           setProjectDetails(project);
-  //         });
-  //       })
-  //       .catch((error) => console.error(error));
-  // }, [initialized, state.accounts, drizzle.contracts.NuclearPoE.methods]);
+  useEffect(() => {
+    if (
+      web3 &&
+      projects &&
+      projects.length > 0 &&
+      !projects[0].hasOwnProperty('userName')
+    )
+      web3.eth.getCoinbase().then((msgSender) => {
+        const newProject = projects.map(async (project) => {
+          const user = await contract.methods
+            .getUser(project[2])
+            .call({ from: msgSender });
+          return { ...project, userName: user[2] };
+        });
+        Promise.all(newProject).then((projects) => {
+          setProjects(projects);
+        });
+      });
+    // eslint-disable-next-line
+  }, [web3, projects]);
 
   function handleRowClick(project) {
+    console.log(project);
+
     setProjectDetails(project);
   }
 
@@ -148,34 +165,42 @@ export default function ProjectList() {
               <Col>ESTADO</Col>
             </HeadRowMonsterrat>
             <ScrollBox400>
-              {projectDetails &&
-                projectDetails.map((project) => (
-                  <Row onClick={handleRowClick}>
-                    {/* <Col>{drizzle.web3.utils.hexToAscii(project[2])}</Col>
+              {projects &&
+                projects.length > 0 &&
+                projects[0].hasOwnProperty('userName') &&
+                projects.map((project) => (
+                  <Row key={project[1]} onClick={() => handleRowClick(project)}>
+                    <Col>{web3.utils.hexToAscii(project[3])}</Col>
+                    <Col>{web3.utils.hexToAscii(project.userName)}</Col>
                     <Col>{project[1]}</Col>
-                    <Col>id</Col>
-                    <Col>{drizzle.web3.utils.hexToAscii(project[3])}</Col>
-                    <Col>{project[0] === 1 ? 'Activo' : 'Cerrado'}</Col> */}
+                    <Col>{web3.utils.hexToAscii(project[4])}</Col>
+                    <Col>{project[0] === '1' ? 'Activo' : 'Cerrado'}</Col>
                   </Row>
                 ))}
             </ScrollBox400>
           </Table>
         </Left>
-        {projectDetails && projectDetails.hasOwnProperty('id') && (
+        {projectDetails && (
           <Right>
             <ResumenTit>RESUMEN DE PROYECTO</ResumenTit>
-            <ResumenName>{projectDetails.title}</ResumenName>
+            <ResumenName>
+              {web3.utils.hexToAscii(projectDetails[3])}
+            </ResumenName>
             <Row>
               <Col2 className="color">CLIENTE</Col2>
-              <Col2 className="bold">{projectDetails.clientName}</Col2>
+              <Col2 className="bold">
+                {web3.utils.hexToAscii(projectDetails.userName)}
+              </Col2>
             </Row>
             <Row>
               <Col2 className="color">EXPEDIENTE</Col2>
-              <Col2 className="bold">{projectDetails.id}</Col2>
+              <Col2 className="bold">{projectDetails[1]}</Col2>
             </Row>
             <Row>
               <Col2 className="color">Nº OC</Col2>
-              <Col2 className="bold">{projectDetails.oc}</Col2>
+              <Col2 className="bold">
+                {web3.utils.hexToAscii(projectDetails[4])}
+              </Col2>
             </Row>
             <ProcesosTit>PROCESOS</ProcesosTit>
             <HeadRow>
@@ -184,7 +209,7 @@ export default function ProjectList() {
               <Col3>DOCUMENTOS</Col3>
             </HeadRow>
             {processes &&
-              processes.map((process: IProcess) => (
+              processes.map((process) => (
                 <Row>
                   <Col3>{process.processName}</Col3>
                   <Col3>{process.supplierName}</Col3>

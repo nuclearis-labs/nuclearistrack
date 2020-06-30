@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Footer from '../components/Footer';
 import { Title, Label, Input, Button, Select } from '../styles/components';
 import { Top, Form, FormWrap, ErrorForm } from '../styles/form';
@@ -10,20 +10,40 @@ import useWeb3 from '../hooks/useWeb3';
 
 export default function NewProject() {
   const [web3, contract] = useWeb3();
+  const [users, setUsers] = useState([]);
 
   const { register, handleSubmit, errors } = useForm({
     validationSchema: ProjectSchema,
   });
 
+  useEffect(() => {
+    async function getUserList() {
+      const msgSender = await web3.eth.getCoinbase();
+      const addresses = await contract.methods
+        .getAllUsers()
+        .call({ from: msgSender });
+      Promise.all(
+        addresses.map((address) =>
+          contract.methods.getUser(address).call({ from: msgSender })
+        )
+      ).then((users) => setUsers(users.filter((user) => user[1] === '1')));
+    }
+    if (web3 && contract) getUserList().catch(console.error);
+  }, [web3, contract]);
+
   function onSubmit(data) {
-    contract.methods
-      .createProject(
-        data.expediente,
-        data.clientAddress,
-        web3.utils.asciiToHex(data.proyectoTitle),
-        web3.utils.asciiToHex(data.oc)
-      )
-      .send();
+    web3.eth
+      .getCoinbase()
+      .then((msgSender) =>
+        contract.methods
+          .createProject(
+            data.expediente,
+            data.clientAddress,
+            web3.utils.asciiToHex(data.proyectoTitle),
+            web3.utils.asciiToHex(data.oc)
+          )
+          .send({ from: msgSender })
+      );
   }
 
   return (
@@ -50,10 +70,11 @@ export default function NewProject() {
             <option disabled hidden value="">
               Select one...
             </option>
-
-            <option value="0x9b4453Fa524904a427D8065FD6c9b12f943EfdbA">
-              NA-SA
-            </option>
+            {users.map((user) => (
+              <option key={user[3]} value={user[3]}>
+                {web3.utils.hexToAscii(user[2])}
+              </option>
+            ))}
           </Select>
           <ErrorForm>
             {errors.clientAddress && errors.clientAddress.message}

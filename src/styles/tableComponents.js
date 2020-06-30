@@ -34,7 +34,6 @@ export const HeadRow = styled(Row)`
 
 export const HeadRowMonsterrat = styled(HeadRow)`
   font-family: Montserrat, sans-serif;
-  width: calc(100% - 14px);
 `;
 
 export const Col = styled.div`
