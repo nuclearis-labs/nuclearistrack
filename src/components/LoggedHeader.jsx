@@ -22,11 +22,6 @@ export default function LoggedHeader(props) {
   const [web3] = useWeb3();
   const [isUser, user] = useAuth();
 
-  useEffect(() => {
-    console.log(isUser);
-    console.log(user);
-  }, [isUser]);
-
   const [indexDropdownOpened, setIndexDropdownOpened] = useState(false);
   function resetDropdown() {
     setIndexDropdownOpened(false);

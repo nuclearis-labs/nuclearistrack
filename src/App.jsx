@@ -16,9 +16,9 @@ import Benefits from './pages/Benefits';
 import Abstract from './pages/Abstract';
 import FAQ from './pages/FAQ';
 import NewDocument from './pages/NewDocument';
-import Document from './pages/DocumentList';
+import Documents from './pages/DocumentList';
 import Login from './pages/Login';
-import Documents from './pages/DocumentDetail';
+import Document from './pages/DocumentDetail';
 const AppWrapper = styled.div`
   background-color: #fafafa;
 `;
@@ -52,13 +52,14 @@ function App() {
           <PrivateRoute
             exact={true}
             path={`${base}/documents/:process`}
-            component={Document}
+            component={Documents}
           />
           <PrivateRoute
             exact={true}
             path={`${base}/documents/:process/:hash`}
-            component={Documents}
+            component={Document}
           />
+
           <Route path={`${base}/benefits`} component={Benefits} />
           <Route path={`${base}/abstract`} component={Abstract} />
           <Route path={`${base}/login`} component={Login} />

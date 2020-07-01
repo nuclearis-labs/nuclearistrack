@@ -73,7 +73,13 @@ function ProcessList() {
             <Col4>AGREGAR DOC.</Col4>
             <Col4>CONTRACT</Col4>
           </HeadRow>
-          {processes.length > 0 &&
+          {processes.length === 0 ? (
+            <Row>
+              <Col4 style={{ textAlign: 'center', width: '100%' }}>
+                No hay procesos cargados para usted
+              </Col4>
+            </Row>
+          ) : (
             processes[0].hasOwnProperty('userName') &&
             processes.map((process) => (
               <Row key={process[3]}>
@@ -96,10 +102,8 @@ function ProcessList() {
                   <RSKLink hash={process[3]} type="address" testnet />
                 </Col4>
               </Row>
-            ))}
-          <Button as={Link} to="/processes/add">
-            NUEVO PROCESO
-          </Button>
+            ))
+          )}
         </Form>
       </FormWrap>
       <Footer />

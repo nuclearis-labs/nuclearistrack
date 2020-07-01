@@ -166,8 +166,13 @@ export default function ProjectList() {
               <Col>ESTADO</Col>
             </HeadRowMonsterrat>
             <ScrollBox400>
-              {projects &&
-                projects.length > 0 &&
+              {projects && projects.length === 0 ? (
+                <Row>
+                  <Col style={{ textAlign: 'center', width: '100%' }}>
+                    No hay projectos cargados para usted
+                  </Col>
+                </Row>
+              ) : (
                 projects[0].hasOwnProperty('userName') &&
                 projects.map((project) => (
                   <Row key={project[1]} onClick={() => handleRowClick(project)}>
@@ -177,7 +182,8 @@ export default function ProjectList() {
                     <Col>{web3.utils.hexToAscii(project[4])}</Col>
                     <Col>{project[0] === '1' ? 'Activo' : 'Cerrado'}</Col>
                   </Row>
-                ))}
+                ))
+              )}
             </ScrollBox400>
           </Table>
         </Left>

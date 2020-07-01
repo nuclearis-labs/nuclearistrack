@@ -62,7 +62,13 @@ export default function UserList() {
               <Col4>ESTADO</Col4>
               <Col4>BALANCE</Col4>
             </HeadRow>
-            {users.length > 0 &&
+            {users.length === 0 ? (
+              <Row>
+                <Col4 style={{ textAlign: 'center', width: '100%' }}>
+                  No hay usuarios cargados para usted
+                </Col4>
+              </Row>
+            ) : (
               users.map((user) => (
                 <Row key={user[3]}>
                   <Col4>{web3.utils.hexToAscii(user[2])}</Col4>
@@ -79,7 +85,8 @@ export default function UserList() {
                   <Col4>{user[0] === '1' ? 'Activo' : 'Pausado'}</Col4>
                   <Col4>{user[4]} RBTC</Col4>
                 </Row>
-              ))}
+              ))
+            )}
           </Form>
         </FormWrap>
         <Footer />

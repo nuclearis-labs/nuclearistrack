@@ -1,12 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
+import styled from 'styled-components';
 import { useParams } from 'react-router';
 import { Title } from '../styles/components';
 import { Top, Form, FormWrap } from '../styles/form';
-import { Row, HeadRow, Col3 } from '../styles/tableComponents';
 import Footer from '../components/Footer';
 import useWeb3 from '../hooks/useWeb3';
 import Process from '../build/contracts/Process.json';
 import LoggedHeader from '../components/LoggedHeader';
+import { Link } from 'react-router-dom';
+
+const Table = styled.table`
+  width: 100%;
+`;
+
+export const Row = styled.tr`
+  padding: 1px 0;
+  box-sizing: border-box;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  color: #333;
+  cursor: pointer;
+  &.active {
+    font-weight: 700;
+  }
+`;
+
+export const HeadRow = styled(Row)`
+  color: #8c6239;
+  font-weight: 700;
+  padding: 4px 0;
+`;
 
 export default function DocumentList() {
   const [web3] = useWeb3();
@@ -28,7 +51,11 @@ export default function DocumentList() {
             .getDocument(document)
             .call({ from: msgSender })
         )
-      ).then((documents) => setDocuments(documents));
+      ).then((documents) => {
+        console.log(documents);
+
+        setDocuments(documents);
+      });
     }
     if (web3) getDocumentList();
   }, [web3]);
@@ -40,18 +67,30 @@ export default function DocumentList() {
         <Title>DOCUMENTOS</Title>
       </Top>
       <FormWrap>
-        <Form>
-          <HeadRow>
-            <Col3>NOMBRE</Col3>
-            <Col3>FECHA DE SUBIDA</Col3>
-          </HeadRow>
-          {documents.map((document) => (
-            <Row>
-              <Col3>{document[0]}</Col3>
-              <Col3>{document[4]}</Col3>
-            </Row>
-          ))}
-        </Form>
+        <Table>
+          <thead>
+            <HeadRow>
+              <th>NOMBRE</th>
+              <th>FECHA</th>
+              <th>DETALLES</th>
+            </HeadRow>
+          </thead>
+          <tbody>
+            {documents.map((document) => (
+              <Row key={document[4]}>
+                <td style={{ width: '50%' }}>{document[0]}</td>
+                <td>
+                  {new Date(parseInt(document[4] + '000')).toLocaleString()}
+                </td>
+                <td>
+                  <Link to={'/documents/' + params.process + '/' + document[1]}>
+                    VER
+                  </Link>
+                </td>
+              </Row>
+            ))}
+          </tbody>
+        </Table>
       </FormWrap>
       <Footer />
     </>

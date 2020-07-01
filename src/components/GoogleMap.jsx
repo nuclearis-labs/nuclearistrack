@@ -17,7 +17,6 @@ function DocumentMap(props) {
     lat: props.coords.lat,
     lng: props.coords.lng,
   });
-  console.log(props.coords);
 
   return (
     <LoadScript googleMapsApiKey="AIzaSyCHpdtM1Pvk-nSgdFB02zUeq7TnTy_eGPs">
@@ -40,9 +39,9 @@ function DocumentMap(props) {
               lng: mouseEvent.latLng.lng(),
             });
           }}
-          draggable
+          draggable={props.draggable}
           position={props.coords}
-        />{' '}
+        />
         <></>
       </GoogleMap>
     </LoadScript>

@@ -120,12 +120,12 @@ const translations = {
       availability: {
         title: 'DISPONIBILIDAD DE LA INFORMACION',
         text:
-          '<p>La Plataforma de Trazabilidad basada en BLOCKCHAIN desarrollada por NUCLEARIS permite <del>almacenar</del> sellar la información técnica de los procesos productivos involucrados en la fabricación de componentes mecánicos para Centrales Nucleares. Toda la documentación técnica tal como certificados, formularios, calibraciones, ensayos, registros dimensionales, etc, que generan nuestros proveedores alrededor del mundo, es <del>subida</del> sellada <del>a</del> por nuestra plataforma <del>por cada empresa proveedora</del> en el momento en que sucede el proceso respectivo. De esta forma NUCLEARIS puede garantizar la autenticidad de la información debido a que una vez que fue <del>subida</del> sellada <del>a</del> por la BLOCKCHAIN nunca nadie podrá modificarla. La posibilidad de garantizar la veracidad y autenticidad de la información técnica otorga máxima confiabilidad respecto a la calidad de la pieza o componente mecánico producido. De esta manera las huellas digitales de los archivos generados por los proveedores que intervienen en los procesos productivos se suben a la BLOCKCHAIN<del> suben a la red de almacenamiento descentralizada “IPFS”</del> lo cual implica que a partir de ese momento la veracidad de la documentación es completamente inmutable, descentralizada y perpetua. Nunca se apaga, nunca se modifica y está siempre disponible para uso del cliente. </p>',
+          '<p>La Plataforma de Trazabilidad basada en BLOCKCHAIN desarrollada por NUCLEARIS permite sellar la información técnica de los procesos productivos involucrados en la fabricación de componentes mecánicos para Centrales Nucleares. Toda la documentación técnica tal como certificados, formularios, calibraciones, ensayos, registros dimensionales, etc, que generan nuestros proveedores alrededor del mundo, es sellada por nuestra plataforma en el momento en que sucede el proceso respectivo. De esta forma NUCLEARIS puede garantizar la autenticidad de la información debido a que una vez que fue sellada por la BLOCKCHAIN nunca nadie podrá modificarla. La posibilidad de garantizar la veracidad y autenticidad de la información técnica otorga máxima confiabilidad respecto a la calidad de la pieza o componente mecánico producido. De esta manera las huellas digitales de los archivos generados por los proveedores que intervienen en los procesos productivos se suben a la BLOCKCHAIN lo cual implica que a partir de ese momento la veracidad de la documentación es completamente inmutable, descentralizada y perpetua. Nunca se apaga, nunca se modifica y está siempre disponible para uso del cliente.</p>',
       },
       control: {
         title: 'CONTROL',
         text:
-          '<p>Todos los sistemas de una Central Nuclear son construidos a partir de cientos de miles de piezas mecánicas las cuales deben ser diseñadas y fabricadas bajo exhaustivas normativas técnicas internacionales. Los operadores de dichas Centrales, mediante un permiso de acceso a nuestra Plataforma, podrán verificar en tiempo real la veracidad de toda la documentación relacionada con <del>controlar en tiempo real los parámetros de los procesos productivos realizados sobre</del> los componentes que posteriormente serán instalados en sus instalaciones.</p>',
+          '<p>Todos los sistemas de una Central Nuclear son construidos a partir de cientos de miles de piezas mecánicas las cuales deben ser diseñadas y fabricadas bajo exhaustivas normativas técnicas internacionales. Los operadores de dichas Centrales, mediante un permiso de acceso a nuestra Plataforma, podrán verificar en tiempo real la veracidad de toda la documentación relacionada con los componentes que posteriormente serán instalados en sus instalaciones.</p>',
       },
     },
     abstract: {
@@ -141,25 +141,27 @@ const translations = {
       section2: {
         title: 'LA SOLUCIÓN',
         text: `<p>Mediante el uso de tecnología BLOCKCHAIN, la empresa NUCLEARIS desarrolló una Plataforma de Trazabilidad en la fabricación de componentes mecánicos de uso nuclear, brindando así una capa de seguridad adicional al Sistema de Calidad.
-      Con esta aplicación <del>de almacenamiento</del> descentralizada, los fabricantes <del>suben</del> sellan <del>a la</del> a través de la Plataforma la documentación técnica de su proceso industrial “en el momento en que se realiza el mismo” y su huella digital queda almacenado allí de manera inmutable<del>, in-hackeable </del> y para siempre. 
+      Con esta aplicación descentralizada, los fabricantes sellan a través de la Plataforma la documentación técnica de su proceso industrial “en el momento en que se realiza el mismo” y su huella digital queda almacenado allí de manera inmutable y para siempre. 
       Esta metodología propuesta erradica la posibilidad de posteriores modificaciones de la documentación agregando valor y confiabilidad al producto final y consecuentemente al nivel de seguridad de la Central Nuclear misma.
-      De esta manera, el operador de la Central podrá acceder a la Plataforma para verificar la autenticidad de la documentación comparando <del>“los papeles” con </del>los documentos digitales.</p>`,
+      De esta manera, el operador de la Central podrá acceder a la Plataforma para verificar la autenticidad de la documentación.</p>`,
       },
       section3: {
         title: 'LA TECNOLOGÍA BLOCKCHAIN',
         text: `<p>A finales del año 2008, se publicó la tesis académica que dio origen a lo que en la actualidad es la red de almacenamiento descentralizada más grande del mundo la cual funciona al mismo tiempo en miles de computadores, servidores alrededor del mundo, con una capacidad computacional extraordinaria e imposible de modificar o “apagar”.
         La descentralización mencionada le provee a la red una inherente robustez y seguridad a ataques externos que es muy difícil conseguir en sistemas centralizados.
         Cabe destacar que lo que se sube a la BLOCKCHAIN son simplemente los códigos alfanuméricos denominados HASH que son las identificaciones criptográficas (a modo de “huella digital”) que representan de forma unívoca a cada documentos. 
-        Con esta breve descripción se pretende explicar que la información de los documentos no es de acceso público bajo ningún punto de vista. <del>El cliente podrá decidir el destino del almacenamiento de sus documentos, pudiendo ser en los servidores de la misma Central Nuclear, en servidores externos o bien se pueden almacenar en una red descentralizada de archivos.</del></p>`,
+        Con esta breve descripción se pretende explicar que la información de los documentos no es de acceso público bajo ningún punto de vista.</p>`,
       },
     },
     faq: {
       bannerTitle: 'LAS PREGUNTAS MAS FRECUENTES',
-      // Los documentos compartidos con la plataforma donde se guardan?
-      // Mi información personal donde se guarda?
-      // La información relacionada con los proyectos/procesos donde se guarda?
-      // Existe la posibilidad de que alguien apague la blockchain?
-      // Con el hash se puede reconstruir el documento?
+      question1:
+        'Los documentos compartidos con la plataforma donde se guardan?',
+      question2: 'Mi información personal donde se guarda?',
+      question3:
+        'La información relacionada con los proyectos/procesos donde se guarda?',
+      question4: 'Existe la posibilidad de que alguien apague la blockchain?',
+      question5: 'Con el hash se puede reconstruir el documento?',
     },
     login: {
       bannerTitle: 'ACCEDER',

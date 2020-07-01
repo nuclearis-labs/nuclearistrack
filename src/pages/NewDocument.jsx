@@ -23,6 +23,7 @@ import { useDropzone } from 'react-dropzone';
 import GoogleMap from '../components/GoogleMap';
 import RSKLink from '../components/RSKLink';
 import { Link } from 'react-router-dom';
+import { hashFile } from '../utils/hashFile';
 
 const fade = keyframes`
   from {
@@ -114,22 +115,14 @@ function NewDocument() {
           .addDocument(
             data.name,
             data.hash,
-            web3.utils.asciiToHex(data.lat),
-            web3.utils.asciiToHex(data.lng),
+            web3.utils.asciiToHex(data.lat.toString()),
+            web3.utils.asciiToHex(data.lng.toString()),
             data.comment
           )
           .send({ from: msgSender })
           .on('transactionHash', (txHash) => setTxHash(txHash));
       });
     });
-  }
-
-  async function hashFile(fileDescriptor) {
-    const hashBuffer = await crypto.subtle.digest('SHA-256', fileDescriptor);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return `0x${hashArray
-      .map((b) => ('00' + b.toString(16)).slice(-2))
-      .join('')}`;
   }
 
   function onFileChange([file]) {
@@ -157,6 +150,28 @@ function NewDocument() {
     }
     if (web3) getProcessDetails();
   }, [web3, params]);
+
+  useEffect(() => {
+    console.log(processDetails);
+
+    if (
+      web3 &&
+      processDetails.hasOwnProperty('0') &&
+      !processDetails.hasOwnProperty('userName')
+    )
+      web3.eth.getCoinbase().then((msgSender) => {
+        const user = contract.methods
+          .getUser(processDetails[0])
+          .call({ from: msgSender })
+          .then((user) => {
+            setProcessDetails((processDetails) => ({
+              ...processDetails,
+              userName: user[2],
+            }));
+          });
+      });
+    // eslint-disable-next-line
+  }, [web3, processDetails]);
 
   return (
     <>
@@ -187,16 +202,20 @@ function NewDocument() {
           ) : (
             <>
               <Pad>
-                {web3 && processDetails && processDetails.hasOwnProperty('1') && (
-                  <>
-                    <SubTit>PROCESO</SubTit>
-                    <ProcessName>
-                      {web3.utils.hexToAscii(processDetails[1])}
-                    </ProcessName>
-                    <SubTit>PROVEEDOR</SubTit>
-                    <SubTit className="bold">{processDetails[0]}</SubTit>
-                  </>
-                )}
+                {web3 &&
+                  processDetails &&
+                  processDetails.hasOwnProperty('userName') && (
+                    <>
+                      <SubTit>PROCESO</SubTit>
+                      <ProcessName>
+                        {web3.utils.hexToAscii(processDetails[1])}
+                      </ProcessName>
+                      <SubTit>PROVEEDOR</SubTit>
+                      <SubTit className="bold">
+                        {web3.utils.hexToAscii(processDetails.userName)}
+                      </SubTit>
+                    </>
+                  )}
               </Pad>
               <Label>SELLAR ARCHIVO</Label>
               <DropZone {...getRootProps()}>
@@ -221,7 +240,11 @@ function NewDocument() {
               <ErrorForm>{errors.file && errors.file.message}</ErrorForm>
               <Label>UBICACION DEL DOCUMENTO (AJUSTAR SI NECESARIO)</Label>
               {location !== undefined && (
-                <GoogleMap setLocation={setLocation} coords={location} />
+                <GoogleMap
+                  draggable
+                  setLocation={setLocation}
+                  coords={location}
+                />
               )}
               <Label>OBSERVACIONES</Label>
               <TextArea name="comment" ref={register}></TextArea>
