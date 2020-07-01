@@ -5,7 +5,6 @@ import styled, { keyframes } from 'styled-components';
 import {
   Title,
   Label,
-  FileInput,
   TextArea,
   ProcessName,
   SubTit,
@@ -15,7 +14,6 @@ import {
 import { Top, Form, FormWrap, ErrorForm } from '../styles/form';
 import Footer from '../components/Footer';
 import { useForm } from 'react-hook-form';
-import { DocumentSchema } from '../validationSchemas/index';
 import LoggedHeader from '../components/LoggedHeader';
 import useWeb3 from '../hooks/useWeb3';
 import Process from '../build/contracts/Process.json';
@@ -63,9 +61,21 @@ function NewDocument() {
   const [location, setLocation] = useState(undefined);
 
   const onDrop = useCallback(
-    (acceptedFiles) => onFileChange(acceptedFiles),
-    []
+    ([file]) => {
+      setFile(file);
+      setValue('name', file.name);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        hashFile(event.target.result).then((hash) => {
+          setHash(hash);
+          setValue('hash', hash);
+        });
+      };
+      if (file) reader.readAsArrayBuffer(file);
+    },
+    [setValue]
   );
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   useEffect(() => {
@@ -92,7 +102,7 @@ function NewDocument() {
       setValue('lat', location.lat);
       setValue('lng', location.lng);
     }
-  }, [location]);
+  }, [location, setValue]);
 
   React.useEffect(() => {
     register('name');
@@ -125,19 +135,6 @@ function NewDocument() {
     });
   }
 
-  function onFileChange([file]) {
-    setFile(file);
-    setValue('name', file.name);
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      hashFile(event.target.result).then((hash) => {
-        setHash(hash);
-        setValue('hash', hash);
-      });
-    };
-    if (file) reader.readAsArrayBuffer(file);
-  }
-
   useEffect(() => {
     async function getProcessDetails() {
       let processContract = new web3.eth.Contract(Process.abi, params.process);
@@ -160,7 +157,7 @@ function NewDocument() {
       !processDetails.hasOwnProperty('userName')
     )
       web3.eth.getCoinbase().then((msgSender) => {
-        const user = contract.methods
+        contract.methods
           .getUser(processDetails[0])
           .call({ from: msgSender })
           .then((user) => {

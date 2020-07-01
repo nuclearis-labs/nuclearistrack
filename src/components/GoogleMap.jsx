@@ -6,14 +6,8 @@ const containerStyle = {
   height: '400px',
 };
 
-const center = {
-  lat: -34.57351,
-  lng: -58.474495,
-};
-
 function DocumentMap(props) {
-  const [map, setMap] = React.useState(null);
-  const [position, setPosition] = useState({
+  const [position] = useState({
     lat: props.coords.lat,
     lng: props.coords.lng,
   });

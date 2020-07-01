@@ -1,8 +1,8 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router';
 import { Title } from '../styles/components';
-import { Top, Form, FormWrap } from '../styles/form';
+import { Top, FormWrap } from '../styles/form';
 import Footer from '../components/Footer';
 import useWeb3 from '../hooks/useWeb3';
 import Process from '../build/contracts/Process.json';
@@ -58,6 +58,7 @@ export default function DocumentList() {
       });
     }
     if (web3) getDocumentList();
+    // eslint-disable-next-line
   }, [web3]);
 
   return (

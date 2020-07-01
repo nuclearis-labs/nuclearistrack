@@ -1,7 +1,7 @@
 // processes.js
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Title, Button } from '../styles/components';
+import { Title } from '../styles/components';
 import { Top, Form, FormWrap } from '../styles/form';
 import { Row, HeadRow, Col4 } from '../styles/tableComponents';
 import { ReactComponent as Eye } from '../img/eye.svg';

@@ -3,7 +3,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useParams } from 'react-router';
 import Footer from '../components/Footer';
-import { Title, Scroll, CopyButton, Label } from '../styles/components';
+import { Title, Scroll, Label } from '../styles/components';
 import { Table, Row, Col2, Col4 } from '../styles/tableComponents';
 import GoogleMap from '../components/GoogleMap';
 import LoggedHeader from '../components/LoggedHeader';
@@ -98,7 +98,6 @@ export default function DocumentDetail() {
   const [web3] = useWeb3();
   const [file, setFile] = useState(null);
   const [hash, setHash] = useState(null);
-  const [valid, setValid] = useState(null);
   const params = useParams();
   const [document, setDocument] = useState(undefined);
 
@@ -119,7 +118,7 @@ export default function DocumentDetail() {
       setDocument(document);
     }
     if (web3) getDocument();
-  }, [web3]);
+  }, [web3, params.hash, params.process]);
 
   function onFileChange([file]) {
     setFile(file);
@@ -203,7 +202,7 @@ export default function DocumentDetail() {
 
               <ProcesosTit>OBSERVACIONES</ProcesosTit>
               <Nota>
-                {document[5] == undefined ? 'No hay comentarios' : document[5]}
+                {document[5] === undefined ? 'No hay comentarios' : document[5]}
               </Nota>
             </>
           )}

@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import styled from 'styled-components';
 import {
   WebTop,
   WidthContent,
@@ -11,27 +10,20 @@ import {
 import Footer from '../components/Footer';
 import useWeb3 from '../hooks/useWeb3';
 import useAuth from '../hooks/useAuth';
-import mask from '../img/metamask.png';
 import PublicHeader from '../components/PublicHeader';
 import LoggedHeader from '../components/LoggedHeader';
 import { useHistory } from 'react-router';
 
-const Metamask = styled.img`
-  display: block;
-  width: 50%;
-  padding-top: 30px;
-`;
-
 export default function Login() {
   const [web3] = useWeb3();
-  const [isUser, user] = useAuth();
+  const [isUser] = useAuth();
   const history = useHistory();
 
   useEffect(() => {
     if (isUser === true) {
       history.push('/projects');
     }
-  }, [isUser]);
+  }, [isUser, history]);
 
   if (web3 === undefined) {
     return (
