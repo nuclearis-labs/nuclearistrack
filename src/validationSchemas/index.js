@@ -28,10 +28,6 @@ export const LoginSchema = yup.object().shape({
   passphrase: yup.string().required('Se requiere su contraseña'),
 });
 
-export const DocumentSchema = yup.object().shape({
-  passphrase: yup.string().required('Se requiere su contraseña'),
-});
-
 export const ProjectSchema = yup.object().shape({
   proyectoTitle: yup.string().required('Se requiere un nombre de proyecto'),
   clientAddress: yup.string().required('Se requiere elegir un cliente'),

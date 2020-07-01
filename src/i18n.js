@@ -143,18 +143,23 @@ const translations = {
         text: `<p>Mediante el uso de tecnología BLOCKCHAIN, la empresa NUCLEARIS desarrolló una Plataforma de Trazabilidad en la fabricación de componentes mecánicos de uso nuclear, brindando así una capa de seguridad adicional al Sistema de Calidad.
       Con esta aplicación <del>de almacenamiento</del> descentralizada, los fabricantes <del>suben</del> sellan <del>a la</del> a través de la Plataforma la documentación técnica de su proceso industrial “en el momento en que se realiza el mismo” y su huella digital queda almacenado allí de manera inmutable<del>, in-hackeable </del> y para siempre. 
       Esta metodología propuesta erradica la posibilidad de posteriores modificaciones de la documentación agregando valor y confiabilidad al producto final y consecuentemente al nivel de seguridad de la Central Nuclear misma.
-      De esta manera, el operador de la Central podrá acceder a la Plataforma para verificar la autenticidad de la documentación comparando <del>“los papeles” con </del>los documentos digitales con los documentos digitales inmutables subidos a la BLOCKCHAIN.</p>`,
+      De esta manera, el operador de la Central podrá acceder a la Plataforma para verificar la autenticidad de la documentación comparando <del>“los papeles” con </del>los documentos digitales.</p>`,
       },
       section3: {
         title: 'LA TECNOLOGÍA BLOCKCHAIN',
         text: `<p>A finales del año 2008, se publicó la tesis académica que dio origen a lo que en la actualidad es la red de almacenamiento descentralizada más grande del mundo la cual funciona al mismo tiempo en miles de computadores, servidores alrededor del mundo, con una capacidad computacional extraordinaria e imposible de modificar o “apagar”.
         La descentralización mencionada le provee a la red una inherente robustez y seguridad a ataques externos que es muy difícil conseguir en sistemas centralizados.
-        Cabe destacar que lo que se sube a la BLOCKCHAIN son simplemente los códigos alfanuméricos denominados HASH que son las identificaciones criptográficas (a modo de “huella digital”) que representan de forma unívoca a cada uno de los documentos almacenados. 
+        Cabe destacar que lo que se sube a la BLOCKCHAIN son simplemente los códigos alfanuméricos denominados HASH que son las identificaciones criptográficas (a modo de “huella digital”) que representan de forma unívoca a cada documentos. 
         Con esta breve descripción se pretende explicar que la información de los documentos no es de acceso público bajo ningún punto de vista. <del>El cliente podrá decidir el destino del almacenamiento de sus documentos, pudiendo ser en los servidores de la misma Central Nuclear, en servidores externos o bien se pueden almacenar en una red descentralizada de archivos.</del></p>`,
       },
     },
     faq: {
       bannerTitle: 'LAS PREGUNTAS MAS FRECUENTES',
+      // Los documentos compartidos con la plataforma donde se guardan?
+      // Mi información personal donde se guarda?
+      // La información relacionada con los proyectos/procesos donde se guarda?
+      // Existe la posibilidad de que alguien apague la blockchain?
+      // Con el hash se puede reconstruir el documento?
     },
     login: {
       bannerTitle: 'ACCEDER',

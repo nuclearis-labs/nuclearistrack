@@ -1,6 +1,6 @@
 // webComponents.js
-import styled from "styled-components";
-import { NavPhrase } from "./navComponents";
+import styled from 'styled-components';
+import { NavPhrase } from './navComponents';
 
 export const Explain = styled.div`
   color: #5d5d5d;
@@ -53,7 +53,7 @@ export const WebTopTit = styled.div`
 export const WidthContent = styled.div`
   max-width: 550px;
   margin: 0 auto;
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
   position: relative;
   height: 100%;
   @media (max-width: 767px) {
@@ -63,6 +63,7 @@ export const WidthContent = styled.div`
 
 export const ItemTit = styled.div`
   color: #8c6239;
+  text-transform: uppercase;
   font-size: 18px;
   line-height: 21px;
   letter-spacing: 2px;
@@ -72,6 +73,7 @@ export const ItemTit = styled.div`
 
 export const ItemDesc = styled.div`
   color: #5d5d5d;
+  text-transform: uppercase;
   font-size: 11px;
   margin-top: 20px;
   line-height: 20px;

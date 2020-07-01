@@ -88,8 +88,8 @@ export const FileInput = styled.input`
 
 export const TextArea = styled.textarea`
   border: solid 2px #5d5d5d;
-  width: 370px;
-  height: 200px;
+  width: 400px;
+  height: 100px;
   padding: 5px;
   color: #555;
   cursor: text;
@@ -142,8 +142,8 @@ export const CopyButton = styled(Button)`
   margin: 0 0 0 10px;
 `;
 
-export const Checkbox = styled.input.attrs(props => ({
-  type: 'checkbox'
+export const Checkbox = styled.input.attrs((props) => ({
+  type: 'checkbox',
 }))`
 	& + label span {
 		display: inline-block;
@@ -163,8 +163,8 @@ export const Checkbox = styled.input.attrs(props => ({
 	}
 `;
 
-export const Datepicker = styled.input.attrs(props => ({
-  type: 'date'
+export const Datepicker = styled.input.attrs((props) => ({
+  type: 'date',
 }))`
   border: solid 2px #5d5d5d;
   width: 207px;

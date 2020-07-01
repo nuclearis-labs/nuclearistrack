@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Nav,
   NavHeader,
@@ -20,7 +20,12 @@ import { Link } from 'react-router-dom';
 
 export default function LoggedHeader(props) {
   const [web3] = useWeb3();
-  const [, user] = useAuth();
+  const [isUser, user] = useAuth();
+
+  useEffect(() => {
+    console.log(isUser);
+    console.log(user);
+  }, [isUser]);
 
   const [indexDropdownOpened, setIndexDropdownOpened] = useState(false);
   function resetDropdown() {
@@ -54,7 +59,7 @@ export default function LoggedHeader(props) {
 
         <NavUser>
           <User />
-          {web3 && user && (
+          {web3 && isUser && user && (
             <>
               <UserName>{web3.utils.hexToAscii(user.name)}</UserName>
 
