@@ -33,23 +33,33 @@ export default function FAQ() {
         <ItemTit>
           <I18n t="faq.question1" />
         </ItemTit>
-        <ItemDesc></ItemDesc>
+        <ItemDesc>
+          <I18n t="faq.answer1" />
+        </ItemDesc>
         <ItemTit>
           <I18n t="faq.question2" />
         </ItemTit>
-        <ItemDesc></ItemDesc>
+        <ItemDesc>
+          <I18n t="faq.answer2" />
+        </ItemDesc>
         <ItemTit>
           <I18n t="faq.question3" />
         </ItemTit>
-        <ItemDesc></ItemDesc>
+        <ItemDesc>
+          <I18n t="faq.answer3" />
+        </ItemDesc>
         <ItemTit>
           <I18n t="faq.question4" />
         </ItemTit>
-        <ItemDesc></ItemDesc>
+        <ItemDesc>
+          <I18n t="faq.answer4" />
+        </ItemDesc>
         <ItemTit>
           <I18n t="faq.question5" />
         </ItemTit>
-        <ItemDesc></ItemDesc>
+        <ItemDesc>
+          <I18n t="faq.answer5" />
+        </ItemDesc>
       </WidthContent>
       <BottomSpace></BottomSpace>
 

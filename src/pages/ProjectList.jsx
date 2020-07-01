@@ -17,6 +17,7 @@ import { ReactComponent as Eye } from '../img/eye.svg';
 import Footer from '../components/Footer';
 import LoggedHeader from '../components/LoggedHeader';
 import useWeb3 from '../hooks/useWeb3';
+import Process from '../build/contracts/Process.json';
 
 const FlexWrap = styled.div`
   display: flex;
@@ -100,7 +101,7 @@ export default function ProjectList() {
   const [showModal, setShowModal] = useState(false);
   const [projects, setProjects] = useState([]);
   const [projectDetails, setProjectDetails] = useState(null);
-  const [processes] = useState(null);
+  const [processes, setProcesses] = useState(null);
 
   useEffect(() => {
     async function getProjectList() {
@@ -139,7 +140,23 @@ export default function ProjectList() {
   }, [web3, projects]);
 
   function handleRowClick(project) {
-    console.log(project);
+    async function getProcessListByProject() {
+      const msgSender = await web3.eth.getCoinbase();
+      const processes = await contract.methods
+        .getProcessContractsByProject(project[1])
+        .call({ from: msgSender });
+      Promise.all(
+        processes.map((address) => {
+          let processContract = new web3.eth.Contract(Process.abi, address);
+          return processContract.methods.getDetails().call({ from: msgSender });
+        })
+      ).then((processes) => {
+        console.log(processes);
+
+        setProcesses(processes);
+      });
+    }
+    if (web3 && contract) getProcessListByProject();
 
     setProjectDetails(project);
   }
@@ -217,11 +234,11 @@ export default function ProjectList() {
             </HeadRow>
             {processes &&
               processes.map((process) => (
-                <Row>
-                  <Col3>{process.processName}</Col3>
-                  <Col3>{process.supplierName}</Col3>
+                <Row key={process[3]}>
+                  <Col3>{web3.utils.hexToAscii(process[1])}</Col3>
+                  <Col3>{process[0]}</Col3>
                   <Col3>
-                    <Link to={'/documents/' + process.contractAddress}>
+                    <Link to={'/documents/' + process[3]}>
                       <Eye />
                       VER DOC.
                     </Link>

@@ -155,13 +155,22 @@ const translations = {
     },
     faq: {
       bannerTitle: 'LAS PREGUNTAS MAS FRECUENTES',
-      question1:
-        'Los documentos compartidos con la plataforma donde se guardan?',
+      question1: 'Los archivos compartidos con la plataforma donde se guardan?',
+      answer1:
+        'Los archivos nunca dejan la computadora en la cual se encuentran a la hora de sellar el archivo. La plataforma genera la huella digital del archivo en la computadora localmente, se obtiene información adicional como el nombre del archivo y la geolocalización provista por el navegador web. Dicha información se envía a un nodo Blockchain y se comparte con toda la red.',
       question2: 'Mi información personal donde se guarda?',
+      answer2:
+        'La plataforma guarda de cada usuario la siguiente información: Nombre de empresa, Dirección de Metamask, Tipo de usuario y Estado actual. Dicha información se guarda en la Blockchain',
       question3:
         'La información relacionada con los proyectos/procesos donde se guarda?',
+      answer3:
+        'Los proyectos y procesos que se crean en la plataforma se guardan en la Blockchain, la información asociada es la minima necesaria.',
       question4: 'Existe la posibilidad de que alguien apague la blockchain?',
+      answer4:
+        'No, la Blockchain es una red descentralizada de cientos de miles de nodos que mientras se mantenga uno encendido, la Blockchain sigue.',
       question5: 'Con el hash se puede reconstruir el documento?',
+      answer5:
+        'No, el hash (huella digital) es una operación criptografica unidireccional.',
     },
     login: {
       bannerTitle: 'ACCEDER',
