@@ -28,8 +28,10 @@ import Footer from '../components/Footer';
 import LoggedHeader from '../components/LoggedHeader';
 import useWeb3 from '../hooks/useWeb3';
 import Process from '../build/contracts/Process.json';
+import useAuth from '../hooks/useAuth';
 
 export default function ProjectList() {
+  const [, user] = useAuth();
   const [web3, contract] = useWeb3();
   const [showModal, setShowModal] = useState(false);
   const [projects, setProjects] = useState([]);
@@ -71,6 +73,8 @@ export default function ProjectList() {
         .call({ from: msgSender });
       Promise.all(
         processes.map((address) => {
+          console.log(address);
+
           let processContract = new web3.eth.Contract(Process.abi, address);
           return processContract.methods.getDetails().call({ from: msgSender });
         })
@@ -85,12 +89,12 @@ export default function ProjectList() {
                 .call({ from: msgSender }),
             };
           })
-        ).then((processes) => setProcesses(processes));
+        ).then((processes) => {
+          setProcesses(processes);
+        });
       });
     }
     if (web3 && contract) {
-      console.log(project);
-
       getProcessListByProject();
       setProjectDetails(project);
     }
@@ -106,7 +110,9 @@ export default function ProjectList() {
       <FlexWrap>
         <Left details={projectDetails}>
           <FlexWrapRight details={projectDetails}>
-            <AddProyectBtn>+ NUEVO PROYECTO</AddProyectBtn>
+            {user.type === '0' && (
+              <AddProyectBtn>+ NUEVO PROYECTO</AddProyectBtn>
+            )}
             <Title>PROYECTOS</Title>
           </FlexWrapRight>
           <Table>
@@ -179,14 +185,16 @@ export default function ProjectList() {
                   </Col3>
                 </Row>
               ))}
-            <Button
-              style={{ width: 'fit-content' }}
-              onClick={() => {
-                setShowModal(true);
-              }}
-            >
-              + AGREGAR PROCESOS
-            </Button>
+            {user.type === '0' && (
+              <Button
+                style={{ width: 'fit-content', whiteSpace: 'nowrap' }}
+                onClick={() => {
+                  setShowModal(true);
+                }}
+              >
+                + AGREGAR PROCESOS
+              </Button>
+            )}
           </Right>
         )}
       </FlexWrap>
