@@ -1,7 +1,6 @@
 // modal.js
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { Scroll, Button } from '../styles/components';
+import { Button } from '../styles/components';
 import { Row, HeadRow, Col4 } from '../styles/tableComponents';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import { Link } from 'react-router-dom';
@@ -10,85 +9,16 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import Process from '../build/contracts/Process.json';
 import useWeb3 from '../hooks/useWeb3';
 import RSKLink from '../components/RSKLink';
-
-const ModalWrap = styled.div`
-  width: 540px;
-  height: 350px;
-  position: fixed;
-  top: 320px;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #333;
-  z-index: 999999;
-`;
-
-const ModalTop = styled.div`
-  width: 100%;
-  height: 140px;
-  color: #fff;
-  padding: 30px 20px 10px 50px;
-  box-sizing: border-box;
-`;
-
-const ModalBottom = styled.div`
-  width: 100%;
-  height: 210px;
-  background: #999;
-  color: #333;
-  padding: 5px 20px 10px 30px;
-  box-sizing: border-box;
-  ${HeadRow} {
-    width: calc(100% - 34px);
-    margin-left: 20px;
-  }
-`;
-
-const ModalTit = styled.div`
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
-  font-size: 16px;
-  letter-spacing: 1px;
-  line-height: 26px;
-`;
-
-const ModalInput = styled.input`
-  font-family: 'Roboto Condensed', sans-serif;
-  border: none;
-  width: 190px;
-  height: 23px;
-  padding: 5px;
-  color: #333;
-  cursor: text;
-  font-size: 13px;
-  font-weight: 300;
-  box-sizing: border-box;
-  background: #e6e6e6;
-  margin: 5px 0;
-  &:active,
-  &:focus {
-    text-align: left;
-  }
-`;
-
-const ModalTxt = styled.div`
-  font-weight: 400;
-  font-size: 11px;
-  letter-spacing: 1px;
-  line-height: 20px;
-`;
-
-const ModalProdName = styled.div`
-  font-weight: 700;
-  font-size: 23px;
-  letter-spacing: 1px;
-  line-height: 20px;
-  margin: 3px 0;
-`;
-
-const ScrollBox130 = styled(Scroll)`
-  height: 115px;
-  overflow: scroll;
-`;
+import {
+  ModalWrap,
+  ModalTop,
+  ModalTit,
+  ModalInput,
+  ModalTxt,
+  ModalProdName,
+  ModalBottom,
+  ScrollBox130,
+} from '../styles/processModal';
 
 function ProcessModal(props) {
   const { register, handleSubmit } = useForm();
@@ -160,7 +90,9 @@ function ProcessModal(props) {
               <ModalTxt>
                 SELECCIONE LOS PROCESOS QUE DESEA AGREGAR AL PROYECTO
               </ModalTxt>
-              <ModalProdName>{props.project.title}</ModalProdName>
+              <ModalProdName>
+                {web3.utils.hexToAscii(props.project[3])}
+              </ModalProdName>
             </ModalTop>
             <ModalBottom>
               <HeadRow>

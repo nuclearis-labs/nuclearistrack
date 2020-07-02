@@ -1,9 +1,8 @@
 // newProvider.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import styled, { keyframes } from 'styled-components';
 import ProcessModal from '../components/ProcessModal';
-import { Title, Button, Scroll } from '../styles/components';
+import { Title, Button } from '../styles/components';
 import {
   Table,
   Row,
@@ -90,6 +89,8 @@ export default function ProjectList() {
       });
     }
     if (web3 && contract) {
+      console.log(project);
+
       getProcessListByProject();
       setProjectDetails(project);
     }

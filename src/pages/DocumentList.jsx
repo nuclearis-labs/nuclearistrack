@@ -10,7 +10,8 @@ import LoggedHeader from '../components/LoggedHeader';
 import { Link } from 'react-router-dom';
 
 const Table = styled.table`
-  width: 100%;
+  width: 50%;
+  margin: auto;
 `;
 
 export const Row = styled.tr`
@@ -29,6 +30,10 @@ export const HeadRow = styled(Row)`
   color: #8c6239;
   font-weight: 700;
   padding: 4px 0;
+`;
+
+export const Col = styled.td`
+  font-weight: 700;
 `;
 
 export default function DocumentList() {
@@ -79,15 +84,15 @@ export default function DocumentList() {
           <tbody>
             {documents.map((document) => (
               <Row key={document[4]}>
-                <td style={{ width: '50%' }}>{document[0]}</td>
-                <td>
+                <Col style={{ width: '50%' }}>{document[0]}</Col>
+                <Col>
                   {new Date(parseInt(document[4] + '000')).toLocaleString()}
-                </td>
-                <td>
+                </Col>
+                <Col>
                   <Link to={'/documents/' + params.process + '/' + document[1]}>
                     VER
                   </Link>
-                </td>
+                </Col>
               </Row>
             ))}
           </tbody>
