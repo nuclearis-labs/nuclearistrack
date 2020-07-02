@@ -41,11 +41,15 @@ export default function LoggedHeader(props) {
         </NavPhrase>
         <OutsideClickHandler onOutsideClick={resetDropdown} display="contents">
           <NavAbm>
-            <DropDownNew
-              index={indexDropdownOpened}
-              onClick={setIndexDropdownOpened}
-            />
+            {user.type === '0' && (
+              <DropDownNew
+                user={user}
+                index={indexDropdownOpened}
+                onClick={setIndexDropdownOpened}
+              />
+            )}
             <DropDownEdit
+              user={user}
               index={indexDropdownOpened}
               onClick={setIndexDropdownOpened}
             />

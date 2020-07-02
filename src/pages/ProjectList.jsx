@@ -13,88 +13,22 @@ import {
   Col2,
   Col3,
 } from '../styles/tableComponents';
+import {
+  FlexWrap,
+  Left,
+  FlexWrapRight,
+  AddProyectBtn,
+  ScrollBox400,
+  Right,
+  ResumenTit,
+  ResumenName,
+  ProcesosTit,
+} from '../styles/projectList';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import Footer from '../components/Footer';
 import LoggedHeader from '../components/LoggedHeader';
 import useWeb3 from '../hooks/useWeb3';
 import Process from '../build/contracts/Process.json';
-
-const FlexWrap = styled.div`
-  display: flex;
-`;
-const FlexWrapRight = styled(FlexWrap)`
-  float: ${(props) => (props.details && props.details.id ? 'right' : 'left')};
-  padding-right: ${(props) =>
-    props.details && props.details.id ? '20px' : '0px'};
-  padding-left: ${(props) =>
-    props.details && props.details.id ? '0px' : '37%'};
-`;
-
-const Left = styled.div`
-  padding: 0;
-  width: ${(props) => (props.details && props.details.id ? '60%' : '100%')};
-  background: #fff;
-  min-width: 461px;
-  ${Row} {
-    padding: 4px 60px;
-  }
-`;
-const appear = keyframes`
-from {
-  opacity:0;
-}
-to {
-  opacity: 1;
-}`;
-
-const Right = styled.div`
-  padding: 30px 40px;
-  width: 40%;
-  background: #ccc;
-  min-width: 307px;
-  text-align: left;
-  box-sizing: border-box;
-  animation: ${appear} 500ms;
-  animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
-`;
-
-const AddProyectBtn = styled.a`
-  color: #8c6239;
-  font-family: Montserrat, sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  text-decoration: none;
-  letter-spacing: 1px;
-  padding: 40px 20px 0 20px;
-  cursor: pointer;
-  :hover {
-    color: #000;
-  }
-`;
-
-const ResumenTit = styled(Title)`
-  color: #8c6239;
-  font-size: 16px;
-  line-height: 16px;
-  margin: 10px 0;
-`;
-
-const ProcesosTit = styled(ResumenTit)`
-  color: #333;
-  margin-top: 50px;
-`;
-
-const ResumenName = styled.div`
-  color: #333;
-  font-weight: 700;
-  font-size: 23px;
-  letter-spacing: 1px;
-  margin-bottom: 10px;
-`;
-
-const ScrollBox400 = styled(Scroll)`
-  height: 400px;
-`;
 
 export default function ProjectList() {
   const [web3, contract] = useWeb3();
@@ -113,31 +47,22 @@ export default function ProjectList() {
         projects.map((project) =>
           contract.methods.getProjectDetails(project).call({ from: msgSender })
         )
-      ).then((project) => setProjects(project));
+      ).then((projects) => {
+        // TODO: Extract getUserName Logic
+        Promise.all(
+          projects.map(async (project) => {
+            return {
+              ...project,
+              '2': await contract.methods
+                .getUser(project[2])
+                .call({ from: msgSender }),
+            };
+          })
+        ).then((projects) => setProjects(projects));
+      });
     }
     if (web3 && contract) getProjectList();
   }, [web3, contract]);
-
-  useEffect(() => {
-    if (
-      web3 &&
-      projects &&
-      projects.length > 0 &&
-      !projects[0].hasOwnProperty('userName')
-    )
-      web3.eth.getCoinbase().then((msgSender) => {
-        const newProject = projects.map(async (project) => {
-          const user = await contract.methods
-            .getUser(project[2])
-            .call({ from: msgSender });
-          return { ...project, userName: user[2] };
-        });
-        Promise.all(newProject).then((projects) => {
-          setProjects(projects);
-        });
-      });
-    // eslint-disable-next-line
-  }, [web3, projects]);
 
   function handleRowClick(project) {
     async function getProcessListByProject() {
@@ -151,14 +76,23 @@ export default function ProjectList() {
           return processContract.methods.getDetails().call({ from: msgSender });
         })
       ).then((processes) => {
-        console.log(processes);
-
-        setProcesses(processes);
+        // TODO: Extract getUserName Logic
+        Promise.all(
+          processes.map(async (process) => {
+            return {
+              ...process,
+              '0': await contract.methods
+                .getUser(process[0])
+                .call({ from: msgSender }),
+            };
+          })
+        ).then((processes) => setProcesses(processes));
       });
     }
-    if (web3 && contract) getProcessListByProject();
-
-    setProjectDetails(project);
+    if (web3 && contract) {
+      getProcessListByProject();
+      setProjectDetails(project);
+    }
   }
 
   function closeModal() {
@@ -190,11 +124,10 @@ export default function ProjectList() {
                   </Col>
                 </Row>
               ) : (
-                projects[0].hasOwnProperty('userName') &&
                 projects.map((project) => (
                   <Row key={project[1]} onClick={() => handleRowClick(project)}>
                     <Col>{web3.utils.hexToAscii(project[3])}</Col>
-                    <Col>{web3.utils.hexToAscii(project.userName)}</Col>
+                    <Col>{web3.utils.hexToAscii(project[2][2])}</Col>
                     <Col>{project[1]}</Col>
                     <Col>{web3.utils.hexToAscii(project[4])}</Col>
                     <Col>{project[0] === '1' ? 'Activo' : 'Cerrado'}</Col>
@@ -213,7 +146,7 @@ export default function ProjectList() {
             <Row>
               <Col2 className="color">CLIENTE</Col2>
               <Col2 className="bold">
-                {web3.utils.hexToAscii(projectDetails.userName)}
+                {web3.utils.hexToAscii(projectDetails[2][2])}
               </Col2>
             </Row>
             <Row>
@@ -236,7 +169,7 @@ export default function ProjectList() {
               processes.map((process) => (
                 <Row key={process[3]}>
                   <Col3>{web3.utils.hexToAscii(process[1])}</Col3>
-                  <Col3>{process[0]}</Col3>
+                  <Col3>{web3.utils.hexToAscii(process[0][2])}</Col3>
                   <Col3>
                     <Link to={'/documents/' + process[3]}>
                       <Eye />

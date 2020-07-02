@@ -22,41 +22,27 @@ function ProcessList() {
       const processes = await contract.methods
         .getProcessesByAddress()
         .call({ from: msgSender });
-
       Promise.all(
         processes.map((address) => {
           let processContract = new web3.eth.Contract(Process.abi, address);
           return processContract.methods.getDetails().call({ from: msgSender });
         })
       ).then((processes) => {
-        console.log(processes);
-
-        setProcesses(processes);
+        // TODO: Extract getUserName Logic
+        Promise.all(
+          processes.map(async (process) => {
+            return {
+              ...process,
+              '0': await contract.methods
+                .getUser(process[0])
+                .call({ from: msgSender }),
+            };
+          })
+        ).then((processes) => setProcesses(processes));
       });
     }
     if (web3 && contract) getProcessList();
   }, [web3, contract]);
-
-  useEffect(() => {
-    if (
-      web3 &&
-      processes &&
-      processes.length > 0 &&
-      !processes[0].hasOwnProperty('userName')
-    )
-      web3.eth.getCoinbase().then((msgSender) => {
-        const newProcess = processes.map(async (process) => {
-          const user = await contract.methods
-            .getUser(process[0])
-            .call({ from: msgSender });
-          return { ...process, userName: user[2] };
-        });
-        Promise.all(newProcess).then((process) => {
-          setProcesses(process);
-        });
-      });
-    // eslint-disable-next-line
-  }, [web3, processes]);
 
   return (
     <>
@@ -80,11 +66,10 @@ function ProcessList() {
               </Col4>
             </Row>
           ) : (
-            processes[0].hasOwnProperty('userName') &&
             processes.map((process) => (
               <Row key={process[3]}>
                 <Col4>{web3.utils.hexToAscii(process[1])}</Col4>
-                <Col4>{web3.utils.hexToAscii(process.userName)}</Col4>
+                <Col4>{web3.utils.hexToAscii(process[0][2])}</Col4>
                 <Col4>
                   <Link to={'/documents/' + process[3]}>
                     <Eye />

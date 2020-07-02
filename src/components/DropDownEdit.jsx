@@ -3,7 +3,7 @@ import { AbmLink, SubMenuEdit } from '../styles/Nav';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import { Link } from 'react-router-i18n';
 
-export default function DropDownEdit(props: any) {
+export default function DropDownEdit(props) {
   return (
     <div>
       <AbmLink
@@ -16,16 +16,21 @@ export default function DropDownEdit(props: any) {
       </AbmLink>
 
       <SubMenuEdit className={props.index === 2 ? 'open' : 'closed'}>
-        <Link to="/projects" onClick={() => props.onClick(false)}>
-          + PROYECTO
-        </Link>
-        <Link to="/users" onClick={() => props.onClick(false)}>
-          + USUARIO
-        </Link>
-
-        <Link to="/processes" onClick={() => props.onClick(false)}>
-          + PROCESO
-        </Link>
+        {(props.user.type === '0' || props.user.type === '1') && (
+          <Link to="/projects" onClick={() => props.onClick(false)}>
+            + PROYECTO
+          </Link>
+        )}
+        {props.user.type === '0' && (
+          <Link to="/users" onClick={() => props.onClick(false)}>
+            + USUARIO
+          </Link>
+        )}
+        {(props.user.type === '0' || props.user.type === '2') && (
+          <Link to="/processes" onClick={() => props.onClick(false)}>
+            + PROCESO
+          </Link>
+        )}
       </SubMenuEdit>
     </div>
   );
