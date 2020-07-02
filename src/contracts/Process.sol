@@ -108,10 +108,6 @@ contract Process {
             address
         )
     {
-        require(
-            msg.sender == supplierAddress || msg.sender == owner,
-            'User has to be assigned client or owner'
-        );
         return (supplierAddress, processName, allDocuments, address(this));
     }
 }
