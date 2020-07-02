@@ -73,8 +73,6 @@ export default function ProjectList() {
         .call({ from: msgSender });
       Promise.all(
         processes.map((address) => {
-          console.log(address);
-
           let processContract = new web3.eth.Contract(Process.abi, address);
           return processContract.methods.getDetails().call({ from: msgSender });
         })
