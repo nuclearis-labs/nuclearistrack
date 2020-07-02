@@ -38,7 +38,7 @@ export default function useWeb3(httpProvider) {
       if (web3 !== null) {
         const contract = new web3.eth.Contract(
           NuclearPoE.abi,
-          '0x5A08f0299683a1c96675f01B9778e9886f21Bd9d'
+          '0x4818cFfeC4Dda9bb7875C8B11F7E9EADBe28534c'
         );
 
         return [web3, contract];
