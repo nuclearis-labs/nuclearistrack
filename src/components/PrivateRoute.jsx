@@ -6,7 +6,7 @@ import useWeb3 from '../hooks/useWeb3';
 function PrivateRoute(props) {
   const web3 = useWeb3();
   const [isUser] = useAuth(web3);
-  if (web3) return isUser && <Route {...props} />;
+  if (web3) return isUser ? <Route {...props} /> : null;
   else return null;
 }
 
