@@ -1,6 +1,5 @@
 // newProvider.js
 import React, { useState, useEffect } from 'react';
-// import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import ProcessModal from '../components/ProcessModal';
 import { Title, Button } from '../styles/components';
@@ -30,7 +29,6 @@ import LoggedHeader from '../components/LoggedHeader';
 import useWeb3 from '../hooks/useWeb3';
 import Process from '../build/contracts/Process.json';
 import useAuth from '../hooks/useAuth';
-// import Toast from '../components/Toast';
 
 export default function ProjectList() {
   const [, user] = useAuth();
@@ -39,7 +37,6 @@ export default function ProjectList() {
   const [projects, setProjects] = useState([]);
   const [projectDetails, setProjectDetails] = useState(null);
   const [processes, setProcesses] = useState(null);
-  // const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     async function getProjectList() {
@@ -104,14 +101,6 @@ export default function ProjectList() {
   function closeModal() {
     setShowModal(false);
   }
-
-  // const NotificationArea = styled.div`
-  //   position: absolute;
-  //   top: 90px;
-  //   right: 10px;
-  //   display: flex;
-  //   flex-direction: column;
-  // `;
 
   if (user)
     return (
