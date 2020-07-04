@@ -11,21 +11,21 @@ import Footer from '../components/Footer';
 import useWeb3 from '../hooks/useWeb3';
 import useAuth from '../hooks/useAuth';
 import PublicHeader from '../components/PublicHeader';
-import LoggedHeader from '../components/LoggedHeader';
 import { useHistory } from 'react-router';
 
 export default function Login() {
   const [web3] = useWeb3();
-  const [isUser] = useAuth();
+  const [isUser, user] = useAuth();
   const history = useHistory();
 
   useEffect(() => {
-    if (isUser === true) {
-      history.push('/projects');
+    if (isUser === true && user) {
+      if (user.type === '2') history.push('/processes');
+      else history.push('/projects');
     }
-  }, [isUser, history]);
+  }, [isUser, user, history]);
 
-  if (web3 === undefined) {
+  if (web3 === undefined && isUser === undefined) {
     return (
       <>
         <PublicHeader />
@@ -39,19 +39,7 @@ export default function Login() {
         <Footer />
       </>
     );
-  } else if (isUser === true) {
-    return (
-      <>
-        <LoggedHeader />
-        <WebTop>
-          <WidthContent>
-            <WebTopTit style={{ paddingBottom: '150px' }}>Conectado!</WebTopTit>
-          </WidthContent>
-        </WebTop>
-        <Footer />
-      </>
-    );
-  } else {
+  } else if (isUser === false) {
     return (
       <>
         <PublicHeader />
@@ -79,7 +67,7 @@ export default function Login() {
                 Metamask <a href="https://metamask.io/">(Pagina Web)</a>
               </li>
               <li>
-                Nifty{' '}
+                Nifty
                 <a href="https://www.poa.network/for-users/nifty-wallet">
                   (Pagina Web)
                 </a>
@@ -109,5 +97,5 @@ export default function Login() {
         <Footer />
       </>
     );
-  }
+  } else return null;
 }

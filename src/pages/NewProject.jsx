@@ -7,8 +7,6 @@ import { useForm } from 'react-hook-form';
 import { ProjectSchema } from '../validationSchemas/index';
 import LoggedHeader from '../components/LoggedHeader';
 import useWeb3 from '../hooks/useWeb3';
-import RSKLink from '../components/RSKLink';
-import { Link } from 'react-router-dom';
 import TxTrack from '../components/TxTrack';
 
 export default function NewProject() {

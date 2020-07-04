@@ -27,48 +27,54 @@ export default function LoggedHeader(props) {
     setIndexDropdownOpened(false);
   }
 
-  return (
-    <Nav>
-      <NavHeader>
-        <NavLogo>
-          <Link to="/">
-            <Logo />
-          </Link>
-        </NavLogo>
+  if (user)
+    return (
+      <Nav>
+        <NavHeader>
+          <NavLogo>
+            <Link to="/">
+              <Logo />
+            </Link>
+          </NavLogo>
 
-        <NavPhrase>
-          <I18n t="header.navloggedPhrase" />
-        </NavPhrase>
-        <OutsideClickHandler onOutsideClick={resetDropdown} display="contents">
-          <NavAbm>
-            {user.type === '0' && (
-              <DropDownNew
+          <NavPhrase>
+            <I18n t="header.navloggedPhrase" />
+          </NavPhrase>
+          <OutsideClickHandler
+            onOutsideClick={resetDropdown}
+            display="contents"
+          >
+            <NavAbm>
+              {user.type === '0' && (
+                <DropDownNew
+                  user={user}
+                  index={indexDropdownOpened}
+                  onClick={setIndexDropdownOpened}
+                />
+              )}
+              <DropDownEdit
                 user={user}
                 index={indexDropdownOpened}
                 onClick={setIndexDropdownOpened}
               />
+            </NavAbm>
+          </OutsideClickHandler>
+
+          <NavUser>
+            <User />
+            {web3 && isUser && user && (
+              <>
+                <UserName>{web3.utils.hexToAscii(user.name)}</UserName>
+
+                <UserName>{`${user.address.substr(
+                  0,
+                  4
+                )}...${user.address.substr(-4)}`}</UserName>
+              </>
             )}
-            <DropDownEdit
-              user={user}
-              index={indexDropdownOpened}
-              onClick={setIndexDropdownOpened}
-            />
-          </NavAbm>
-        </OutsideClickHandler>
-
-        <NavUser>
-          <User />
-          {web3 && isUser && user && (
-            <>
-              <UserName>{web3.utils.hexToAscii(user.name)}</UserName>
-
-              <UserName>{`${user.address.substr(0, 4)}...${user.address.substr(
-                -4
-              )}`}</UserName>
-            </>
-          )}
-        </NavUser>
-      </NavHeader>
-    </Nav>
-  );
+          </NavUser>
+        </NavHeader>
+      </Nav>
+    );
+  return null;
 }

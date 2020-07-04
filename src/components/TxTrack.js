@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useInterval } from 'react-use';
 import useWeb3 from '../hooks/useWeb3';
 import RSKLink from '../components/RSKLink';
-import { Label, Button } from '../styles/components';
-import { Link } from 'react-router-dom';
+import { Label } from '../styles/components';
 
 export default function TxTrack(props) {
   const [receipt, setReceipt] = useState();
@@ -29,7 +28,7 @@ export default function TxTrack(props) {
       <Label>
         {receipt === undefined
           ? 'TRANSACCION PENDIENTE'
-          : receipt.status === 'true'
+          : receipt.status === true
           ? 'EXITO'
           : 'HUBO UN ERROR'}
       </Label>
@@ -43,7 +42,7 @@ export default function TxTrack(props) {
           </div>
           <div>
             Estado:{' '}
-            {receipt.status === 'true'
+            {receipt.status === true
               ? 'EXITOSO'
               : 'FALLIDO, POR FAVOR REPITA Y CHEQUEE LOS DATOS INGRESADOS'}
           </div>

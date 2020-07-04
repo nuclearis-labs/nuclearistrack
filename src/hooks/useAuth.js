@@ -4,8 +4,8 @@ import useWeb3 from '../hooks/useWeb3';
 export default function useAuth() {
   const [web3, contract] = useWeb3();
 
-  const [isUser, setIsUser] = useState(false);
-  const [user, setUser] = useState(false);
+  const [isUser, setIsUser] = useState(undefined);
+  const [user, setUser] = useState(undefined);
   const _isMounted = useRef(true);
 
   useEffect(() => {
@@ -31,11 +31,13 @@ export default function useAuth() {
           });
         } else {
           setIsUser(false);
-          setUser({});
+          setUser(undefined);
         }
       } catch (error) {
+        console.log(error);
+
         setIsUser(false);
-        setUser({});
+        setUser(undefined);
       }
     }
     if (web3 && contract) checkUser();
