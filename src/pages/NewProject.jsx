@@ -9,6 +9,7 @@ import LoggedHeader from '../components/LoggedHeader';
 import useWeb3 from '../hooks/useWeb3';
 import RSKLink from '../components/RSKLink';
 import { Link } from 'react-router-dom';
+import TxTrack from '../components/TxTrack';
 
 export default function NewProject() {
   const [web3, contract] = useWeb3();
@@ -60,19 +61,7 @@ export default function NewProject() {
       <FormWrap>
         <Form onSubmit={handleSubmit(onSubmit)}>
           {txHash ? (
-            <>
-              <Label>EXITO</Label>
-              <p>
-                Transaccion fue enviada con exito a la Blockchain, puede tardar
-                varios minutos en ser confirmada.
-              </p>
-              <div>
-                Transaction Hash: <RSKLink hash={txHash} testnet type="tx" />
-              </div>
-              <Button as={Link} to="/projects">
-                VER PROYECTOS
-              </Button>
-            </>
+            <TxTrack tx={txHash} />
           ) : (
             <>
               <Label>
