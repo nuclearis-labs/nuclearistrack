@@ -112,14 +112,12 @@ contract NuclearPoE is Ownable {
             address
         )
     {
-        if (user[_address].status == State.Created)
-            return (
-                user[_address].status,
-                user[_address].userType,
-                user[_address].name,
-                _address
-            );
-        else return (State.Null, Type.Client, 0, address(0));
+        return (
+            user[_address].status,
+            user[_address].userType,
+            user[_address].name,
+            _address
+        );
     }
 
     /// @notice Returns all saved users

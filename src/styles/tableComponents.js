@@ -3,11 +3,28 @@ import styled from 'styled-components';
 
 export const Table = styled.div`
   padding: 20px 0;
-  margin: 75px auto 0 auto;
+  margin: 0 auto;
   width: 1000px;
   text-align: left;
   height: calc(100% - 75px);
   box-sizing: border-box;
+`;
+
+export const TableButton = styled.button`
+  font-size: '12px';
+  font-family: 'Roboto condensed';
+  margin: 0;
+  background-color: #8c6239;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  border: none;
+  height: 30px;
+  padding: 5px 10px;
+`;
+
+export const TableWrap = styled.div`
+  background-color: #e6e6e6;
+  width: 100%;
 `;
 
 export const Row = styled.div`
@@ -40,6 +57,13 @@ export const Col = styled.div`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  a {
+    text-decoration: none;
+    color: #333;
+  }
+  a:hover {
+    color: #8c6239;
+  }
 `;
 
 export const Col2 = styled.div`

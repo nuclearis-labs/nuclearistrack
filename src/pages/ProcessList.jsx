@@ -1,9 +1,15 @@
 // processes.js
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Title } from '../styles/components';
-import { Top, Form, FormWrap } from '../styles/form';
-import { Row, HeadRow, Col4 } from '../styles/tableComponents';
+import { Title, ScrollBox400 } from '../styles/components';
+import { Top } from '../styles/form';
+import {
+  TableWrap,
+  Table,
+  Row,
+  HeadRowMonsterrat,
+  Col,
+} from '../styles/tableComponents';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import { ReactComponent as Pen } from '../img/pen.svg';
 import Footer from '../components/Footer';
@@ -50,47 +56,63 @@ function ProcessList() {
       <Top>
         <Title>PROCESOS</Title>
       </Top>
-      <FormWrap>
-        <Form>
-          <HeadRow>
-            <Col4>NOMBRE</Col4>
-            <Col4>PROVEEDOR</Col4>
-            <Col4>VER DOC.</Col4>
-            <Col4>AGREGAR DOC.</Col4>
-            <Col4>CONTRACT</Col4>
-          </HeadRow>
-          {processes.length === 0 ? (
-            <Row>
-              <Col4 style={{ textAlign: 'center', width: '100%' }}>
-                No hay procesos cargados para usted
-              </Col4>
-            </Row>
-          ) : (
-            processes.map((process) => (
-              <Row key={process[3]}>
-                <Col4>{web3.utils.hexToAscii(process[1])}</Col4>
-                <Col4>{web3.utils.hexToAscii(process[0][2])}</Col4>
-                <Col4>
-                  <Link to={'/documents/' + process[3]}>
-                    <Eye />
-                    VER DOC.
-                  </Link>
-                </Col4>
-
-                <Col4>
-                  <Link to={'/documents/add/' + process[3]}>
-                    <Pen />
-                    AGREGAR DOC.
-                  </Link>
-                </Col4>
-                <Col4>
-                  <RSKLink hash={process[3]} type="address" testnet />
-                </Col4>
+      <TableWrap>
+        <Table>
+          <HeadRowMonsterrat>
+            <Col>NOMBRE</Col>
+            <Col>PROVEEDOR</Col>
+            <Col>VER DOC.</Col>
+            <Col>AGREGAR DOC.</Col>
+            <Col>CONTRACT</Col>
+          </HeadRowMonsterrat>
+          <ScrollBox400>
+            {processes.length === 0 ? (
+              <Row>
+                <Col style={{ textAlign: 'center', width: '100%' }}>
+                  No hay procesos cargados para usted
+                </Col>
               </Row>
-            ))
-          )}
-        </Form>
-      </FormWrap>
+            ) : (
+              processes.map((process) => (
+                <Row key={process[3]}>
+                  <Col>{web3.utils.hexToAscii(process[1])}</Col>
+                  <Col>{web3.utils.hexToAscii(process[0][2])}</Col>
+                  <Col>
+                    <Link to={'/documents/' + process[3]}>
+                      <Eye
+                        style={{
+                          width: '20px',
+                          verticalAlign: 'middle',
+                          marginRight: '5px',
+                          fill: '#333',
+                        }}
+                      />
+                      VER DOC.
+                    </Link>
+                  </Col>
+
+                  <Col>
+                    <Link to={'/documents/add/' + process[3]}>
+                      <Pen
+                        style={{
+                          width: '20px',
+                          verticalAlign: 'middle',
+                          marginRight: '5px',
+                          fill: '#333',
+                        }}
+                      />
+                      AGREGAR DOC.
+                    </Link>
+                  </Col>
+                  <Col>
+                    <RSKLink hash={process[3]} type="address" testnet />
+                  </Col>
+                </Row>
+              ))
+            )}
+          </ScrollBox400>
+        </Table>
+      </TableWrap>
       <Footer />
     </>
   );
