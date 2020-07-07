@@ -1,6 +1,7 @@
 // newProvider.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import ProcessModal from '../components/ProcessModal';
 import { Title, Button } from '../styles/components';
 import {
@@ -29,6 +30,7 @@ import LoggedHeader from '../components/LoggedHeader';
 import useWeb3 from '../hooks/useWeb3';
 import Process from '../build/contracts/Process.json';
 import useAuth from '../hooks/useAuth';
+import TxTrack from '../components/TxTrack';
 
 export default function ProjectList() {
   const [, user] = useAuth();
@@ -37,6 +39,7 @@ export default function ProjectList() {
   const [projects, setProjects] = useState([]);
   const [projectDetails, setProjectDetails] = useState(null);
   const [processes, setProcesses] = useState(null);
+  const [txHash, setTxHash] = useState(undefined);
 
   useEffect(() => {
     async function getProjectList() {
@@ -98,6 +101,15 @@ export default function ProjectList() {
     }
   }
 
+  function toggleProject(id) {
+    web3.eth.getCoinbase().then((msgSender) =>
+      contract.methods
+        .toggleProjectStatus(id)
+        .send({ from: msgSender })
+        .on('transactionHash', (txHash) => setTxHash(txHash))
+    );
+  }
+
   function closeModal() {
     setShowModal(false);
   }
@@ -114,37 +126,56 @@ export default function ProjectList() {
               )}
               <Title>PROYECTOS</Title>
             </FlexWrapRight>
-            <Table>
-              <HeadRowMonsterrat>
-                <Col>NOMBRE</Col>
-                <Col>CLIENTE</Col>
-                <Col>EXPEDIENTE</Col>
-                <Col>N°OC</Col>
-                <Col>ESTADO</Col>
-              </HeadRowMonsterrat>
-              <ScrollBox400>
-                {projects && projects.length === 0 ? (
-                  <Row>
-                    <Col style={{ textAlign: 'center', width: '100%' }}>
-                      No hay projectos cargados para usted
-                    </Col>
-                  </Row>
+            <TableWrap>
+              <Table>
+                {txHash ? (
+                  <TxTrack tx={txHash} />
                 ) : (
-                  projects.map((project) => (
-                    <Row
-                      key={project[1]}
-                      onClick={() => handleRowClick(project)}
-                    >
-                      <Col>{web3.utils.hexToAscii(project[3])}</Col>
-                      <Col>{web3.utils.hexToAscii(project[2][2])}</Col>
-                      <Col>{project[1]}</Col>
-                      <Col>{web3.utils.hexToAscii(project[4])}</Col>
-                      <Col>{project[0] === '1' ? 'Activo' : 'Cerrado'}</Col>
-                    </Row>
-                  ))
+                  <>
+                    <HeadRowMonsterrat>
+                      <Col>NOMBRE</Col>
+                      <Col>CLIENTE</Col>
+                      <Col>EXPEDIENTE</Col>
+                      <Col>N°OC</Col>
+                      <Col>ESTADO</Col>
+                      <Col>DETALLES</Col>
+                    </HeadRowMonsterrat>
+                    <ScrollBox400>
+                      {projects && projects.length === 0 ? (
+                        <Row>
+                          <Col style={{ textAlign: 'center', width: '100%' }}>
+                            No hay projectos cargados para usted
+                          </Col>
+                        </Row>
+                      ) : (
+                        projects.map((project) => (
+                          <Row key={project[1]}>
+                            <Col>{web3.utils.hexToAscii(project[3])}</Col>
+                            <Col>{web3.utils.hexToAscii(project[2][2])}</Col>
+                            <Col>{project[1]}</Col>
+                            <Col>{web3.utils.hexToAscii(project[4])}</Col>
+                            <Col>
+                              <TableButton
+                                onClick={() => toggleProject(project[1])}
+                              >
+                                {project[0] === '1' ? 'ACTIVO' : 'CERRADO'}
+                              </TableButton>
+                            </Col>
+                            <Col>
+                              <TableButton
+                                onClick={() => handleRowClick(project)}
+                              >
+                                VER
+                              </TableButton>
+                            </Col>
+                          </Row>
+                        ))
+                      )}
+                    </ScrollBox400>
+                  </>
                 )}
-              </ScrollBox400>
-            </Table>
+              </Table>
+            </TableWrap>
           </Left>
 
           {projectDetails && (
@@ -209,3 +240,20 @@ export default function ProjectList() {
     );
   else return null;
 }
+
+const TableButton = styled.button`
+  font-size: '12px';
+  font-family: 'Roboto condensed';
+  margin: 0;
+  background-color: #8c6239;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  border: none;
+  height: 30px;
+  padding: 5px 10px;
+`;
+
+const TableWrap = styled.div`
+  background-color: #e6e6e6;
+  width: 100%;
+`;

@@ -1,6 +1,7 @@
 // components.js
 import styled from 'styled-components';
 export const Scroll = styled.div`
+  overflow-y: scroll;
   &::-webkit-scrollbar {
     width: 14px;
   }

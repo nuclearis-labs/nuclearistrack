@@ -3,9 +3,8 @@ import styled from 'styled-components';
 
 export const Table = styled.div`
   padding: 20px 0;
-  margin-top: 75px;
-  width: 100%;
-  background: #e6e6e6;
+  margin: 75px auto 0 auto;
+  width: 1000px;
   text-align: left;
   height: calc(100% - 75px);
   box-sizing: border-box;
@@ -17,10 +16,10 @@ export const Row = styled.div`
   width: 100%;
   text-align: left;
   display: flex;
+  align-items: center;
   font-size: 13px;
   letter-spacing: 0.5px;
   color: #333;
-  cursor: pointer;
   &.active {
     font-weight: 700;
   }
