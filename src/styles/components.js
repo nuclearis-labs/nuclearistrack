@@ -13,6 +13,10 @@ export const Scroll = styled.div`
   }
 `;
 
+export const ScrollBox400 = styled(Scroll)`
+  height: 400px;
+`;
+
 export const Title = styled.h1`
   color: #5d5d5d;
   font-family: 'Montserrat', sans-serif;

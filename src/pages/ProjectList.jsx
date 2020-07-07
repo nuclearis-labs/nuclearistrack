@@ -1,10 +1,11 @@
 // newProvider.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 import ProcessModal from '../components/ProcessModal';
-import { Title, Button } from '../styles/components';
+import { Title, Button, ScrollBox400 } from '../styles/components';
 import {
+  TableWrap,
+  TableButton,
   Table,
   Row,
   HeadRow,
@@ -18,7 +19,6 @@ import {
   Left,
   FlexWrapRight,
   AddProyectBtn,
-  ScrollBox400,
   Right,
   ResumenTit,
   ResumenName,
@@ -240,20 +240,3 @@ export default function ProjectList() {
     );
   else return null;
 }
-
-const TableButton = styled.button`
-  font-size: '12px';
-  font-family: 'Roboto condensed';
-  margin: 0;
-  background-color: #8c6239;
-  color: #fff;
-  font-family: 'Montserrat', sans-serif;
-  border: none;
-  height: 30px;
-  padding: 5px 10px;
-`;
-
-const TableWrap = styled.div`
-  background-color: #e6e6e6;
-  width: 100%;
-`;

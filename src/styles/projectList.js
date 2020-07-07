@@ -6,7 +6,6 @@ export const FlexWrap = styled.div`
   display: flex;
 `;
 export const FlexWrapRight = styled(FlexWrap)`
-  float: ${(props) => (props.details && props.details.id ? 'right' : 'left')};
   padding-right: ${(props) =>
     props.details && props.details.id ? '20px' : '0px'};
   padding-left: ${(props) =>
