@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import Footer from '../components/Footer';
+import React, { useState, useEffect, useContext } from 'react';
 import { Title, Label, Input, Button, Select } from '../styles/components';
 import { Top, Form, FormWrap, ErrorForm } from '../styles/form';
 import I18n from '../i18n';
 import { useForm } from 'react-hook-form';
 import { ProjectSchema } from '../validationSchemas/index';
-import LoggedHeader from '../components/LoggedHeader';
-import useWeb3 from '../hooks/useWeb3';
 import TxTrack from '../components/TxTrack';
+import { UserContext } from '../context/UserContext';
 
 export default function NewProject() {
-  const [web3, contract] = useWeb3();
   const [users, setUsers] = useState([]);
   const [txHash, setTxHash] = useState(undefined);
+  const { account, web3, contract } = useContext(UserContext);
 
   const { register, handleSubmit, errors } = useForm({
     validationSchema: ProjectSchema,
@@ -21,36 +19,33 @@ export default function NewProject() {
   // TODO: Extract to custom hook or reusable function
   useEffect(() => {
     async function getUserList() {
-      const msgSender = await web3.eth.getCoinbase();
       const addresses = await contract.methods
         .getAllUsers()
-        .call({ from: msgSender });
+        .call({ from: account.address });
       Promise.all(
         addresses.map((address) =>
-          contract.methods.getUser(address).call({ from: msgSender })
+          contract.methods.getUser(address).call({ from: account.address })
         )
       ).then((users) => setUsers(users.filter((user) => user[1] === '1')));
     }
-    if (web3 && contract) getUserList().catch(console.error);
-  }, [web3, contract]);
+    getUserList().catch(console.error);
+    // eslint-disable-next-line
+  }, []);
 
   function onSubmit(data) {
-    web3.eth.getCoinbase().then((msgSender) =>
-      contract.methods
-        .createProject(
-          data.expediente,
-          data.clientAddress,
-          web3.utils.asciiToHex(data.proyectoTitle),
-          web3.utils.asciiToHex(data.oc)
-        )
-        .send({ from: msgSender })
-        .on('transactionHash', (txHash) => setTxHash(txHash))
-    );
+    contract.methods
+      .createProject(
+        data.expediente,
+        data.clientAddress,
+        web3.utils.asciiToHex(data.proyectoTitle),
+        web3.utils.asciiToHex(data.oc)
+      )
+      .send({ from: account.address })
+      .on('transactionHash', (txHash) => setTxHash(txHash));
   }
 
   return (
     <>
-      <LoggedHeader />
       <Top>
         <Title>
           <I18n t="forms.newProject" />
@@ -78,7 +73,7 @@ export default function NewProject() {
                 </option>
                 {users.map((user) => (
                   <option key={user[3]} value={user[3]}>
-                    {web3.utils.hexToAscii(user[2])}
+                    {web3.utils.hexToAscii(user[2]).replace(/\0/g, '')}
                   </option>
                 ))}
               </Select>
@@ -102,8 +97,6 @@ export default function NewProject() {
           )}
         </Form>
       </FormWrap>
-
-      <Footer />
     </>
   );
 }

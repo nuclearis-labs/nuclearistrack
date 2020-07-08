@@ -2,12 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Title } from '../styles/components';
 import { Top, Form, FormWrap } from '../styles/form';
-import Footer from '../components/Footer';
-import PublicHeader from '../components/PublicHeader';
+
 export default function NoMatch() {
   return (
     <>
-      <PublicHeader />
       <Top>
         <Title>PAGINA NO ENCONTRADA</Title>
       </Top>
@@ -24,7 +22,6 @@ export default function NoMatch() {
           </ul>
         </Form>
       </FormWrap>
-      <Footer />
     </>
   );
 }

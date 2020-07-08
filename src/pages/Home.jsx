@@ -21,7 +21,6 @@ import Hept5 from '../img/hept5.png';
 import Hept6 from '../img/hept6.png';
 import Hept7 from '../img/hept7.png';
 import I18n from '../i18n';
-import PublicHeader from '../components/PublicHeader';
 
 const WebTopHome = styled(WebTop)`
   background: url(${bg}) #1a1a1a no-repeat center;
@@ -187,7 +186,6 @@ const Icon = styled.img`
 function Home(props) {
   return (
     <>
-      <PublicHeader />
       <WebTopHome>
         <WidthContentHome>
           <PhraseHome>

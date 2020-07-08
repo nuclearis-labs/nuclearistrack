@@ -1,16 +1,15 @@
 // documents.js
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useContext } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useParams } from 'react-router';
 import Footer from '../components/Footer';
 import { Title, Scroll, Label } from '../styles/components';
-import { Table, Row, Col2, Col4 } from '../styles/tableComponents';
+import { Row, Col2, Col4 } from '../styles/tableComponents';
 import GoogleMap from '../components/GoogleMap';
-import LoggedHeader from '../components/LoggedHeader';
-import useWeb3 from '../hooks/useWeb3';
 import Process from '../build/contracts/Process.json';
 import { useDropzone } from 'react-dropzone';
 import { hashFile } from '../utils/hashFile';
+import { UserContext } from '../context/UserContext';
 
 const fade = keyframes`
   from {
@@ -95,11 +94,11 @@ const Nota = styled.div`
 `;
 
 export default function DocumentDetail() {
-  const [web3] = useWeb3();
   const [file, setFile] = useState(null);
   const [hash, setHash] = useState(null);
   const params = useParams();
   const [document, setDocument] = useState(undefined);
+  const { web3 } = useContext(UserContext);
 
   const onDrop = useCallback(
     (acceptedFiles) => onFileChange(acceptedFiles),
@@ -115,6 +114,8 @@ export default function DocumentDetail() {
       const document = await processContract.methods
         .getDocument(params.hash)
         .call({ from: msgSender });
+      console.log(document);
+
       setDocument(document);
     }
     if (web3) getDocument();
@@ -131,13 +132,12 @@ export default function DocumentDetail() {
 
   return (
     <>
-      <LoggedHeader />
       <FlexWrap>
         <Left>
-          <FlexWrapRight>
+          <FlexWrapRight
+            style={{ flexDirection: 'column', alignItems: 'flex-end' }}
+          >
             <Title>DOCUMENTO </Title>
-          </FlexWrapRight>
-          <Table>
             {document && (
               <DropZone
                 valid={hash === null ? null : hash === document[1]}
@@ -167,7 +167,7 @@ export default function DocumentDetail() {
                 )}
               </DropZone>
             )}
-          </Table>
+          </FlexWrapRight>
         </Left>
         <Right>
           {document && (
@@ -202,7 +202,7 @@ export default function DocumentDetail() {
 
               <ProcesosTit>OBSERVACIONES</ProcesosTit>
               <Nota>
-                {document[5] === undefined ? 'No hay comentarios' : document[5]}
+                {document[5] === '' ? 'No hay comentarios' : document[5]}
               </Nota>
             </>
           )}

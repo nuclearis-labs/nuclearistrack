@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Nav,
   NavHeader,
@@ -14,67 +14,52 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import { ReactComponent as User } from '../img/user.svg';
 import DropDownNew from './DropDownNew';
 import DropDownEdit from './DropDownEdit';
-import useWeb3 from '../hooks/useWeb3';
-import useAuth from '../hooks/useAuth';
 import { Link } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 
 export default function LoggedHeader(props) {
-  const [web3] = useWeb3();
-  const [isUser, user] = useAuth();
-
   const [indexDropdownOpened, setIndexDropdownOpened] = useState(false);
   function resetDropdown() {
     setIndexDropdownOpened(false);
   }
+  const { account, web3 } = useContext(UserContext);
 
-  if (user)
-    return (
-      <Nav>
-        <NavHeader>
-          <NavLogo>
-            <Link to="/">
-              <Logo />
-            </Link>
-          </NavLogo>
-
-          <NavPhrase>
-            <I18n t="header.navloggedPhrase" />
-          </NavPhrase>
-          <OutsideClickHandler
-            onOutsideClick={resetDropdown}
-            display="contents"
-          >
-            <NavAbm>
-              {user.type === '0' && (
-                <DropDownNew
-                  user={user}
-                  index={indexDropdownOpened}
-                  onClick={setIndexDropdownOpened}
-                />
-              )}
-              <DropDownEdit
-                user={user}
+  return (
+    <Nav>
+      <NavHeader>
+        <NavLogo>
+          <Link to="/">
+            <Logo />
+          </Link>
+        </NavLogo>
+        <NavPhrase>
+          <I18n t="header.navloggedPhrase" />
+        </NavPhrase>
+        <OutsideClickHandler onOutsideClick={resetDropdown} display="contents">
+          <NavAbm>
+            {account.type === '0' && (
+              <DropDownNew
+                user={account}
                 index={indexDropdownOpened}
                 onClick={setIndexDropdownOpened}
               />
-            </NavAbm>
-          </OutsideClickHandler>
-
-          <NavUser>
-            <User />
-            {web3 && isUser && user && (
-              <>
-                <UserName>{web3.utils.hexToAscii(user.name)}</UserName>
-
-                <UserName>{`${user.address.substr(
-                  0,
-                  4
-                )}...${user.address.substr(-4)}`}</UserName>
-              </>
             )}
-          </NavUser>
-        </NavHeader>
-      </Nav>
-    );
-  return null;
+            <DropDownEdit
+              user={account}
+              index={indexDropdownOpened}
+              onClick={setIndexDropdownOpened}
+            />
+          </NavAbm>
+        </OutsideClickHandler>
+        <NavUser>
+          <User />
+          <UserName>{web3.utils.hexToAscii(account.name)}</UserName>
+          <UserName>{`${account.address.substr(
+            0,
+            4
+          )}...${account.address.substr(-4)}`}</UserName>
+        </NavUser>
+      </NavHeader>
+    </Nav>
+  );
 }
