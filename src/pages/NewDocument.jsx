@@ -1,5 +1,5 @@
 // newProvider.js
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useParams } from 'react-router';
 import styled, { keyframes } from 'styled-components';
 import {
@@ -12,16 +12,13 @@ import {
   Button,
 } from '../styles/components';
 import { Top, Form, FormWrap, ErrorForm } from '../styles/form';
-import Footer from '../components/Footer';
 import { useForm } from 'react-hook-form';
-import LoggedHeader from '../components/LoggedHeader';
-import useWeb3 from '../hooks/useWeb3';
 import Process from '../build/contracts/Process.json';
 import { useDropzone } from 'react-dropzone';
 import GoogleMap from '../components/GoogleMap';
-import RSKLink from '../components/RSKLink';
-import { Link } from 'react-router-dom';
 import { hashFile } from '../utils/hashFile';
+import { UserContext } from '../context/UserContext';
+import TxTrack from '../components/TxTrack';
 
 const fade = keyframes`
   from {
@@ -51,14 +48,14 @@ const DropZone = styled.div`
 `;
 
 function NewDocument() {
-  const [web3, contract] = useWeb3();
   const [file, setFile] = useState(null);
   const [hash, setHash] = useState(null);
   const params = useParams();
   const [txHash, setTxHash] = useState(undefined);
-  const [processDetails, setProcessDetails] = useState({});
+  const [processDetails, setProcessDetails] = useState();
   const { register, handleSubmit, setValue, errors } = useForm();
   const [location, setLocation] = useState(undefined);
+  const { account, web3, contract } = useContext(UserContext);
 
   const onDrop = useCallback(
     ([file]) => {
@@ -117,21 +114,18 @@ function NewDocument() {
         reject('No location provided');
         return;
       }
-      console.log(data);
       let processContract = new web3.eth.Contract(Process.abi, params.process);
 
-      web3.eth.getCoinbase().then((msgSender) => {
-        processContract.methods
-          .addDocument(
-            data.name,
-            data.hash,
-            web3.utils.asciiToHex(data.lat.toString()),
-            web3.utils.asciiToHex(data.lng.toString()),
-            data.comment
-          )
-          .send({ from: msgSender })
-          .on('transactionHash', (txHash) => setTxHash(txHash));
-      });
+      processContract.methods
+        .addDocument(
+          data.name,
+          data.hash,
+          web3.utils.asciiToHex(data.lat.toString()),
+          web3.utils.asciiToHex(data.lng.toString()),
+          data.comment
+        )
+        .send({ from: account.address })
+        .on('transactionHash', (txHash) => setTxHash(txHash));
     });
   }
 
@@ -139,40 +133,22 @@ function NewDocument() {
     async function getProcessDetails() {
       let processContract = new web3.eth.Contract(Process.abi, params.process);
 
-      const msgSender = await web3.eth.getCoinbase();
       const process = await processContract.methods
         .getDetails()
-        .call({ from: msgSender });
+        .call({ from: account.address });
+
+      process[0] = await contract.methods
+        .getUser(process[0])
+        .call({ from: account.address });
+
       setProcessDetails(process);
     }
-    if (web3) getProcessDetails();
-  }, [web3, params]);
-
-  useEffect(() => {
-    console.log(processDetails);
-
-    if (
-      web3 &&
-      processDetails.hasOwnProperty('0') &&
-      !processDetails.hasOwnProperty('userName')
-    )
-      web3.eth.getCoinbase().then((msgSender) => {
-        contract.methods
-          .getUser(processDetails[0])
-          .call({ from: msgSender })
-          .then((user) => {
-            setProcessDetails((processDetails) => ({
-              ...processDetails,
-              userName: user[2],
-            }));
-          });
-      });
+    getProcessDetails();
     // eslint-disable-next-line
-  }, [web3, processDetails]);
+  }, [params]);
 
   return (
     <>
-      <LoggedHeader />
       <Top>
         <Title>
           NUEVO
@@ -183,36 +159,22 @@ function NewDocument() {
       <FormWrap>
         <Form onSubmit={handleSubmit(onSubmit)}>
           {txHash ? (
-            <>
-              <Label>EXITO</Label>
-              <p>
-                Transaccion fue enviada con exito a la Blockchain, puede tardar
-                varios minutos en ser confirmada.
-              </p>
-              <div>
-                Transaction Hash: <RSKLink hash={txHash} testnet type="tx" />
-              </div>
-              <Button as={Link} to={'/documents/' + params.process}>
-                VER DOCUMENTOS
-              </Button>
-            </>
+            <TxTrack tx={txHash} />
           ) : (
             <>
               <Pad>
-                {web3 &&
-                  processDetails &&
-                  processDetails.hasOwnProperty('userName') && (
-                    <>
-                      <SubTit>PROCESO</SubTit>
-                      <ProcessName>
-                        {web3.utils.hexToAscii(processDetails[1])}
-                      </ProcessName>
-                      <SubTit>PROVEEDOR</SubTit>
-                      <SubTit className="bold">
-                        {web3.utils.hexToAscii(processDetails.userName)}
-                      </SubTit>
-                    </>
-                  )}
+                {processDetails && (
+                  <>
+                    <SubTit>PROCESO</SubTit>
+                    <ProcessName>
+                      {web3.utils.hexToAscii(processDetails[1])}
+                    </ProcessName>
+                    <SubTit>PROVEEDOR</SubTit>
+                    <SubTit className="bold">
+                      {web3.utils.hexToAscii(processDetails[0][2])}
+                    </SubTit>
+                  </>
+                )}
               </Pad>
               <Label>SELLAR ARCHIVO</Label>
               <DropZone {...getRootProps()}>
@@ -250,7 +212,6 @@ function NewDocument() {
           )}
         </Form>
       </FormWrap>
-      <Footer />
     </>
   );
 }

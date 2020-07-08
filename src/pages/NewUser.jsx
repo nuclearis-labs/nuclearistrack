@@ -1,40 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Title, Label, Button, Input } from '../styles/components';
 import { Top, Form, FormWrap, ErrorForm } from '../styles/form';
-import Footer from '../components/Footer';
 import I18n from '../i18n';
 import { useForm } from 'react-hook-form';
 import { UserSchema } from '../validationSchemas/index';
-import useWeb3 from '../hooks/useWeb3';
-import LoggedHeader from '../components/LoggedHeader';
-import RSKLink from '../components/RSKLink';
-import { Link } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
+import TxTrack from '../components/TxTrack';
 
 export default function NewUser() {
-  const [web3, contract] = useWeb3();
   const [txHash, setTxHash] = useState(undefined);
+  const { account, web3, contract } = useContext(UserContext);
 
   const { register, handleSubmit, errors } = useForm({
     validationSchema: UserSchema,
   });
 
   function onSubmit(data) {
-    if (contract && web3)
-      web3.eth.getCoinbase().then((msgSender) =>
-        contract.methods
-          .createUser(
-            data.newUserType,
-            data.newUserAddress,
-            web3.utils.asciiToHex(data.newUserName)
-          )
-          .send({ from: msgSender })
-          .on('transactionHash', (txHash) => setTxHash(txHash))
-      );
+    contract.methods
+      .createUser(
+        data.newUserType,
+        data.newUserAddress,
+        web3.utils.asciiToHex(data.newUserName)
+      )
+      .send({ from: account.address })
+      .on('transactionHash', (txHash) => setTxHash(txHash));
   }
 
   return (
     <>
-      <LoggedHeader />
       <Top>
         <Title>
           <I18n t="forms.newUser" />
@@ -43,19 +36,7 @@ export default function NewUser() {
       <FormWrap>
         <Form onSubmit={handleSubmit(onSubmit)}>
           {txHash ? (
-            <>
-              <Label>EXITO</Label>
-              <p>
-                Transaccion fue enviada con exito a la Blockchain, puede tardar
-                varios minutos en ser confirmada.
-              </p>
-              <div>
-                Transaction Hash: <RSKLink hash={txHash} testnet type="tx" />
-              </div>
-              <Button as={Link} to="/users">
-                VER USUARIOS
-              </Button>
-            </>
+            <TxTrack tx={txHash} />
           ) : (
             <>
               <Label>
@@ -111,7 +92,6 @@ export default function NewUser() {
           )}
         </Form>
       </FormWrap>
-      <Footer />
     </>
   );
 }

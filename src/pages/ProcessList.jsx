@@ -1,5 +1,5 @@
 // processes.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Title, ScrollBox400 } from '../styles/components';
 import { Top } from '../styles/form';
@@ -12,26 +12,25 @@ import {
 } from '../styles/tableComponents';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import { ReactComponent as Pen } from '../img/pen.svg';
-import Footer from '../components/Footer';
-import LoggedHeader from '../components/LoggedHeader';
-import useWeb3 from '../hooks/useWeb3';
 import Process from '../build/contracts/Process.json';
 import RSKLink from '../components/RSKLink';
+import { UserContext } from '../context/UserContext';
 
 function ProcessList() {
-  const [web3, contract] = useWeb3();
   const [processes, setProcesses] = useState([]);
+  const { account, web3, contract } = useContext(UserContext);
 
   useEffect(() => {
     async function getProcessList() {
-      const msgSender = await web3.eth.getCoinbase();
       const processes = await contract.methods
         .getProcessesByAddress()
-        .call({ from: msgSender });
+        .call({ from: account.address });
       Promise.all(
         processes.map((address) => {
           let processContract = new web3.eth.Contract(Process.abi, address);
-          return processContract.methods.getDetails().call({ from: msgSender });
+          return processContract.methods
+            .getDetails()
+            .call({ from: account.address });
         })
       ).then((processes) => {
         // TODO: Extract getUserName Logic
@@ -41,18 +40,18 @@ function ProcessList() {
               ...process,
               '0': await contract.methods
                 .getUser(process[0])
-                .call({ from: msgSender }),
+                .call({ from: account.address }),
             };
           })
         ).then((processes) => setProcesses(processes));
       });
     }
-    if (web3 && contract) getProcessList();
-  }, [web3, contract]);
+    getProcessList();
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <>
-      <LoggedHeader />
       <Top>
         <Title>PROCESOS</Title>
       </Top>
@@ -113,7 +112,6 @@ function ProcessList() {
           </ScrollBox400>
         </Table>
       </TableWrap>
-      <Footer />
     </>
   );
 }

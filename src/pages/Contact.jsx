@@ -12,7 +12,6 @@ import { Label, Input, TextArea, Button } from '../styles/components';
 import I18n from '../i18n';
 import bg from '../img/bgHome.jpg';
 import { useForm } from 'react-hook-form';
-import PublicHeader from '../components/PublicHeader';
 
 const WebTopContact = styled(WebTop)`
   height: 370px;
@@ -27,7 +26,6 @@ export default function Contact() {
   }
   return (
     <>
-      <PublicHeader />
       <WebTopContact>
         <WidthContent>
           <WebTopTit>

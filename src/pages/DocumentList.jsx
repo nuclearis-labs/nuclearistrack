@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router';
 import { Title } from '../styles/components';
 import { Top, FormWrap } from '../styles/form';
-import Footer from '../components/Footer';
-import useWeb3 from '../hooks/useWeb3';
 import Process from '../build/contracts/Process.json';
-import LoggedHeader from '../components/LoggedHeader';
 import { Link } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 
 const Table = styled.table`
   width: 50%;
@@ -37,9 +35,9 @@ export const Col = styled.td`
 `;
 
 export default function DocumentList() {
-  const [web3] = useWeb3();
   const params = useParams();
   const [documents, setDocuments] = useState([]);
+  const { web3 } = useContext(UserContext);
 
   useEffect(() => {
     async function getDocumentList() {
@@ -62,13 +60,12 @@ export default function DocumentList() {
         setDocuments(documents);
       });
     }
-    if (web3) getDocumentList();
+    getDocumentList();
     // eslint-disable-next-line
-  }, [web3]);
+  }, []);
 
   return (
     <>
-      <LoggedHeader />
       <Top>
         <Title>DOCUMENTOS</Title>
       </Top>
@@ -98,7 +95,6 @@ export default function DocumentList() {
           </tbody>
         </Table>
       </FormWrap>
-      <Footer />
     </>
   );
 }

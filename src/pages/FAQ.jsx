@@ -11,7 +11,6 @@ import {
 } from '../styles/webComponents';
 import bg from '../img/bgfaq.jpg';
 import I18n from '../i18n';
-import PublicHeader from '../components/PublicHeader';
 
 const WebTopFAQ = styled(WebTop)`
   height: 396px;
@@ -21,7 +20,6 @@ const WebTopFAQ = styled(WebTop)`
 export default function FAQ() {
   return (
     <>
-      <PublicHeader />
       <WebTopFAQ>
         <WidthContent>
           <WebTopTit>

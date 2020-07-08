@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useInterval } from 'react-use';
-import useWeb3 from '../hooks/useWeb3';
 import RSKLink from '../components/RSKLink';
 import { Label } from '../styles/components';
+import { UserContext } from '../context/UserContext';
 
 export default function TxTrack(props) {
   const [receipt, setReceipt] = useState();
-  const [web3] = useWeb3();
+  const { web3 } = useContext(UserContext);
 
   useEffect(() => {
     setReceipt();
@@ -15,8 +15,6 @@ export default function TxTrack(props) {
   useInterval(
     () => {
       web3.eth.getTransactionReceipt(props.tx).then((result) => {
-        console.log(result);
-
         if (result !== null) setReceipt(result);
       });
     },

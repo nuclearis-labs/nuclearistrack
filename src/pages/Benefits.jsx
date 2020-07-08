@@ -13,7 +13,6 @@ import {
 import bg from '../img/bgBeneficios.jpg';
 import I18n from '../i18n';
 import { RouteProps } from 'react-router';
-import PublicHeader from '../components/PublicHeader';
 
 const WebTopBenefits = styled(WebTop)`
   height: 396px;
@@ -23,7 +22,6 @@ const WebTopBenefits = styled(WebTop)`
 export default function Benefits(props: RouteProps) {
   return (
     <>
-      <PublicHeader />
       <WebTopBenefits>
         <WidthContent>
           <WebTopTit>
