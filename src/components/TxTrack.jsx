@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useInterval } from 'react-use';
-import RSKLink from '../components/RSKLink';
+import RSKLink from './RSKLink';
 import { Label } from '../styles/components';
 import { UserContext } from '../context/UserContext';
 

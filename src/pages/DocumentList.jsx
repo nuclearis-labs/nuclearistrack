@@ -1,38 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react';
-import styled from 'styled-components';
 import { useParams } from 'react-router';
 import { Title } from '../styles/components';
 import { Top, FormWrap } from '../styles/form';
 import Process from '../build/contracts/Process.json';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
-
-const Table = styled.table`
-  width: 50%;
-  margin: auto;
-`;
-
-export const Row = styled.tr`
-  padding: 1px 0;
-  box-sizing: border-box;
-  font-size: 13px;
-  letter-spacing: 0.5px;
-  color: #333;
-  cursor: pointer;
-  &.active {
-    font-weight: 700;
-  }
-`;
-
-export const HeadRow = styled(Row)`
-  color: #8c6239;
-  font-weight: 700;
-  padding: 4px 0;
-`;
-
-export const Col = styled.td`
-  font-weight: 700;
-`;
+import { Table, HeadRow, Row, Col } from '../styles/documentList';
 
 export default function DocumentList() {
   const params = useParams();

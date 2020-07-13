@@ -1,104 +1,31 @@
 // documents.js
 import React, { useState, useCallback, useEffect, useContext } from 'react';
-import styled, { keyframes } from 'styled-components';
 import { useParams } from 'react-router';
 import Footer from '../components/Footer';
-import { Title, Scroll, Label } from '../styles/components';
+import { Title, Label } from '../styles/components';
 import { Row, Col2, Col4 } from '../styles/tableComponents';
 import GoogleMap from '../components/GoogleMap';
 import Process from '../build/contracts/Process.json';
 import { useDropzone } from 'react-dropzone';
 import { hashFile } from '../utils/hashFile';
 import { UserContext } from '../context/UserContext';
-
-const fade = keyframes`
-  from {
-    box-shadow: none;
-  }
-
-  to {
-    box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 1);
-
-  }
-`;
-
-const DropZone = styled.div`
-  height: 40vh;
-  width: 400px;
-  padding: 0 22px;
-  background-color: ${(props) =>
-    props.valid === true
-      ? 'MEDIUMSPRINGGREEN'
-      : props.valid === false
-      ? 'lightcoral'
-      : 'none'}
-  float: right;
-  margin-right: 20px;
-  text-align: center;
-  overflow: hidden;
-  cursor: pointer;
-  border: 2px solid grey;
-  width: fit-content;
-  min-width: 400px;
-  &:hover {
-    box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 1);
-    animation: ${fade} 100ms linear;
-  }
-`;
-const FlexWrap = styled.div`
-  display: flex;
-  height: 100%;
-`;
-const FlexWrapRight = styled(FlexWrap)`
-  float: right;
-  padding-right: 20px;
-  height: auto;
-`;
-
-const Left = styled.div`
-  padding: 0;
-  width: 60%;
-  background: #fff;
-  min-width: 461px;
-  ${Row} {
-    padding: 4px 60px;
-  }
-`;
-
-const Right = styled(Scroll)`
-  padding: 30px 40px;
-  width: 40%;
-  background: #ccc;
-  min-width: 307px;
-  text-align: left;
-  box-sizing: border-box;
-`;
-
-const ResumenTit = styled(Title)`
-  color: #8c6239;
-  font-size: 16px;
-  line-height: 16px;
-  margin: 10px 0;
-`;
-
-const ProcesosTit = styled(ResumenTit)`
-  color: #333;
-  margin-top: 50px;
-`;
-
-const Nota = styled.div`
-  color: #333;
-  font-size: 13px;
-  line-height: 16px;
-  margin: 10px 0;
-`;
+import {
+  Nota,
+  ProcesosTit,
+  ResumenTit,
+  Right,
+  Left,
+  FlexWrapRight,
+  FlexWrap,
+  DropZone,
+} from '../styles/documentDetail';
 
 export default function DocumentDetail() {
+  const params = useParams();
+  const { web3 } = useContext(UserContext);
   const [file, setFile] = useState(null);
   const [hash, setHash] = useState(null);
-  const params = useParams();
   const [document, setDocument] = useState(undefined);
-  const { web3 } = useContext(UserContext);
 
   const onDrop = useCallback(
     (acceptedFiles) => onFileChange(acceptedFiles),
@@ -118,8 +45,9 @@ export default function DocumentDetail() {
 
       setDocument(document);
     }
-    if (web3) getDocument();
-  }, [web3, params.hash, params.process]);
+    getDocument();
+    // eslint-disable-next-line
+  }, [params.hash, params.process]);
 
   function onFileChange([file]) {
     setFile(file);
