@@ -74,7 +74,7 @@ function NewDocument() {
     }
   }, [location, setValue]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     register('name');
     register('hash');
     register('lat');
@@ -105,11 +105,9 @@ function NewDocument() {
   useEffect(() => {
     async function getProcessDetails() {
       let processContract = new web3.eth.Contract(Process.abi, params.process);
-
       const process = await processContract.methods
         .getDetails()
         .call({ from: account.address });
-
       process[0] = await contract.methods
         .getUser(process[0])
         .call({ from: account.address });

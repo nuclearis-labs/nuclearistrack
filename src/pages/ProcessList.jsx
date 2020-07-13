@@ -12,41 +12,24 @@ import {
 } from '../styles/tableComponents';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import { ReactComponent as Pen } from '../img/pen.svg';
-import Process from '../build/contracts/Process.json';
 import RSKLink from '../components/RSKLink';
 import { UserContext } from '../context/UserContext';
+import {
+  getProcessDetails,
+  getUserDetails,
+  getProcessesByAddress,
+} from '../utils/web3Helpers';
 
 function ProcessList() {
   const [processes, setProcesses] = useState([]);
   const { account, web3, contract } = useContext(UserContext);
 
   useEffect(() => {
-    async function getProcessList() {
-      const processes = await contract.methods
-        .getProcessesByAddress()
-        .call({ from: account.address });
-      Promise.all(
-        processes.map((address) => {
-          let processContract = new web3.eth.Contract(Process.abi, address);
-          return processContract.methods
-            .getDetails()
-            .call({ from: account.address });
-        })
-      ).then((processes) => {
-        // TODO: Extract getUserName Logic
-        Promise.all(
-          processes.map(async (process) => {
-            return {
-              ...process,
-              '0': await contract.methods
-                .getUser(process[0])
-                .call({ from: account.address }),
-            };
-          })
-        ).then((processes) => setProcesses(processes));
-      });
-    }
-    getProcessList();
+    getProcessesByAddress(contract, account.address)
+      .then(getProcessDetails(account.address, web3))
+      .then(getUserDetails(account.address, contract, 0, web3))
+      .then(setProcesses);
+
     // eslint-disable-next-line
   }, []);
 

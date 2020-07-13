@@ -7,29 +7,23 @@ import { useForm } from 'react-hook-form';
 import { ProcessSchema } from '../validationSchemas/index';
 import { UserContext } from '../context/UserContext';
 import TxTrack from '../components/TxTrack';
+import { getUserDetails, filter, getAllUsers } from '../utils/web3Helpers';
 
 export default function NewProcess() {
   const [users, setUsers] = useState([]);
   const [txHash, setTxHash] = useState(undefined);
   const { account, web3, contract } = useContext(UserContext);
-
   const { register, handleSubmit, errors } = useForm({
     validationSchema: ProcessSchema,
   });
 
   // TODO: Extract to custom hook or reusable function
   useEffect(() => {
-    async function getUserList() {
-      const addresses = await contract.methods
-        .getAllUsers()
-        .call({ from: account.address });
-      Promise.all(
-        addresses.map((address) =>
-          contract.methods.getUser(address).call({ from: account.address })
-        )
-      ).then((users) => setUsers(users.filter((user) => user[1] === '2')));
-    }
-    getUserList().catch(console.error);
+    getAllUsers(contract, account.address)
+      .then(getUserDetails(account.address, contract, undefined, web3))
+      .then(filter((user) => user[1] === '2'))
+      .then(setUsers)
+      .catch((e) => console.error(e));
     // eslint-disable-next-line
   }, []);
 

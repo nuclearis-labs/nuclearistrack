@@ -6,6 +6,11 @@ import { Top } from '../styles/form';
 import { Table, Row, HeadRowMonsterrat, Col } from '../styles/tableComponents';
 import TxTrack from '../components/TxTrack';
 import { UserContext } from '../context/UserContext';
+import {
+  getUserDetails,
+  getUserBalances,
+  getAllUsers,
+} from '../utils/web3Helpers';
 
 export default function UserList() {
   const [users, setUsers] = useState([]);
@@ -13,28 +18,11 @@ export default function UserList() {
   const { account, web3, contract } = useContext(UserContext);
 
   useEffect(() => {
-    async function getUserList() {
-      const addresses = await contract.methods
-        .getAllUsers()
-        .call({ from: account.address });
-      Promise.all(
-        addresses.map((address) =>
-          contract.methods.getUser(address).call({ from: account.address })
-        )
-      ).then((users) => {
-        Promise.all(
-          users.map(async (user) => {
-            return {
-              ...user,
-              '4': parseFloat(
-                web3.utils.fromWei(await web3.eth.getBalance(user[3]))
-              ).toFixed(6),
-            };
-          })
-        ).then((users) => setUsers(users));
-      });
-    }
-    getUserList().catch(console.error);
+    getAllUsers(contract, account.address)
+      .then(getUserDetails(account.address, contract, undefined, web3))
+      .then(getUserBalances(web3))
+      .then(setUsers);
+
     // eslint-disable-next-line
   }, []);
 

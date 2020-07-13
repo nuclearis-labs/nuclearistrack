@@ -6,42 +6,48 @@ import { useForm } from 'react-hook-form';
 import { ProjectSchema } from '../validationSchemas/index';
 import TxTrack from '../components/TxTrack';
 import { UserContext } from '../context/UserContext';
+import {
+  getUserDetails,
+  filter,
+  getAllUsers,
+  createProject,
+} from '../utils/web3Helpers';
 
 export default function NewProject() {
   const [users, setUsers] = useState([]);
   const [txHash, setTxHash] = useState(undefined);
   const { account, web3, contract } = useContext(UserContext);
-
   const { register, handleSubmit, errors } = useForm({
     validationSchema: ProjectSchema,
   });
 
-  // TODO: Extract to custom hook or reusable function
   useEffect(() => {
-    async function getUserList() {
-      const addresses = await contract.methods
-        .getAllUsers()
-        .call({ from: account.address });
-      Promise.all(
-        addresses.map((address) =>
-          contract.methods.getUser(address).call({ from: account.address })
-        )
-      ).then((users) => setUsers(users.filter((user) => user[1] === '1')));
-    }
-    getUserList().catch(console.error);
+    getAllUsers(contract, account.address)
+      .then(getUserDetails(account.address, contract, undefined, web3))
+      .then(filter((user) => user[1] === '1'))
+      .then(setUsers)
+      .catch((e) => console.error(e));
+
     // eslint-disable-next-line
   }, []);
 
   function onSubmit(data) {
-    contract.methods
-      .createProject(
-        data.expediente,
-        data.clientAddress,
-        web3.utils.asciiToHex(data.proyectoTitle),
-        web3.utils.asciiToHex(data.oc)
-      )
-      .send({ from: account.address })
-      .on('transactionHash', (txHash) => setTxHash(txHash));
+    createProject(contract, data, web3, account.address).on(
+      'transactionHash',
+      (txHash) => setTxHash(txHash)
+    );
+  }
+
+  function UserSelectList() {
+    return (
+      <>
+        {users.map((user) => (
+          <option key={user[3]} value={user[3]}>
+            {web3.utils.hexToAscii(user[2]).replace(/\0/g, '')}
+          </option>
+        ))}
+      </>
+    );
   }
 
   return (
@@ -71,11 +77,7 @@ export default function NewProject() {
                 <option disabled hidden value="">
                   Select one...
                 </option>
-                {users.map((user) => (
-                  <option key={user[3]} value={user[3]}>
-                    {web3.utils.hexToAscii(user[2]).replace(/\0/g, '')}
-                  </option>
-                ))}
+                <UserSelectList />
               </Select>
               <ErrorForm>
                 {errors.clientAddress && errors.clientAddress.message}

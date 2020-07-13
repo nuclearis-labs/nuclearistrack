@@ -25,9 +25,14 @@ import {
   ProcesosTit,
 } from '../styles/projectList';
 import { ReactComponent as Eye } from '../img/eye.svg';
-import Process from '../build/contracts/Process.json';
 import TxTrack from '../components/TxTrack';
 import { UserContext } from '../context/UserContext';
+import {
+  getProcessDetails,
+  getUserDetails,
+  getProjectDetails,
+  getProjectsByAddress,
+} from '../utils/web3Helpers';
 
 export default function ProjectList() {
   const [showModal, setShowModal] = useState(false);
@@ -38,72 +43,30 @@ export default function ProjectList() {
   const { account, web3, contract } = useContext(UserContext);
 
   useEffect(() => {
-    async function getProjectList() {
-      const msgSender = await web3.eth.getCoinbase();
-      const projects = await contract.methods
-        .getProjectsByAddress()
-        .call({ from: msgSender });
-      Promise.all(
-        projects.map((project) =>
-          contract.methods.getProjectDetails(project).call({ from: msgSender })
-        )
-      ).then((projects) => {
-        // TODO: Extract getUserName Logic
-        Promise.all(
-          projects.map(async (project) => {
-            return {
-              ...project,
-              '2': await contract.methods
-                .getUser(project[2])
-                .call({ from: msgSender }),
-            };
-          })
-        ).then((projects) => setProjects(projects));
-      });
-    }
-    if (web3 && contract) getProjectList();
-  }, [web3, contract]);
+    getProjectsByAddress(contract, account.address)
+      .then(getProjectDetails(account.address, contract, web3))
+      .then(getUserDetails(account.address, contract, 2, web3))
+      .then(setProjects);
+    //eslint-disable-next-line
+  }, []);
 
   function handleRowClick(project) {
-    async function getProcessListByProject() {
-      const msgSender = await web3.eth.getCoinbase();
-      const processes = await contract.methods
-        .getProcessContractsByProject(project[1])
-        .call({ from: msgSender });
-      Promise.all(
-        processes.map((address) => {
-          let processContract = new web3.eth.Contract(Process.abi, address);
-          return processContract.methods.getDetails().call({ from: msgSender });
-        })
-      ).then((processes) => {
-        // TODO: Extract getUserName Logic
-        Promise.all(
-          processes.map(async (process) => {
-            return {
-              ...process,
-              '0': await contract.methods
-                .getUser(process[0])
-                .call({ from: msgSender }),
-            };
-          })
-        ).then((processes) => {
-          setProcesses(processes);
-        });
+    setProjectDetails(project);
+    contract.methods
+      .getProcessContractsByProject(project[1])
+      .call({ from: account.address })
+      .then((processes) => {
+        Promise.all(processes.map(getProcessDetails(account.address, web3)))
+          .then(getUserDetails(account.address, contract, 0, web3))
+          .then(setProcesses);
       });
-    }
-    if (web3 && contract) {
-      getProcessListByProject();
-      setProjectDetails(project);
-    }
   }
 
   function toggleProject(id) {
-    web3.eth.getCoinbase().then((msgSender) =>
-      contract.methods
-        .toggleProjectStatus(id)
-        .send({ from: msgSender })
-        .on('transactionHash', (txHash) => setTxHash(txHash))
-    );
+    contract.methods
+      .toggleProjectStatus(id)
+      .send({ from: account.address })
+      .on('transactionHash', (txHash) => setTxHash(txHash));
   }
 
   function closeModal() {

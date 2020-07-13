@@ -14,7 +14,7 @@ export default function NoMatch() {
           <p>No se encontró la pagina solicitada, algúnas recomendaciones</p>
           <ul>
             <li>
-              <Link to="/home">Home</Link>
+              <Link to="/">Home</Link>
             </li>
             <li>
               <Link to="/login">Login</Link>

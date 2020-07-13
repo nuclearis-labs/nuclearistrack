@@ -6,34 +6,19 @@ import Process from '../build/contracts/Process.json';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import { Table, HeadRow, Row, Col } from '../styles/documentList';
+import { getDocumentDetails, getProcessDetails } from '../utils/web3Helpers';
 
 export default function DocumentList() {
   const params = useParams();
   const [documents, setDocuments] = useState([]);
-  const { web3 } = useContext(UserContext);
+  const { web3, account } = useContext(UserContext);
 
   useEffect(() => {
-    async function getDocumentList() {
-      let processContract = new web3.eth.Contract(Process.abi, params.process);
+    let processContract = new web3.eth.Contract(Process.abi, params.process);
+    getProcessDetails(account.address, web3)([params.process])
+      .then(getDocumentDetails(account.address, processContract))
+      .then(setDocuments);
 
-      const msgSender = await web3.eth.getCoinbase();
-      const documents = await processContract.methods
-        .getDetails()
-        .call({ from: msgSender });
-
-      Promise.all(
-        documents[2].map((document) =>
-          processContract.methods
-            .getDocument(document)
-            .call({ from: msgSender })
-        )
-      ).then((documents) => {
-        console.log(documents);
-
-        setDocuments(documents);
-      });
-    }
-    getDocumentList();
     // eslint-disable-next-line
   }, []);
 

@@ -21,7 +21,7 @@ import {
 
 export default function DocumentDetail() {
   const params = useParams();
-  const { web3 } = useContext(UserContext);
+  const { web3, account } = useContext(UserContext);
   const [file, setFile] = useState(null);
   const [hash, setHash] = useState(null);
   const [document, setDocument] = useState(undefined);
@@ -36,11 +36,9 @@ export default function DocumentDetail() {
     async function getDocument() {
       let processContract = new web3.eth.Contract(Process.abi, params.process);
 
-      const msgSender = await web3.eth.getCoinbase();
       const document = await processContract.methods
         .getDocument(params.hash)
-        .call({ from: msgSender });
-      console.log(document);
+        .call({ from: account.address });
 
       setDocument(document);
     }
