@@ -1,7 +1,6 @@
 // documents.js
 import React, { useState, useCallback, useEffect, useContext } from 'react';
 import { useParams } from 'react-router';
-import Footer from '../components/Footer';
 import { Title, Label } from '../styles/components';
 import { Row, Col2, Col4 } from '../styles/tableComponents';
 import GoogleMap from '../components/GoogleMap';
@@ -136,7 +135,6 @@ export default function DocumentDetail() {
           )}
         </Right>
       </FlexWrap>
-      <Footer />
     </>
   );
 }

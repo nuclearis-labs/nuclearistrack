@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import Footer from '../components/Footer';
 import {
   WebTop,
   WidthContent,
@@ -62,8 +61,7 @@ export default function Abstract({ location }) {
           }}
         ></ItemDesc>
       </WidthContent>
-      <BottomSpace></BottomSpace>
-      <Footer />
+      <BottomSpace />
     </>
   );
 }

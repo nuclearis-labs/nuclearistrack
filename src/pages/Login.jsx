@@ -7,7 +7,6 @@ import {
   ItemTit,
   ItemDesc,
 } from '../styles/webComponents';
-import Footer from '../components/Footer';
 import { useHistory } from 'react-router';
 import { UserContext } from '../context/UserContext';
 
@@ -39,7 +38,6 @@ export default function Login() {
             </WebTopTit>
           </WidthContent>
         </WebTop>
-        <Footer />
       </>
     );
   } else if (isLoading === false && isConnected === false) {
@@ -96,7 +94,6 @@ export default function Login() {
           </ItemDesc>
         </WidthContent>
         <BottomSpace />
-        <Footer />
       </>
     );
   } else return null;

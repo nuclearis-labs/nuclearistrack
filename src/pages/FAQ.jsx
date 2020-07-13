@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import Footer from '../components/Footer';
 import {
   WebTop,
   WidthContent,
@@ -59,9 +58,7 @@ export default function FAQ() {
           <I18n t="faq.answer5" />
         </ItemDesc>
       </WidthContent>
-      <BottomSpace></BottomSpace>
-
-      <Footer />
+      <BottomSpace />
     </>
   );
 }

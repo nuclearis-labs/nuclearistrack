@@ -1,6 +1,5 @@
 // benefits.js
 import React from 'react';
-import Footer from '../components/Footer';
 import styled from 'styled-components';
 import {
   WebTop,
@@ -65,8 +64,7 @@ export default function Benefits(props: RouteProps) {
           }}
         ></ItemDesc>
       </WidthContent>
-      <BottomSpace></BottomSpace>
-      <Footer />
+      <BottomSpace />
     </>
   );
 }

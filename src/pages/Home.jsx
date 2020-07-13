@@ -83,7 +83,7 @@ function Home() {
               </Link>
             </ItemDescHome>
           </ColHome>
-          <BottomSpace></BottomSpace>
+          <BottomSpace />
         </WidthContentHome>
       </WebBottomHome>
     </>
