@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Form } from '../styles/form';
 import Footer from '../components/Footer';
@@ -19,11 +19,28 @@ const WebTopContact = styled(WebTop)`
 `;
 
 export default function Contact() {
-  const { handleSubmit } = useForm();
+  const [form, setForm] = useState({ name: '', email: '', message: '' });
 
-  function onSubmit(data) {
-    console.log('submit');
-  }
+  const encode = (data) => {
+    return Object.keys(data)
+      .map(
+        (key) => encodeURIComponent(key) + '=' + encodeURIComponent(data[key])
+      )
+      .join('&');
+  };
+
+  const handleSubmit = (e) => {
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: encode({ 'form-name': 'contact', ...form }),
+    })
+      .then(() => alert('Success!'))
+      .catch((error) => alert(error));
+
+    e.preventDefault();
+  };
+
   return (
     <>
       <WebTopContact>
@@ -34,7 +51,7 @@ export default function Contact() {
         </WidthContent>
       </WebTopContact>
       <WidthContent style={{ textTransform: 'uppercase' }}>
-        <Form data-netlify="true">
+        <Form onSubmit={handleSubmit}>
           <Label>
             <I18n t="contact.name" />
           </Label>
@@ -47,7 +64,7 @@ export default function Contact() {
             <I18n t="contact.message" />
           </Label>
           <TextArea name="message"></TextArea>
-          <Button type="submit" onClick={handleSubmit(onSubmit)}>
+          <Button type="submit">
             <I18n t="contact.submit" />
           </Button>
         </Form>
