@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Form } from '../styles/form';
-import Footer from '../components/Footer';
 import {
   WebTop,
   WidthContent,
@@ -96,7 +95,6 @@ export default function Contact() {
         )}
       </WidthContent>
       <BottomSpace />
-      <Footer />
     </>
   );
 }
