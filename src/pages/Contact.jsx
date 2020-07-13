@@ -34,7 +34,7 @@ export default function Contact() {
         </WidthContent>
       </WebTopContact>
       <WidthContent style={{ textTransform: 'uppercase' }}>
-        <Form>
+        <Form data-netlify="true">
           <Label>
             <I18n t="contact.name" />
           </Label>
