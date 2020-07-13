@@ -11,7 +11,6 @@ import {
 import { Label, Input, TextArea, Button } from '../styles/components';
 import I18n from '../i18n';
 import bg from '../img/bgHome.jpg';
-import { useForm } from 'react-hook-form';
 
 const WebTopContact = styled(WebTop)`
   height: 370px;
@@ -27,6 +26,11 @@ export default function Contact() {
         (key) => encodeURIComponent(key) + '=' + encodeURIComponent(data[key])
       )
       .join('&');
+  };
+
+  const handleChange = (e) => {
+    e.persist();
+    setForm((form) => ({ ...form, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = (e) => {
@@ -55,15 +59,15 @@ export default function Contact() {
           <Label>
             <I18n t="contact.name" />
           </Label>
-          <Input name="name" type="text"></Input>
+          <Input name="name" onChange={handleChange} type="text"></Input>
           <Label>
             <I18n t="contact.email" />
           </Label>
-          <Input name="email" type="email"></Input>
+          <Input name="email" onChange={handleChange} type="email"></Input>
           <Label>
             <I18n t="contact.message" />
           </Label>
-          <TextArea name="message"></TextArea>
+          <TextArea name="message" onChange={handleChange}></TextArea>
           <Button type="submit">
             <I18n t="contact.submit" />
           </Button>
