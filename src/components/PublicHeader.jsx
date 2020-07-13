@@ -34,7 +34,7 @@ export default function PublicHeader() {
         </NavMenu>
 
         <NavLogin>
-          <Link>ES</Link> / <Link>EN</Link> / <Link>DE</Link> |{' '}
+          <span>ES</span> / <span>EN</span> / <span>DE</span> |{' '}
           <NavLink to="/login">
             {' '}
             <I18n t="header.login" />
