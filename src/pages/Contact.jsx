@@ -19,6 +19,8 @@ const WebTopContact = styled(WebTop)`
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
 
   const encode = (data) => {
     return Object.keys(data)
@@ -34,15 +36,22 @@ export default function Contact() {
   };
 
   const handleSubmit = (e) => {
+    e.preventDefault();
+    if (
+      form.name.length === 0 ||
+      form.email.length === 0 ||
+      form.message.length === 0
+    ) {
+      setError(true);
+      return;
+    }
     fetch('/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: encode({ 'form-name': 'contact', ...form }),
     })
-      .then(() => alert('Success!'))
-      .catch((error) => alert(error));
-
-    e.preventDefault();
+      .then(() => setSuccess(true))
+      .catch((error) => setError(true));
   };
 
   return (
@@ -55,23 +64,36 @@ export default function Contact() {
         </WidthContent>
       </WebTopContact>
       <WidthContent style={{ textTransform: 'uppercase' }}>
-        <Form onSubmit={handleSubmit}>
-          <Label>
-            <I18n t="contact.name" />
-          </Label>
-          <Input name="name" onChange={handleChange} type="text"></Input>
-          <Label>
-            <I18n t="contact.email" />
-          </Label>
-          <Input name="email" onChange={handleChange} type="email"></Input>
-          <Label>
-            <I18n t="contact.message" />
-          </Label>
-          <TextArea name="message" onChange={handleChange}></TextArea>
-          <Button type="submit">
-            <I18n t="contact.submit" />
-          </Button>
-        </Form>
+        {success ? (
+          <div style={{ marginTop: '100px' }}>
+            Se envío exitosamente su consulta
+          </div>
+        ) : error ? (
+          <>
+            <div style={{ marginTop: '100px' }}>
+              Hubo un error enviando su consulta
+            </div>
+            <Button onClick={() => setError(false)}>Volver a intentar</Button>
+          </>
+        ) : (
+          <Form onSubmit={handleSubmit}>
+            <Label>
+              <I18n t="contact.name" />
+            </Label>
+            <Input name="name" onChange={handleChange} type="text"></Input>
+            <Label>
+              <I18n t="contact.email" />
+            </Label>
+            <Input name="email" onChange={handleChange} type="email"></Input>
+            <Label>
+              <I18n t="contact.message" />
+            </Label>
+            <TextArea name="message" onChange={handleChange}></TextArea>
+            <Button type="submit">
+              <I18n t="contact.submit" />
+            </Button>
+          </Form>
+        )}
       </WidthContent>
       <BottomSpace />
       <Footer />
