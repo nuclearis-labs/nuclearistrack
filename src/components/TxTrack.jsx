@@ -3,8 +3,10 @@ import { useInterval } from 'react-use';
 import RSKLink from './RSKLink';
 import { Label } from '../styles/components';
 import { UserContext } from '../context/UserContext';
+import { useTranslation } from 'react-i18next';
 
 export default function TxTrack(props) {
+  const { t } = useTranslation();
   const [receipt, setReceipt] = useState();
   const { web3 } = useContext(UserContext);
 
@@ -25,28 +27,29 @@ export default function TxTrack(props) {
     <>
       <Label>
         {receipt === undefined
-          ? 'TRANSACCION PENDIENTE'
+          ? t('txTracker:pendiente')
           : receipt.status === true
-          ? 'EXITO'
-          : 'HUBO UN ERROR'}
+          ? t('txTracker:success')
+          : t('txTracker:error')}
       </Label>
       <div>
-        Transaction Hash: <RSKLink hash={props.tx} testnet type="tx" />
+        {t('txTracker:hash')}: <RSKLink hash={props.tx} testnet type="tx" />
       </div>
       {receipt ? (
         <>
           <div>
-            Bloque: <RSKLink hash={receipt.blockHash} testnet type="block" />
+            {t('txTracker:block')}:{' '}
+            <RSKLink hash={receipt.blockHash} testnet type="block" />
           </div>
           <div>
-            Estado:{' '}
+            {t('txTracker.state')}:{' '}
             {receipt.status === true
-              ? 'EXITOSO'
-              : 'FALLIDO, POR FAVOR REPITA Y CHEQUEE LOS DATOS INGRESADOS'}
+              ? t('txTracker:success')
+              : t('txTracker:receiptError')}
           </div>
         </>
       ) : (
-        'Esperando confirmacion de la transacción... No se requiere esperar la confirmación.'
+        t('txTracker:waiting')
       )}
     </>
   );

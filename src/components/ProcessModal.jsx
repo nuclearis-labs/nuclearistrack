@@ -19,8 +19,10 @@ import {
   ScrollBox130,
 } from '../styles/processModal';
 import { UserContext } from '../context/UserContext';
+import { useTranslation } from 'react-i18next';
 
 function ProcessModal(props) {
+  const { t } = useTranslation();
   const { register, handleSubmit } = useForm();
   const { web3, contract, account } = useContext(UserContext);
   const [processes, setProcesses] = useState([]);
@@ -70,20 +72,18 @@ function ProcessModal(props) {
       <ModalWrap>
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalTop>
-            <ModalTit>AGREGAR PROCESOS</ModalTit>
+            <ModalTit>{t('process:add')}</ModalTit>
             <ModalInput placeholder="BUSCAR" ref={register}></ModalInput>
-            <ModalTxt>
-              SELECCIONE LOS PROCESOS QUE DESEA AGREGAR AL PROYECTO
-            </ModalTxt>
+            <ModalTxt>{t('process:explainer')}</ModalTxt>
             <ModalProdName>
               {web3.utils.hexToAscii(props.project[3])}
             </ModalProdName>
           </ModalTop>
           <ModalBottom>
             <HeadRow>
-              <Col4>NOMBRE</Col4>
-              <Col4>PROVEEDOR</Col4>
-              <Col4>DOCUMENTOS</Col4>
+              <Col4>{t('forms:name')}</Col4>
+              <Col4>{t('forms:supplier')}</Col4>
+              <Col4>{t('forms:documents')}</Col4>
             </HeadRow>
             <ScrollBox130>
               {processes.map((process) => (
@@ -105,7 +105,7 @@ function ProcessModal(props) {
                   <Col4>
                     <Link to={'/documents/' + process[3]}>
                       <Eye />
-                      VER DOC.
+                      {t('forms:viewDoc')}
                     </Link>
                   </Col4>
                 </Row>
@@ -113,8 +113,10 @@ function ProcessModal(props) {
             </ScrollBox130>
             <Button type="submit">
               {txHash
-                ? ('EXITO! Tx:', (<RSKLink hash={txHash} testnet type="tx" />))
-                : 'ASIGNAR PROCESO'}
+                ? t('forms:success')(
+                    <RSKLink hash={txHash} testnet type="tx" />
+                  )
+                : t('forms:assignProcess')}
             </Button>
           </ModalBottom>
         </form>

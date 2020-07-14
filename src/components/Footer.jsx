@@ -8,24 +8,23 @@ import {
   FooterRight,
   FooterLink,
 } from '../styles/footer';
+import { useTranslation } from 'react-i18next';
 
 export default function Footer() {
+  const { t } = useTranslation();
+
   return (
     <FooterBg>
       <FooterWrap>
         <FooterLeft>
           <Logo style={{ position: 'relative', bottom: '5px' }} />
           <br />
-          INGENIERÍA Y FABRICACIÓN DE
-          <br />
-          COMPONENTES MECÁNICOS PARA LA
-          <br />
-          INDUSTRIA NUCLEAR
+          {t('footer:phrase')}
           <br />
         </FooterLeft>
         <FooterRight>
-          © {new Date().getFullYear()}. Nuclearis. NRS, S.A. Todos los derechos
-          reservados.
+          © {new Date().getFullYear()}. Nuclearis. NRS, S.A.{' '}
+          {t('footer:license')}
           <FooterLink href="http://www.nuclearis.com">
             WWW.NUCLEARIS.COM
           </FooterLink>

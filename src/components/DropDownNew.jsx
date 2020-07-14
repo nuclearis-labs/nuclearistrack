@@ -17,7 +17,7 @@ export default function DropDownNew(props) {
         }}
       >
         <New />
-        NUEVO
+        {t('forms:new')}
       </AbmLink>
 
       <SubMenuNew className={props.index === 1 ? 'open' : 'closed'}>
