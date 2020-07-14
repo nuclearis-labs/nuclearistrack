@@ -9,57 +9,36 @@ import {
   BottomSpace,
 } from '../styles/webComponents';
 import bg from '../img/bgSeguridad.jpg';
-import I18n from '../i18n';
+import { useTranslation, Trans } from 'react-i18next';
 
 const WebTopSecurity = styled(WebTop)`
   height: 396px;
   background: url(${bg}) #000 no-repeat center;
 `;
 
-export default function Abstract({ location }) {
+export default function Abstract({ location, locale, path }) {
+  const { t } = useTranslation(['abstract']);
+
   return (
     <>
       <WebTopSecurity>
         <WidthContent>
-          <WebTopTit>
-            <I18n t="abstract.bannerTitle" />
-          </WebTopTit>
+          <WebTopTit>{t('abstract:bannerTitle')}</WebTopTit>
         </WidthContent>
       </WebTopSecurity>
       <WidthContent>
-        <ItemTit>
-          <I18n t="abstract.section1.title" />
-        </ItemTit>
-        <ItemDesc
-          dangerouslySetInnerHTML={{
-            __html: I18n.getTranslation(
-              location,
-              'abstract.section1.text'
-            ).toUpperCase(),
-          }}
-        ></ItemDesc>
-        <ItemTit>
-          <I18n t="abstract.section2.title" />
-        </ItemTit>
-        <ItemDesc
-          dangerouslySetInnerHTML={{
-            __html: I18n.getTranslation(
-              location,
-              'abstract.section2.text'
-            ).toUpperCase(),
-          }}
-        ></ItemDesc>
-        <ItemTit>
-          <I18n t="abstract.section3.title" />
-        </ItemTit>
-        <ItemDesc
-          dangerouslySetInnerHTML={{
-            __html: I18n.getTranslation(
-              location,
-              'abstract.section3.text'
-            ).toUpperCase(),
-          }}
-        ></ItemDesc>
+        <ItemTit>{t('abstract:section1Title')}</ItemTit>
+        <ItemDesc>
+          <Trans>abstract:section1Text</Trans>
+        </ItemDesc>
+        <ItemTit>{t('abstract:section2Title')}</ItemTit>
+        <ItemDesc>
+          <Trans>abstract:section2Text</Trans>
+        </ItemDesc>
+        <ItemTit>{t('abstract:section3Title')}</ItemTit>
+        <ItemDesc>
+          <Trans>abstract:section3Text</Trans>
+        </ItemDesc>
       </WidthContent>
       <BottomSpace />
     </>

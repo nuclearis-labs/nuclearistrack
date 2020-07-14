@@ -19,8 +19,10 @@ import {
   getUserDetails,
   getProcessesByAddress,
 } from '../utils/web3Helpers';
+import { useTranslation } from 'react-i18next';
 
 function ProcessList() {
+  const { t } = useTranslation();
   const [processes, setProcesses] = useState([]);
   const { account, web3, contract } = useContext(UserContext);
 
@@ -36,22 +38,22 @@ function ProcessList() {
   return (
     <>
       <Top>
-        <Title>PROCESOS</Title>
+        <Title>{t('header:proceso')}</Title>
       </Top>
       <TableWrap>
         <Table>
           <HeadRowMonsterrat>
-            <Col>NOMBRE</Col>
-            <Col>PROVEEDOR</Col>
-            <Col>VER DOC.</Col>
-            <Col>AGREGAR DOC.</Col>
-            <Col>CONTRACT</Col>
+            <Col>{t('forms:name')}</Col>
+            <Col>{t('forms:supplier')}</Col>
+            <Col>{t('forms:viewDoc')}</Col>
+            <Col>{t('forms:addDoc')}</Col>
+            <Col>{t('forms:contract')}</Col>
           </HeadRowMonsterrat>
           <ScrollBox400>
             {processes.length === 0 ? (
               <Row>
                 <Col style={{ textAlign: 'center', width: '100%' }}>
-                  No hay procesos cargados para usted
+                  {t('forms:noItems')}
                 </Col>
               </Row>
             ) : (
@@ -69,7 +71,7 @@ function ProcessList() {
                           fill: '#333',
                         }}
                       />
-                      VER DOC.
+                      {t('forms:viewDoc')}
                     </Link>
                   </Col>
 
@@ -83,7 +85,7 @@ function ProcessList() {
                           fill: '#333',
                         }}
                       />
-                      AGREGAR DOC.
+                      {t('forms:addDoc')}
                     </Link>
                   </Col>
                   <Col>

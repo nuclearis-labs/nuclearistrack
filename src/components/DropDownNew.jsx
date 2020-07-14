@@ -1,10 +1,12 @@
 import React from 'react';
 import { AbmLink, SubMenuNew } from '../styles/Nav';
-import { Link } from 'react-router-i18n';
 import { ReactComponent as New } from '../img/new.svg';
-import I18n from '../i18n';
+import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
-export default function DropDownNew(props: any) {
+export default function DropDownNew(props) {
+  const { t } = useTranslation();
+
   return (
     <div>
       <AbmLink
@@ -20,13 +22,13 @@ export default function DropDownNew(props: any) {
 
       <SubMenuNew className={props.index === 1 ? 'open' : 'closed'}>
         <Link to="/projects/add" onClick={() => props.onClick(false)}>
-          + <I18n t="header.projects" />
+          + {t('header:projects')}
         </Link>
         <Link to="/users/add" onClick={() => props.onClick(false)}>
-          + <I18n t="header.user" />
+          + {t('header:user')}
         </Link>
         <Link to="/processes/add" onClick={() => props.onClick(false)}>
-          + PROCESO
+          + {t('header:proceso')}
         </Link>
       </SubMenuNew>
     </div>

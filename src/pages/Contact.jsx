@@ -8,8 +8,8 @@ import {
   BottomSpace,
 } from '../styles/webComponents';
 import { Label, Input, TextArea, Button } from '../styles/components';
-import I18n from '../i18n';
 import bg from '../img/bgHome.jpg';
+import { useTranslation } from 'react-i18next';
 
 const WebTopContact = styled(WebTop)`
   height: 370px;
@@ -17,6 +17,7 @@ const WebTopContact = styled(WebTop)`
 `;
 
 export default function Contact() {
+  const { t } = useTranslation();
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -57,40 +58,28 @@ export default function Contact() {
     <>
       <WebTopContact>
         <WidthContent>
-          <WebTopTit>
-            <I18n t="contact.bannerTitle" />
-          </WebTopTit>
+          <WebTopTit>{t('contact:bannerTitle')}</WebTopTit>
         </WidthContent>
       </WebTopContact>
       <WidthContent style={{ textTransform: 'uppercase' }}>
         {success ? (
-          <div style={{ marginTop: '100px' }}>
-            Se envío exitosamente su consulta
-          </div>
+          <div style={{ marginTop: '100px' }}>{t('contact:success')}</div>
         ) : error ? (
           <>
-            <div style={{ marginTop: '100px' }}>
-              Hubo un error enviando su consulta
-            </div>
-            <Button onClick={() => setError(false)}>Volver a intentar</Button>
+            <div style={{ marginTop: '100px' }}>{t('contact:error')}</div>
+            <Button onClick={() => setError(false)}>
+              {t('contact:retry')}
+            </Button>
           </>
         ) : (
           <Form onSubmit={handleSubmit}>
-            <Label>
-              <I18n t="contact.name" />
-            </Label>
+            <Label>{t('contact:name')}</Label>
             <Input name="name" onChange={handleChange} type="text"></Input>
-            <Label>
-              <I18n t="contact.email" />
-            </Label>
+            <Label>{t('contact:email')}</Label>
             <Input name="email" onChange={handleChange} type="email"></Input>
-            <Label>
-              <I18n t="contact.message" />
-            </Label>
+            <Label>{t('contact:message')}</Label>
             <TextArea name="message" onChange={handleChange}></TextArea>
-            <Button type="submit">
-              <I18n t="contact.submit" />
-            </Button>
+            <Button type="submit">{t('contact:submit')}</Button>
           </Form>
         )}
       </WidthContent>

@@ -33,8 +33,10 @@ import {
   getProjectDetails,
   getProjectsByAddress,
 } from '../utils/web3Helpers';
+import { useTranslation } from 'react-i18next';
 
 export default function ProjectList() {
+  const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
   const [projects, setProjects] = useState([]);
   const [projectDetails, setProjectDetails] = useState(null);
@@ -55,11 +57,9 @@ export default function ProjectList() {
     contract.methods
       .getProcessContractsByProject(project[1])
       .call({ from: account.address })
-      .then((processes) => {
-        Promise.all(processes.map(getProcessDetails(account.address, web3)))
-          .then(getUserDetails(account.address, contract, 0, web3))
-          .then(setProcesses);
-      });
+      .then(getProcessDetails(account.address, web3))
+      .then(getUserDetails(account.address, contract, 0, web3))
+      .then(setProcesses);
   }
 
   function toggleProject(id) {
@@ -79,9 +79,9 @@ export default function ProjectList() {
         <Left details={projectDetails}>
           <FlexWrapRight details={projectDetails}>
             {account.type === '0' && (
-              <AddProyectBtn>+ NUEVO PROYECTO</AddProyectBtn>
+              <AddProyectBtn>+ {t('forms:newProject')}</AddProyectBtn>
             )}
-            <Title>PROYECTOS</Title>
+            <Title>{t('header:projects')}</Title>
           </FlexWrapRight>
           <TableWrap>
             <Table>
@@ -90,18 +90,18 @@ export default function ProjectList() {
               ) : (
                 <>
                   <HeadRowMonsterrat>
-                    <Col>NOMBRE</Col>
-                    <Col>CLIENTE</Col>
-                    <Col>EXPEDIENTE</Col>
-                    <Col>N°OC</Col>
-                    <Col>ESTADO</Col>
-                    <Col>DETALLES</Col>
+                    <Col>{t('forms:name')}</Col>
+                    <Col>{t('forms:client')}</Col>
+                    <Col>{t('forms:expediente')}</Col>
+                    <Col>{t('forms:oc')}</Col>
+                    <Col>{t('forms:state')}</Col>
+                    <Col>{t('forms:details')}</Col>
                   </HeadRowMonsterrat>
                   <ScrollBox400>
                     {projects && projects.length === 0 ? (
                       <Row>
                         <Col style={{ textAlign: 'center', width: '100%' }}>
-                          No hay projectos cargados para usted
+                          {t('forms:noItems')}
                         </Col>
                       </Row>
                     ) : (
@@ -116,19 +116,21 @@ export default function ProjectList() {
                               <TableButton
                                 onClick={() => toggleProject(project[1])}
                               >
-                                {project[0] === '1' ? 'ACTIVO' : 'CERRADO'}
+                                {project[0] === '1'
+                                  ? t('forms:active')
+                                  : t('forms:closed')}
                               </TableButton>
                             ) : project[0] === '1' ? (
-                              'ACTIVO'
+                              t('forms:active')
                             ) : (
-                              'CERRADO'
+                              t('forms:closed')
                             )}
                           </Col>
                           <Col>
                             <TableButton
                               onClick={() => handleRowClick(project)}
                             >
-                              VER
+                              {t('forms:view')}
                             </TableButton>
                           </Col>
                         </Row>
@@ -143,31 +145,31 @@ export default function ProjectList() {
 
         {projectDetails && (
           <Right>
-            <ResumenTit>RESUMEN DE PROYECTO</ResumenTit>
+            <ResumenTit>{t('forms:resumen')}</ResumenTit>
             <ResumenName>
               {web3.utils.hexToAscii(projectDetails[3])}
             </ResumenName>
             <Row>
-              <Col2 className="color">CLIENTE</Col2>
+              <Col2 className="color">{t('forms:client')}</Col2>
               <Col2 className="bold">
                 {web3.utils.hexToAscii(projectDetails[2][2])}
               </Col2>
             </Row>
             <Row>
-              <Col2 className="color">EXPEDIENTE</Col2>
+              <Col2 className="color">{t('forms:expediente')}</Col2>
               <Col2 className="bold">{projectDetails[1]}</Col2>
             </Row>
             <Row>
-              <Col2 className="color">Nº OC</Col2>
+              <Col2 className="color">{t('forms:oc')}</Col2>
               <Col2 className="bold">
                 {web3.utils.hexToAscii(projectDetails[4])}
               </Col2>
             </Row>
-            <ProcesosTit>PROCESOS</ProcesosTit>
+            <ProcesosTit>{t('header:proceso')}</ProcesosTit>
             <HeadRow>
-              <Col3>NOMBRE</Col3>
-              <Col3>PROVEEDOR</Col3>
-              <Col3>DOCUMENTOS</Col3>
+              <Col3>{t('forms:name')}</Col3>
+              <Col3>{t('forms:supplier')}</Col3>
+              <Col3>{t('forms:documents')}</Col3>
             </HeadRow>
             {processes &&
               processes.map((process) => (
@@ -177,7 +179,7 @@ export default function ProjectList() {
                   <Col3>
                     <Link to={'/documents/' + process[3]}>
                       <Eye />
-                      VER DOC.
+                      {t('forms:view')}
                     </Link>
                   </Col3>
                 </Row>
@@ -189,7 +191,7 @@ export default function ProjectList() {
                   setShowModal(true);
                 }}
               >
-                + AGREGAR PROCESOS
+                + {t('forms:addProcesses')}
               </Button>
             )}
           </Right>

@@ -7,8 +7,10 @@ import { Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import { Table, HeadRow, Row, Col } from '../styles/documentList';
 import { getDocumentDetails, getProcessDetails } from '../utils/web3Helpers';
+import { useTranslation } from 'react-i18next';
 
 export default function DocumentList() {
+  const { t } = useTranslation();
   const params = useParams();
   const [documents, setDocuments] = useState([]);
   const { web3, account } = useContext(UserContext);
@@ -25,15 +27,15 @@ export default function DocumentList() {
   return (
     <>
       <Top>
-        <Title>DOCUMENTOS</Title>
+        <Title>{t('forms:documents')}</Title>
       </Top>
       <FormWrap>
         <Table>
           <thead>
             <HeadRow>
-              <th>NOMBRE</th>
-              <th>FECHA</th>
-              <th>DETALLES</th>
+              <th>{t('forms:name')}</th>
+              <th>{t('forms:date')}</th>
+              <th>{t('forms:details')}</th>
             </HeadRow>
           </thead>
           <tbody>
@@ -45,7 +47,7 @@ export default function DocumentList() {
                 </Col>
                 <Col>
                   <Link to={'/documents/' + params.process + '/' + document[1]}>
-                    VER
+                    {t('forms:view')}
                   </Link>
                 </Col>
               </Row>

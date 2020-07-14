@@ -9,7 +9,7 @@ import {
   BottomSpace,
 } from '../styles/webComponents';
 import bg from '../img/bgfaq.jpg';
-import I18n from '../i18n';
+import { useTranslation } from 'react-i18next';
 
 const WebTopFAQ = styled(WebTop)`
   height: 396px;
@@ -17,46 +17,26 @@ const WebTopFAQ = styled(WebTop)`
 `;
 
 export default function FAQ() {
+  const { t } = useTranslation();
+
   return (
     <>
       <WebTopFAQ>
         <WidthContent>
-          <WebTopTit>
-            <I18n t="faq.bannerTitle" />
-          </WebTopTit>
+          <WebTopTit>{t('faq:bannerTitle')}</WebTopTit>
         </WidthContent>
       </WebTopFAQ>
       <WidthContent style={{ textTransform: 'uppercase' }}>
-        <ItemTit>
-          <I18n t="faq.question1" />
-        </ItemTit>
-        <ItemDesc>
-          <I18n t="faq.answer1" />
-        </ItemDesc>
-        <ItemTit>
-          <I18n t="faq.question2" />
-        </ItemTit>
-        <ItemDesc>
-          <I18n t="faq.answer2" />
-        </ItemDesc>
-        <ItemTit>
-          <I18n t="faq.question3" />
-        </ItemTit>
-        <ItemDesc>
-          <I18n t="faq.answer3" />
-        </ItemDesc>
-        <ItemTit>
-          <I18n t="faq.question4" />
-        </ItemTit>
-        <ItemDesc>
-          <I18n t="faq.answer4" />
-        </ItemDesc>
-        <ItemTit>
-          <I18n t="faq.question5" />
-        </ItemTit>
-        <ItemDesc>
-          <I18n t="faq.answer5" />
-        </ItemDesc>
+        <ItemTit>{t('faq:question1')}</ItemTit>
+        <ItemDesc>{t('faq:answer1')}</ItemDesc>
+        <ItemTit>{t('faq:question2')}</ItemTit>
+        <ItemDesc>{t('faq:answer2')}</ItemDesc>
+        <ItemTit>{t('faq:question3')}</ItemTit>
+        <ItemDesc>{t('faq:answer3')}</ItemDesc>
+        <ItemTit>{t('faq:question4')}</ItemTit>
+        <ItemDesc>{t('faq:answer4')}</ItemDesc>
+        <ItemTit>{t('faq:question5')}</ItemTit>
+        <ItemDesc>{t('faq:answer5')}</ItemDesc>
       </WidthContent>
       <BottomSpace />
     </>

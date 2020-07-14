@@ -1,10 +1,19 @@
 import React from 'react';
-import { Nav, NavHeader, NavLogo, NavMenu, NavLogin } from '../styles/Nav';
+import {
+  Nav,
+  NavHeader,
+  NavLogo,
+  NavMenu,
+  NavLogin,
+  LanguageSelector,
+} from '../styles/Nav';
 import { ReactComponent as Logo } from '../img/logo.svg';
-import { Link, NavLink } from 'react-router-i18n';
-import I18n from '../i18n';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 export default function PublicHeader() {
+  const { t, i18n } = useTranslation(['header']);
+
   return (
     <Nav>
       <NavHeader>
@@ -14,31 +23,25 @@ export default function PublicHeader() {
           </Link>
         </NavLogo>
         <NavMenu>
-          <NavLink to="/">
-            <I18n t="header.home" />
-          </NavLink>{' '}
-          |{' '}
-          <NavLink to="/benefits">
-            <I18n t="header.benefits" />
-          </NavLink>{' '}
-          |
-          <NavLink to="/abstract">
-            {' '}
-            <I18n t="header.abstract" />
-          </NavLink>{' '}
-          | <NavLink to="/faq">FAQ </NavLink>|
-          <NavLink to="/contact">
-            {' '}
-            <I18n t="header.contact" />
-          </NavLink>
+          <Link to="/">{t('home')}</Link> |{' '}
+          <Link to="/benefits">{t('benefits')}</Link> |
+          <Link to="/abstract"> {t('abstract')}</Link> |{' '}
+          <Link to="/faq">FAQ </Link>|<Link to="/contact"> {t('contact')}</Link>
         </NavMenu>
 
         <NavLogin>
-          <span>ES</span> / <span>EN</span> / <span>DE</span> |{' '}
-          <NavLink to="/login">
-            {' '}
-            <I18n t="header.login" />
-          </NavLink>
+          <LanguageSelector onClick={() => i18n.changeLanguage('es')}>
+            ES
+          </LanguageSelector>{' '}
+          /{' '}
+          <LanguageSelector onClick={() => i18n.changeLanguage('en')}>
+            EN
+          </LanguageSelector>{' '}
+          /{' '}
+          <LanguageSelector onClick={() => i18n.changeLanguage('de')}>
+            DE
+          </LanguageSelector>{' '}
+          | <Link to="/login"> {t('login')}</Link>
         </NavLogin>
       </NavHeader>
     </Nav>

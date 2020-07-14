@@ -1,7 +1,7 @@
 import React from 'react';
 import { AbmLink, SubMenuEdit } from '../styles/Nav';
 import { ReactComponent as Eye } from '../img/eye.svg';
-import { Link } from 'react-router-i18n';
+import { Link } from 'react-router-dom';
 
 export default function DropDownEdit(props) {
   return (

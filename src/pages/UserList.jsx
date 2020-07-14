@@ -11,8 +11,10 @@ import {
   getUserBalances,
   getAllUsers,
 } from '../utils/web3Helpers';
+import { useTranslation } from 'react-i18next';
 
 export default function UserList() {
+  const { t } = useTranslation();
   const [users, setUsers] = useState([]);
   const [txHash, setTxHash] = useState(undefined);
   const { account, web3, contract } = useContext(UserContext);
@@ -22,7 +24,6 @@ export default function UserList() {
       .then(getUserDetails(account.address, contract, undefined, web3))
       .then(getUserBalances(web3))
       .then(setUsers);
-
     // eslint-disable-next-line
   }, []);
 
@@ -36,7 +37,7 @@ export default function UserList() {
   return (
     <>
       <Top>
-        <Title>USUARIOS</Title>
+        <Title>{t('header:user')}</Title>
       </Top>
       <TableWrap>
         <Table>
@@ -45,17 +46,17 @@ export default function UserList() {
           ) : (
             <>
               <HeadRowMonsterrat>
-                <Col>NOMBRE</Col>
-                <Col>DIRECCION</Col>
-                <Col>TIPO</Col>
-                <Col>ESTADO</Col>
-                <Col>BALANCE</Col>
+                <Col>{t('forms:name')}</Col>
+                <Col>{t('forms:address')}</Col>
+                <Col>{t('forms:type')}</Col>
+                <Col>{t('forms:state')}</Col>
+                <Col>{t('forms:saldo')}</Col>
               </HeadRowMonsterrat>
               <ScrollBox400>
                 {users.length === 0 ? (
                   <Row>
                     <Col style={{ textAlign: 'center', width: '100%' }}>
-                      No hay usuarios cargados para usted
+                      {t('forms:noItems')}
                     </Col>
                   </Row>
                 ) : (

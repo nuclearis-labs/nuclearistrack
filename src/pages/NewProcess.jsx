@@ -2,14 +2,15 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Title, Label, Input, Select, Button } from '../styles/components';
 import { Top, Form, FormWrap, ErrorForm } from '../styles/form';
-import I18n from '../i18n';
 import { useForm } from 'react-hook-form';
 import { ProcessSchema } from '../validationSchemas/index';
 import { UserContext } from '../context/UserContext';
 import TxTrack from '../components/TxTrack';
 import { getUserDetails, filter, getAllUsers } from '../utils/web3Helpers';
+import { useTranslation } from 'react-i18next';
 
 export default function NewProcess() {
+  const { t } = useTranslation();
   const [users, setUsers] = useState([]);
   const [txHash, setTxHash] = useState(undefined);
   const { account, web3, contract } = useContext(UserContext);
@@ -40,9 +41,7 @@ export default function NewProcess() {
   return (
     <>
       <Top>
-        <Title>
-          <I18n t="forms.newProcess" />
-        </Title>
+        <Title>{t('forms:newProcess')}</Title>
       </Top>
       <FormWrap>
         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -50,19 +49,15 @@ export default function NewProcess() {
             <TxTrack tx={txHash} />
           ) : (
             <>
-              <Label>
-                <I18n t="forms.name" />
-              </Label>
+              <Label>{t('forms:name')}</Label>
               <Input ref={register} name="processTitle"></Input>
               <ErrorForm>
                 {errors.processTitle && errors.processTitle.message}
               </ErrorForm>
-              <Label>
-                <I18n t="forms.supplier" />
-              </Label>
+              <Label>{t('forms:supplier')}</Label>
               <Select ref={register} name="supplierAddress" defaultValue="">
                 <option disabled hidden value="">
-                  Select one...
+                  {t('forms:selectOne')}
                 </option>
                 {users.map((user) => (
                   <option key={user[3]} value={user[3]}>
@@ -73,7 +68,7 @@ export default function NewProcess() {
               <ErrorForm>
                 {errors.supplierAddress && errors.supplierAddress.message}
               </ErrorForm>
-              <Button type="submit">CREAR</Button>
+              <Button type="submit">{t('forms:create')}</Button>
             </>
           )}
         </Form>

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const NavAbm = styled.div`
   width: 25%;
@@ -12,6 +12,11 @@ export const NavAbm = styled.div`
   position: relative;
   letter-spacing: 1px;
 `;
+
+export const LanguageSelector = styled.span`
+  cursor: pointer;
+`;
+
 export const AbmLink = styled.button`
   color: #333;
   background: transparent;
@@ -189,7 +194,7 @@ export const NavMenu = styled.div`
 
 export const Nav = styled.div`
   background-color: #333;
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
 `;
 export const NavHeader = styled.div`
   max-width: 1010px;

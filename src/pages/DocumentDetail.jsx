@@ -18,8 +18,10 @@ import {
   FlexWrap,
   DropZone,
 } from '../styles/documentDetail';
+import { useTranslation } from 'react-i18next';
 
 export default function DocumentDetail() {
+  const { t } = useTranslation();
   const params = useParams();
   const { web3, account } = useContext(UserContext);
   const [file, setFile] = useState(null);
@@ -35,11 +37,9 @@ export default function DocumentDetail() {
   useEffect(() => {
     async function getDocument() {
       let processContract = new web3.eth.Contract(Process.abi, params.process);
-
       const document = await processContract.methods
         .getDocument(params.hash)
         .call({ from: account.address });
-
       setDocument(document);
     }
     getDocument();
@@ -62,32 +62,29 @@ export default function DocumentDetail() {
           <FlexWrapRight
             style={{ flexDirection: 'column', alignItems: 'flex-end' }}
           >
-            <Title>DOCUMENTO </Title>
+            <Title>{t('forms:document')}</Title>
             {document && (
               <DropZone
                 valid={hash === null ? null : hash === document[1]}
                 {...getRootProps()}
               >
-                <Label>VERIFICAR DOCUMENTO</Label>
+                <Label>{t('forms:verify')}</Label>
                 <input {...getInputProps()} />
                 {isDragActive ? (
                   <pre style={{ transform: 'translateY(55px)', margin: 0 }}>
-                    Suelte el archivo aquí
+                    {t('forms:dragFile')}
                   </pre>
                 ) : (
                   <pre style={{ transform: 'translateY(45px)', margin: 0 }}>
                     {hash
-                      ? `Nombre del archivo: ${
-                          file.name
-                        }\nHash del archivo: ${hash.substr(
-                          0,
-                          8
-                        )}...${hash.substr(-8)}\n${
+                      ? `${t('forms:fileName')} ${file.name}\n${t(
+                          'forms:fileHash'
+                        )} ${hash.substr(0, 8)}...${hash.substr(-8)}\n${
                           hash === document[1]
-                            ? 'Estado: AUTENTICO'
-                            : 'Estado: NO COINCIDE'
+                            ? t('forms:authentic')
+                            : t('forms:fake')
                         }`
-                      : `Arrastre el archivo hacia aquí,\no haga click para seleccionarlo`}
+                      : t('forms:dropFile')}
                   </pre>
                 )}
               </DropZone>
@@ -97,26 +94,26 @@ export default function DocumentDetail() {
         <Right>
           {document && (
             <>
-              <ResumenTit>DETALLES DE DOCUMENTO</ResumenTit>
+              <ResumenTit>{t('forms:documentDetails')}</ResumenTit>
               <Row>
-                <Col4 className="color">NOMBRE</Col4>
+                <Col4 className="color">{t('forms:name')}</Col4>
                 <Col2 className="bold">{document[0]}</Col2>
               </Row>
               <Row>
-                <Col4 className="color">HASH</Col4>
+                <Col4 className="color">{t('forms:hash')}</Col4>
                 <Col2 className="bold" id="hash">
                   {document[1].substr(0, 10)}...
                   {document[1].substr(-10)}
                 </Col2>
               </Row>
               <Row>
-                <Col4 className="color">FECHA</Col4>
+                <Col4 className="color">{t('forms:date')}</Col4>
                 <Col2 className="bold">
                   {' '}
                   {new Date(parseInt(document[4] + '000')).toLocaleString()}
                 </Col2>
               </Row>
-              <ProcesosTit>UBICACIÓN</ProcesosTit>
+              <ProcesosTit>{t('forms:location')}</ProcesosTit>
 
               <GoogleMap
                 coords={{
@@ -125,9 +122,9 @@ export default function DocumentDetail() {
                 }}
               />
 
-              <ProcesosTit>OBSERVACIONES</ProcesosTit>
+              <ProcesosTit>{t('forms:comments')}</ProcesosTit>
               <Nota>
-                {document[5] === '' ? 'No hay comentarios' : document[5]}
+                {document[5] === '' ? t('forms:noComments') : document[5]}
               </Nota>
             </>
           )}

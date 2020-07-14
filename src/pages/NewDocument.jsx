@@ -19,8 +19,10 @@ import { hashFile } from '../utils/hashFile';
 import { UserContext } from '../context/UserContext';
 import TxTrack from '../components/TxTrack';
 import { DropZone } from '../styles/newDocument';
+import { useTranslation, Trans } from 'react-i18next';
 
 function NewDocument() {
+  const { t } = useTranslation();
   const [file, setFile] = useState(null);
   const [hash, setHash] = useState(null);
   const params = useParams();
@@ -122,9 +124,7 @@ function NewDocument() {
     <>
       <Top>
         <Title>
-          NUEVO
-          <br />
-          DOCUMENTO
+          <Trans>forms:newDoc</Trans>
         </Title>
       </Top>
       <FormWrap>
@@ -147,23 +147,20 @@ function NewDocument() {
                   </>
                 )}
               </Pad>
-              <Label>SELLAR ARCHIVO</Label>
+              <Label>{t('forms:hashFile')}</Label>
               <DropZone {...getRootProps()}>
                 <input {...getInputProps()} />
                 {isDragActive ? (
                   <p style={{ transform: 'translateY(55px)', margin: 0 }}>
-                    Deje el archivo aquí
+                    {t('forms:dragFile')}
                   </p>
                 ) : (
                   <pre style={{ transform: 'translateY(45px)', margin: 0 }}>
                     {hash
-                      ? `Nombre del archivo: ${
-                          file.name
-                        }\nHash del archivo: ${hash.substr(
-                          0,
-                          8
-                        )}...${hash.substr(-8)}`
-                      : `Arrastre el archivo hacia aquí,\no haga click para seleccionarlo`}
+                      ? `${t('forms:fileName')} ${file.name}\n${t(
+                          'forms:fileHash'
+                        )} ${hash.substr(0, 8)}...${hash.substr(-8)}`
+                      : t('forms:dropFile')}
                   </pre>
                 )}
               </DropZone>

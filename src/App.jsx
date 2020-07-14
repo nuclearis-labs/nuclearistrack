@@ -23,11 +23,10 @@ import Login from './pages/Login';
 import Document from './pages/DocumentDetail';
 import { UserContext } from './context/UserContext';
 import useWeb3 from './hooks/useWeb3';
+
 const AppWrapper = styled.div`
   background-color: #fafafa;
 `;
-
-const base = '/:locale(en|sp|de)?';
 
 function App() {
   const {
@@ -56,43 +55,40 @@ function App() {
         <AppWrapper>
           <Header />
           <Switch>
-            <PrivateRoute path={`${base}/projects/add`}>
+            <PrivateRoute path={`/projects/add`}>
               <NewProject />
             </PrivateRoute>
-            <PrivateRoute exact={true} path={`${base}/projects`}>
+            <PrivateRoute exact={true} path={`/projects`}>
               <Projects />
             </PrivateRoute>
-            <PrivateRoute path={`${base}/processes/add`}>
+            <PrivateRoute path={`/processes/add`}>
               <NewProcess />
             </PrivateRoute>
-            <PrivateRoute exact={true} path={`${base}/processes`}>
+            <PrivateRoute exact={true} path={`/processes`}>
               <Processes />
             </PrivateRoute>
-            <PrivateRoute path={`${base}/users/add`}>
+            <PrivateRoute path={`/users/add`}>
               <NewUser />
             </PrivateRoute>
-            <PrivateRoute exact={true} path={`${base}/users`}>
+            <PrivateRoute exact={true} path={`/users`}>
               <Users />
             </PrivateRoute>
-            <PrivateRoute path={`${base}/documents/add/:process`}>
+            <PrivateRoute path={`/documents/add/:process`}>
               <NewDocument />
             </PrivateRoute>
-            <PrivateRoute exact={true} path={`${base}/documents/:process`}>
+            <PrivateRoute exact={true} path={`/documents/:process`}>
               <Documents />
             </PrivateRoute>
-            <PrivateRoute
-              exact={true}
-              path={`${base}/documents/:process/:hash`}
-            >
+            <PrivateRoute exact={true} path={`/documents/:process/:hash`}>
               <Document />
             </PrivateRoute>
 
-            <Route path={`${base}/benefits`} component={Benefits} />
-            <Route path={`${base}/abstract`} component={Abstract} />
-            <Route path={`${base}/login`} component={Login} />
-            <Route path={`${base}/faq`} component={FAQ} />
-            <Route path={`${base}/contact`} component={Contact} />
-            <Route path={base} exact component={Home} />
+            <Route path={`/benefits`} component={Benefits} />
+            <Route path={`/abstract`} component={Abstract} />
+            <Route path={`/login`} component={Login} />
+            <Route path={`/faq`} component={FAQ} />
+            <Route path={`/contact`} component={Contact} />
+            <Route path={'/'} exact component={Home} />
             <Route path="*" component={NoMatch} />
           </Switch>
           <Footer />

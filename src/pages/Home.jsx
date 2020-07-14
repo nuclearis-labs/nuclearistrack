@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-i18n';
+import { Link } from 'react-router-dom';
 import { BottomSpace } from '../styles/webComponents';
 import Icon1 from '../img/icon1.png';
 import Icon2 from '../img/icon2.png';
@@ -11,7 +11,6 @@ import Hept4 from '../img/hept4.png';
 import Hept5 from '../img/hept5.png';
 import Hept6 from '../img/hept6.png';
 import Hept7 from '../img/hept7.png';
-import I18n from '../i18n';
 import {
   WebTopHome,
   WidthContentHome,
@@ -24,15 +23,16 @@ import {
   ItemDescHome,
   ItemTitHome,
 } from '../styles/home';
+import { useTranslation } from 'react-i18next';
 
 function Home() {
+  const { t } = useTranslation(['header', 'home', 'general']);
+
   return (
     <>
       <WebTopHome>
         <WidthContentHome>
-          <PhraseHome>
-            <I18n t="header.navPhrase" />
-          </PhraseHome>
+          <PhraseHome>{t('header:navPhrase')}</PhraseHome>
           <TitHome text="BLOCKCHAIN">BLOCKCHAIN</TitHome>
 
           <Heptagram src={Hept1} className="hept1" />
@@ -49,38 +49,26 @@ function Home() {
         <WidthContentHome>
           <ColHome>
             <Icon src={Icon1} />
-            <ItemTitHome>
-              <I18n t="home.security.title" />
-            </ItemTitHome>
+            <ItemTitHome>{t('home:securityTitle')}</ItemTitHome>
             <ItemDescHome>
-              <I18n t="home.security.text" />
-              <Link to="/benefits/#security">
-                <I18n t="general.more" /> +
-              </Link>
+              {t('home:securityText')}
+              <Link to="/benefits/#security">{t('general:more')} +</Link>
             </ItemDescHome>
           </ColHome>
           <ColHome>
             <Icon src={Icon2} />
-            <ItemTitHome>
-              <I18n t="home.availability.title" />
-            </ItemTitHome>
+            <ItemTitHome>{t('home:availabilityTitle')}</ItemTitHome>
             <ItemDescHome>
-              <I18n t="home.availability.text" />
-              <Link to="/benefits/#availability">
-                <I18n t="general.more" /> +
-              </Link>
+              {t('home:availabilityText')}
+              <Link to="/benefits/#availability">{t('general:more')} +</Link>
             </ItemDescHome>
           </ColHome>
           <ColHome>
             <Icon src={Icon3} />
-            <ItemTitHome>
-              <I18n t="home.control.title" />
-            </ItemTitHome>
+            <ItemTitHome>{t('home:controlTitle')}</ItemTitHome>
             <ItemDescHome>
-              <I18n t="home.control.text" />
-              <Link to="/benefits/#control">
-                <I18n t="general.more" /> +
-              </Link>
+              {t('home:controlText')}
+              <Link to="/benefits/#control">{t('general:more')} +</Link>
             </ItemDescHome>
           </ColHome>
           <BottomSpace />
