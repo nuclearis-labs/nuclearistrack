@@ -143,6 +143,7 @@
       "retry": "Volver a intentar"
     },
     "forms": {
+      "verify": "VERIFICAR DOCUMENTO",
       "newUser": "NUEVO USUARIO",
       "name": "NOMBRE",
       "mail": "CORREO ELECTRONICO",
