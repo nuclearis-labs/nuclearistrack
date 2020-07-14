@@ -124,7 +124,7 @@ function NewDocument() {
     <>
       <Top>
         <Title>
-          <Trans>forms:newDoc</Trans>
+          <Trans>newDocument:title</Trans>
         </Title>
       </Top>
       <FormWrap>
@@ -136,36 +136,36 @@ function NewDocument() {
               <Pad>
                 {processDetails && (
                   <>
-                    <SubTit>PROCESO</SubTit>
+                    <SubTit>{t('newDocument:processTitle')}</SubTit>
                     <ProcessName>
                       {web3.utils.hexToAscii(processDetails[1])}
                     </ProcessName>
-                    <SubTit>PROVEEDOR</SubTit>
+                    <SubTit>{t('newDocument:supplier')}</SubTit>
                     <SubTit className="bold">
                       {web3.utils.hexToAscii(processDetails[0][2])}
                     </SubTit>
                   </>
                 )}
               </Pad>
-              <Label>{t('forms:hashFile')}</Label>
+              <Label>{t('newDocument:hashFile')}</Label>
               <DropZone {...getRootProps()}>
                 <input {...getInputProps()} />
                 {isDragActive ? (
                   <p style={{ transform: 'translateY(55px)', margin: 0 }}>
-                    {t('forms:dragFile')}
+                    {t('newDocument:dragFile')}
                   </p>
                 ) : (
                   <pre style={{ transform: 'translateY(45px)', margin: 0 }}>
                     {hash
-                      ? `${t('forms:fileName')} ${file.name}\n${t(
-                          'forms:fileHash'
+                      ? `${t('newDocument:fileName')} ${file.name}\n${t(
+                          'newDocument:fileHash'
                         )} ${hash.substr(0, 8)}...${hash.substr(-8)}`
-                      : t('forms:dropFile')}
+                      : t('newDocument:dropFile')}
                   </pre>
                 )}
               </DropZone>
               <ErrorForm>{errors.file && errors.file.message}</ErrorForm>
-              <Label>UBICACION DEL DOCUMENTO (AJUSTAR SI NECESARIO)</Label>
+              <Label>{t('newDocument:locationComment')}</Label>
               {location !== undefined && (
                 <GoogleMap
                   draggable
@@ -173,9 +173,9 @@ function NewDocument() {
                   coords={location}
                 />
               )}
-              <Label>OBSERVACIONES</Label>
+              <Label>{t('newDocument:comments')}</Label>
               <TextArea name="comment" ref={register}></TextArea>
-              <Button type="submit">SELLAR</Button>
+              <Button type="submit">{t('newDocument:submit')}</Button>
             </>
           )}
         </Form>

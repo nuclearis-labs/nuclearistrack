@@ -62,29 +62,29 @@ export default function DocumentDetail() {
           <FlexWrapRight
             style={{ flexDirection: 'column', alignItems: 'flex-end' }}
           >
-            <Title>{t('forms:document')}</Title>
+            <Title>{t('documentDetail:title')}</Title>
             {document && (
               <DropZone
                 valid={hash === null ? null : hash === document[1]}
                 {...getRootProps()}
               >
-                <Label>{t('forms:verify')}</Label>
+                <Label>{t('documentDetail:verify')}</Label>
                 <input {...getInputProps()} />
                 {isDragActive ? (
                   <pre style={{ transform: 'translateY(55px)', margin: 0 }}>
-                    {t('forms:dragFile')}
+                    {t('documentDetail:dragFile')}
                   </pre>
                 ) : (
                   <pre style={{ transform: 'translateY(45px)', margin: 0 }}>
                     {hash
-                      ? `${t('forms:fileName')} ${file.name}\n${t(
-                          'forms:fileHash'
+                      ? `${t('documentDetail:fileName')} ${file.name}\n${t(
+                          'documentDetail:fileHash'
                         )} ${hash.substr(0, 8)}...${hash.substr(-8)}\n${
                           hash === document[1]
-                            ? t('forms:authentic')
-                            : t('forms:fake')
+                            ? t('documentDetail:authentic')
+                            : t('documentDetail:fake')
                         }`
-                      : t('forms:dropFile')}
+                      : t('documentDetail:dropFile')}
                   </pre>
                 )}
               </DropZone>
@@ -94,26 +94,26 @@ export default function DocumentDetail() {
         <Right>
           {document && (
             <>
-              <ResumenTit>{t('forms:documentDetails')}</ResumenTit>
+              <ResumenTit>{t('documentDetail:documentDetails')}</ResumenTit>
               <Row>
-                <Col4 className="color">{t('forms:name')}</Col4>
+                <Col4 className="color">{t('documentDetail:name')}</Col4>
                 <Col2 className="bold">{document[0]}</Col2>
               </Row>
               <Row>
-                <Col4 className="color">{t('forms:hash')}</Col4>
+                <Col4 className="color">{t('documentDetail:hash')}</Col4>
                 <Col2 className="bold" id="hash">
                   {document[1].substr(0, 10)}...
                   {document[1].substr(-10)}
                 </Col2>
               </Row>
               <Row>
-                <Col4 className="color">{t('forms:date')}</Col4>
+                <Col4 className="color">{t('documentDetail:date')}</Col4>
                 <Col2 className="bold">
                   {' '}
                   {new Date(parseInt(document[4] + '000')).toLocaleString()}
                 </Col2>
               </Row>
-              <ProcesosTit>{t('forms:location')}</ProcesosTit>
+              <ProcesosTit>{t('documentDetail:location')}</ProcesosTit>
 
               <GoogleMap
                 coords={{
@@ -122,9 +122,11 @@ export default function DocumentDetail() {
                 }}
               />
 
-              <ProcesosTit>{t('forms:comments')}</ProcesosTit>
+              <ProcesosTit>{t('documentDetail:comments')}</ProcesosTit>
               <Nota>
-                {document[5] === '' ? t('forms:noComments') : document[5]}
+                {document[5] === ''
+                  ? t('documentDetail:noComments')
+                  : document[5]}
               </Nota>
             </>
           )}

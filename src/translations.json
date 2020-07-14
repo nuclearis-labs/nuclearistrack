@@ -1,58 +1,5 @@
 {
-  "en": {
-    "header": {
-      "home": "HOME",
-      "benefits": "BENEFITS",
-      "abstract": "ABSTRACT",
-      "projects": "PROJECTS",
-      "user": "USERS",
-      "contact": "CONTACT",
-      "login": "LOGIN",
-      "logout": "LOGOUT",
-      "navPhrase": "NUCLEAR DOCUMENTATION BASED ON"
-    },
-    "home": {
-      "securityTitle": "SECURITY",
-      "securityText": "SYSTEM BASED ON BLOCKCHAIN TECNOLOGY, THE NEW STANDARD IN SUPPLY CHAIN TECHNOLOGY",
-      "availabilityTitle": "AVAILABILITY OF INFORMATION",
-      "availabilityText": "JUST ENTERING THE PLATFORM, OBTAIN ACCESS TO ALL THE PROCESSES AND DOCUMENTS OF YOUR CONCERN.",
-      "controlTitle": "CONTROL",
-      "controlText": "REAL TIME INFORMATION ABOUT YOUR FABRICATION PROCESSES"
-    },
-    "general": {
-      "more": "MORE"
-    },
-    "benefits": {
-      "bannerTitle": "TRANSPARENCY IN EVERY PROCESS",
-      "title": "BENEFITS",
-      "securityTitle": "SECURITY",
-      "securityText": "SYSTEM BASED ON BLOCKCHAIN TECNOLOGY, THE NEW STANDARD IN SUPPLY CHAIN TECHNOLOGY",
-      "availabilityTitle": "AVAILABILITY OF INFORMATION",
-      "availabilityText": "JUST ENTERING THE PLATFORM, OBTAIN ACCESS TO ALL THE PROCESSES AND DOCUMENTS OF YOUR CONCERN.",
-      "controlTitle": "CONTROL",
-      "controlText": "REAL TIME INFORMATION ABOUT YOUR FABRICATION PROCESSES"
-    },
-    "login": {
-      "bannerTitle": "LOGIN",
-      "user": "USERNAME",
-      "passphrase": "PASSWORD",
-      "submit": "LOGIN"
-    },
-    "contact": {
-      "bannerTitle": "CONTACT",
-      "name": "NAME",
-      "email": "EMAIL",
-      "message": "MESSAGE",
-      "submit": "SEND"
-    },
-    "forms": {
-      "newUser": "NEW USER",
-      "name": "NAME",
-      "mail": "EMAIL",
-      "type": "TYPE",
-      "selectOne": "Select one..."
-    }
-  },
+  "en": {},
   "es": {
     "header": {
       "home": "INICIO",
@@ -71,10 +18,6 @@
       "phrase": "INGENIERÍA Y FABRICACIÓN DE<br/>COMPONENTES MECÁNICOS PARA LA<br/>INDUSTRIA NUCLEAR",
       "license": "Todos los derechos reservados"
     },
-    "process": {
-      "add": "AGREGAR PROCESOS",
-      "explainer": "SELECCIONE LOS PROCESOS QUE DESEA AGREGAR AL PROYECTO"
-    },
     "home": {
       "securityTitle": "SEGURIDAD",
       "securityText": "SISTEMA CON TECNOLOGIA BLOCKCHAIN, EL NUEVO ESTANDARD DE TRAZABILIDAD DIGITAL.",
@@ -84,23 +27,21 @@
       "controlText": "INFORMACION EN TIEMPO REAL DE LOS PROCESOS DE FABRICACION."
     },
     "general": {
-      "more": "MAS",
+      "more": "MÁS",
       "404Title": "PAGINA NO ENCONTRADA",
       "404": "No se encontró la pagina solicitada, algúnas recomendaciones"
     },
     "benefits": {
       "bannerTitle": "TRANSPARENCIA EN TODOS NUESTROS PROCESOS",
-      "title": "BENEFICIOS",
       "securityTitle": "SEGURIDAD",
-      "securityText": "<p>La BLOCKCHAIN es un registro digital que funciona sobre una \"cadena de bloques\" asegurados criptográficamente. Dicha tecnología es extremadamente segura debido a su <strong>naturaleza distribuida</strong> y la <strong>irreversibilidad de las transacciones</strong>. La cadena de bloques, más conocida por el término en inglés BLOCKCHAIN, es un registro único, consensuado cuyo almacenaje está distribuido en cientos de miles de computadoras alrededor del mundo. Al ser una tecnología distribuida cada nodo de la red almacena una copia de la cadena la cual se actualiza segundo a segundo garantizando así la disponibilidad de la información en todo momento. La tecnología de BLOCKCHAIN nos permite almacenar información que jamás se podrá perder, modificar o eliminar.",
+      "securityText": "<p>La BLOCKCHAIN es un registro digital que funciona sobre una \"cadena de bloques\" asegurados criptográficamente. Dicha tecnología es extremadamente segura debido a su <strong>naturaleza distribuida</strong> y la <strong>irreversibilidad de las transacciones</strong>. La cadena de bloques, más conocida por el término en inglés BLOCKCHAIN, es un registro único, consensuado cuya información está distribuida en cientos de miles de computadoras alrededor del mundo. Al ser una tecnología distribuida cada nodo de la red almacena una copia de la cadena la cual se actualiza segundo a segundo garantizando así la disponibilidad de la información en todo momento. La tecnología de BLOCKCHAIN nos permite almacenar información que jamás se podrá perder, modificar o eliminar.",
       "availabilityTitle": "DISPONIBILIDAD DE LA INFORMACION",
-      "availabilityText": "<p>La Plataforma de Trazabilidad basada en BLOCKCHAIN desarrollada por NUCLEARIS permite sellar la información técnica de los procesos productivos involucrados en la fabricación de componentes mecánicos para Centrales Nucleares. Toda la documentación técnica tal como certificados, formularios, calibraciones, ensayos, registros dimensionales, etc, que generan nuestros proveedores alrededor del mundo, es sellada por nuestra plataforma en el momento en que sucede el proceso respectivo. De esta forma NUCLEARIS puede garantizar la autenticidad de la información debido a que una vez que fue sellada por la BLOCKCHAIN nunca nadie podrá modificarla. La posibilidad de garantizar la veracidad y autenticidad de la información técnica otorga máxima confiabilidad respecto a la calidad de la pieza o componente mecánico producido. De esta manera las huellas digitales de los archivos generados por los proveedores que intervienen en los procesos productivos se suben a la BLOCKCHAIN lo cual implica que a partir de ese momento la veracidad de la documentación es completamente inmutable, descentralizada y perpetua. Nunca se apaga, nunca se modifica y está siempre disponible para uso del cliente.</p>",
+      "availabilityText": "<p>La Plataforma de Trazabilidad basada en BLOCKCHAIN desarrollada por <strong>NUCLEARIS</strong> permite sellar la información técnica de los procesos productivos involucrados en la fabricación de componentes mecánicos para Centrales Nucleares. Toda la documentación técnica tal como certificados, formularios, calibraciones, ensayos, registros dimensionales, etc, que generan nuestros proveedores alrededor del mundo, es sellada por nuestra plataforma en el momento en que sucede el proceso respectivo. De esta forma <strong>NUCLEARIS</strong> puede garantizar la autenticidad de la información debido a que una vez que fue sellada por la BLOCKCHAIN nunca nadie podrá modificarla. La posibilidad de garantizar la veracidad y autenticidad de la información técnica otorga máxima confiabilidad respecto a la calidad de la pieza o componente mecánico producido. De esta manera las huellas digitales de los archivos generados por los proveedores que intervienen en los procesos productivos se suben a la BLOCKCHAIN lo cual implica que a partir de ese momento la veracidad de la documentación es completamente inmutable, descentralizada y perpetua. Nunca se apaga, nunca se modifica y está siempre disponible para uso del cliente.</p>",
       "controlTitle": "CONTROL",
-      "controlText": "<p>Todos los sistemas de una Central Nuclear son construidos a partir de cientos de miles de piezas mecánicas las cuales deben ser diseñadas y fabricadas bajo exhaustivas normativas técnicas internacionales. Los operadores de dichas Centrales, mediante un permiso de acceso a nuestra Plataforma, podrán verificar en tiempo real la veracidad de toda la documentación relacionada con los componentes que posteriormente serán instalados en sus instalaciones.</p>"
+      "controlText": "<p>Todos los sistemas de una Central Nuclear son construidos a partir de cientos de miles de piezas mecánicas las cuales deben ser diseñadas y fabricadas bajo exhaustivas normativas técnicas internacionales. Los operadores de dichas Centrales, acceden mediante un permiso a nuestra Plataforma, podrán verificar en tiempo real la veracidad de toda la documentación relacionada con los componentes que posteriormente serán instalados en sus instalaciones.</p>"
     },
     "abstract": {
       "bannerTitle": "UN NUEVO STANDARD EN EL AREA DE DOCUMENTACION",
-      "title": "",
       "section1Title": "STATU QUO",
       "section1Text": "<p>Desde la etapa del diseño de una Central Nuclear, la “Seguridad” conforma la máxima prioridad ya que tiene como objetivo reducir la probabilidad de que ocurra un accidente. Dicha seguridad se establece a través del uso de normativas técnicas de reconocimiento internacional para garantizar niveles óptimos de calidad y confiabilidad de cada uno de sus componentes mecánicos que la integran. “Asegurar la calidad de cada una de las partes individuales de un Reactor Nuclear, asegurará en gran medida la confiabilidad del conjunto completo”. Los fabricantes de piezas mecánicas que integran un Reactor Nuclear son empresas certificadas por entes internacionales las cuales están obligadas a presentar “documentación en formato papel” con todos los datos de trazabilidad de cada uno de los procesos productivos que condujeron a la fabricación de cada pieza, tales como: certificados de materiales, ensayos, calibraciones, etc. Es aquí en donde se presenta un punto de vulnerabilidad ya que dichos documentos podrían ser modificados, alterados o reemplazados por cualquiera de las empresas intervinientes de forma accidental o exprofeso y como consecuencia se perdería la trazabilidad del componente fabricado y por lo tanto dejaría de ser confiable.</p>",
       "section2Title": "LA SOLUCIÓN",
@@ -111,15 +52,15 @@
     "faq": {
       "bannerTitle": "LAS PREGUNTAS MAS FRECUENTES",
       "question1": "Los archivos compartidos con la plataforma donde se guardan?",
-      "answer1": "Los archivos nunca dejan la computadora en la cual se encuentran a la hora de sellar el archivo. La plataforma genera la huella digital del archivo en la computadora localmente, se obtiene información adicional como el nombre del archivo y la geolocalización provista por el navegador web. Dicha información se envía a un nodo Blockchain y se comparte con toda la red.",
+      "answer1": "Los archivos nunca dejan la computadora en la cual se encuentran a la hora de sellar el archivo. La plataforma genera la huella digital del archivo de forma local, se obtiene información adicional como el nombre del archivo y la geolocalización provista por el navegador web. Dicha información se envía a un nodo Blockchain y se comparte con toda la red.",
       "question2": "Mi información personal donde se guarda?",
       "answer2": "La plataforma guarda de cada usuario la siguiente información: Nombre de empresa, Dirección de Metamask, Tipo de usuario y Estado actual. Dicha información se guarda en la Blockchain",
       "question3": "La información relacionada con los proyectos/procesos donde se guarda?",
       "answer3": "Los proyectos y procesos que se crean en la plataforma se guardan en la Blockchain, la información asociada es la minima necesaria.",
       "question4": "Existe la posibilidad de que alguien apague la blockchain?",
-      "answer4": "No, la Blockchain es una red descentralizada de cientos de miles de nodos que mientras se mantenga uno encendido, la Blockchain sigue.",
-      "question5": "Con el hash se puede reconstruir el documento?",
-      "answer5": "No, el hash (huella digital) es una operación criptografica unidireccional."
+      "answer4": "No, la Blockchain es una red descentralizada de cientos de miles de nodos que mientras se mantenga uno encendido, la información sigue existiendo.",
+      "question5": "Con la huella digital se puede reconstruir el documento?",
+      "answer5": "No, la huella digital es una operación criptografica unidireccional."
     },
     "login": {
       "bannerTitle": "ACCEDER",
@@ -149,7 +90,6 @@
     },
     "contact": {
       "bannerTitle": "ESTABLEZCA EL CONTACTO",
-      "title": "CONTACTO",
       "name": "NOMBRE",
       "email": "CORREO ELECTRONICO",
       "message": "MENSAJE",
@@ -158,56 +98,128 @@
       "error": " Hubo un error enviando su consulta",
       "retry": "Volver a intentar"
     },
-    "forms": {
-      "verify": "VERIFICAR DOCUMENTO",
+    "user": {
       "newUser": "NUEVO USUARIO",
+      "saldo": "BALANCE"
+    },
+    "newProcess": {
+      "title": "NUEVO PROCESO",
       "name": "NOMBRE",
-      "mail": "CORREO ELECTRONICO",
-      "type": "TIPO",
-      "date": "FECHA",
-      "hash": "HUELLA",
-      "location": "UBICACIÓN",
-      "comments": "OBSERVACIONES",
-      "noComments": "NO HAY COMENTARIOS",
-      "address": "DIRECCIÓN WALLET",
-      "selectOne": "SELECCIONAR UNO...",
-      "create": "CREAR",
-      "newProject": "NUEVO PROYECTO",
-      "newProcess": "NUEVO PROCESO",
-      "projectTitle": "TITULO DE PROYECTO",
-      "client": "CLIENTE",
-      "state": "ESTADO",
-      "details": "DETALLES",
-      "documentDetails": "DETALLES DE DOCUMENTO",
-      "document": "DOCUMENTO",
-      "documents": "DOCUMENTOS",
-      "saldo": "BALANCE",
       "supplier": "PROVEEDOR",
-      "expediente": "EXPEDIENTE",
-      "resumen": "RESUMEN DEL PROYECTO",
-      "oc": "Nº DE OC",
-      "user": "USUARIO",
-      "send": "ENVIAR",
+      "selectOne": "SELECCIONAR UNO...",
+      "submit": "SELLAR"
+    },
+    "processModal": {
+      "title": "ASIGNAR PROCESO",
+      "explainer": "SELECCIONE LOS PROCESOS QUE DESEA AGREGAR AL PROYECTO",
+      "name": "NOMBRE",
+      "supplier": "PROVEEDOR",
+      "documents": "DOCUMENTOS",
+      "view": "VER DOC.",
+      "success": "EXITO!",
+      "submit": "CONFIRMAR"
+    },
+    "processList": {
+      "title": "PROCESOS",
+      "name": "NOMBRE",
+      "supplier": "PROVEEDOR",
+      "view": "VER DOC.",
       "contract": "CONTRATO",
-      "noItems": "NO HAY INFORMACIÓN CARGADA PARA USTED",
-      "active": "ACTIVO",
-      "closed": "CERRADO",
-      "view": "VER",
-      "newDoc": "NUEVO<br>DOCUMENTO",
-      "hashFile": "SELLAR ARCHIVO",
+      "add": "AGREGAR DOC.",
+      "noItems": "NO HAY PROCESOS CARGADOS PARA USTED"
+    },
+    "documentDetail": {
+      "title": "DOCUMENTO",
+      "verify": "VERIFICAR DOCUMENTO",
       "dragFile": "DEJE EL ARCHIVO AQUÍ",
       "dropFile": "ARRASTRE EL ARCHIVO HACIA AQUÍ,\nO HAGA CLICK PARA SELECCIONARLO",
-      "viewDoc": "VER DOC.",
       "fileName": "NOMBRE DEL ARCHIVO: ",
       "fileHash": "HASH DEL ARCHIVO: ",
-      "addDoc": "AGREGAR DOC.",
-      "addProcesses": "AGREGAR PROCESOS",
       "authentic": "ESTADO: AUTENTICO",
       "fake": "ESTADO: NO COINCIDE",
-      "success": "EXITO!",
-      "assignProcess": "ASIGNAR PROCESO",
-      "edit": "EDITAR",
-      "new": "NUEVO"
+      "documentDetails": "DETALLES DE DOCUMENTO",
+      "name": "NOMBRE",
+      "hash": "HUELLA",
+      "date": "FECHA",
+      "location": "UBICACIÓN",
+      "comments": "OBSERVACIONES",
+      "noComments": "NO HAY COMENTARIOS"
+    },
+    "newDocument": {
+      "title": "NUEVO<br>DOCUMENTO",
+      "processTitle": "PROCESO",
+      "supplier": "PROVEEDOR",
+      "hashFile": "SELLAR ARCHIVO",
+      "dropFile": "ARRASTRE EL ARCHIVO HACIA AQUÍ,\nO HAGA CLICK PARA SELECCIONARLO",
+      "dragFile": "DEJE EL ARCHIVO AQUÍ",
+      "fileName": "NOMBRE DEL ARCHIVO: ",
+      "fileHash": "HASH DEL ARCHIVO: ",
+      "locationComment": "UBICACION DEL DOCUMENTO (AJUSTAR SI NECESARIO)",
+      "comments": "OBSERVACIONES",
+      "submit": "SELLAR"
+    },
+    "newProject": {
+      "title": "NUEVO PROYECTO",
+      "name": "TITULO DE PROYECTO",
+      "client": "CLIENTE",
+      "selectOne": "SELECCIONAR UNO...",
+      "expediente": "EXPEDIENTE",
+      "oc": "Nº DE OC",
+      "submit": "CREAR"
+    },
+    "userList": {
+      "title": "USUARIOS",
+      "name": "NOMBRE",
+      "address": "DIRECCIÓN WALLET",
+      "type": "TIPO",
+      "state": "ESTADO",
+      "saldo": "BALANCE",
+      "noItems": "NO HAY USUARIOS CARGADOS PARA USTED",
+      "admin": "ADMINISTRADOR",
+      "client": "CLIENTE",
+      "supplier": "PROVEEDOR",
+      "active": "ACTIVO",
+      "closed": "PAUSADO"
+    },
+    "newUser": {
+      "title": "NUEVO USUARIO",
+      "name": "NOMBRE",
+      "address": "DIRECCIÓN WALLET",
+      "type": "TIPO",
+      "client": "CLIENTE",
+      "supplier": "PROVEEDOR",
+      "submit": "CREAR"
+    },
+    "dropDownNew": {
+      "title": "NUEVO",
+      "projects": "PROYECTOS",
+      "processes": "PROCESOS",
+      "users": "USUARIOS"
+    },
+    "dropDownEdit": {
+      "title": "VER / EDITAR",
+      "projects": "PROYECTOS",
+      "processes": "PROCESOS",
+      "users": "USUARIOS"
+    },
+    "projectList": {
+      "projects": "PROYECTOS",
+      "new": "NUEVO PROYECTO",
+      "name": "NOMBRE",
+      "client": "CLIENTE",
+      "expediente": "EXPEDIENTE",
+      "oc": "Nº DE OC",
+      "state": "ESTADO",
+      "details": "DETALLES",
+      "active": "ACTIVO",
+      "closed": "CERRADO",
+      "noItems": "NO HAY PROYECTOS CARGADOS PARA USTED",
+      "view": "VER",
+      "resumen": "RESUMEN DEL PROYECTO",
+      "processes": "PROCESOS",
+      "supplier": "PROVEEDOR",
+      "documents": "DOCUMENTOS",
+      "assignProcess": "ASIGNAR PROCESO"
     }
   },
   "de": {

@@ -54,7 +54,7 @@ export default function NewProject() {
   return (
     <>
       <Top>
-        <Title>{t('forms:newProject')}</Title>
+        <Title>{t('newProject:title')}</Title>
       </Top>
       <FormWrap>
         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -62,30 +62,30 @@ export default function NewProject() {
             <TxTrack tx={txHash} />
           ) : (
             <>
-              <Label>{t('forms:projectTitle')}</Label>
+              <Label>{t('newProject:name')}</Label>
               <Input type="text" ref={register} name="proyectoTitle"></Input>
               <ErrorForm>
                 {errors.proyectoTitle && errors.proyectoTitle.message}
               </ErrorForm>
-              <Label>{t('forms:client')}</Label>
+              <Label>{t('newProject:client')}</Label>
               <Select name="clientAddress" defaultValue="" ref={register}>
                 <option disabled hidden value="">
-                  {t('forms:selectOne')}
+                  {t('newProject:selectOne')}
                 </option>
                 <UserSelectList />
               </Select>
               <ErrorForm>
                 {errors.clientAddress && errors.clientAddress.message}
               </ErrorForm>
-              <Label>{t('forms:expediente')}</Label>
+              <Label>{t('newProject:expediente')}</Label>
               <Input type="text" name="expediente" ref={register} />
               <ErrorForm>
                 {errors.expediente && errors.expediente.message}
               </ErrorForm>
-              <Label>{t('forms:oc')}</Label>
+              <Label>{t('newProject:oc')}</Label>
               <Input ref={register} name="oc"></Input>
               <ErrorForm>{errors.oc && errors.oc.message}</ErrorForm>
-              <Button type="submit">{t('forms:create')}</Button>
+              <Button type="submit">{t('newProject:submit')}</Button>
             </>
           )}
         </Form>

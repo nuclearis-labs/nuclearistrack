@@ -79,9 +79,9 @@ export default function ProjectList() {
         <Left details={projectDetails}>
           <FlexWrapRight details={projectDetails}>
             {account.type === '0' && (
-              <AddProyectBtn>+ {t('forms:newProject')}</AddProyectBtn>
+              <AddProyectBtn>+ {t('projectList:new')}</AddProyectBtn>
             )}
-            <Title>{t('header:projects')}</Title>
+            <Title>{t('projectList:projects')}</Title>
           </FlexWrapRight>
           <TableWrap>
             <Table>
@@ -90,18 +90,18 @@ export default function ProjectList() {
               ) : (
                 <>
                   <HeadRowMonsterrat>
-                    <Col>{t('forms:name')}</Col>
-                    <Col>{t('forms:client')}</Col>
-                    <Col>{t('forms:expediente')}</Col>
-                    <Col>{t('forms:oc')}</Col>
-                    <Col>{t('forms:state')}</Col>
-                    <Col>{t('forms:details')}</Col>
+                    <Col>{t('projectList:name')}</Col>
+                    <Col>{t('projectList:client')}</Col>
+                    <Col>{t('projectList:expediente')}</Col>
+                    <Col>{t('projectList:oc')}</Col>
+                    <Col>{t('projectList:state')}</Col>
+                    <Col>{t('projectList:details')}</Col>
                   </HeadRowMonsterrat>
                   <ScrollBox400>
                     {projects && projects.length === 0 ? (
                       <Row>
                         <Col style={{ textAlign: 'center', width: '100%' }}>
-                          {t('forms:noItems')}
+                          {t('projectList:noItems')}
                         </Col>
                       </Row>
                     ) : (
@@ -117,20 +117,20 @@ export default function ProjectList() {
                                 onClick={() => toggleProject(project[1])}
                               >
                                 {project[0] === '1'
-                                  ? t('forms:active')
-                                  : t('forms:closed')}
+                                  ? t('projectList:active')
+                                  : t('projectList:closed')}
                               </TableButton>
                             ) : project[0] === '1' ? (
-                              t('forms:active')
+                              t('projectList:active')
                             ) : (
-                              t('forms:closed')
+                              t('projectList:closed')
                             )}
                           </Col>
                           <Col>
                             <TableButton
                               onClick={() => handleRowClick(project)}
                             >
-                              {t('forms:view')}
+                              {t('projectList:view')}
                             </TableButton>
                           </Col>
                         </Row>
@@ -145,31 +145,31 @@ export default function ProjectList() {
 
         {projectDetails && (
           <Right>
-            <ResumenTit>{t('forms:resumen')}</ResumenTit>
+            <ResumenTit>{t('projectList:resumen')}</ResumenTit>
             <ResumenName>
               {web3.utils.hexToAscii(projectDetails[3])}
             </ResumenName>
             <Row>
-              <Col2 className="color">{t('forms:client')}</Col2>
+              <Col2 className="color">{t('projectList:client')}</Col2>
               <Col2 className="bold">
                 {web3.utils.hexToAscii(projectDetails[2][2])}
               </Col2>
             </Row>
             <Row>
-              <Col2 className="color">{t('forms:expediente')}</Col2>
+              <Col2 className="color">{t('projectList:expediente')}</Col2>
               <Col2 className="bold">{projectDetails[1]}</Col2>
             </Row>
             <Row>
-              <Col2 className="color">{t('forms:oc')}</Col2>
+              <Col2 className="color">{t('projectList:oc')}</Col2>
               <Col2 className="bold">
                 {web3.utils.hexToAscii(projectDetails[4])}
               </Col2>
             </Row>
-            <ProcesosTit>{t('header:proceso')}</ProcesosTit>
+            <ProcesosTit>{t('projectList:processes')}</ProcesosTit>
             <HeadRow>
-              <Col3>{t('forms:name')}</Col3>
-              <Col3>{t('forms:supplier')}</Col3>
-              <Col3>{t('forms:documents')}</Col3>
+              <Col3>{t('projectList:name')}</Col3>
+              <Col3>{t('projectList:supplier')}</Col3>
+              <Col3>{t('projectList:documents')}</Col3>
             </HeadRow>
             {processes &&
               processes.map((process) => (
@@ -179,7 +179,7 @@ export default function ProjectList() {
                   <Col3>
                     <Link to={'/documents/' + process[3]}>
                       <Eye />
-                      {t('forms:view')}
+                      {t('projectList:view')}
                     </Link>
                   </Col3>
                 </Row>
@@ -191,7 +191,7 @@ export default function ProjectList() {
                   setShowModal(true);
                 }}
               >
-                + {t('forms:addProcesses')}
+                + {t('projectList:assignProcess')}
               </Button>
             )}
           </Right>

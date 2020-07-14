@@ -38,22 +38,22 @@ function ProcessList() {
   return (
     <>
       <Top>
-        <Title>{t('header:proceso')}</Title>
+        <Title>{t('processList:title')}</Title>
       </Top>
       <TableWrap>
         <Table>
           <HeadRowMonsterrat>
-            <Col>{t('forms:name')}</Col>
-            <Col>{t('forms:supplier')}</Col>
-            <Col>{t('forms:viewDoc')}</Col>
-            <Col>{t('forms:addDoc')}</Col>
-            <Col>{t('forms:contract')}</Col>
+            <Col>{t('processList:name')}</Col>
+            <Col>{t('processList:supplier')}</Col>
+            <Col>{t('processList:view')}</Col>
+            <Col>{t('processList:add')}</Col>
+            <Col>{t('processList:contract')}</Col>
           </HeadRowMonsterrat>
           <ScrollBox400>
             {processes.length === 0 ? (
               <Row>
                 <Col style={{ textAlign: 'center', width: '100%' }}>
-                  {t('forms:noItems')}
+                  {t('processList:noItems')}
                 </Col>
               </Row>
             ) : (
@@ -71,7 +71,7 @@ function ProcessList() {
                           fill: '#333',
                         }}
                       />
-                      {t('forms:viewDoc')}
+                      {t('processList:view')}
                     </Link>
                   </Col>
 
@@ -85,7 +85,7 @@ function ProcessList() {
                           fill: '#333',
                         }}
                       />
-                      {t('forms:addDoc')}
+                      {t('processList:add')}
                     </Link>
                   </Col>
                   <Col>

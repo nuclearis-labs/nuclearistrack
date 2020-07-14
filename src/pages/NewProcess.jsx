@@ -41,7 +41,7 @@ export default function NewProcess() {
   return (
     <>
       <Top>
-        <Title>{t('forms:newProcess')}</Title>
+        <Title>{t('newProcess:title')}</Title>
       </Top>
       <FormWrap>
         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -49,15 +49,15 @@ export default function NewProcess() {
             <TxTrack tx={txHash} />
           ) : (
             <>
-              <Label>{t('forms:name')}</Label>
+              <Label>{t('newProcess:name')}</Label>
               <Input ref={register} name="processTitle"></Input>
               <ErrorForm>
                 {errors.processTitle && errors.processTitle.message}
               </ErrorForm>
-              <Label>{t('forms:supplier')}</Label>
+              <Label>{t('newProcess:supplier')}</Label>
               <Select ref={register} name="supplierAddress" defaultValue="">
                 <option disabled hidden value="">
-                  {t('forms:selectOne')}
+                  {t('newProcess:selectOne')}
                 </option>
                 {users.map((user) => (
                   <option key={user[3]} value={user[3]}>
@@ -68,7 +68,7 @@ export default function NewProcess() {
               <ErrorForm>
                 {errors.supplierAddress && errors.supplierAddress.message}
               </ErrorForm>
-              <Button type="submit">{t('forms:create')}</Button>
+              <Button type="submit">{t('newProcess:submit')}</Button>
             </>
           )}
         </Form>

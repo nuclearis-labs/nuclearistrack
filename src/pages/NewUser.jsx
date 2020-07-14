@@ -30,7 +30,7 @@ export default function NewUser() {
   return (
     <>
       <Top>
-        <Title>{t('forms:newUser')}</Title>
+        <Title>{t('newUser:title')}</Title>
       </Top>
       <FormWrap>
         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -38,17 +38,17 @@ export default function NewUser() {
             <TxTrack tx={txHash} />
           ) : (
             <>
-              <Label>{t('forms:name')}</Label>
+              <Label>{t('newUser:name')}</Label>
               <Input type="text" ref={register} name="newUserName"></Input>
               <ErrorForm>
                 {errors.newUserName && errors.newUserName.message}
               </ErrorForm>
-              <Label>{t('forms:address')}</Label>
+              <Label>{t('newUser:address')}</Label>
               <Input type="text" ref={register} name="newUserAddress"></Input>
               <ErrorForm>
                 {errors.newUserAddress && errors.newUserAddress.message}
               </ErrorForm>
-              <Label>{t('forms:type')}</Label>
+              <Label>{t('newUser:type')}</Label>
               <div>
                 <Input
                   style={{ width: '20px', height: 'unset' }}
@@ -58,7 +58,7 @@ export default function NewUser() {
                   value="1"
                   id="client"
                 ></Input>
-                <label htmlFor="client"> {t('forms:client')}</label>
+                <label htmlFor="client"> {t('newUser:client')}</label>
               </div>
               <div>
                 <Input
@@ -69,12 +69,12 @@ export default function NewUser() {
                   value="2"
                   id="supplier"
                 ></Input>
-                <label htmlFor="supplier"> {t('forms:supplier')}</label>
+                <label htmlFor="supplier"> {t('newUser:supplier')}</label>
               </div>
               <ErrorForm>
                 {errors.newUserAddress && errors.newUserAddress.message}
               </ErrorForm>
-              <Button type="submit">CREAR</Button>
+              <Button type="submit">{t('newUser:submit')}</Button>
             </>
           )}
         </Form>

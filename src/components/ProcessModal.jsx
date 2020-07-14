@@ -72,18 +72,18 @@ function ProcessModal(props) {
       <ModalWrap>
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalTop>
-            <ModalTit>{t('process:add')}</ModalTit>
+            <ModalTit>{t('processModal:title')}</ModalTit>
             <ModalInput placeholder="BUSCAR" ref={register}></ModalInput>
-            <ModalTxt>{t('process:explainer')}</ModalTxt>
+            <ModalTxt>{t('processModal:explainer')}</ModalTxt>
             <ModalProdName>
               {web3.utils.hexToAscii(props.project[3])}
             </ModalProdName>
           </ModalTop>
           <ModalBottom>
             <HeadRow>
-              <Col4>{t('forms:name')}</Col4>
-              <Col4>{t('forms:supplier')}</Col4>
-              <Col4>{t('forms:documents')}</Col4>
+              <Col4>{t('processModal:name')}</Col4>
+              <Col4>{t('processModal:supplier')}</Col4>
+              <Col4>{t('processModal:documents')}</Col4>
             </HeadRow>
             <ScrollBox130>
               {processes.map((process) => (
@@ -105,7 +105,7 @@ function ProcessModal(props) {
                   <Col4>
                     <Link to={'/documents/' + process[3]}>
                       <Eye />
-                      {t('forms:viewDoc')}
+                      {t('processModal:view')}
                     </Link>
                   </Col4>
                 </Row>
@@ -113,10 +113,10 @@ function ProcessModal(props) {
             </ScrollBox130>
             <Button type="submit">
               {txHash
-                ? t('forms:success')(
+                ? t('processModal:success')(
                     <RSKLink hash={txHash} testnet type="tx" />
                   )
-                : t('forms:assignProcess')}
+                : t('processModal:submit')}
             </Button>
           </ModalBottom>
         </form>

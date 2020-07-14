@@ -14,23 +14,23 @@ export default function DropDownEdit(props) {
         }}
       >
         <Eye />
-        {t('forms:view')} / {t('forms:edit')}
+        {t('dropDownEdit:title')}
       </AbmLink>
 
       <SubMenuEdit className={props.index === 2 ? 'open' : 'closed'}>
         {(props.user.type === '0' || props.user.type === '1') && (
           <Link to="/projects" onClick={() => props.onClick(false)}>
-            + {t('header:projects')}
+            + {t('dropDownEdit:projects')}
           </Link>
         )}
         {props.user.type === '0' && (
           <Link to="/users" onClick={() => props.onClick(false)}>
-            + {t('header:user')}
+            + {t('dropDownEdit:users')}
           </Link>
         )}
         {(props.user.type === '0' || props.user.type === '2') && (
           <Link to="/processes" onClick={() => props.onClick(false)}>
-            + {t('header:proceso')}
+            + {t('dropDownEdit:processes')}
           </Link>
         )}
       </SubMenuEdit>

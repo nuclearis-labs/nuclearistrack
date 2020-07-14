@@ -37,7 +37,7 @@ export default function UserList() {
   return (
     <>
       <Top>
-        <Title>{t('header:user')}</Title>
+        <Title>{t('userList:title')}</Title>
       </Top>
       <TableWrap>
         <Table>
@@ -46,17 +46,17 @@ export default function UserList() {
           ) : (
             <>
               <HeadRowMonsterrat>
-                <Col>{t('forms:name')}</Col>
-                <Col>{t('forms:address')}</Col>
-                <Col>{t('forms:type')}</Col>
-                <Col>{t('forms:state')}</Col>
-                <Col>{t('forms:saldo')}</Col>
+                <Col>{t('userList:name')}</Col>
+                <Col>{t('userList:address')}</Col>
+                <Col>{t('userList:type')}</Col>
+                <Col>{t('userList:state')}</Col>
+                <Col>{t('userList:saldo')}</Col>
               </HeadRowMonsterrat>
               <ScrollBox400>
                 {users.length === 0 ? (
                   <Row>
                     <Col style={{ textAlign: 'center', width: '100%' }}>
-                      {t('forms:noItems')}
+                      {t('userList:noItems')}
                     </Col>
                   </Row>
                 ) : (
@@ -68,14 +68,16 @@ export default function UserList() {
                       </Col>
                       <Col>
                         {user[1] === '0'
-                          ? 'Administrador'
+                          ? t('userList:admin')
                           : user[1] === '1'
-                          ? 'Cliente'
-                          : 'Proveedor'}
+                          ? t('userList:client')
+                          : t('userList:supplier')}
                       </Col>
                       <Col>
                         <TableButton onClick={() => toggleUser(user[3])}>
-                          {user[0] === '1' ? 'ACTIVO' : 'PAUSADO'}
+                          {user[0] === '1'
+                            ? t('userList:active')
+                            : t('userList:closed')}
                         </TableButton>
                       </Col>
                       <Col>{user[4]} RBTC</Col>

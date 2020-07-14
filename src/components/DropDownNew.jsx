@@ -17,18 +17,18 @@ export default function DropDownNew(props) {
         }}
       >
         <New />
-        {t('forms:new')}
+        {t('dropDownNew:title')}
       </AbmLink>
 
       <SubMenuNew className={props.index === 1 ? 'open' : 'closed'}>
         <Link to="/projects/add" onClick={() => props.onClick(false)}>
-          + {t('header:projects')}
+          + {t('dropDownNew:projects')}
         </Link>
         <Link to="/users/add" onClick={() => props.onClick(false)}>
-          + {t('header:user')}
+          + {t('dropDownNew:users')}
         </Link>
         <Link to="/processes/add" onClick={() => props.onClick(false)}>
-          + {t('header:proceso')}
+          + {t('dropDownNew:processes')}
         </Link>
       </SubMenuNew>
     </div>

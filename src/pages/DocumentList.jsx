@@ -27,7 +27,7 @@ export default function DocumentList() {
   return (
     <>
       <Top>
-        <Title>{t('forms:documents')}</Title>
+        <Title>{t('documents:documents')}</Title>
       </Top>
       <FormWrap>
         <Table>
