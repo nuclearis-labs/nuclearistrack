@@ -22,45 +22,45 @@
       "securityTitle": "SEGURIDAD",
       "securityText": "SISTEMA CON TECNOLOGIA BLOCKCHAIN, EL NUEVO ESTANDARD DE TRAZABILIDAD DIGITAL.",
       "availabilityTitle": "DISPONIBILIDAD",
-      "availabilityText": "CON SOLO INGRESAR EN LA PLATAFORMA TIENE DISPONIBILIDAD DE TODOS LOS PROCESOS Y CERTIFICADOS.",
+      "availabilityText": "CON SOLO INGRESAR EN LA PLATAFORMA TIENE A DISPONIBILIDAD TODOS LOS PROYECTOS Y PROCESOS.",
       "controlTitle": "CONTROL",
-      "controlText": "INFORMACION EN TIEMPO REAL DE LOS PROCESOS DE FABRICACION."
+      "controlText": "PERMITE VERIFICAR LA VERACIDAD DE TODA LA DOCUMENTACIÓN CORRESPONDIENTE A SUS PROCESOS DE FABRICACION."
     },
     "general": {
       "more": "MÁS",
-      "404Title": "PAGINA NO ENCONTRADA",
-      "404": "No se encontró la pagina solicitada, algúnas recomendaciones"
+      "404Title": "PÁGINA NO ENCONTRADA",
+      "404": "NO SE ENCONTRÓ LA PÁGINA SOLICITADA, A CONTINUACIÓN ALGÚNAS RECOMENDACIONES"
     },
     "benefits": {
       "bannerTitle": "TRANSPARENCIA EN TODOS NUESTROS PROCESOS",
       "securityTitle": "SEGURIDAD",
-      "securityText": "<p>La BLOCKCHAIN es un registro digital que funciona sobre una \"cadena de bloques\" asegurados criptográficamente. Dicha tecnología es extremadamente segura debido a su <strong>naturaleza distribuida</strong> y la <strong>irreversibilidad de las transacciones</strong>. La cadena de bloques, más conocida por el término en inglés BLOCKCHAIN, es un registro único, consensuado cuya información está distribuida en cientos de miles de computadoras alrededor del mundo. Al ser una tecnología distribuida cada nodo de la red almacena una copia de la cadena la cual se actualiza segundo a segundo garantizando así la disponibilidad de la información en todo momento. La tecnología de BLOCKCHAIN nos permite almacenar información que jamás se podrá perder, modificar o eliminar.",
-      "availabilityTitle": "DISPONIBILIDAD DE LA INFORMACION",
-      "availabilityText": "<p>La Plataforma de Trazabilidad basada en BLOCKCHAIN desarrollada por <strong>NUCLEARIS</strong> permite sellar la información técnica de los procesos productivos involucrados en la fabricación de componentes mecánicos para Centrales Nucleares. Toda la documentación técnica tal como certificados, formularios, calibraciones, ensayos, registros dimensionales, etc, que generan nuestros proveedores alrededor del mundo, es sellada por nuestra plataforma en el momento en que sucede el proceso respectivo. De esta forma <strong>NUCLEARIS</strong> puede garantizar la autenticidad de la información debido a que una vez que fue sellada por la BLOCKCHAIN nunca nadie podrá modificarla. La posibilidad de garantizar la veracidad y autenticidad de la información técnica otorga máxima confiabilidad respecto a la calidad de la pieza o componente mecánico producido. De esta manera las huellas digitales de los archivos generados por los proveedores que intervienen en los procesos productivos se suben a la BLOCKCHAIN lo cual implica que a partir de ese momento la veracidad de la documentación es completamente inmutable, descentralizada y perpetua. Nunca se apaga, nunca se modifica y está siempre disponible para uso del cliente.</p>",
+      "securityText": "<p>LA BLOCKCHAIN ES UN REGISTRO DIGITAL QUE FUNCIONA SOBRE UNA \"CADENA DE BLOQUES\" ASEGURADOS CRIPTOGRÁFICAMENTE. DICHA TECNOLOGÍA ES EXTREMADAMENTE SEGURA DEBIDO A SU NATURALEZA DISTRIBUIDA Y LA IRREVERSIBILIDAD DE LAS TRANSACCIONES. LA CADENA DE BLOQUES, MÁS CONOCIDA POR EL TÉRMINO EN INGLÉS BLOCKCHAIN, ES UN REGISTRO ÚNICO, CONSENSUADO CUYA INFORMACIÓN ESTÁ DISTRIBUIDA EN CIENTOS DE MILES DE COMPUTADORAS ALREDEDOR DEL MUNDO. AL SER UNA TECNOLOGÍA DISTRIBUIDA CADA NODO DE LA RED ALMACENA UNA COPIA DE LA CADENA LA CUAL SE ACTUALIZA SEGUNDO A SEGUNDO GARANTIZANDO ASÍ LA DISPONIBILIDAD DE LA INFORMACIÓN EN TODO MOMENTO. LA TECNOLOGÍA DE BLOCKCHAIN NOS PERMITE ALMACENAR INFORMACIÓN QUE JAMÁS SE PODRÁ PERDER, MODIFICAR O ELIMINAR.",
+      "availabilityTitle": "DISPONIBILIDAD DE LA INFORMACIÓN",
+      "availabilityText": "<p>LA PLATAFORMA DE TRAZABILIDAD BASADA EN BLOCKCHAIN DESARROLLADA POR <strong>NUCLEARIS</strong> PERMITE SELLAR LA INFORMACIÓN TÉCNICA DE LOS PROCESOS PRODUCTIVOS INVOLUCRADOS EN LA FABRICACIÓN DE COMPONENTES MECÁNICOS PARA CENTRALES NUCLEARES. CADA VEZ QUE UN PROVEEDOR DE NUCLEARIS REALIZA UN PROCESO PRODUCTIVO SOBRE UNA PIEZA O SEMIELABORADO DEBE TAMBIÉN ELABORAR UN DOCUMENTO DONDE REGISTRA TODA LA INFORMACIÓN TÉCNICA TAL COMO CERTIFICADOS, PARÁMETROS, CALIBRACIONES, ENSAYOS, REGISTROS DIMENSIONALES, ETC. Y POR CADA UNO DE ESOS DOCUMENTOS NUESTRA PLATAFORMA GENERA “UNA HUELLA DIGITAL” UNÍVOCA QUE LO IDENTIFICA Y ESE “SELLO” CRIPTOGRÁFICO SE ALMACENA EN LA BLOCKCHAIN.</p><p>LAS HUELLAS DIGITALES GENERADAS DE FORMA UNÍVOCA POR CADA UNO DE LOS DOCUMENTOS DE TRAZABILIDAD PERMITE QUE NUESTROS CLIENTES (OPERADORES DE CENTRALES NUCLEARES) PUEDAN ACCEDER A LA PLATAFORMA BLOCKCHAIN PARA VERIFICAR LA AUTENTICIDAD DE LA DOCUMENTACIÓN GENERADA A LO LARGO DE TODO EL HISTORIAL PRODUCTIVO DE CADA UNO DE LOS PROCESOS LLEVADOS A CABO POR NUCLEARIS Y SU EXTENSA RED DE PROVEEDORES DE SERVICIOS, MATERIAS PRIMAS Y PROCESOS, LOS CUALES SON USUARIOS ACTIVOS DE NUESTRA PLATAFORMA. MEDIANTE EL USO DE BLOCKCHAIN LA VERACIDAD DE LA DOCUMENTACIÓN ES COMPLETAMENTE INMUTABLE, DESCENTRALIZADA Y PERPETUA. NUNCA SE APAGA, NUNCA SE MODIFICA Y ESTÁ SIEMPRE DISPONIBLE PARA USO DEL CLIENTE.</p>",
       "controlTitle": "CONTROL",
-      "controlText": "<p>Todos los sistemas de una Central Nuclear son construidos a partir de cientos de miles de piezas mecánicas las cuales deben ser diseñadas y fabricadas bajo exhaustivas normativas técnicas internacionales. Los operadores de dichas Centrales, acceden mediante un permiso a nuestra Plataforma, podrán verificar en tiempo real la veracidad de toda la documentación relacionada con los componentes que posteriormente serán instalados en sus instalaciones.</p>"
+      "controlText": "<p>TODOS LOS SISTEMAS DE UNA CENTRAL NUCLEAR SON CONSTRUIDOS A PARTIR DE CIENTOS DE MILES DE PIEZAS MECÁNICAS LAS CUALES DEBEN SER DISEÑADAS Y FABRICADAS BAJO EXHAUSTIVAS NORMATIVAS TÉCNICAS INTERNACIONALES. LOS OPERADORES DE DICHAS CENTRALES, ACCEDEN MEDIANTE UN PERMISO A NUESTRA PLATAFORMA Y DE ESA MANERA PUEDEN VERIFICAR EN TIEMPO REAL LA VERACIDAD DE TODA LA DOCUMENTACIÓN RELACIONADA CON LOS COMPONENTES QUE POSTERIORMENTE SERÁN INSTALADOS EN SUS INSTALACIONES. DE ESTA MANERA SE GARANTIZA QUE EN CADA PASO DEL PROCESO SE CUMPLAN ESTRICTAMENTE LAS ESPECIFICACIONES TÉCNICAS Y NORMATIVAS EXIGIDAS POR EL CLIENTE CON EL OBJETIVO DE OTORGAR MÁXIMA CONFIABILIDAD AL PRODUCTO FINAL Y COMO CONSECUENCIA A LA CENTRAL NUCLEAR ENTERA.</p>"
     },
     "abstract": {
       "bannerTitle": "UN NUEVO STANDARD EN EL AREA DE DOCUMENTACION",
       "section1Title": "STATU QUO",
-      "section1Text": "<p>Desde la etapa del diseño de una Central Nuclear, la “Seguridad” conforma la máxima prioridad ya que tiene como objetivo reducir la probabilidad de que ocurra un accidente. Dicha seguridad se establece a través del uso de normativas técnicas de reconocimiento internacional para garantizar niveles óptimos de calidad y confiabilidad de cada uno de sus componentes mecánicos que la integran. “Asegurar la calidad de cada una de las partes individuales de un Reactor Nuclear, asegurará en gran medida la confiabilidad del conjunto completo”. Los fabricantes de piezas mecánicas que integran un Reactor Nuclear son empresas certificadas por entes internacionales las cuales están obligadas a presentar “documentación en formato papel” con todos los datos de trazabilidad de cada uno de los procesos productivos que condujeron a la fabricación de cada pieza, tales como: certificados de materiales, ensayos, calibraciones, etc. Es aquí en donde se presenta un punto de vulnerabilidad ya que dichos documentos podrían ser modificados, alterados o reemplazados por cualquiera de las empresas intervinientes de forma accidental o exprofeso y como consecuencia se perdería la trazabilidad del componente fabricado y por lo tanto dejaría de ser confiable.</p>",
+      "section1Text": "<p>DESDE LA ETAPA DEL DISEÑO DE UNA CENTRAL NUCLEAR, LA “SEGURIDAD” CONFORMA LA MÁXIMA PRIORIDAD YA QUE TIENE COMO OBJETIVO REDUCIR LA PROBABILIDAD DE QUE OCURRA UN INCIDENTE. DICHA SEGURIDAD SE ESTABLECE A TRAVÉS DEL USO DE NORMATIVAS TÉCNICAS DE RECONOCIMIENTO INTERNACIONAL PARA GARANTIZAR NIVELES ÓPTIMOS DE CALIDAD Y CONFIABILIDAD DE CADA UNO DE SUS COMPONENTES MECÁNICOS QUE LA INTEGRAN. “ASEGURAR LA CALIDAD DE CADA UNA DE LAS PARTES INDIVIDUALES DE UN REACTOR NUCLEAR, ASEGURARÁ EN GRAN MEDIDA LA CONFIABILIDAD DEL CONJUNTO COMPLETO”.</p><p>LOS FABRICANTES DE PIEZAS MECÁNICAS DESTINADAS A SER INSTALADAS EN UN REACTOR NUCLEAR SON EMPRESAS QUE ESTÁN CERTIFICADAS POR ENTES INTERNACIONALES QUE OBLIGAN A LA MISMAS A ELABORAR “DOCUMENTACIÓN EN FORMATO PAPEL” EN LA CUAL SE ENCUENTRAN PLASMADOS TODOS LOS DATOS DE TRAZABILIDAD DE CADA UNO DE LOS PROCESOS PRODUCTIVOS QUE CONDUJERON A LA FABRICACIÓN DE CADA UNA DE LAS PIEZAS.</p><p>ES AQUÍ EN DONDE SE PRESENTA UN PUNTO DE VULNERABILIDAD EN EL SISTEMA DE CALIDAD DEBIDO A QUE DICHOS DOCUMENTOS PODRÍAN SER EXTRAVIADOS, MODIFICADOS O REEMPLAZADOS DE FORMA ACCIDENTAL O EXPROFESO Y COMO CONSECUENCIA SE PERDERÍA LA AUTENTICIDAD DE LA TRAZABILIDAD DEL COMPONENTE Y POR LO TANTO DEJARÍA DE SER “CONFIABLE”.</p><p>LA TECNOLOGÍA BLOCKCHAIN IMPLEMENTADA EN LA CADENA DE PRODUCCIÓN Y SUMINISTRO DE COMPONENTES MECÁNICOS DE USO NUCLEAR ES LA SOLUCIÓN A ESE PROBLEMA. AL UTILIZAR LA TECNOLOGÍA BLOCKCHAIN EN EL REGISTRO DOCUMENTAL DE PROCESOS INDUSTRIALES SE LOGRA INSERTAR UNA CAPA DE SEGURIDAD ADICIONAL A LA CONFIABILIDAD DE CADA UNA DE LAS PARTES QUE INTEGRAN UN REACTOR NUCLEAR.</p>",
       "section2Title": "LA SOLUCIÓN",
-      "section2Text": "<p>Mediante el uso de tecnología BLOCKCHAIN, la empresa NUCLEARIS desarrolló una Plataforma de Trazabilidad en la fabricación de componentes mecánicos de uso nuclear, brindando así una capa de seguridad adicional al Sistema de Calidad. Con esta aplicación descentralizada, los fabricantes sellan a través de la Plataforma la documentación técnica de su proceso industrial “en el momento en que se realiza el mismo” y su huella digital queda almacenado allí de manera inmutable y para siempre. Esta metodología propuesta erradica la posibilidad de posteriores modificaciones de la documentación agregando valor y confiabilidad al producto final y consecuentemente al nivel de seguridad de la Central Nuclear misma. De esta manera, el operador de la Central podrá acceder a la Plataforma para verificar la autenticidad de la documentación.</p>",
+      "section2Text": "<p>MEDIANTE EL USO DE TECNOLOGÍA BLOCKCHAIN, LA EMPRESA <strong>NUCLEARIS</strong> DESARROLLÓ UNA PLATAFORMA DE TRAZABILIDAD EN LA FABRICACIÓN DE COMPONENTES MECÁNICOS DE USO NUCLEAR, BRINDANDO ASÍ UNA CAPA DE SEGURIDAD ADICIONAL AL SISTEMA DE CALIDAD. CON ESTA APLICACIÓN DESCENTRALIZADA, LOS FABRICANTES SELLAN A TRAVÉS DE LA PLATAFORMA LA DOCUMENTACIÓN TÉCNICA DE SU PROCESO INDUSTRIAL “EN EL MOMENTO EN QUE SE REALIZA EL MISMO” Y SU HUELLA DIGITAL QUEDA ALMACENADO ALLÍ DE MANERA INMUTABLE Y PARA SIEMPRE. ESTA METODOLOGÍA PROPUESTA ERRADICA LA POSIBILIDAD DE POSTERIORES MODIFICACIONES DE LA DOCUMENTACIÓN AGREGANDO VALOR Y CONFIABILIDAD AL PRODUCTO FINAL Y CONSECUENTEMENTE AL NIVEL DE SEGURIDAD DE LA CENTRAL NUCLEAR MISMA.</p>",
       "section3Title": "LA TECNOLOGÍA BLOCKCHAIN",
-      "section3Text": "<p>A finales del año 2008, se publicó la tesis académica que dio origen a lo que en la actualidad es la red de almacenamiento descentralizada más grande del mundo la cual funciona al mismo tiempo en miles de computadores, servidores alrededor del mundo, con una capacidad computacional extraordinaria e imposible de modificar o “apagar”. La descentralización mencionada le provee a la red una inherente robustez y seguridad a ataques externos que es muy difícil conseguir en sistemas centralizados. Cabe destacar que lo que se sube a la BLOCKCHAIN son simplemente los códigos alfanuméricos denominados HASH que son las identificaciones criptográficas (a modo de “huella digital”) que representan de forma unívoca a cada documentos. Con esta breve descripción se pretende explicar que la información de los documentos no es de acceso público bajo ningún punto de vista.</p>"
+      "section3Text": "<p>A FINALES DEL AÑO 2008, SE PUBLICÓ LA TESIS ACADÉMICA QUE DIO ORIGEN A LO QUE EN LA ACTUALIDAD ES LA RED DE ALMACENAMIENTO DESCENTRALIZADA MÁS GRANDE DEL MUNDO LA CUAL FUNCIONA AL MISMO TIEMPO EN MILES DE COMPUTADORES, SERVIDORES A NIVEL GLOBAL, CON UNA CAPACIDAD COMPUTACIONAL EXTRAORDINARIA E IMPOSIBLE DE MODIFICAR O “APAGAR”. LA DESCENTRALIZACIÓN MENCIONADA LE PROVEE A LA RED UNA INHERENTE ROBUSTEZ Y SEGURIDAD A ATAQUES EXTERNOS QUE ES MUY DIFÍCIL CONSEGUIR EN SISTEMAS CENTRALIZADOS. CABE DESTACAR QUE LO QUE SE SUBE A LA BLOCKCHAIN SON SIMPLEMENTE LOS CÓDIGOS ALFANUMÉRICOS DENOMINADOS HASH QUE SON LAS IDENTIFICACIONES CRIPTOGRÁFICAS (A MODO DE “HUELLA DIGITAL”) QUE REPRESENTAN DE FORMA UNÍVOCA A CADA UNO DE LOS DOCUMENTOS. CON ESTA BREVE DESCRIPCIÓN SE PRETENDE EXPLICAR QUE LA INFORMACIÓN DE LOS DOCUMENTOS NO ES DE ACCESO PÚBLICO BAJO NINGÚN PUNTO DE VISTA.</p>"
     },
     "faq": {
       "bannerTitle": "LAS PREGUNTAS MAS FRECUENTES",
       "question1": "Los archivos compartidos con la plataforma donde se guardan?",
-      "answer1": "Los archivos nunca dejan la computadora en la cual se encuentran a la hora de sellar el archivo. La plataforma genera la huella digital del archivo de forma local, se obtiene información adicional como el nombre del archivo y la geolocalización provista por el navegador web. Dicha información se envía a un nodo Blockchain y se comparte con toda la red.",
+      "answer1": "LOS ARCHIVOS NUNCA DEJAN LA COMPUTADORA EN LA CUAL SE ENCUENTRAN A LA HORA DE SELLAR EL ARCHIVO. LA PLATAFORMA GENERA LA HUELLA DIGITAL DEL DOCUMENTO DE FORMA LOCAL Y SE REGISTRA EL NOMBRE DEL ARCHIVO Y LA GEOLOCALIZACIÓN DE QUIEN ESTÁ “SELLANDO” EL DOCUMENTO. DICHA INFORMACIÓN CRIPTOGRÁFICA DENOMINADA “HASH” SE ENVÍA A LA RED DESCENTRALIZADA DE BLOCKCHAIN Y NUNCA MÁS PODRÁ SER MODIFICADA.",
       "question2": "Mi información personal donde se guarda?",
-      "answer2": "La plataforma guarda de cada usuario la siguiente información: Nombre de empresa, Dirección de Metamask, Tipo de usuario y Estado actual. Dicha información se guarda en la Blockchain",
+      "answer2": "LA PLATAFORMA GUARDA EN LA BLOCKCHAIN EL NOMBRE DE LA EMPRESA, LA DIRECCIÓN DE SU CUENTA, TIPO DE USUARIO Y ESTADO ACTUAL.",
       "question3": "La información relacionada con los proyectos/procesos donde se guarda?",
-      "answer3": "Los proyectos y procesos que se crean en la plataforma se guardan en la Blockchain, la información asociada es la minima necesaria.",
-      "question4": "Existe la posibilidad de que alguien apague la blockchain?",
-      "answer4": "No, la Blockchain es una red descentralizada de cientos de miles de nodos que mientras se mantenga uno encendido, la información sigue existiendo.",
-      "question5": "Con la huella digital se puede reconstruir el documento?",
-      "answer5": "No, la huella digital es una operación criptografica unidireccional."
+      "answer3": "LA PLATAFORMA NO SUBE DOCUMENTOS A INTERNET BAJO NINGÚN PUNTO DE VISTA. SIMPLEMENTE GENERA LAS HUELLAS DIGITALES QUE SE CORRESPONDEN DE FORMA UNÍVOCA CON CADA DOCUMENTO Y LAS SUBE A LA BLOCKCHAIN. ",
+      "question4": "Con la huella digital se puede reconstruir el documento?",
+      "answer4": "NO, LA HUELLA DIGITAL ES UNA OPERACIÓN CRIPTOGRAFICA UNIDIRECCIONAL Y LA PLATAFORMA NO ALMACENA DOCUMENTOS NI DE LOS PROVEEDORES, NI DE LOS CLIENTES.",
+      "question5": "Existe la posibilidad de que alguien apague la blockchain?",
+      "answer5": "NO, LA BLOCKCHAIN ES UNA RED DESCENTRALIZADA DE CIENTOS DE MILES DE COMPUTADORAS Y SERVIDORES ALREDEDOR DEL MUNDO (NODOS) QUE REPLICAN DE FORMA INSTANTANEA TODA LA CADENA DE BLOQUES EN TIEMPO REAL. MIENTRAS SE MANTENGA AL MENOS UN SOLO NODO ENCENDIDO, LA INFORMACIÓN SEGUIRÁ EXISTIENDO."
     },
     "login": {
       "bannerTitle": "ACCEDER",
@@ -70,28 +70,25 @@
       "connecting": "CONECTANDO A LA BLOCKCHAIN...",
       "failed": "LOGIN FALLIDO",
       "requirements": "REQUISITOS",
-      "requirementsText": "Para poder acceder a la plataforma se requiere proveer sus credenciales a través de una billetera criptografica. La cual resguarda sus claves secretas y provee a la plataforma con su información publica, lo cual permite a la plataforma consultar y enviar información a la Blockchain en representación de usted.",
+      "requirementsText": "Para poder acceder a la plataforma se requiere autenticarse a través de una billetera criptografica. La cual resguarda sus claves secretas, provee a la plataforma solamente su información publica y permite a la plataforma consultar y enviar información en representación de usted.",
       "extensions": "EXTENSIONES DISPONIBLES",
-      "extensionsText": "A continuación listamos algunas de las disponibles extensiones para diferentes navegadores web que cumplen con dicha funcionalidad. El siguiente listado se actualizará si se publican nuevas extensiones.<ul style={{ paddingTop: '10px' }}><li>Metamask <a href='https://metamask.io/'>(Pagina Web)</a></li><li>Nifty<a href='https://www.poa.network/for-users/nifty-wallet'>(Pagina Web)</a></li></ul>",
-      "proximosPasos": "PROXIMOS PASOS",
-      "proximosPasosText": "Para obtener acceso a la plataforma, le pedimos de instalar y configurar una de las extensiones disponibles. Una vez configurado, requerimos que nos envie la dirección de una de sus cuentas a <a href='mailto:sistemas@nuclearis.com?subject=Request%20to%20join%20Nuclearistrack&body=I%20hereby%20ask%20you%20to%20give%20my%20company%20access%20to%20Nuclearistrack.%0D%0A%0D%0ACompany%20Name%3A%20%3CTo%20be%20filled%20out%3E%0D%0AHexadecimal%20Account%20Name%20on%20Metamask%3A%20%3CTo%20be%20filled%20out%3E%0D%0A%0D%0AThank%20you%20very%20much!'>sistemas@nuclearis.com</a>, en conjunto con el nombre de su empresa. Luego de una brevehabilitación en el sistema, podrá recargar la pagina para formar parte de la plataforma.",
+      "extensionsText": "A continuación listamos algunas de las disponibles extensiones para diferentes navegadores web que cumplen con dicha funcionalidad. {{- extensiones}}",
+      "proximosPasos": "PRÓXIMOS PASOS",
+      "proximosPasosText": "Para obtener acceso a la plataforma, le pedimos de instalar y configurar una de las extensiones disponibles, una vez configurada, envíe la dirección de su cuenta a {{- requestEmail}}, en conjunto con el nombre de su empresa.",
       "soporte": "SOPORTE",
-      "soporteText": "En el caso que requiere soporte por parte de NUCLEARIS, por favor no dude en contactarnos a sistemas@nuclearis.com, o telefonicamente al +54 11 5263 2700."
+      "soporteText": "En el caso que requiere soporte por parte de NUCLEARIS, por favor no dude en contactarnos a {{- email}}, o telefonicamente al +54 11 5263 2700."
     },
     "txTracker": {
-      "pendiente": "TRANSACCION PENDIENTE",
-      "success": "EXITO!",
+      "pendiente": "TRANSACCIÓN PENDIENTE",
+      "success": "ÉXITO!",
       "error": "HUBO UN ERROR",
-      "hash": "Transaction Hash: ",
-      "block": "Bloque: ",
-      "receiptError": "FALLIDO, POR FAVOR REPITA Y CHEQUEE LOS DATOS INGRESADOS",
-      "waiting": "Esperando confirmacion de la transacción... No se requiere esperar la confirmación.",
-      "state": "ESTADO"
+      "hash": "Hash de transacción",
+      "block": "Bloque"
     },
     "contact": {
       "bannerTitle": "ESTABLEZCA EL CONTACTO",
       "name": "NOMBRE",
-      "email": "CORREO ELECTRONICO",
+      "email": "CORREO ELECTRÓNICO",
       "message": "MENSAJE",
       "submit": "ENVIAR",
       "success": "Se envío exitosamente su consulta",
@@ -116,7 +113,7 @@
       "supplier": "PROVEEDOR",
       "documents": "DOCUMENTOS",
       "view": "VER DOC.",
-      "success": "EXITO!",
+      "success": "ÉXITO!",
       "submit": "CONFIRMAR"
     },
     "processList": {
@@ -128,6 +125,13 @@
       "add": "AGREGAR DOC.",
       "noItems": "NO HAY PROCESOS CARGADOS PARA USTED"
     },
+    "documentList": {
+      "title": "DOCUMENTOS",
+      "name": "NOMBRE",
+      "date": "FECHA",
+      "details": "DETALLES",
+      "view": "VER"
+    },
     "documentDetail": {
       "title": "DOCUMENTO",
       "verify": "VERIFICAR DOCUMENTO",
@@ -136,7 +140,7 @@
       "fileName": "NOMBRE DEL ARCHIVO: ",
       "fileHash": "HASH DEL ARCHIVO: ",
       "authentic": "ESTADO: AUTENTICO",
-      "fake": "ESTADO: NO COINCIDE",
+      "fake": "ESTADO: NO COINCIDEN",
       "documentDetails": "DETALLES DE DOCUMENTO",
       "name": "NOMBRE",
       "hash": "HUELLA",
@@ -149,12 +153,12 @@
       "title": "NUEVO<br>DOCUMENTO",
       "processTitle": "PROCESO",
       "supplier": "PROVEEDOR",
-      "hashFile": "SELLAR ARCHIVO",
+      "hashFile": "ARCHIVO A SELLAR",
       "dropFile": "ARRASTRE EL ARCHIVO HACIA AQUÍ,\nO HAGA CLICK PARA SELECCIONARLO",
       "dragFile": "DEJE EL ARCHIVO AQUÍ",
       "fileName": "NOMBRE DEL ARCHIVO: ",
       "fileHash": "HASH DEL ARCHIVO: ",
-      "locationComment": "UBICACION DEL DOCUMENTO (AJUSTAR SI NECESARIO)",
+      "locationComment": "UBICACIÓN DEL DOCUMENTO (AJUSTAR SI NECESARIO)",
       "comments": "OBSERVACIONES",
       "submit": "SELLAR"
     },
@@ -170,7 +174,7 @@
     "userList": {
       "title": "USUARIOS",
       "name": "NOMBRE",
-      "address": "DIRECCIÓN WALLET",
+      "address": "DIRECCIÓN",
       "type": "TIPO",
       "state": "ESTADO",
       "saldo": "BALANCE",
