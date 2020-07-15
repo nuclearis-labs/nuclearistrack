@@ -27,15 +27,15 @@ export default function DocumentList() {
   return (
     <>
       <Top>
-        <Title>{t('documents:documents')}</Title>
+        <Title>{t('documentList:title')}</Title>
       </Top>
       <FormWrap>
         <Table>
           <thead>
             <HeadRow>
-              <th>{t('forms:name')}</th>
-              <th>{t('forms:date')}</th>
-              <th>{t('forms:details')}</th>
+              <th>{t('documentList:name')}</th>
+              <th>{t('documentList:date')}</th>
+              <th>{t('documentList:details')}</th>
             </HeadRow>
           </thead>
           <tbody>
@@ -47,7 +47,7 @@ export default function DocumentList() {
                 </Col>
                 <Col>
                   <Link to={'/documents/' + params.process + '/' + document[1]}>
-                    {t('forms:view')}
+                    {t('documentList:view')}
                   </Link>
                 </Col>
               </Row>
