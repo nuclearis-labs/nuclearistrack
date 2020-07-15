@@ -79,7 +79,9 @@ export default function ProjectList() {
         <Left details={projectDetails}>
           <FlexWrapRight details={projectDetails}>
             {account.type === '0' && (
-              <AddProyectBtn>+ {t('projectList:new')}</AddProyectBtn>
+              <AddProyectBtn as={Link} to="/projects/add">
+                + {t('projectList:new')}
+              </AddProyectBtn>
             )}
             <Title>{t('projectList:projects')}</Title>
           </FlexWrapRight>
