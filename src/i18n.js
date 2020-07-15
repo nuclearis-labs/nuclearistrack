@@ -29,7 +29,6 @@ i18n
       transEmptyNodeValue: '',
       transSupportBasicHtmlNodes: true,
       transKeepBasicHtmlNodesFor: ['ul', 'li', 'p', 'a', 'br', 'strong', 'i'],
-      useSuspense: true,
     },
 
     interpolation: {
