@@ -8,7 +8,7 @@ import {
   FooterRight,
   FooterLink,
 } from '../styles/footer';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 
 export default function Footer() {
   const { t } = useTranslation();
@@ -19,7 +19,7 @@ export default function Footer() {
         <FooterLeft>
           <Logo style={{ position: 'relative', bottom: '5px' }} />
           <br />
-          {t('footer:phrase')}
+          <Trans>footer:phrase</Trans>
           <br />
         </FooterLeft>
         <FooterRight>
