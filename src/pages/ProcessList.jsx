@@ -45,7 +45,7 @@ function ProcessList() {
           <HeadRowMonsterrat>
             <Col>{t('processList:name')}</Col>
             <Col>{t('processList:supplier')}</Col>
-            <Col>{t('processList:view')}</Col>
+            <Col>{t('processList:documents')}</Col>
             <Col>{t('processList:add')}</Col>
             <Col>{t('processList:contract')}</Col>
           </HeadRowMonsterrat>
@@ -71,7 +71,6 @@ function ProcessList() {
                           fill: '#333',
                         }}
                       />
-                      {t('processList:view')}
                     </Link>
                   </Col>
 
@@ -85,7 +84,6 @@ function ProcessList() {
                           fill: '#333',
                         }}
                       />
-                      {t('processList:add')}
                     </Link>
                   </Col>
                   <Col>
