@@ -6,7 +6,7 @@ import './Ownable.sol';
 
 /// @title Main Contract for Nuclearis Track
 /// @author Sebastian A. Martinez
-/// @notice This contract is the main entrypoint for the Nuclearis Track Platform
+/// @notice This contract is the main entrypoint for the Nuclearistrack Platform
 contract NuclearPoE is Ownable {
     enum State {Null, Created, Closed}
     enum Type {Admin, Client, Supplier}
@@ -94,6 +94,7 @@ contract NuclearPoE is Ownable {
     ) external onlyOwner {
         user[_address] = User(State.Created, _type, _name);
         users.push(_address);
+
         emit CreateUser(_address);
     }
 
