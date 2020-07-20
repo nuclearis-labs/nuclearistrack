@@ -25,6 +25,7 @@ function NewDocument() {
   const { t } = useTranslation();
   const [file, setFile] = useState(null);
   const [hash, setHash] = useState(null);
+  const [isDisabled, setDisabled] = useState(false);
   const params = useParams();
   const [txHash, setTxHash] = useState(undefined);
   const [processDetails, setProcessDetails] = useState();
@@ -54,10 +55,15 @@ function NewDocument() {
     function getLocation() {
       return new Promise((resolve, reject) => {
         if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(({ coords }) =>
-            resolve(coords)
+          navigator.geolocation.getCurrentPosition(
+            ({ coords }) => {
+              setDisabled(false);
+              resolve(coords);
+            },
+            () => setDisabled(true)
           );
         } else {
+          setDisabled(true);
           reject(undefined);
         }
       });
@@ -65,8 +71,12 @@ function NewDocument() {
     getLocation()
       .then(({ latitude, longitude }) => {
         setLocation({ lat: latitude, lng: longitude });
+        setDisabled(false);
       })
-      .catch((e) => setLocation(undefined));
+      .catch((e) => {
+        setDisabled(false);
+        setLocation(undefined);
+      });
   }, []);
 
   useEffect(() => {
@@ -86,7 +96,7 @@ function NewDocument() {
   function onSubmit(data) {
     return new Promise((resolve, reject) => {
       if (location === undefined) {
-        reject('No location provided');
+        setDisabled(true);
         return;
       }
       let processContract = new web3.eth.Contract(Process.abi, params.process);
@@ -171,7 +181,11 @@ function NewDocument() {
               )}
               <Label>{t('newDocument:comments')}</Label>
               <TextArea name="comment" ref={register}></TextArea>
-              <Button type="submit">{t('newDocument:submit')}</Button>
+              <Button disabled={isDisabled} type="submit">
+                {isDisabled
+                  ? t('newDocument:noLocation')
+                  : t('newDocument:submit')}
+              </Button>
             </>
           )}
         </Form>
