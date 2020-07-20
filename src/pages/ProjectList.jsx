@@ -110,7 +110,17 @@ export default function ProjectList() {
                       projects.map((project) => (
                         <Row key={project[1]}>
                           <Col>{project[3]}</Col>
-                          <Col>{project[2][2]}</Col>
+                          <Col>
+                            {project[2][2] === '' ? (
+                              account.type === '0' ? (
+                                <TableButton>ASIGNAR</TableButton>
+                              ) : (
+                                ''
+                              )
+                            ) : (
+                              project[2][2]
+                            )}
+                          </Col>
                           <Col>{project[1]}</Col>
                           <Col>{project[4]}</Col>
                           <Col>

@@ -30,7 +30,6 @@ export const LoginSchema = yup.object().shape({
 
 export const ProjectSchema = yup.object().shape({
   proyectoTitle: yup.string().required('Se requiere un nombre de proyecto'),
-  clientAddress: yup.string().required('Se requiere elegir un cliente'),
   expediente: yup
     .number()
     .typeError('Expediente debe ser un numero')

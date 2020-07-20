@@ -79,11 +79,6 @@ export const filter = (f) => (input) => input.filter(f);
 
 export const createProject = (contract, data, web3, from) => {
   return contract.methods
-    .createProject(
-      data.expediente,
-      data.clientAddress,
-      data.proyectoTitle,
-      data.oc
-    )
+    .createProject(data.expediente, data.proyectoTitle, data.oc)
     .send({ from });
 };
