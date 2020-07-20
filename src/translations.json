@@ -157,7 +157,8 @@
       "fileHash": "HASH DEL ARCHIVO: ",
       "locationComment": "UBICACIÓN DEL DOCUMENTO (AJUSTAR SI NECESARIO)",
       "comments": "OBSERVACIONES",
-      "submit": "SELLAR"
+      "submit": "SELLAR",
+      "noLocation": "NO SE PUDO OBTENER SU UBICACIÓN"
     },
     "newProject": {
       "title": "NUEVO PROYECTO",
