@@ -59,8 +59,8 @@ function ProcessList() {
             ) : (
               processes.map((process) => (
                 <Row key={process[3]}>
-                  <Col>{web3.utils.hexToAscii(process[1])}</Col>
-                  <Col>{web3.utils.hexToAscii(process[0][2])}</Col>
+                  <Col>{process[1]}</Col>
+                  <Col>{process[0][2]}</Col>
                   <Col>
                     <Link to={'/documents/' + process[3]}>
                       <Eye

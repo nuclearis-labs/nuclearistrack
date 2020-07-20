@@ -11,23 +11,20 @@ contract('Create Process', (accounts) => {
     await instance.createProject(
       41955,
       accounts[1],
-      web3.utils.asciiToHex('Conjunto Soporte'),
-      web3.utils.asciiToHex('23423423 / 23423423')
+      'Conjunto Soporte',
+      '23423423 / 23423423'
     );
   });
 
   it('REVERT: Create a new process as non-owner', async () => {
     await truffleAssert.reverts(
-      instance.createProcess(accounts[2], web3.utils.asciiToHex('Mecanizado'), {
+      instance.createProcess(accounts[2], 'Mecanizado', {
         from: accounts[1],
       })
     );
   });
   it('EVENT: Create a new process', async () => {
-    const result = await instance.createProcess(
-      accounts[2],
-      web3.utils.asciiToHex('Mecanizado')
-    );
+    const result = await instance.createProcess(accounts[2], 'Mecanizado');
 
     processAddress = result.logs[0].args[0];
     processInstance3 = await Process.at(processAddress);
@@ -47,21 +44,18 @@ contract('Return Processes', (accounts) => {
     await instance.createProject(
       41955,
       accounts[1],
-      web3.utils.asciiToHex('Conjunto Soporte'),
-      web3.utils.asciiToHex('23423423 / 23423423')
+      'Conjunto Soporte',
+      '23423423 / 23423423'
     );
     const process1 = await instance.createProcess(
       accounts[2],
-      web3.utils.asciiToHex('Mecanizado 2019')
+      'Mecanizado 2019'
     );
     const process2 = await instance.createProcess(
       accounts[2],
-      web3.utils.asciiToHex('Mecanizado 2020')
+      'Mecanizado 2020'
     );
-    const process3 = await instance.createProcess(
-      accounts[3],
-      web3.utils.asciiToHex('Plateado')
-    );
+    const process3 = await instance.createProcess(accounts[3], 'Plateado');
     processAddress1 = process1.logs[0].args[0];
     processInstance1 = await Process.at(processAddress1);
     processAddress2 = process2.logs[0].args[0];
@@ -117,18 +111,11 @@ contract('Return Processes', (accounts) => {
     assert.lengthOf(result, 2, 'Array has to have one process assigned');
   });
 
-  it('REVERT: Get Process Details as non-supplier or non-owner', async () => {
-    await truffleAssert.reverts(
-      processInstance3.getDetails({ from: accounts[4] }),
-      'User has to be assigned client or owner'
-    );
-  });
-
   it('Get Process Details as owner', async () => {
     const result = await processInstance3.getDetails({ from: accounts[0] });
     assert.deepEqual(result, {
       '0': accounts[3],
-      '1': web3.utils.padRight(web3.utils.asciiToHex('Plateado'), 64),
+      '1': 'Plateado',
       '2': [],
       '3': processAddress3,
     });
@@ -138,7 +125,7 @@ contract('Return Processes', (accounts) => {
     const result = await processInstance3.getDetails({ from: accounts[3] });
     assert.deepEqual(result, {
       '0': accounts[3],
-      '1': web3.utils.padRight(web3.utils.asciiToHex('Plateado'), 64),
+      '1': 'Plateado',
       '2': [],
       '3': processAddress3,
     });

@@ -30,10 +30,7 @@ export default function NewProcess() {
 
   function onSubmit(data) {
     contract.methods
-      .createProcess(
-        data.supplierAddress,
-        web3.utils.asciiToHex(data.processTitle)
-      )
+      .createProcess(data.supplierAddress, data.processTitle)
       .send({ from: account.address })
       .on('transactionHash', (txHash) => setTxHash(txHash));
   }
@@ -61,7 +58,7 @@ export default function NewProcess() {
                 </option>
                 {users.map((user) => (
                   <option key={user[3]} value={user[3]}>
-                    {web3.utils.hexToAscii(user[2]).replace(/\0/g, '')}
+                    {user[2]}
                   </option>
                 ))}
               </Select>

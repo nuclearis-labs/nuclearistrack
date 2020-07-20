@@ -109,10 +109,10 @@ export default function ProjectList() {
                     ) : (
                       projects.map((project) => (
                         <Row key={project[1]}>
-                          <Col>{web3.utils.hexToAscii(project[3])}</Col>
-                          <Col>{web3.utils.hexToAscii(project[2][2])}</Col>
+                          <Col>{project[3]}</Col>
+                          <Col>{project[2][2]}</Col>
                           <Col>{project[1]}</Col>
-                          <Col>{web3.utils.hexToAscii(project[4])}</Col>
+                          <Col>{project[4]}</Col>
                           <Col>
                             {account.type === '0' ? (
                               <TableButton
@@ -148,14 +148,10 @@ export default function ProjectList() {
         {projectDetails && (
           <Right>
             <ResumenTit>{t('projectList:resumen')}</ResumenTit>
-            <ResumenName>
-              {web3.utils.hexToAscii(projectDetails[3])}
-            </ResumenName>
+            <ResumenName>{projectDetails[3]}</ResumenName>
             <Row>
               <Col2 className="color">{t('projectList:client')}</Col2>
-              <Col2 className="bold">
-                {web3.utils.hexToAscii(projectDetails[2][2])}
-              </Col2>
+              <Col2 className="bold">{projectDetails[2][2]}</Col2>
             </Row>
             <Row>
               <Col2 className="color">{t('projectList:expediente')}</Col2>
@@ -163,9 +159,7 @@ export default function ProjectList() {
             </Row>
             <Row>
               <Col2 className="color">{t('projectList:oc')}</Col2>
-              <Col2 className="bold">
-                {web3.utils.hexToAscii(projectDetails[4])}
-              </Col2>
+              <Col2 className="bold">{projectDetails[4]}</Col2>
             </Row>
             <ProcesosTit>{t('projectList:processes')}</ProcesosTit>
             <HeadRow>
@@ -176,8 +170,8 @@ export default function ProjectList() {
             {processes &&
               processes.map((process) => (
                 <Row key={process[3]}>
-                  <Col3>{web3.utils.hexToAscii(process[1])}</Col3>
-                  <Col3>{web3.utils.hexToAscii(process[0][2])}</Col3>
+                  <Col3>{process[1]}</Col3>
+                  <Col3>{process[0][2]}</Col3>
                   <Col3>
                     <Link to={'/documents/' + process[3]}>
                       <Eye />

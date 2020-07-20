@@ -14,14 +14,14 @@ contract NuclearPoE is Ownable {
     struct Project {
         State status;
         address clientAddress;
-        bytes32 title;
-        bytes32 purchaseOrder;
+        string title;
+        string purchaseOrder;
         address[] processContracts;
     }
     struct User {
         State status;
         Type userType;
-        bytes32 name;
+        string name;
     }
 
     address[] public processContractsArray;
@@ -47,7 +47,7 @@ contract NuclearPoE is Ownable {
         _;
     }
 
-    constructor(bytes32 _name) public {
+    constructor(string memory _name) public {
         // Creates the admin user, similar to an owner
         user[msg.sender] = User(State.Created, Type.Admin, _name);
         users.push(msg.sender);
@@ -61,8 +61,8 @@ contract NuclearPoE is Ownable {
     function createProject(
         uint256 _id,
         address _client,
-        bytes32 _title,
-        bytes32 _purchaseOrder
+        string calldata _title,
+        string calldata _purchaseOrder
     ) external onlyOwner {
         require(
             project[_id].status == State.Null,
@@ -90,7 +90,7 @@ contract NuclearPoE is Ownable {
     function createUser(
         Type _type,
         address _address,
-        bytes32 _name
+        string calldata _name
     ) external onlyOwner {
         user[_address] = User(State.Created, _type, _name);
         users.push(_address);
@@ -100,7 +100,7 @@ contract NuclearPoE is Ownable {
     /// @notice Returns specific information about one user
     /// @param _address User Address
     /// @return Type User Type (supplier or client)
-    /// @return bytes32 Name of user
+    /// @return string Name of user
     function getUser(address _address)
         external
         view
@@ -108,7 +108,7 @@ contract NuclearPoE is Ownable {
         returns (
             State,
             Type,
-            bytes32,
+            string memory,
             address
         )
     {
@@ -140,7 +140,7 @@ contract NuclearPoE is Ownable {
     /// @param _supplier Supplier Address
     /// @param _processName Name of supplier of process
     /// @param _processName Name of supplier of process
-    function createProcess(address _supplier, bytes32 _processName)
+    function createProcess(address _supplier, string calldata _processName)
         external
         onlyOwner
     {
@@ -220,8 +220,8 @@ contract NuclearPoE is Ownable {
     /// @param _id The id of the project
     /// @return status Current State of project
     /// @return address Client assigned to project
-    /// @return bytes32 Title of project
-    /// @return bytes32 Purchase order of project
+    /// @return string Title of project
+    /// @return string Purchase order of project
     /// @return address[] Array of process contract addresses assigned to project
     function getProjectDetails(uint256 _id)
         external
@@ -230,8 +230,8 @@ contract NuclearPoE is Ownable {
             State,
             uint256,
             address,
-            bytes32,
-            bytes32,
+            string memory,
+            string memory,
             address[] memory
         )
     {

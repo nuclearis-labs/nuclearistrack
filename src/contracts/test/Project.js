@@ -11,8 +11,8 @@ contract('Create Project', (accounts) => {
       instance.createProject(
         41955,
         accounts[1],
-        web3.utils.asciiToHex('Conjunto Soporte'),
-        web3.utils.asciiToHex('23423423 / 23423423'),
+        'Conjunto Soporte',
+        '23423423 / 23423423',
         { from: accounts[1] }
       ),
       'Ownable: caller is not the owner'
@@ -22,8 +22,8 @@ contract('Create Project', (accounts) => {
     const result = await instance.createProject(
       41955,
       accounts[1],
-      web3.utils.asciiToHex('Conjunto Soporte'),
-      web3.utils.asciiToHex('23423423 / 23423423')
+      'Conjunto Soporte',
+      '23423423 / 23423423'
     );
 
     truffleAssert.eventEmitted(result, 'CreateProject');
@@ -34,8 +34,8 @@ contract('Create Project', (accounts) => {
       instance.createProject(
         41955,
         accounts[1],
-        web3.utils.asciiToHex('Conjunto Soporte'),
-        web3.utils.asciiToHex('23423423 / 23423423')
+        'Conjunto Soporte',
+        '23423423 / 23423423'
       ),
       'Project already created or closed'
     );
@@ -49,20 +49,20 @@ contract('Return Projects', (accounts) => {
     await instance.createProject(
       41955,
       accounts[1],
-      web3.utils.asciiToHex('Conjunto Soporte'),
-      web3.utils.asciiToHex('23423423 / 23423423')
+      'Conjunto Soporte',
+      '23423423 / 23423423'
     );
     await instance.createProject(
       41800,
       accounts[1],
-      web3.utils.asciiToHex('Anillos 2019'),
-      web3.utils.asciiToHex('23423423 / 23423423')
+      'Anillos 2019',
+      '23423423 / 23423423'
     );
     await instance.createProject(
       51233,
       accounts[2],
-      web3.utils.asciiToHex('Anillos 2019'),
-      web3.utils.asciiToHex('23423423 / 23423423')
+      'Anillos 2019',
+      '23423423 / 23423423'
     );
   });
   it('Return projects contracts as owner', async () => {
@@ -87,14 +87,9 @@ contract('Return Projects', (accounts) => {
     const result = await instance.getProjectDetails(41955, {
       from: accounts[1],
     });
-    const expectedTitle = web3.utils.padRight(
-      web3.utils.asciiToHex('Conjunto Soporte'),
-      64
-    );
-    const expectedPurchaseOrder = web3.utils.padRight(
-      web3.utils.asciiToHex('23423423 / 23423423'),
-      64
-    );
+    const expectedTitle = 'Conjunto Soporte';
+
+    const expectedPurchaseOrder = '23423423 / 23423423';
 
     assert.deepEqual(result, {
       '0': web3.utils.toBN(1),
@@ -109,14 +104,9 @@ contract('Return Projects', (accounts) => {
     const result = await instance.getProjectDetails(41800, {
       from: accounts[0],
     });
-    const expectedTitle = web3.utils.padRight(
-      web3.utils.asciiToHex('Anillos 2019'),
-      64
-    );
-    const expectedPurchaseOrder = web3.utils.padRight(
-      web3.utils.asciiToHex('23423423 / 23423423'),
-      64
-    );
+    const expectedTitle = 'Anillos 2019';
+
+    const expectedPurchaseOrder = '23423423 / 23423423';
 
     assert.deepEqual(result, {
       '0': web3.utils.toBN(1),
@@ -136,14 +126,14 @@ contract('Toggle Project Status', (accounts) => {
     await instance.createProject(
       41955,
       accounts[1],
-      web3.utils.asciiToHex('Conjunto Soporte'),
-      web3.utils.asciiToHex('23423423 / 23423423')
+      'Conjunto Soporte',
+      '23423423 / 23423423'
     );
     await instance.createProject(
       41956,
       accounts[1],
-      web3.utils.asciiToHex('Conjunto Soporte'),
-      web3.utils.asciiToHex('23423423 / 23423423')
+      'Conjunto Soporte',
+      '23423423 / 23423423'
     );
   });
   it('REVERT: Toggle project as non-owner', async () => {

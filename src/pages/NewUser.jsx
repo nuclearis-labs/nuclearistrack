@@ -18,11 +18,7 @@ export default function NewUser() {
 
   function onSubmit(data) {
     contract.methods
-      .createUser(
-        data.newUserType,
-        data.newUserAddress,
-        web3.utils.asciiToHex(data.newUserName)
-      )
+      .createUser(data.newUserType, data.newUserAddress, data.newUserName)
       .send({ from: account.address })
       .on('transactionHash', (txHash) => setTxHash(txHash));
   }

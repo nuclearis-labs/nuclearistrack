@@ -75,9 +75,7 @@ function ProcessModal(props) {
             <ModalTit>{t('processModal:title')}</ModalTit>
             <ModalInput placeholder="BUSCAR" ref={register}></ModalInput>
             <ModalTxt>{t('processModal:explainer')}</ModalTxt>
-            <ModalProdName>
-              {web3.utils.hexToAscii(props.project[3])}
-            </ModalProdName>
+            <ModalProdName>{props.project[3]}</ModalProdName>
           </ModalTop>
           <ModalBottom>
             <HeadRow>
@@ -100,8 +98,8 @@ function ProcessModal(props) {
                     value={process[3]}
                     ref={register}
                   />
-                  <Col4>{web3.utils.hexToAscii(process[1])}</Col4>
-                  <Col4>{web3.utils.hexToAscii(process[0][2])}</Col4>
+                  <Col4>{process[1]}</Col4>
+                  <Col4>{process[0][2]}</Col4>
                   <Col4>
                     <Link to={'/documents/' + process[3]}>
                       <Eye />
@@ -112,11 +110,7 @@ function ProcessModal(props) {
               ))}
             </ScrollBox130>
             <Button type="submit">
-              {txHash
-                ? t('processModal:success')(
-                    <RSKLink hash={txHash} testnet type="tx" />
-                  )
-                : t('processModal:submit')}
+              {txHash ? t('processModal:success') : t('processModal:submit')}
             </Button>
           </ModalBottom>
         </form>

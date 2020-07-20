@@ -53,7 +53,7 @@ export default function LoggedHeader(props) {
         </OutsideClickHandler>
         <NavUser>
           <User />
-          <UserName>{web3.utils.hexToAscii(account.name)}</UserName>
+          <UserName>{account.name}</UserName>
           <UserName>{`${account.address.substr(
             0,
             4

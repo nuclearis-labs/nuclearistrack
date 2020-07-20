@@ -44,7 +44,7 @@ export default function NewProject() {
       <>
         {users.map((user) => (
           <option key={user[3]} value={user[3]}>
-            {web3.utils.hexToAscii(user[2]).replace(/\0/g, '')}
+            {user[2]}
           </option>
         ))}
       </>

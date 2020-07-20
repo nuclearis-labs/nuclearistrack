@@ -11,13 +11,10 @@ contract('Add Document', (accounts) => {
     await instance.createProject(
       41955,
       accounts[1],
-      web3.utils.asciiToHex('Conjunto Soporte'),
-      web3.utils.asciiToHex('234342 / 3453453')
+      'Conjunto Soporte',
+      '234342 / 3453453'
     );
-    const result = await instance.createProcess(
-      accounts[2],
-      web3.utils.asciiToHex('Mecanizado')
-    );
+    const result = await instance.createProcess(accounts[2], 'Mecanizado');
 
     processAddress = result.logs[0].args[0];
     processInstance = await Process.at(processAddress);
@@ -26,8 +23,8 @@ contract('Add Document', (accounts) => {
     const result = await processInstance.addDocument(
       'Documento',
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
-      web3.utils.asciiToHex('-31,324234234'),
-      web3.utils.asciiToHex('-54,324234234'),
+      '-31,324234234',
+      '-54,324234234',
       'Este es un comentario',
       { from: accounts[2] }
     );
@@ -39,8 +36,8 @@ contract('Add Document', (accounts) => {
       processInstance.addDocument(
         'Documento',
         '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
-        web3.utils.asciiToHex('-31,324234234'),
-        web3.utils.asciiToHex('-54,324234234'),
+        '-31,324234234',
+        '-54,324234234',
         'Este es un comentario',
         { from: accounts[0] }
       ),
@@ -52,8 +49,8 @@ contract('Add Document', (accounts) => {
       processInstance.addDocument(
         'Documento',
         '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
-        web3.utils.asciiToHex('-31,324234234'),
-        web3.utils.asciiToHex('-54,324234234'),
+        '-31,324234234',
+        '-54,324234234',
         'Este es un comentario',
         { from: accounts[4] }
       ),
@@ -65,8 +62,8 @@ contract('Add Document', (accounts) => {
       processInstance.addDocument(
         'Documento',
         '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
-        web3.utils.asciiToHex('-31,324234234'),
-        web3.utils.asciiToHex('-54,324234234'),
+        '-31,324234234',
+        '-54,324234234',
         'Este es un comentario',
         { from: accounts[2] }
       ),
@@ -82,14 +79,8 @@ contract('Add Document', (accounts) => {
       result[1],
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd'
     );
-    assert.equal(
-      result[2],
-      web3.utils.padRight(web3.utils.asciiToHex('-31,324234234'), 64)
-    );
-    assert.equal(
-      result[3],
-      web3.utils.padRight(web3.utils.asciiToHex('-54,324234234'), 64)
-    );
+    assert.equal(result[2], '-31,324234234');
+    assert.equal(result[3], '-54,324234234');
     assert.equal(result[5], 'Este es un comentario');
   });
 
@@ -112,29 +103,26 @@ contract('Return Documents', (accounts) => {
     await instance.createProject(
       41955,
       accounts[1],
-      web3.utils.asciiToHex('Conjunto Soporte'),
-      web3.utils.asciiToHex('234342 / 3453453')
+      'Conjunto Soporte',
+      '234342 / 3453453'
     );
-    const result = await instance.createProcess(
-      accounts[2],
-      web3.utils.asciiToHex('Mecanizado')
-    );
+    const result = await instance.createProcess(accounts[2], 'Mecanizado');
 
     processAddress = result.logs[0].args[0];
     processInstance = await Process.at(processAddress);
     await processInstance.addDocument(
       'Documento',
       '0x29b4c17ccd128acc8c9f3e02c9b60d72c76add107a87a230d7a87b62dc313dbd',
-      web3.utils.asciiToHex('-31,324234234'),
-      web3.utils.asciiToHex('-54,324234234'),
+      '-31,324234234',
+      '-54,324234234',
       'Este es un comentario',
       { from: accounts[2] }
     );
     await processInstance.addDocument(
       'Documento',
       '0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
-      web3.utils.asciiToHex('-31,324234234'),
-      web3.utils.asciiToHex('-54,324234234'),
+      '-31,324234234',
+      '-54,324234234',
       'Este es un comentario',
       { from: accounts[2] }
     );

@@ -95,8 +95,8 @@ function NewDocument() {
         .addDocument(
           data.name,
           data.hash,
-          web3.utils.asciiToHex(data.lat.toString()),
-          web3.utils.asciiToHex(data.lng.toString()),
+          data.lat.toString(),
+          data.lng.toString(),
           data.comment
         )
         .send({ from: account.address })
@@ -137,13 +137,9 @@ function NewDocument() {
                 {processDetails && (
                   <>
                     <SubTit>{t('newDocument:processTitle')}</SubTit>
-                    <ProcessName>
-                      {web3.utils.hexToAscii(processDetails[1])}
-                    </ProcessName>
+                    <ProcessName>{processDetails[1]}</ProcessName>
                     <SubTit>{t('newDocument:supplier')}</SubTit>
-                    <SubTit className="bold">
-                      {web3.utils.hexToAscii(processDetails[0][2])}
-                    </SubTit>
+                    <SubTit className="bold">{processDetails[0][2]}</SubTit>
                   </>
                 )}
               </Pad>

@@ -117,8 +117,8 @@ export default function DocumentDetail() {
 
               <GoogleMap
                 coords={{
-                  lat: parseFloat(web3.utils.hexToAscii(document[2])),
-                  lng: parseFloat(web3.utils.hexToAscii(document[3])),
+                  lat: parseFloat(document[2]),
+                  lng: parseFloat(document[3]),
                 }}
               />
 

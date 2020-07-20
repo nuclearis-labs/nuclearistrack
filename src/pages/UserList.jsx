@@ -62,7 +62,7 @@ export default function UserList() {
                 ) : (
                   users.map((user) => (
                     <Row key={user[3]}>
-                      <Col>{web3.utils.hexToAscii(user[2])}</Col>
+                      <Col>{user[2]}</Col>
                       <Col>
                         <RSKLink type="address" testnet hash={user[3]} />
                       </Col>

@@ -82,8 +82,8 @@ export const createProject = (contract, data, web3, from) => {
     .createProject(
       data.expediente,
       data.clientAddress,
-      web3.utils.asciiToHex(data.proyectoTitle),
-      web3.utils.asciiToHex(data.oc)
+      data.proyectoTitle,
+      data.oc
     )
     .send({ from });
 };

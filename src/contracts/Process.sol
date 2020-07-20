@@ -7,14 +7,14 @@ import './NuclearPoE.sol';
 /// @author Sebastian A. Martinez
 /// @notice This contract is responsible for each process and its corresponding documents
 contract Process {
-    bytes32 private processName;
+    string private processName;
     address private supplierAddress;
     address private owner;
 
     struct Document {
         string name;
-        bytes32 latitude;
-        bytes32 longitude;
+        string latitude;
+        string longitude;
         uint256 mineTime;
         string comment;
     }
@@ -34,7 +34,7 @@ contract Process {
 
     constructor(
         address _supplierAddress,
-        bytes32 _processName,
+        string memory _processName,
         address _ownerAddress
     ) public {
         supplierAddress = _supplierAddress;
@@ -51,8 +51,8 @@ contract Process {
     function addDocument(
         string calldata _name,
         bytes32 _hash,
-        bytes32 _latitude,
-        bytes32 _longitude,
+        string calldata _latitude,
+        string calldata _longitude,
         string calldata _comment
     ) external onlySupplier() {
         require(document[_hash].mineTime == 0, 'Document already created');
@@ -66,8 +66,8 @@ contract Process {
     /// @notice Gets document metadata by hash
     /// @param _hash Hash of document
     /// @return string Name of document
-    /// @return bytes32 Latitude
-    /// @return bytes32 Longitude
+    /// @return string Latitude
+    /// @return string Longitude
     /// @return uint256 mineTime Moment the transaction got mined
     /// @return string Comment
     function getDocument(bytes32 _hash)
@@ -76,8 +76,8 @@ contract Process {
         returns (
             string memory,
             bytes32,
-            bytes32,
-            bytes32,
+            string memory,
+            string memory,
             uint256,
             string memory
         )
@@ -95,7 +95,7 @@ contract Process {
 
     /// @notice Gets details about this contract
     /// @return address Address of supplier of this process
-    /// @return bytes32 Name of process
+    /// @return string Name of process
     /// @return bytes32[] Array of all document hashes in this process
     /// @return address Address of contract
     function getDetails()
@@ -103,7 +103,7 @@ contract Process {
         view
         returns (
             address,
-            bytes32,
+            string memory,
             bytes32[] memory,
             address
         )
