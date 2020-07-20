@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import OutsideClickHandler from 'react-outside-click-handler';
 import Process from '../build/contracts/Process.json';
-import RSKLink from '../components/RSKLink';
 import {
   ModalWrap,
   ModalTop,

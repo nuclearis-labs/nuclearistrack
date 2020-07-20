@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 export default function NewUser() {
   const { t } = useTranslation();
   const [txHash, setTxHash] = useState(undefined);
-  const { account, web3, contract } = useContext(UserContext);
+  const { account, contract } = useContext(UserContext);
 
   const { register, handleSubmit, errors } = useForm({
     validationSchema: UserSchema,

@@ -24,7 +24,7 @@ export default function LoggedHeader(props) {
   function resetDropdown() {
     setIndexDropdownOpened(false);
   }
-  const { account, web3 } = useContext(UserContext);
+  const { account } = useContext(UserContext);
 
   return (
     <Nav>
