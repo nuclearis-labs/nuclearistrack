@@ -8,20 +8,15 @@ contract('Create Project', (accounts) => {
   });
   it('REVERT: Create project as non-owner', async () => {
     await truffleAssert.reverts(
-      instance.createProject(
-        41955,
-        accounts[1],
-        'Conjunto Soporte',
-        '23423423 / 23423423',
-        { from: accounts[1] }
-      ),
+      instance.createProject(41955, 'Conjunto Soporte', '23423423 / 23423423', {
+        from: accounts[1],
+      }),
       'Ownable: caller is not the owner'
     );
   });
   it('EVENT: Create a new project', async () => {
     const result = await instance.createProject(
       41955,
-      accounts[1],
       'Conjunto Soporte',
       '23423423 / 23423423'
     );
@@ -31,12 +26,7 @@ contract('Create Project', (accounts) => {
 
   it('REVERT: Create duplicate project', async () => {
     await truffleAssert.reverts(
-      instance.createProject(
-        41955,
-        accounts[1],
-        'Conjunto Soporte',
-        '23423423 / 23423423'
-      ),
+      instance.createProject(41955, 'Conjunto Soporte', '23423423 / 23423423'),
       'Project already created or closed'
     );
   });
@@ -48,32 +38,20 @@ contract('Return Projects', (accounts) => {
     instance = await NuclearPoE.new(accounts[0]);
     await instance.createProject(
       41955,
-      accounts[1],
       'Conjunto Soporte',
       '23423423 / 23423423'
     );
-    await instance.createProject(
-      41800,
-      accounts[1],
-      'Anillos 2019',
-      '23423423 / 23423423'
-    );
-    await instance.createProject(
-      51233,
-      accounts[2],
-      'Anillos 2019',
-      '23423423 / 23423423'
-    );
+    await instance.createProject(41800, 'Anillos 2019', '23423423 / 23423423');
+    await instance.createProject(51233, 'Anillos 2019', '23423423 / 23423423');
   });
   it('Return projects contracts as owner', async () => {
     const result = await instance.getProjectsByAddress();
     assert.lengthOf(result, 3, 'Result should be array of 3 projects');
   });
-  it('Return projects contracts as client', async () => {
+  /* it('Return projects contracts as client', async () => {
     const result = await instance.getProjectsByAddress({ from: accounts[1] });
     assert.lengthOf(result, 2, 'Result should be array of 2 projects');
-  });
-  it('Return empty array if called by address without corresponding projects', async () => {
+  }) */ it('Return empty array if called by address without corresponding projects', async () => {
     const result = await instance.getProjectsByAddress({ from: accounts[3] });
     assert.lengthOf(result, 0, 'Result should be an empty array');
   });
@@ -84,6 +62,7 @@ contract('Return Projects', (accounts) => {
     );
   });
   it('Return details of project as client', async () => {
+    await instance.assignClient(41955, accounts[1]);
     const result = await instance.getProjectDetails(41955, {
       from: accounts[1],
     });
@@ -111,7 +90,7 @@ contract('Return Projects', (accounts) => {
     assert.deepEqual(result, {
       '0': web3.utils.toBN(1),
       '1': web3.utils.toBN(41800),
-      '2': accounts[1],
+      '2': '0x0000000000000000000000000000000000000000',
       '3': expectedTitle,
       '4': expectedPurchaseOrder,
       '5': [],
@@ -125,13 +104,11 @@ contract('Toggle Project Status', (accounts) => {
     instance = await NuclearPoE.new(accounts[0]);
     await instance.createProject(
       41955,
-      accounts[1],
       'Conjunto Soporte',
       '23423423 / 23423423'
     );
     await instance.createProject(
       41956,
-      accounts[1],
       'Conjunto Soporte',
       '23423423 / 23423423'
     );

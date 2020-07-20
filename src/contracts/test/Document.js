@@ -8,12 +8,7 @@ contract('Add Document', (accounts) => {
   let processInstance;
   before(async () => {
     instance = await NuclearPoE.new(accounts[0]);
-    await instance.createProject(
-      41955,
-      accounts[1],
-      'Conjunto Soporte',
-      '234342 / 3453453'
-    );
+    await instance.createProject(41955, 'Conjunto Soporte', '234342 / 3453453');
     const result = await instance.createProcess(accounts[2], 'Mecanizado');
 
     processAddress = result.logs[0].args[0];
@@ -100,12 +95,7 @@ contract('Return Documents', (accounts) => {
   let instance;
   before(async () => {
     instance = await NuclearPoE.new(accounts[0]);
-    await instance.createProject(
-      41955,
-      accounts[1],
-      'Conjunto Soporte',
-      '234342 / 3453453'
-    );
+    await instance.createProject(41955, 'Conjunto Soporte', '234342 / 3453453');
     const result = await instance.createProcess(accounts[2], 'Mecanizado');
 
     processAddress = result.logs[0].args[0];

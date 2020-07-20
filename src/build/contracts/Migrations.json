@@ -17,7 +17,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -30,7 +31,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -185,7 +187,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 936,
+                        "referencedDeclaration": 965,
                         "src": "198:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -270,7 +272,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 936,
+                        "referencedDeclaration": 965,
                         "src": "253:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -607,7 +609,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 936,
+                        "referencedDeclaration": 965,
                         "src": "198:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -692,7 +694,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 936,
+                        "referencedDeclaration": 965,
                         "src": "253:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -905,8 +907,8 @@
     "31": {
       "events": {},
       "links": {},
-      "address": "0xe8b627EdA9CE1551d117efc94564FA1450af4a7A",
-      "transactionHash": "0x75c81689b61bf147fcc4524888c8d8b91fc725f1a8611f6f1c72da71cf18ca7d"
+      "address": "0xc02e1c10d9b9098B25Bf1fB7f9187c2895402F6D",
+      "transactionHash": "0x961a4cae494af56f34fc411ca465c2eac6d847e73b2b929cafc3e6e363d8d820"
     },
     "5777": {
       "events": {},
@@ -934,7 +936,8 @@
     }
   },
   "schemaVersion": "3.2.0",
-  "updatedAt": "2020-07-20T17:42:14.538Z",
+  "updatedAt": "2020-07-20T20:56:27.093Z",
+  "networkType": "ethereum",
   "devdoc": {
     "methods": {}
   },

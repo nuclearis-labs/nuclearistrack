@@ -37,6 +37,7 @@ contract NuclearPoE is Ownable {
     event CreateUser(address userAddress);
     event CreateProcess(address ProcessContractAddress);
     event AssignProcess(uint256 project, address ProcessContractAddress);
+    event AssignClient(uint256 project, address ClientAddress);
     event ToggleProjectStatus(uint256 id, State newState);
 
     modifier onlyUser() {
@@ -55,12 +56,10 @@ contract NuclearPoE is Ownable {
 
     /// @notice Creates a new project
     /// @param _id Id of a new project
-    /// @param _client Address of client
     /// @param _title Title of new project
     /// @param _purchaseOrder Purchase Order Id of project
     function createProject(
         uint256 _id,
-        address _client,
         string calldata _title,
         string calldata _purchaseOrder
     ) external onlyOwner {
@@ -72,15 +71,21 @@ contract NuclearPoE is Ownable {
         address[] memory processContracts = new address[](0);
         project[_id] = Project(
             State.Created,
-            _client,
+            address(0),
             _title,
             _purchaseOrder,
             processContracts
         );
-        projectsByAddress[_client].push(_id);
         projectsArray.push(_id);
 
         emit CreateProject(_id);
+    }
+
+    function assignClient(uint256 _id, address _client) external onlyOwner {
+        projectsByAddress[_client].push(_id);
+        project[_id].clientAddress = _client;
+
+        emit AssignClient(_id, _client);
     }
 
     /// @notice Creates a new user

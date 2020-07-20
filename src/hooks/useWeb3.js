@@ -58,7 +58,7 @@ export default function useWeb3(props) {
           account: null,
           contract: new web3.eth.Contract(
             NuclearPoE.abi,
-            '0x7313DB7Bd26269cfe790EdC34A2d1F20B05466ff'
+            '0xE8156B243Cae0B41DE81Dbf40f0eA2982EaEE83D'
           ),
           web3,
         };

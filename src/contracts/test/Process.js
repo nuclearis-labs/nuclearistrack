@@ -10,7 +10,6 @@ contract('Create Process', (accounts) => {
     instance = await NuclearPoE.new(accounts[0]);
     await instance.createProject(
       41955,
-      accounts[1],
       'Conjunto Soporte',
       '23423423 / 23423423'
     );
@@ -43,7 +42,6 @@ contract('Return Processes', (accounts) => {
     instance = await NuclearPoE.new(accounts[0]);
     await instance.createProject(
       41955,
-      accounts[1],
       'Conjunto Soporte',
       '23423423 / 23423423'
     );
@@ -105,6 +103,7 @@ contract('Return Processes', (accounts) => {
   });
 
   it('Return process contracts by project as client', async () => {
+    await instance.assignClient(41955, accounts[1]);
     const result = await instance.getProcessContractsByProject(41955, {
       from: accounts[1],
     });
