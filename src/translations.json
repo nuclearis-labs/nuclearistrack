@@ -1,5 +1,4 @@
 {
-  "en": {},
   "es": {
     "header": {
       "home": "INICIO",
@@ -221,7 +220,8 @@
       "processes": "PROCESOS",
       "supplier": "PROVEEDOR",
       "documents": "DOCUMENTOS",
-      "assignProcess": "ASIGNAR PROCESO"
+      "assignProcess": "ASIGNAR PROCESO",
+      "assignClient": "ASIGNAR CLIENTE"
     }
   },
 
@@ -444,7 +444,234 @@
       "processes": "PROZESS",
       "supplier": "LIEFERANT",
       "documents": "DOKUMENTE",
-      "assignProcess": "PROZESS ZUWEISEN"
+      "assignProcess": "PROZESS ZUWEISEN",
+      "assignClient": "KUNDE ZUWEISEN"
+    }
+  },
+  "en": {
+    "header": {
+      "home": "START",
+      "benefits": "BENEFITS",
+      "abstract": "ABSTRACT",
+      "projects": "PROJECTS",
+      "proceso": "PROCESSES",
+      "user": "USERS",
+      "contact": "CONTACT",
+      "login": "ACCESS",
+      "logout": "EXIT",
+      "navPhrase": "MANUFACTURING TRACEABILITY BASED ON",
+      "navloggedPhrase": " MANUFACTURING TRACEABILITY BASED ON BLOCKCHAIN"
+    },
+    "footer": {
+      "phrase": "ENGINEERING AND MANUFACTURING OF<br/>MECHANICAL COMPONENTS FOR<br/>THE NUCLEAR INDUSTRY",
+      "license": "All rights reserved"
+    },
+    "home": {
+      "securityTitle": "SECURITY",
+      "securityText": "BLOCKCHAIN TECHNOLOGY SYSTEM, THE NEW STANDARD IN DIGITAL TRACEABILITY.",
+      "availabilityTitle": "AVAILABILITY",
+      "availabilityText": "BY ENTERING THE PLATFORM YOU WILL HAVE ACCESS TO ALL PROJECTS AND PROCESSES.",
+      "controlTitle": "CONTROL",
+      "controlText": "IT ALLOWS VERIFYING THE VERACITY OF ALL DOCUMENTS RELATED TO MANUFACTURING PROCESSES."
+    },
+    "general": {
+      "more": "MORE",
+      "404Title": "PAGE NOT FOUND",
+      "404": "THE REQUESTED PAGE WAS NOT FOUND, HERE YOU HAVE SOME RECOMMENDATIONS"
+    },
+    "benefits": {
+      "bannerTitle": "TRANSPARENCY IN ALL OF OUR PROCESSES",
+      "securityTitle": "SECURITY",
+      "securityText": "<p>BLOCKCHAIN IS A DIGITAL RECORD THAT WORKS OVER A \"CHAIN OF BLOCKS\" CRYPTOGRAPHICALLY SECURED. THIS TECHNOLOGY IS EXTREMELY SECURE DUE TO ITS DISTRIBUTED NATURE AND TRANSACTIONS’ IRREVERSIBILITY. THE CHAIN OF BLOCKS, KNOW AS BLOCKCHAIN, IS AN AGREED SINGLE RECORD,  IN WHICH INFORMATION IS DISTRIBUTED IN HUNDREDS OF THOUSANDS OF COMPUTERS AROUND THE WORLD. AS IT IS A DISTRIBUTED TECHNOLOGY, EVERY NETWORK NODE STORES A COPY OF THE CHAIN THAT WILL BE UPDATED EVERY SECOND ENSURING INFORMATION AVAILABILITY AT ALL TIMES. BLOCKCHAIN TECHNOLOGY ALLOWS US TO STORE INFORMATION THAT WILL NEVER BE LOST, MODIFIED OR DELETE",
+      "availabilityTitle": "INFORMATION AVAILABILITY",
+      "availabilityText": "<p>THE TRACEABILITY PLATFORM BASED ON BLOCKCHAIN DEVELOPED BY<strong>NUCLEARIS</strong> ALLOWS IT TO SEAL TECHNICAL INFORMATION OF THE PRODUCTIVE PROCESSES INVOLVED IN THE MANUFACTURING OF MECHANICAL COMPONENTS FOR NUCLEAR POWER PLANTS. EVERY TIME A NUCLEARIS’ SUPPLIER CARRIES OUT A PRODUCTIVE PROCESS OVER A PIECE O A HALF-FINISHED, A DOCUMENT NEEDS TO BE COMPLETED WHERE IT IS REGISTERED ALL TECHNICAL INFORMATION SUCH AS CERTIFICATES, PARAMETERS, CALIBRATIONS, TESTS, DIMENSIONAL RECORDS, ETC., AND FOR EVERY ONE OF THESE DOCUMENTS OUR PLATFORM GENERATES A UNIQUE “DIGITAL PRINT” THAT IDENTIFIES IT AND THIS CRYPTOGRAPHIC “SEAL” IS STORED IN THE BLOCKCHAIN.</p><p> DIGITAL PRINTS GENERATED IN A UNIQUE WAY FOR EVERY SINGLE TRACEABILITY DOCUMENT ALLOW OUR CLIENTS (NUCLEAR POWER PLANT OPERATORS) TO ACCESS THE BLOCKCHAIN PLATFORM TO VERIFY THE AUTHENTICITY OF DOCUMENTS GENERATED ACROSS ALL PRODUCTIVE HISTORY OF EVERY ONE OF THE PROCESS CARRIED OUT BY NUCLEARIS AND ITS BROAD NETWORK OF SUPPLIERS OF SERVICES, RAW MATERIALS AND PROCESSES THAT ARE ACTIVE USERS OF OUR PLATFORM. USING BLOCKCHAIN DOCUMENT VERACITY IS COMPLETELY IMMUTABLE, DECENTRALIZED AND PERPETUAL. IT IS NEVER SHUT DOWN, IT IS NEVER MODIFIED AND IT IS ALWAYS AVAILABLE FOR THE CLIENT.</p>",
+      "controlTitle": "CONTROL",
+      "controlText": "<p> ALL NUCLEAR POWER PLANT SYSTEMS ARE FORMED BY HUNDREDS OF THOUSANDS OF MECHANICAL COMPONENTS THAT HAVE TO BE DESIGNED AND BUILT UNDER STRICT INTERNATIONAL TECHNICAL REGULATIONS. OPERATORS IN THOSE POWER PLANTS ARE GRANTED PERMISSION TO ACCESS OUR PLATFORM AND, IN THIS WAY, THEY CAN VERIFY IN REAL TIME THE VERACITY OF ALL DOCUMENTS RELATED TO COMPONENTS THAT ARE TO BE INSTALLED IN THEIR FACILITIES. THUS, IT IS GUARANTEED THAT IN EVERY STEP OF THE PROCESS TECHNICAL SPECIFICATIONS AND REGULATIONS REQUIRED BY THE CLIENT ARE COMPLIED WITH IN ORDER TO GRANT MAXIMUM TRUSTWORTHINESS TO THE FINAL PRODUCT AND THEREFORE, THE ENTIRE POWER PLANT.</p>"
+    },
+    "abstract": {
+      "bannerTitle": "A NEW STANDARD IN THE AREA OF DOCUMENTATION ",
+      "section1Title": "STATUS QUO",
+      "section1Text": "<p>RIGHT FROM THE DESIGNING STATE OF A POWER PLANT, SAFETY IS OF TOP PRIORITY BECAUSE IT HAS THE OBJECTIVE OF REDUCING PROBABILITY OF INCIDENTS. THAT SAFETY IS STABLISHED THANKS TO THE USE OF TECHNICAL INTERNATIONAL REGULATIONS IN ORDER TO ENSURE TOP LEVELS OF QUALITY AND TRUSTWORTHINESS OF EVERY SINGLE MECHANICAL COMPONENT OF THE POWER PLANT. “ENSURING QUALITY IN EVERY SINGLE INDIVIDUAL PART OF A NUCLEAR REACTOR, WILL ENSURE TRUSTWORTHINESS OF THE ENTIRE SET”.</p><p> MANUFACTURERS OF MECHANICAL COMPONENTS TO BE INSTALLED IN A NUCLEAR REACTOR ARE COMPANIES CERTIFIED BY INTERNATIONAL ORGANIZATIONS WHICH FORCE THEM TO PRODUCE “PAPER BASED DOCUMENTS” WHERE ALL TRACEABILITY DATA OF EVERY SINGLE PRODUCTIVE PROCESS THAT TOOK PLACE IN THE MANUFACTURING OF EVERY COMPONENT IS INCLUDED.</p><p>HERE IS WHERE WE CAN FIND A VULNERABILITY SPOT IN THE QUALITY SYSTEM BECAUSE THOSE DOCUMENTS COULD BE LOST, MODIFIED OR REPLACED BY ACCIDENT OR DELIBERATELY AND THEREFORE AUTHENTICITY OF THE TRACEABILITY OF THAT COMPONENT WIL BE LOST AND THEREFORE IT WILL STOP BEING “TRUSTWORTHY”.</p><p>BLOCKCHAIN TECHNOLOGY IMPLEMENTED IN THE PRODUCTION AND SUPPLYING OF MECHANICAL COMPONENTS OF NUCLEAR USAGE IS THE SOLUTION TO THAT PROBLEM. USING BLOCKCHAIN TECHNOLOGY IN THE DOCUMENTARY RECORD OF INDUSTRIAL PROCESSES CREATES AN ADDITIONAL SECURITY LAYER TO THE TRUSTWORTHINESS OF EVERY PART OF THE NUCLEAR REACTOR.</p>",
+      "section2Title": "THE SOLUTION",
+      "section2Text": "<p>USING BLOCKCHAIN TECHNOLOGY, THE COMPANY <strong>NUCLEARIS</strong> HAS DEVELOPED A TRACEABILITY PLATFORM FOR THE MANUFACTURING OF MECHANICAL COMPONENTS OF NUCLEAR USAGE, ADDING AN EXTRA LAYER OF SECURITY TO THE QUALITY SYSTEM. WITH THIS DECENTRALIZED APPLICATION, MANUFACTURERS SEAL ON THE PLATFORM TECHNICAL DOCUMENTS OF THEIR INDUSTRIAL PROCESS. “THE MOMENT IT IS DONE AND ITS DIGITAL PRINT IS STORED, IT BECOMES IMMUTABLE AND ETERNAL.  THIS METHODOLOGY ELIMINATES ALL POSSIBILITY FOR FUTURE MODIFICATIONS OF THE DOCUMENTS ADDING VALUE AND RELIABILITY TO THE FINAL PRODUCT AND THEREFORE TO THE LEVEL OF SAFETY OF THE ENTIRE POWER PLANT.</p>",
+      "section3Title": "BLOCKCHAIN TECHNOLOGY",
+      "section3Text": "<p>BY THE END OF 2008, AND ACADEMIC THESIS WAS PUBLISHED CREATING WHAT IS NOW KNOWN AS THE BIGGEST DECENTRALIZED STORAGE NETWORK IN THE WORLD FUNCTIONING AT THE SAME TIME IN THOUSANDS OF COMPUTERS, GLOBAL SERVERS, WITH AN EXTRAORDINARY COMPUTING CAPACITY AND IMPOSSIBLE TO MODIFY OR SHUT DOWN. DECENTRALIZATION PROVIDES THE NETWORK INHERENT STRENGTH AND SECURITY REGARDING EXTERNAL ATTACKS WHICH IS VERY DIFFICULT TO OBTAIN IN CENTRALIZED SYSTEMS. IT IS IMPORTANT TO ADDRESS THAT WHAT IS UPLOADED TO THE BLOCKCHAIN ARE ONLY ALPHANUMERICAL CODES CALLED HASH THAT ARE CRYPTOGRAPHIC IDs (“DIGITAL PRINTS”) REPRESENTING IN AN UNIQUE WAY ALL DOCUMENTS. WITH THIS BRIEF DESCRIPTION, IT IS IMPORTANT TO UNDERSTAND THAT INFORMATION IN THE DOCUMENTS DOES NOT HAVE PUBLIC ACCESS UNDER ANY CIRCUMSTANCE.</p>"
+    },
+    "faq": {
+      "bannerTitle": "FREQUENTLY ASKED QUESTIONS",
+      "question1": "Where are all files shared with the platform stored?",
+      "answer1": "FILES NEVER LEAVE THE COMPUTER IN WHICH THEY ARE WHEN SEALING THE FILE. THE PLATFORM GENERATES A DIGITAL PRINT OF THE DOCUMENT LOCALLY, THE NAME OF THE FILE AND THE GLOCALIZATION OF WHOM IS SEALING THE DOCUMENT ARE REGISTERED. SUCH CRYPTOGRAPHIC DOCUMENT , CALLED “HASH”, IS SENT TO THE DECENTRALIZED NETWORK OF BLOCKCHAIN AND NEVER AGAIN MAY IT BE MODIFIED.",
+      "question2": "Where is my personal information stored?",
+      "answer2": "THE PLATFORM STORES IN THE BLOCKCHAIN THE NAME OF THE COMPANY, ACCOUNT ADDRESS, USER TYPE AND CURRENT STATE.",
+      "question3": "Where is information related to projects / processes stored?",
+      "answer3": "THE PLATFORM DOES NOT UPLOAD ANY DOCUMENT TO INTERNET UNDER ANY CIRCUMSTANCE. IT SIMPLY GENERATES DIGITAL PRINTS CORRESPONDING ONLY TO EVERY DOCUMENT AND THEN IT UPLOADS THEM TO THE BLOCKCHAIN. ",
+      "question4": "Can the document be rebuilt using the digital print?",
+      "answer4": "NO, THE DIGITAL PRINT IS A ONE-WAY CRYPTOGRAPHIC OPERATION AND THE PLATFORM DOES NOT STORE DOCUMENTS FROM THE SUPPLIERS NOR THE CLIENTS.",
+      "question5": "Is there any possibility for anyone to shut down the blockchain?",
+      "answer5": "NO, THE BLOCKCHAIN IS A DECENTRALIZED NETWORK OF HUNDREDS OF THOUSANDS OF COMPUTERS AND SERVERS AROUND THE WORLD (NODES) REPLICATING INSTANTANEOUSLY ALL THE CHAIN OF BLOCKS IN REAL TIME. WHILE AT LEAST ONE NODE IS STILL ON, INFORMATION WILL CONTINUE EXISTING."
+    },
+    "login": {
+      "bannerTitle": "ACCESS",
+      "user": "USER",
+      "passphrase": "PASSWORD",
+      "submit": "ACCESS",
+      "connecting": "CONNECTING TO THE BLOCKCHAIN...",
+      "failed": "FAILED LOGIN",
+      "requirements": "REQUIREMENTS",
+      "requirementsText": "In order to access the platform authentication through a cryptographic wallet is required. This saves your secret passwords, provides the platform only with your public information and allows the platform checking and sending information on your behalf. ",
+      "extensions": "AVAILABLE EXTENSIONS",
+      "extensionsText": "Below you can find a list of some of the available extensions for different browsers with this function. {{- extensiones}}",
+      "proximosPasos": "NEXT STEPS",
+      "proximosPasosText": "To access the platform, we ask that you install and configure one of the available extensions. Once it is configured, send your account address to {{- requestEmail}}, together with the name of your company",
+      "soporte": "SUPPORT",
+      "soporteText": "In case you need support provided by NUCLEARIS, please do not hesitate to contact us {{- email}}, or by phone to +54 11 5263 2700."
+    },
+    "txTracker": {
+      "pendiente": "PENDING TRANSACTION",
+      "success": "SUCCESS!",
+      "error": "AN ERROR HAS OCCURRED",
+      "hash": "Transaction Hash",
+      "block": "Block"
+    },
+    "contact": {
+      "bannerTitle": "SET UP CONTACT",
+      "name": "NAME",
+      "email": "EMAIL ADDRESS",
+      "message": "MESSAGE",
+      "submit": "SEND",
+      "success": "Your query was successfully sent",
+      "error": " There was an error when sending your query",
+      "retry": "Try again"
+    },
+    "user": {
+      "newUser": "NEW USER",
+      "saldo": "BALANCE"
+    },
+    "newProcess": {
+      "title": "NEW PROCESS",
+      "name": "NAME",
+      "supplier": "SUPPLIER",
+      "selectOne": "SELECT ONE...",
+      "submit": "SEAL"
+    },
+    "processModal": {
+      "title": "ASSIGN PROCESS",
+      "explainer": "SELECT THE PROCESSES YOU WANT TO ADD TO THE PROJECT ",
+      "name": "NAME",
+      "supplier": "SUPPLIER",
+      "documents": "DOCUMENTS",
+      "view": "SEE DOC.",
+      "success": "SUCCESS!",
+      "submit": "CONFIRM"
+    },
+    "processList": {
+      "title": "PROCESS",
+      "name": "NAME",
+      "supplier": "SUPPLIER",
+      "view": "SEE DOC.",
+      "contract": "AGREEMENT",
+      "add": "ADD DOC.",
+      "noItems": "THERE ARE NO ADDED PROCESSES FOR YOU "
+    },
+    "documentList": {
+      "title": "DOCUMENTS",
+      "name": "NAME",
+      "date": "DATE",
+      "details": "DETAILS",
+      "view": "SEE"
+    },
+    "documentDetail": {
+      "title": "DOCUMENT",
+      "verify": "VERIFY DOCUMENT",
+      "dragFile": "LEAVE THE FILE HERE ",
+      "dropFile": "DRAG THE FILE HERE,\n DO NOT CLICK TO SELECT ",
+      "fileName": "FILE NAME: ",
+      "fileHash": "FILE HASH: ",
+      "authentic": "STATUS: AUTHENTIC",
+      "fake": "STATUS: DO NOT MATCH",
+      "documentDetails": "DOCUMENT DETAILS",
+      "name": "NAME",
+      "hash": "PRINT",
+      "date": "DATE",
+      "location": "LOCATION",
+      "comments": "OBSERVATIONS",
+      "noComments": "THERE ARE NO COMMENTS"
+    },
+    "newDocument": {
+      "title": "NEW<br>DOCUMENT",
+      "processTitle": "PROCESS",
+      "supplier": "SUPPLIER",
+      "hashFile": "FILE TO SEAL",
+      "dropFile": " DRAG THE FILE HERE,\n DO NOT CLICK TO SELECT ",
+      "dragFile": " LEAVE THE FILE HERE ",
+      "fileName": "FILE NAME: ",
+      "fileHash": " FILE HASH: ",
+      "locationComment": "DOCUMENT LOCATION (ADJUST IF NECESSARY)",
+      "comments": "OBSERVATIONS",
+      "submit": "SEAL"
+    },
+    "newProject": {
+      "title": "NEW PROJECT",
+      "name": "PROJET TITLE",
+      "client": "CLIENT",
+      "selectOne": "SELECT ONE...",
+      "expediente": "RECORD",
+      "oc": "NUMBER OF PURCHASE ORDER",
+      "submit": "CREATE"
+    },
+    "userList": {
+      "title": "USERS",
+      "name": "NAME",
+      "address": "ADDRESS",
+      "type": "TYPE",
+      "state": "STATUS",
+      "saldo": "BALANCE",
+      "noItems": "THERE ARE NO USERS ADDED FOR YOU",
+      "admin": "ADMINISTRATOR",
+      "client": "CLIENT",
+      "supplier": "SUPPLIER",
+      "active": "ACTIVE",
+      "closed": "ON PAUSE"
+    },
+    "newUser": {
+      "title": "NEW USER",
+      "name": "NAME",
+      "address": " WALLET ADDRESS",
+      "type": "TYPE",
+      "client": "CLIENT",
+      "supplier": "SUPPLIER",
+      "submit": "CREATE"
+    },
+    "dropDownNew": {
+      "title": "NEW",
+      "projects": "PROJECTS",
+      "processes": "PROCESSES",
+      "users": "USERS"
+    },
+    "dropDownEdit": {
+      "title": "SEE / EDIT",
+      "projects": "PROJECT",
+      "processes": "PROCESSES",
+      "users": "USERS"
+    },
+    "projectList": {
+      "projects": "PROJECTS",
+      "new": "NEW PROJECT",
+      "name": "NAME",
+      "client": "CLIENT",
+      "expediente": "RECORD",
+      "oc": "NUMBER OF PURCHASE ORDER",
+      "state": "STATUS",
+      "details": "DETAILS",
+      "active": "ACTIVE",
+      "closed": "CLOSED",
+      "noItems": "THERE ARE NO PROJECTS ADDED FOR YOU",
+      "view": "SEE",
+      "resumen": "PROJECT SUMMARY",
+      "processes": "PROCESSES",
+      "supplier": "SUPPLIER",
+      "documents": "DOCUMENTS",
+      "assignProcess": "ASSIGN PROCESS"
     }
   }
 }
