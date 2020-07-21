@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import ProcessModal from '../components/ProcessModal';
+import ClientModal from '../components/ClientModal';
 import { Title, Button, ScrollBox400 } from '../styles/components';
 import {
   TableWrap,
@@ -38,6 +39,7 @@ import { useTranslation } from 'react-i18next';
 export default function ProjectList() {
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
+  const [showClientModal, setShowClientModal] = useState(false);
   const [projects, setProjects] = useState([]);
   const [projectDetails, setProjectDetails] = useState(null);
   const [processes, setProcesses] = useState(null);
@@ -71,6 +73,10 @@ export default function ProjectList() {
 
   function closeModal() {
     setShowModal(false);
+  }
+
+  function closeClientModal() {
+    setShowClientModal(false);
   }
 
   return (
@@ -110,17 +116,7 @@ export default function ProjectList() {
                       projects.map((project) => (
                         <Row key={project[1]}>
                           <Col>{project[3]}</Col>
-                          <Col>
-                            {project[2][2] === '' ? (
-                              account.type === '0' ? (
-                                <TableButton>ASIGNAR</TableButton>
-                              ) : (
-                                ''
-                              )
-                            ) : (
-                              project[2][2]
-                            )}
-                          </Col>
+                          <Col>{project[2][2] === '' ? '' : project[2][2]}</Col>
                           <Col>{project[1]}</Col>
                           <Col>{project[4]}</Col>
                           <Col>
@@ -191,20 +187,34 @@ export default function ProjectList() {
                 </Row>
               ))}
             {account.type === '0' && (
-              <Button
-                style={{ width: 'fit-content', whiteSpace: 'nowrap' }}
-                onClick={() => {
-                  setShowModal(true);
-                }}
-              >
-                + {t('projectList:assignProcess')}
-              </Button>
+              <>
+                <Button
+                  style={{ width: 'fit-content', whiteSpace: 'nowrap' }}
+                  onClick={() => {
+                    setShowModal(true);
+                  }}
+                >
+                  + {t('projectList:assignProcess')}
+                </Button>
+
+                <Button
+                  style={{ width: 'fit-content', whiteSpace: 'nowrap' }}
+                  onClick={() => {
+                    setShowClientModal(true);
+                  }}
+                >
+                  + {t('projectList:assignClient')}
+                </Button>
+              </>
             )}
           </Right>
         )}
       </FlexWrap>
       {showModal && (
         <ProcessModal project={projectDetails} closeModal={closeModal} />
+      )}
+      {showClientModal && (
+        <ClientModal project={projectDetails} closeModal={closeClientModal} />
       )}
     </>
   );
