@@ -134,7 +134,7 @@ contract('Toggle Project Status', (accounts) => {
     );
   });
   it('EVENT: Reopen closed Project', async () => {
-    const result = await instance.toggleProjectStatus(41956, {
+    const result = await instance.toggleProjectStatus(41955, {
       from: accounts[0],
     });
     truffleAssert.eventEmitted(result, 'ToggleProjectStatus');

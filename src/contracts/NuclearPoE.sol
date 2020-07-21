@@ -35,10 +35,11 @@ contract NuclearPoE is Ownable {
 
     event CreateProject(uint256 id);
     event CreateUser(address userAddress);
-    event CreateProcess(address ProcessContractAddress);
-    event AssignProcess(uint256 project, address ProcessContractAddress);
-    event AssignClient(uint256 project, address ClientAddress);
+    event CreateProcess(address processContractAddress);
+    event AssignProcess(uint256 project, address processContractAddress);
+    event AssignClient(uint256 project, address clientAddress);
     event ToggleProjectStatus(uint256 id, State newState);
+    event ToggleUserStatus(address userAddress, State newState);
 
     modifier onlyUser() {
         require(
@@ -103,35 +104,6 @@ contract NuclearPoE is Ownable {
         emit CreateUser(_address);
     }
 
-    /// @notice Returns specific information about one user
-    /// @param _address User Address
-    /// @return Type User Type (supplier or client)
-    /// @return string Name of user
-    function getUser(address _address)
-        external
-        view
-        onlyUser
-        returns (
-            State,
-            Type,
-            string memory,
-            address
-        )
-    {
-        return (
-            user[_address].status,
-            user[_address].userType,
-            user[_address].name,
-            _address
-        );
-    }
-
-    /// @notice Returns all saved users
-    /// @return address[] Returns array of all created users
-    function getAllUsers() external view onlyOwner returns (address[] memory) {
-        return users;
-    }
-
     /// @notice Toggles a user status
     /// @param _address Address of user to be toggled
     function toggleUserStatus(address _address) external onlyOwner {
@@ -140,6 +112,8 @@ contract NuclearPoE is Ownable {
         if (user[_address].status == State.Created)
             user[_address].status = State.Closed;
         else user[_address].status = State.Created;
+
+        emit ToggleUserStatus(_address, user[_address].status);
     }
 
     /// @notice Creates a new process and deploys contract
@@ -150,13 +124,13 @@ contract NuclearPoE is Ownable {
         external
         onlyOwner
     {
-        address ProcessContractAddress = address(
+        address processContractAddress = address(
             new Process(_supplier, _processName, owner())
         );
-        processesByAddress[_supplier].push(ProcessContractAddress);
-        processContractsArray.push(ProcessContractAddress);
+        processesByAddress[_supplier].push(processContractAddress);
+        processContractsArray.push(processContractAddress);
 
-        emit CreateProcess(ProcessContractAddress);
+        emit CreateProcess(processContractAddress);
     }
 
     /// @notice Adds a process address to a specific project
@@ -186,6 +160,35 @@ contract NuclearPoE is Ownable {
         else project[_id].status = State.Created;
 
         emit ToggleProjectStatus(_id, project[_id].status);
+    }
+
+    /// @notice Returns specific information about one user
+    /// @param _address User Address
+    /// @return Type User Type (supplier or client)
+    /// @return string Name of user
+    function getUser(address _address)
+        external
+        view
+        onlyUser
+        returns (
+            State,
+            Type,
+            string memory,
+            address
+        )
+    {
+        return (
+            user[_address].status,
+            user[_address].userType,
+            user[_address].name,
+            _address
+        );
+    }
+
+    /// @notice Returns all saved users
+    /// @return address[] Returns array of all created users
+    function getAllUsers() external view onlyOwner returns (address[] memory) {
+        return users;
     }
 
     /// @notice Returns all processes

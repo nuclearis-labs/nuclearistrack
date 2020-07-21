@@ -57,6 +57,7 @@ contract Process {
     ) external onlySupplier() {
         require(document[_hash].mineTime == 0, 'Document already created');
 
+        //solhint-disable-next-line not-rely-on-time
         document[_hash] = Document(_name, _latitude, _longitude, now, _comment);
         allDocuments.push(_hash);
 

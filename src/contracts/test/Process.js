@@ -30,6 +30,15 @@ contract('Create Process', (accounts) => {
 
     truffleAssert.eventEmitted(result, 'CreateProcess');
   });
+  it('Assign Process to Project', async () => {
+    const result = await instance.addProcessToProject(41955, processAddress);
+    truffleAssert.eventEmitted(result, 'AssignProcess');
+  });
+  it('Assign Process to non-existant project', async () => {
+    await truffleAssert.reverts(
+      instance.addProcessToProject(53455, processAddress)
+    );
+  });
 });
 
 contract('Return Processes', (accounts) => {

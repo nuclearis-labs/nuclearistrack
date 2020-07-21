@@ -32,6 +32,7 @@ module.exports = {
     //   gasPrice: 60240000
     // }
   },
+  plugins: ['solidity-coverage'],
   compilers: {
     solc: {
       version: '0.6.0',
