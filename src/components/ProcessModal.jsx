@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import OutsideClickHandler from 'react-outside-click-handler';
 import TxTrack from '../components/TxTrack';
-import Process from '../build/contracts/Process.json';
 import {
   ModalWrap,
   ModalTop,
@@ -21,6 +20,11 @@ import {
 } from '../styles/processModal';
 import { UserContext } from '../context/UserContext';
 import { useTranslation } from 'react-i18next';
+import {
+  getProcessDetails,
+  getUserDetails,
+  getProcessesByAddress,
+} from '../utils/web3Helpers';
 
 function ProcessModal(props) {
   const { t } = useTranslation();
@@ -37,34 +41,10 @@ function ProcessModal(props) {
   }
 
   useEffect(() => {
-    async function getProcessList() {
-      const processes = await contract.methods
-        .getProcessesByAddress()
-        .call({ from: account.address });
-
-      Promise.all(
-        processes.map((address) => {
-          let processContract = new web3.eth.Contract(Process.abi, address);
-          return processContract.methods
-            .getDetails()
-            .call({ from: account.address });
-        })
-      ).then((processes) => {
-        Promise.all(
-          processes.map(async (process) => {
-            return {
-              ...process,
-              '0': await contract.methods
-                .getUser(process[0])
-                .call({ from: account.address }),
-            };
-          })
-        ).then((processes) => {
-          setProcesses(processes);
-        });
-      });
-    }
-    getProcessList();
+    getProcessesByAddress(contract, account.address)
+      .then(getProcessDetails(account.address, web3))
+      .then(getUserDetails(account.address, contract, 0, web3))
+      .then(setProcesses);
     // eslint-disable-next-line
   }, []);
 
