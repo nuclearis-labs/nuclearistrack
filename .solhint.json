@@ -6,10 +6,13 @@
     "avoid-sha3": "error",
     "quotes": ["error", "single"],
     "no-unused-vars": "error",
-    "compiler-version": ["error", "^0.6"],
+    "compiler-version": ["error", "0.6.11"],
     "func-order": "error",
     "max-line-length": ["error", 120],
     "reason-string": ["error", { "maxLength": 64 }],
-    "constructor-syntax": "error"
+    "constructor-syntax": "error",
+    "private-vars-leading-underscore": "error",
+    "func-param-name-mixedcase": "error",
+    "modifier-name-mixedcase": "error"
   }
 }

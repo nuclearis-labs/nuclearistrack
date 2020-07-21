@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.0;
+pragma solidity 0.6.11;
 
 import './NuclearPoE.sol';
 
@@ -7,9 +7,9 @@ import './NuclearPoE.sol';
 /// @author Sebastian A. Martinez
 /// @notice This contract is responsible for each process and its corresponding documents
 contract Process {
-    string private processName;
-    address private supplierAddress;
-    address private owner;
+    string private _processName;
+    address private _supplierAddress;
+    address private _owner;
 
     struct Document {
         string name;
@@ -20,26 +20,26 @@ contract Process {
     }
 
     bytes32[] public allDocuments;
-    mapping(bytes32 => Document) private document;
+    mapping(bytes32 => Document) private _document;
 
     event AddDocument(bytes32 hash);
 
     modifier onlySupplier() {
         require(
-            msg.sender == supplierAddress,
+            msg.sender == _supplierAddress,
             'Sender is not supplier of project'
         );
         _;
     }
 
     constructor(
-        address _supplierAddress,
-        string memory _processName,
+        address _supplier,
+        string memory _name,
         address _ownerAddress
     ) public {
-        supplierAddress = _supplierAddress;
-        processName = _processName;
-        owner = _ownerAddress;
+        _supplierAddress = _supplier;
+        _processName = _name;
+        _owner = _ownerAddress;
     }
 
     /// @notice Creates a new document
@@ -55,10 +55,15 @@ contract Process {
         string calldata _longitude,
         string calldata _comment
     ) external onlySupplier() {
-        require(document[_hash].mineTime == 0, 'Document already created');
+        require(_document[_hash].mineTime == 0, 'Document already created');
 
-        //solhint-disable-next-line not-rely-on-time
-        document[_hash] = Document(_name, _latitude, _longitude, now, _comment);
+        _document[_hash] = Document(
+            _name,
+            _latitude,
+            _longitude,
+            now, //solhint-disable-line not-rely-on-time
+            _comment
+        );
         allDocuments.push(_hash);
 
         emit AddDocument(_hash);
@@ -83,14 +88,14 @@ contract Process {
             string memory
         )
     {
-        require(document[_hash].mineTime != 0, 'Document does not exist');
+        require(_document[_hash].mineTime != 0, 'Document does not exist');
         return (
-            document[_hash].name,
+            _document[_hash].name,
             _hash,
-            document[_hash].latitude,
-            document[_hash].longitude,
-            document[_hash].mineTime,
-            document[_hash].comment
+            _document[_hash].latitude,
+            _document[_hash].longitude,
+            _document[_hash].mineTime,
+            _document[_hash].comment
         );
     }
 
@@ -109,6 +114,6 @@ contract Process {
             address
         )
     {
-        return (supplierAddress, processName, allDocuments, address(this));
+        return (_supplierAddress, _processName, allDocuments, address(this));
     }
 }
