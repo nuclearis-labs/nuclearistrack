@@ -11,9 +11,11 @@ import {
   ModalTxt,
   ModalProdName,
   ModalBottom,
+  Backdrop,
   ScrollBox130,
 } from '../styles/processModal';
 import { UserContext } from '../context/UserContext';
+import TxTrack from '../components/TxTrack';
 import { useTranslation } from 'react-i18next';
 import { getUserDetails, getAllUsers } from '../utils/web3Helpers';
 
@@ -39,48 +41,58 @@ function ClientModal(props) {
   }, []);
 
   return (
-    <OutsideClickHandler onOutsideClick={props.closeModal} display="contents">
-      <ModalWrap>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <ModalTop>
-            <ModalTit>ASIGNAR CLIENTE</ModalTit>
-            <ModalTxt>ELEGIR CLIENTE A ASIGNAR</ModalTxt>
-            <ModalProdName>{props.project[3]}</ModalProdName>
-          </ModalTop>
-          <ModalBottom>
-            <HeadRow>
-              <Col4>NAME</Col4>
-              <Col4>ADDRESS</Col4>
-            </HeadRow>
-            <ScrollBox130>
-              {users
-                .filter((user) => user[1] === '1')
-                .map((user) => (
-                  <Row key={user[3]}>
-                    <input
-                      type="radio"
-                      style={{
-                        width: '15px',
-                        height: '15px',
-                        marginRight: '10px',
-                      }}
-                      id={user[3]}
-                      name="userAddress"
-                      value={user[3]}
-                      ref={register}
-                    />
-                    <Col4>{user[2]}</Col4>
-                    <Col4>{user[3]}</Col4>
-                  </Row>
-                ))}
-            </ScrollBox130>
-            <Button type="submit">
-              {txHash ? t('processModal:success') : t('processModal:submit')}
-            </Button>
-          </ModalBottom>
-        </form>
-      </ModalWrap>
-    </OutsideClickHandler>
+    <Backdrop>
+      <OutsideClickHandler onOutsideClick={props.closeModal} display="contents">
+        {txHash ? (
+          <ModalWrap color="#FFF">
+            <TxTrack tx={txHash} />
+          </ModalWrap>
+        ) : (
+          <ModalWrap color="#333">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <ModalTop>
+                <ModalTit>ASIGNAR CLIENTE</ModalTit>
+                <ModalTxt>ELEGIR CLIENTE A ASIGNAR</ModalTxt>
+                <ModalProdName>{props.project[3]}</ModalProdName>
+              </ModalTop>
+              <ModalBottom>
+                <HeadRow>
+                  <Col4>NAME</Col4>
+                  <Col4>ADDRESS</Col4>
+                </HeadRow>
+                <ScrollBox130>
+                  {users
+                    .filter((user) => user[1] === '1')
+                    .map((user) => (
+                      <Row key={user[3]}>
+                        <input
+                          type="radio"
+                          style={{
+                            width: '15px',
+                            height: '15px',
+                            marginRight: '10px',
+                          }}
+                          id={user[3]}
+                          name="userAddress"
+                          value={user[3]}
+                          ref={register}
+                        />
+                        <Col4>{user[2]}</Col4>
+                        <Col4>{user[3]}</Col4>
+                      </Row>
+                    ))}
+                </ScrollBox130>
+                <Button type="submit">
+                  {txHash
+                    ? t('processModal:success')
+                    : t('processModal:submit')}
+                </Button>
+              </ModalBottom>
+            </form>
+          </ModalWrap>
+        )}
+      </OutsideClickHandler>
+    </Backdrop>
   );
 }
 export default ClientModal;

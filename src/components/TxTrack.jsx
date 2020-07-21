@@ -28,28 +28,30 @@ export default function TxTrack(props) {
 
   function State({ receipt }) {
     if (receipt && receipt.status === true)
-      return <Checkmark style={{ marginBottom: '20px' }} />;
+      return <Checkmark style={{ margin: '20px 0' }} />;
     else if (receipt && receipt.status === false)
-      return <Cross style={{ marginBottom: '20px' }} />;
-    else return <Loader style={{ marginBottom: '20px' }} />;
+      return <Cross style={{ margin: '20px 0' }} />;
+    else return <Loader style={{ margin: '20px 0' }} />;
   }
 
   return (
     <>
-      <Label>
-        {receipt === undefined
-          ? t('txTracker:pendiente')
-          : receipt.status === true
-          ? t('txTracker:success')
-          : t('txTracker:error')}
-      </Label>
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
         }}
       >
+        <Label>
+          {receipt === undefined
+            ? t('txTracker:pendiente')
+            : receipt.status === true
+            ? t('txTracker:success')
+            : t('txTracker:error')}
+        </Label>{' '}
         <State receipt={receipt} />
         <div>
           {t('txTracker:hash')}: <RSKLink hash={props.tx} testnet type="tx" />
