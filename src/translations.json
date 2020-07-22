@@ -250,7 +250,9 @@
       "controlText": "INFORMATION IN ECHTZEIT ÜBER IHRE FABRIKATIONS PROZESSE"
     },
     "general": {
-      "more": "MEHR", "404Title": "SEITE NICHT GEFUNDEN", "404": "DIE ANGEFORDERTE SEITE KONNTE NICHT GEFUNDEN WERDEN, FOLGEND EINIGE EMPFEHLUNGEN"
+      "more": "MEHR",
+      "404Title": "SEITE NICHT GEFUNDEN",
+      "404": "DIE ANGEFORDERTE SEITE KONNTE NICHT GEFUNDEN WERDEN, FOLGEND EINIGE EMPFEHLUNGEN"
     },
     "benefits": {
       "bannerTitle": "TRANSPARENZ IN ALLEN UNSEREN PROZESSEN",
@@ -442,7 +444,8 @@
       "assignProcess": "PROZESS ZUWEISEN",
       "assignClient": "KUNDE ZUWEISEN"
     }
-  },
+  }
+},
   "en": {
     "header": {
       "home": "START",
@@ -671,3 +674,4 @@
     }
   }
 }
+ 
