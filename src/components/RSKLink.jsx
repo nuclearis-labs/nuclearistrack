@@ -10,7 +10,7 @@ export default function RSKLink({ hash, type, testnet }) {
   return (
     <a
       href={`https://explorer${
-        testnet === true ? '.testnet' : ''
+        process.env.NODE_ENV === 'development' ? '.testnet' : ''
       }.rsk.co/${type}/${hash}`}
     >
       {hashFunction(hash, 6)}
