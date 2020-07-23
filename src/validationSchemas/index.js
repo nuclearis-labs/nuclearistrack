@@ -1,33 +1,5 @@
 import * as yup from 'yup';
 
-// setLocale({
-//   mixed: {
-//     notType: 'Se debe elegir un archivo'
-//   }
-// });
-
-export const ConfirmSchema = yup.object().shape({
-  passphrase: yup
-    .string()
-    .required('Se requiere elegir una contraseña')
-    .min(4, 'La contraseña debe tener un minimo de 4 characteres'),
-  confirm_passphrase: yup
-    .string()
-    .required('Se requiere elegir una contraseña')
-    .min(4, 'La contraseña debe tener un minimo de 4 characteres')
-    .oneOf([yup.ref('passphrase'), null], 'Contraseñas deben coincidir'),
-});
-
-export const LoginSchema = yup.object().shape({
-  email: yup
-    .string()
-    .email(
-      'El usuario debe ser su correo electronico registrado (Ej: info@ejemplo.com)'
-    )
-    .required('Se requiere su usuario'),
-  passphrase: yup.string().required('Se requiere su contraseña'),
-});
-
 export const ProjectSchema = yup.object().shape({
   proyectoTitle: yup.string().required('Se requiere un nombre de proyecto'),
   expediente: yup
@@ -39,9 +11,20 @@ export const ProjectSchema = yup.object().shape({
 
 export const ProcessSchema = yup.object().shape({
   processTitle: yup.string().required('Se requiere un nombre de proceso'),
-  supplierAddress: yup.string().required('Se requiere elegir un proveedor'),
+  supplierAddress: yup
+    .string()
+    .matches(/^(0x)?[0-9a-f]{40}$/i, 'Se debe ingresar una dirección valida')
+    .required('Se requiere elegir un proveedor'),
 });
 
 export const UserSchema = yup.object().shape({
   newUserName: yup.string().required('Se requiere un nombre del usuario'),
+  newUserAddress: yup
+    .string()
+    .matches(/^(0x)?[0-9a-f]{40}$/i, 'Se debe ingresar una dirección valida')
+    .required('Se requiere definir una dirección'),
+  newUserType: yup
+    .string()
+    .matches(/1|2/, 'Se requiere definir un tipo de usuario')
+    .required('Se requiere definir un tipo de usuario'),
 });

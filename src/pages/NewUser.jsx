@@ -68,7 +68,7 @@ export default function NewUser() {
                 <label htmlFor="supplier"> {t('newUser:supplier')}</label>
               </div>
               <ErrorForm>
-                {errors.newUserAddress && errors.newUserAddress.message}
+                {errors.newUserType && errors.newUserType.message}
               </ErrorForm>
               <Button type="submit">{t('newUser:submit')}</Button>
             </>
