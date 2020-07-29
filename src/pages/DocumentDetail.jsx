@@ -4,7 +4,7 @@ import { useParams } from 'react-router';
 import { Title, Label } from '../styles/components';
 import { Row, Col2, Col4 } from '../styles/tableComponents';
 import GoogleMap from '../components/GoogleMap';
-import Process from '../build/contracts/Process.json';
+import Process from '../contracts/artifacts/Process.json';
 import { useDropzone } from 'react-dropzone';
 import { hashFile } from '../utils/hashFile';
 import { UserContext } from '../context/UserContext';

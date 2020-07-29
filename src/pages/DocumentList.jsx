@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router';
 import { Title } from '../styles/components';
 import { Top, FormWrap } from '../styles/form';
-import Process from '../build/contracts/Process.json';
+import Process from '../contracts/artifacts/Process.json';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import { Table, HeadRow, Row, Col } from '../styles/documentList';

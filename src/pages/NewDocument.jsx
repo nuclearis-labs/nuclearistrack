@@ -12,7 +12,7 @@ import {
 } from '../styles/components';
 import { Top, Form, FormWrap, ErrorForm } from '../styles/form';
 import { useForm } from 'react-hook-form';
-import Process from '../build/contracts/Process.json';
+import Process from '../contracts/artifacts/Process.json';
 import { useDropzone } from 'react-dropzone';
 import GoogleMap from '../components/GoogleMap';
 import { hashFile } from '../utils/hashFile';
