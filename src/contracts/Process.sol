@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.5.2;
-
-import './NuclearPoE.sol';
+pragma solidity 0.6.11;
 
 /// @title Process Contract
 /// @author Sebastian A. Martinez

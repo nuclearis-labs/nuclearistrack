@@ -1,38 +1,16 @@
+require("dotenv").config({path:'./.env.local'})
 usePlugin('@nomiclabs/buidler-truffle5');
 usePlugin('@nomiclabs/buidler-web3');
 usePlugin('solidity-coverage');
 
-task('decrypt', 'Decrypt keystore file', async () => {
-  const result = await web3.eth.accounts.decrypt(
-    {
-      address: 'b51aadba64a42a2fb6f91fc4f94f67f464eab26c',
-      crypto: {
-        cipher: 'aes-128-ctr',
-        ciphertext:
-          '5f62c8b32af72e106c9740f5b1c0624db7365f05d3cf36c1686c155c64c47183',
-        cipherparams: { iv: 'd2ad5b8f29475819eaec580e465a2adc' },
-        kdf: 'scrypt',
-        kdfparams: {
-          dklen: 32,
-          n: 262144,
-          p: 1,
-          r: 8,
-          salt:
-            '83f8d3c57860101cf74d0d524dba0259a882c8519145fc309917fba2833d9af8',
-        },
-        mac: '29ffe2d635de1e5cb9b5e0b41fc2aeed4dae88509494c6a3d2cb40e6f7fd8bac',
-      },
-      id: '5578b43d-deae-4e40-bb95-48e478031eb7',
-      version: 3,
-    },
-    ''
-  );
-  console.log(result);
-});
+task("balance", "Prints an account's balance")
+  .addParam("account", "The account's address")
+  .setAction(async taskArgs => {
+    const account = web3.utils.toChecksumAddress(taskArgs.account);
+    const balance = await web3.eth.getBalance(account);
 
-task('accounts', 'Prints the list of accounts', async () => {
-  console.log(await web3.eth.getAccounts());
-});
+    console.log(web3.utils.fromWei(balance, "ether"), "RBTC");
+  });
 
 module.exports = {
   defaultNetwork: 'buidlerevm',
@@ -41,12 +19,18 @@ module.exports = {
     bfa: {
       url: 'http://localhost:8545',
       accounts: [
-        '0xb0f913e790312aea9d3edd635952bcd1cebe71fe5444b772152095f0529a371b',
+        process.env.BFA_PRIVATE_KEY,
       ],
     },
+    rsk: {
+      url: 'https://public-node.rsk.co:443',
+      accounts: [
+        process.env.RSK_PRIVATE_KEY,
+      ],
+    }
   },
   solc: {
-    version: '0.5.2',
+    version: '0.6.11',
     optimizer: {
       enabled: false,
     },

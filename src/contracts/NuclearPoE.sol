@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.5.2;
+pragma solidity 0.6.11;
 
 import './Process.sol';
 import './Ownable.sol';
