@@ -19,7 +19,7 @@ function DocumentMap(props) {
         center={position}
         zoom={14}
         options={{
-          draggable: false,
+          draggable: true,
           gestureHandling: false,
           zoomControl: false,
           fullscreenControl: false,
