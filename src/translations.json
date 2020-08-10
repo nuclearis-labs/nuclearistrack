@@ -354,7 +354,9 @@
       "name": "NAME",
       "date": "DATUM",
       "details": "DETAILS",
-      "view": "EINSEHEN"
+      "view": "EINSEHEN",
+      "noItems": "KEINE DOKUMENTE VORHANDEN."
+
     },
     "documentDetail": {
       "title": "DOKUMENT",
@@ -575,6 +577,7 @@
       "view": "SEE DOC.",
       "contract": "CONTRACT",
       "add": "ADD DOC.",
+      "documents": "DOCUMENTS",
       "noItems": "THERE ARE NO ADDED PROCESSES FOR YOU "
     },
     "documentList": {
@@ -582,7 +585,8 @@
       "name": "NAME",
       "date": "DATE",
       "details": "DETAILS",
-      "view": "SEE"
+      "view": "SEE",
+      "noItems": "THERE ARE NO ADDED DOCUMENTS"
     },
     "documentDetail": {
       "title": "DOCUMENT",
