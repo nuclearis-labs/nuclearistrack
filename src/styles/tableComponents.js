@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 
 export const Table = styled.table`
-  margin:auto;
+  margin: auto;
   padding: 20px 100px 20px 100px;
   text-align: left;
   width: 100%;
@@ -26,7 +26,7 @@ export const TableButton = styled.button`
 `;
 
 export const TableWrap = styled.div`
-background-color: #e6e6e6;
+  background-color: #e6e6e6;
 `;
 
 export const Row = styled.tr`
@@ -62,7 +62,7 @@ export const Col = styled.td`
 
 export const CenteredCol = styled(Col)`
   text-align: center;
-`
+`;
 
 export const Col2 = styled.div`
   padding:3px 0;

@@ -3,7 +3,14 @@ import styled from 'styled-components';
 import RSKLink from '../components/RSKLink';
 import { Title } from '../styles/components';
 import { Top } from '../styles/form';
-import { Table, TableBody, Row, HeadRowMonsterrat, Col, CenteredCol } from '../styles/tableComponents';
+import {
+  Table,
+  TableBody,
+  Row,
+  HeadRowMonsterrat,
+  Col,
+  CenteredCol,
+} from '../styles/tableComponents';
 import TxTrack from '../components/TxTrack';
 import { UserContext } from '../context/UserContext';
 import {
@@ -12,10 +19,11 @@ import {
   getAllUsers,
 } from '../utils/web3Helpers';
 import { useTranslation } from 'react-i18next';
+import { ReactComponent as Loader } from '../img/puff.svg';
 
 export default function UserList() {
   const { t } = useTranslation();
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState(undefined);
   const [txHash, setTxHash] = useState(undefined);
   const { account, web3, contract } = useContext(UserContext);
 
@@ -53,36 +61,52 @@ export default function UserList() {
                 <Col>{t('userList:saldo')}</Col>
               </HeadRowMonsterrat>
               <TableBody>
-                {users.length === 0 ? (
-                  <Row>
-                    <CenteredCol colSpan="5">
-                      {t('userList:noItems')}
-                    </CenteredCol>
-                  </Row>
+                {users === undefined ? (
+                  <tr
+                    style={{
+                      width: '100%',
+                      margin: 'auto',
+                      textAlign: 'center',
+                    }}
+                  >
+                    <td colSpan="4">
+                      <Loader />
+                    </td>
+                  </tr>
                 ) : (
-                  users.map((user) => (
-                    <Row key={user[3]}>
-                      <Col>{user[2]}</Col>
-                      <Col>
-                        <RSKLink type="address" testnet hash={user[3]} />
-                      </Col>
-                      <Col>
-                        {user[1] === '0'
-                          ? t('userList:admin')
-                          : user[1] === '1'
-                          ? t('userList:client')
-                          : t('userList:supplier')}
-                      </Col>
-                      <Col>
-                        <TableButton onClick={() => toggleUser(user[3])}>
-                          {user[0] === '1'
-                            ? t('userList:active')
-                            : t('userList:closed')}
-                        </TableButton>
-                      </Col>
-                      <Col>{user[4]} RBTC</Col>
-                    </Row>
-                  ))
+                  <>
+                    {users.length === 0 ? (
+                      <Row>
+                        <CenteredCol colSpan="5">
+                          {t('userList:noItems')}
+                        </CenteredCol>
+                      </Row>
+                    ) : (
+                      users.map((user) => (
+                        <Row key={user[3]}>
+                          <Col>{user[2]}</Col>
+                          <Col>
+                            <RSKLink type="address" testnet hash={user[3]} />
+                          </Col>
+                          <Col>
+                            {user[1] === '0'
+                              ? t('userList:admin')
+                              : user[1] === '1'
+                              ? t('userList:client')
+                              : t('userList:supplier')}
+                          </Col>
+                          <Col>
+                            <TableButton onClick={() => toggleUser(user[3])}>
+                              {user[0] === '1'
+                                ? t('userList:active')
+                                : t('userList:closed')}
+                            </TableButton>
+                          </Col>
+                          <Col>{user[4]} RBTC</Col>
+                        </Row>
+                      ))
+                    )}{' '}
+                  </>
                 )}
               </TableBody>
             </>

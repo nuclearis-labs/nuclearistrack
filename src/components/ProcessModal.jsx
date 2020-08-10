@@ -1,7 +1,7 @@
 // modal.js
 import React, { useEffect, useState, useContext } from 'react';
 import { Button } from '../styles/components';
-import { Row, HeadRow, Col, TableBody} from '../styles/tableComponents';
+import { Row, HeadRow, Col, TableBody } from '../styles/tableComponents';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import OutsideClickHandler from 'react-outside-click-handler';
@@ -68,61 +68,62 @@ function ProcessModal(props) {
               </ModalTop>
               <ModalBottom>
                 <ScrollBox130>
-                <table>
-                <HeadRow>
-                  <Col></Col>
-                  <Col>{t('processModal:name')}</Col>
-                  <Col>{t('processModal:supplier')}</Col>
-                  <Col>{t('processModal:documents')}</Col>
-                </HeadRow>
-                <TableBody>
-                  {processes.map((process) => (
-                    <Row key={process[3]}>
-                      <input
-                        type="radio"
-                        style={{
-                          width: '15px',
-                          height: '15px',
-                          marginRight: '10px',
-                        }}
-                        id={process[3]}
-                        name="processContract"
-                        value={process[3]}
-                        ref={register}
-                      />
-                      <Col>{process[1]}</Col>
-                      <Col>{process[0][2]}</Col>
-                      <Col>
-                        <Link to={'/documents/' + process[3]}>
-                          {t('processModal:view')}
-                        </Link>
-                      </Col>
-                    </Row>
-                  ))}      {processes.map((process) => (
-                    <Row key={process[3]}>
-                      <input
-                        type="radio"
-                        style={{
-                          width: '15px',
-                          height: '15px',
-                          marginRight: '10px',
-                        }}
-                        id={process[3]}
-                        name="processContract"
-                        value={process[3]}
-                        ref={register}
-                      />
-                      <Col>{process[1]}</Col>
-                      <Col>{process[0][2]}</Col>
-                      <Col>
-                        <Link to={'/documents/' + process[3]}>
-                          {t('processModal:view')}
-                        </Link>
-                      </Col>
-                    </Row>
-                  ))}
-                </TableBody>
-                </table>
+                  <table>
+                    <HeadRow>
+                      <Col></Col>
+                      <Col>{t('processModal:name')}</Col>
+                      <Col>{t('processModal:supplier')}</Col>
+                      <Col>{t('processModal:documents')}</Col>
+                    </HeadRow>
+                    <TableBody>
+                      {processes.map((process) => (
+                        <Row key={process[3]}>
+                          <input
+                            type="radio"
+                            style={{
+                              width: '15px',
+                              height: '15px',
+                              marginRight: '10px',
+                            }}
+                            id={process[3]}
+                            name="processContract"
+                            value={process[3]}
+                            ref={register}
+                          />
+                          <Col>{process[1]}</Col>
+                          <Col>{process[0][2]}</Col>
+                          <Col>
+                            <Link to={'/documents/' + process[3]}>
+                              {t('processModal:view')}
+                            </Link>
+                          </Col>
+                        </Row>
+                      ))}{' '}
+                      {processes.map((process) => (
+                        <Row key={process[3]}>
+                          <input
+                            type="radio"
+                            style={{
+                              width: '15px',
+                              height: '15px',
+                              marginRight: '10px',
+                            }}
+                            id={process[3]}
+                            name="processContract"
+                            value={process[3]}
+                            ref={register}
+                          />
+                          <Col>{process[1]}</Col>
+                          <Col>{process[0][2]}</Col>
+                          <Col>
+                            <Link to={'/documents/' + process[3]}>
+                              {t('processModal:view')}
+                            </Link>
+                          </Col>
+                        </Row>
+                      ))}
+                    </TableBody>
+                  </table>
                 </ScrollBox130>
                 <Button type="submit">
                   {txHash

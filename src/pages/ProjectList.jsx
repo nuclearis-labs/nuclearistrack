@@ -13,7 +13,7 @@ import {
   Row,
   HeadRow,
   HeadRowMonsterrat,
-  Col
+  Col,
 } from '../styles/tableComponents';
 import {
   FlexWrap,
@@ -34,12 +34,13 @@ import {
   getProjectsByAddress,
 } from '../utils/web3Helpers';
 import { useTranslation } from 'react-i18next';
+import { ReactComponent as Loader } from '../img/puff.svg';
 
 export default function ProjectList() {
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
   const [showClientModal, setShowClientModal] = useState(false);
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState(undefined);
   const [projectDetails, setProjectDetails] = useState(null);
   const [processes, setProcesses] = useState(null);
   const [txHash, setTxHash] = useState(undefined);
@@ -91,60 +92,80 @@ export default function ProjectList() {
             <Title>{t('projectList:projects')}</Title>
           </FlexWrapRight>
           <TableWrap>
-          <Table>
-            <HeadRowMonsterrat>
-              <Col>{t('projectList:name')}</Col>
-              <Col>{t('projectList:client')}</Col>
-              <Col>{t('projectList:expediente')}</Col>
-              <Col>{t('projectList:oc')}</Col>
-              <Col>{t('projectList:state')}</Col>
-              <Col>{t('projectList:details')}</Col>
-            </HeadRowMonsterrat>
-            <TableBody>
-              {txHash ? (
-                <TxTrack tx={txHash} />
-              ) : (
-                <>
-                  {projects && projects.length === 0 ? (
-                    <Row>
-                      <CenteredCol colSpan="6">
-                        {t('projectList:noItems')}
-                      </CenteredCol>
-                    </Row>
-                  ) : (
-                    projects.map((project) => (
-                      <Row key={project[1]}>
-                        <Col>{project[3]}</Col>
-                        <Col>{project[2][2] === '' ? '' : project[2][2]}</Col>
-                        <Col>{project[1]}</Col>
-                        <Col>{project[4]}</Col>
-                        <Col>
-                          {account.type === '0' ? (
-                            <TableButton
-                              onClick={() => toggleProject(project[1])}
-                            >
-                              {project[0] === '1'
-                                ? t('projectList:active')
-                                : t('projectList:closed')}
-                            </TableButton>
-                          ) : project[0] === '1' ? (
-                            t('projectList:active')
-                          ) : (
-                            t('projectList:closed')
-                          )}
-                        </Col>
-                        <Col>
-                          <TableButton onClick={() => handleRowClick(project)}>
-                            {t('projectList:view')}
-                          </TableButton>
-                        </Col>
-                      </Row>
-                    ))
-                  )}
-                </>
-              )}
-            </TableBody>
-          </Table>
+            <Table>
+              <HeadRowMonsterrat>
+                <Col>{t('projectList:name')}</Col>
+                <Col>{t('projectList:client')}</Col>
+                <Col>{t('projectList:expediente')}</Col>
+                <Col>{t('projectList:oc')}</Col>
+                <Col>{t('projectList:state')}</Col>
+                <Col>{t('projectList:details')}</Col>
+              </HeadRowMonsterrat>
+              <TableBody>
+                {txHash ? (
+                  <TxTrack tx={txHash} />
+                ) : (
+                  <>
+                    {projects === undefined ? (
+                      <tr
+                        style={{
+                          width: '100%',
+                          margin: 'auto',
+                          textAlign: 'center',
+                        }}
+                      >
+                        <td colSpan="6">
+                          <Loader />
+                        </td>
+                      </tr>
+                    ) : (
+                      <>
+                        {projects && projects.length === 0 ? (
+                          <Row>
+                            <CenteredCol colSpan="6">
+                              {t('projectList:noItems')}
+                            </CenteredCol>
+                          </Row>
+                        ) : (
+                          projects.map((project) => (
+                            <Row key={project[1]}>
+                              <Col>{project[3]}</Col>
+                              <Col>
+                                {project[2][2] === '' ? '' : project[2][2]}
+                              </Col>
+                              <Col>{project[1]}</Col>
+                              <Col>{project[4]}</Col>
+                              <Col>
+                                {account.type === '0' ? (
+                                  <TableButton
+                                    onClick={() => toggleProject(project[1])}
+                                  >
+                                    {project[0] === '1'
+                                      ? t('projectList:active')
+                                      : t('projectList:closed')}
+                                  </TableButton>
+                                ) : project[0] === '1' ? (
+                                  t('projectList:active')
+                                ) : (
+                                  t('projectList:closed')
+                                )}
+                              </Col>
+                              <Col>
+                                <TableButton
+                                  onClick={() => handleRowClick(project)}
+                                >
+                                  {t('projectList:view')}
+                                </TableButton>
+                              </Col>
+                            </Row>
+                          ))
+                        )}
+                      </>
+                    )}{' '}
+                  </>
+                )}
+              </TableBody>
+            </Table>
           </TableWrap>
         </Left>
 
@@ -157,7 +178,9 @@ export default function ProjectList() {
               <Col className="bold">{projectDetails[2][2]}</Col>
             </Row>
             <Row>
-              <Col style={{width:"115px"}} className="color">{t('projectList:expediente')}</Col>
+              <Col style={{ width: '115px' }} className="color">
+                {t('projectList:expediente')}
+              </Col>
               <Col className="bold">{projectDetails[1]}</Col>
             </Row>
             <Row>
@@ -177,7 +200,6 @@ export default function ProjectList() {
                   <Col>{process[0][2]}</Col>
                   <Col>
                     <Link to={'/documents/' + process[3]}>
-                   
                       {t('projectList:view')}
                     </Link>
                   </Col>

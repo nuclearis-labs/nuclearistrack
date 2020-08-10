@@ -130,7 +130,6 @@
       "details": "DETALLES",
       "view": "VER",
       "noItems": "NO HAY DOCUMENTOS CARGADOS."
-
     },
     "documentDetail": {
       "title": "DOCUMENTO",
@@ -356,7 +355,6 @@
       "details": "DETAILS",
       "view": "EINSEHEN",
       "noItems": "KEINE DOKUMENTE VORHANDEN."
-
     },
     "documentDetail": {
       "title": "DOKUMENT",

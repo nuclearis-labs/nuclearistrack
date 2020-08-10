@@ -58,33 +58,32 @@ function ClientModal(props) {
               <ModalBottom>
                 <ScrollBox130>
                   <table>
-                    
-                <HeadRow>
-                  <Col>NAME</Col>
-                  <Col>ADDRESS</Col>
-                </HeadRow>
-                <TableBody>
-                  {users
-                    .filter((user) => user[1] === '1')
-                    .map((user) => (
-                      <Row key={user[3]}>
-                        <input
-                          type="radio"
-                          style={{
-                            width: '15px',
-                            height: '15px',
-                            marginRight: '10px',
-                          }}
-                          id={user[3]}
-                          name="userAddress"
-                          value={user[3]}
-                          ref={register}
-                        />
-                        <Col>{user[2]}</Col>
-                        <Col>{user[3]}</Col>
-                      </Row>
-                    ))}
-</TableBody>
+                    <HeadRow>
+                      <Col>NAME</Col>
+                      <Col>ADDRESS</Col>
+                    </HeadRow>
+                    <TableBody>
+                      {users
+                        .filter((user) => user[1] === '1')
+                        .map((user) => (
+                          <Row key={user[3]}>
+                            <input
+                              type="radio"
+                              style={{
+                                width: '15px',
+                                height: '15px',
+                                marginRight: '10px',
+                              }}
+                              id={user[3]}
+                              name="userAddress"
+                              value={user[3]}
+                              ref={register}
+                            />
+                            <Col>{user[2]}</Col>
+                            <Col>{user[3]}</Col>
+                          </Row>
+                        ))}
+                    </TableBody>
                   </table>
                 </ScrollBox130>
                 <Button type="submit">
