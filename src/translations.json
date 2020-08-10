@@ -106,6 +106,7 @@
       "title": "ASIGNAR PROCESO",
       "explainer": "SELECCIONE LOS PROCESOS QUE DESEA AGREGAR AL PROYECTO",
       "name": "NOMBRE",
+      "search": "BUSCAR",
       "supplier": "PROVEEDOR",
       "documents": "DOCUMENTOS",
       "view": "VER DOC.",
@@ -117,6 +118,7 @@
       "name": "NOMBRE",
       "supplier": "PROVEEDOR",
       "view": "VER DOC.",
+      "documents": "DOCUMENTOS",
       "contract": "CONTRATO",
       "add": "AGREGAR DOC.",
       "noItems": "NO HAY PROCESOS CARGADOS PARA USTED"
