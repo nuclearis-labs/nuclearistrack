@@ -5,8 +5,17 @@ import { Top, FormWrap } from '../styles/form';
 import Process from '../contracts/artifacts/Process.json';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
-import { Table, HeadRow, Row, Col } from '../styles/documentList';
-import { getDocumentDetails, getProcessDetails } from '../utils/web3Helpers';
+import {
+  TableBody,
+  TableWrap,
+  CenteredCol,
+  TableButton,
+  Table,
+  Row,
+  HeadRow,
+  HeadRowMonsterrat,
+  Col
+} from '../styles/tableComponents';import { getDocumentDetails, getProcessDetails } from '../utils/web3Helpers';
 import { useTranslation } from 'react-i18next';
 
 export default function DocumentList() {
@@ -29,16 +38,14 @@ export default function DocumentList() {
       <Top>
         <Title>{t('documentList:title')}</Title>
       </Top>
-      <FormWrap>
+      <TableWrap>
         <Table>
-          <thead>
-            <HeadRow>
-              <th>{t('documentList:name')}</th>
-              <th>{t('documentList:date')}</th>
-              <th>{t('documentList:details')}</th>
-            </HeadRow>
-          </thead>
-          <tbody>
+        <HeadRowMonsterrat>
+              <Col>{t('documentList:name')}</Col>
+              <Col>{t('documentList:date')}</Col>
+              <Col>{t('documentList:details')}</Col>
+          </HeadRowMonsterrat>
+          <TableBody>
             {documents.map((document) => (
               <Row key={document[4]}>
                 <Col style={{ width: '50%' }}>{document[0]}</Col>
@@ -52,9 +59,9 @@ export default function DocumentList() {
                 </Col>
               </Row>
             ))}
-          </tbody>
+          </TableBody>
         </Table>
-      </FormWrap>
+        </TableWrap>
     </>
   );
 }

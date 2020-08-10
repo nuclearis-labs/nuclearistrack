@@ -1,7 +1,7 @@
 // modal.js
 import React, { useEffect, useState, useContext } from 'react';
 import { Button } from '../styles/components';
-import { Row, HeadRow, Col4 } from '../styles/tableComponents';
+import { Row, HeadRow, Col, TableBody } from '../styles/tableComponents';
 import { useForm } from 'react-hook-form';
 import OutsideClickHandler from 'react-outside-click-handler';
 import {
@@ -56,11 +56,14 @@ function ClientModal(props) {
                 <ModalProdName>{props.project[3]}</ModalProdName>
               </ModalTop>
               <ModalBottom>
-                <HeadRow>
-                  <Col4>NAME</Col4>
-                  <Col4>ADDRESS</Col4>
-                </HeadRow>
                 <ScrollBox130>
+                  <table>
+                    
+                <HeadRow>
+                  <Col>NAME</Col>
+                  <Col>ADDRESS</Col>
+                </HeadRow>
+                <TableBody>
                   {users
                     .filter((user) => user[1] === '1')
                     .map((user) => (
@@ -77,10 +80,12 @@ function ClientModal(props) {
                           value={user[3]}
                           ref={register}
                         />
-                        <Col4>{user[2]}</Col4>
-                        <Col4>{user[3]}</Col4>
+                        <Col>{user[2]}</Col>
+                        <Col>{user[3]}</Col>
                       </Row>
                     ))}
+</TableBody>
+                  </table>
                 </ScrollBox130>
                 <Button type="submit">
                   {txHash

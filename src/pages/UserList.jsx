@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
 import styled from 'styled-components';
 import RSKLink from '../components/RSKLink';
-import { Title, ScrollBox400 } from '../styles/components';
+import { Title } from '../styles/components';
 import { Top } from '../styles/form';
-import { Table, Row, HeadRowMonsterrat, Col } from '../styles/tableComponents';
+import { Table, TableBody, Row, HeadRowMonsterrat, Col, CenteredCol } from '../styles/tableComponents';
 import TxTrack from '../components/TxTrack';
 import { UserContext } from '../context/UserContext';
 import {
@@ -52,12 +52,12 @@ export default function UserList() {
                 <Col>{t('userList:state')}</Col>
                 <Col>{t('userList:saldo')}</Col>
               </HeadRowMonsterrat>
-              <ScrollBox400>
+              <TableBody>
                 {users.length === 0 ? (
                   <Row>
-                    <Col style={{ textAlign: 'center', width: '100%' }}>
+                    <CenteredCol colSpan="5">
                       {t('userList:noItems')}
-                    </Col>
+                    </CenteredCol>
                   </Row>
                 ) : (
                   users.map((user) => (
@@ -84,7 +84,7 @@ export default function UserList() {
                     </Row>
                   ))
                 )}
-              </ScrollBox400>
+              </TableBody>
             </>
           )}
         </Table>

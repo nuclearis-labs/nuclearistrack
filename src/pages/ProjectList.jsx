@@ -5,15 +5,15 @@ import ProcessModal from '../components/ProcessModal';
 import ClientModal from '../components/ClientModal';
 import { Title, Button, ScrollBox400 } from '../styles/components';
 import {
-  TableWrap,
+  TableBody,
+  CenteredCol,
   TableButton,
   Table,
+  TableWrap,
   Row,
   HeadRow,
   HeadRowMonsterrat,
-  Col,
-  Col2,
-  Col3,
+  Col
 } from '../styles/tableComponents';
 import {
   FlexWrap,
@@ -92,62 +92,60 @@ export default function ProjectList() {
             <Title>{t('projectList:projects')}</Title>
           </FlexWrapRight>
           <TableWrap>
-            <Table>
+          <Table>
+            <HeadRowMonsterrat>
+              <Col>{t('projectList:name')}</Col>
+              <Col>{t('projectList:client')}</Col>
+              <Col>{t('projectList:expediente')}</Col>
+              <Col>{t('projectList:oc')}</Col>
+              <Col>{t('projectList:state')}</Col>
+              <Col>{t('projectList:details')}</Col>
+            </HeadRowMonsterrat>
+            <TableBody>
               {txHash ? (
                 <TxTrack tx={txHash} />
               ) : (
                 <>
-                  <HeadRowMonsterrat>
-                    <Col>{t('projectList:name')}</Col>
-                    <Col>{t('projectList:client')}</Col>
-                    <Col>{t('projectList:expediente')}</Col>
-                    <Col>{t('projectList:oc')}</Col>
-                    <Col>{t('projectList:state')}</Col>
-                    <Col>{t('projectList:details')}</Col>
-                  </HeadRowMonsterrat>
-                  <ScrollBox400>
-                    {projects && projects.length === 0 ? (
-                      <Row>
-                        <Col style={{ textAlign: 'center', width: '100%' }}>
-                          {t('projectList:noItems')}
+                  {projects && projects.length === 0 ? (
+                    <Row>
+                      <CenteredCol colSpan="6">
+                        {t('projectList:noItems')}
+                      </CenteredCol>
+                    </Row>
+                  ) : (
+                    projects.map((project) => (
+                      <Row key={project[1]}>
+                        <Col>{project[3]}</Col>
+                        <Col>{project[2][2] === '' ? '' : project[2][2]}</Col>
+                        <Col>{project[1]}</Col>
+                        <Col>{project[4]}</Col>
+                        <Col>
+                          {account.type === '0' ? (
+                            <TableButton
+                              onClick={() => toggleProject(project[1])}
+                            >
+                              {project[0] === '1'
+                                ? t('projectList:active')
+                                : t('projectList:closed')}
+                            </TableButton>
+                          ) : project[0] === '1' ? (
+                            t('projectList:active')
+                          ) : (
+                            t('projectList:closed')
+                          )}
+                        </Col>
+                        <Col>
+                          <TableButton onClick={() => handleRowClick(project)}>
+                            {t('projectList:view')}
+                          </TableButton>
                         </Col>
                       </Row>
-                    ) : (
-                      projects.map((project) => (
-                        <Row key={project[1]}>
-                          <Col>{project[3]}</Col>
-                          <Col>{project[2][2] === '' ? '' : project[2][2]}</Col>
-                          <Col>{project[1]}</Col>
-                          <Col>{project[4]}</Col>
-                          <Col>
-                            {account.type === '0' ? (
-                              <TableButton
-                                onClick={() => toggleProject(project[1])}
-                              >
-                                {project[0] === '1'
-                                  ? t('projectList:active')
-                                  : t('projectList:closed')}
-                              </TableButton>
-                            ) : project[0] === '1' ? (
-                              t('projectList:active')
-                            ) : (
-                              t('projectList:closed')
-                            )}
-                          </Col>
-                          <Col>
-                            <TableButton
-                              onClick={() => handleRowClick(project)}
-                            >
-                              {t('projectList:view')}
-                            </TableButton>
-                          </Col>
-                        </Row>
-                      ))
-                    )}
-                  </ScrollBox400>
+                    ))
+                  )}
                 </>
               )}
-            </Table>
+            </TableBody>
+          </Table>
           </TableWrap>
         </Left>
 
@@ -156,34 +154,34 @@ export default function ProjectList() {
             <ResumenTit>{t('projectList:resumen')}</ResumenTit>
             <ResumenName>{projectDetails[3]}</ResumenName>
             <Row>
-              <Col2 className="color">{t('projectList:client')}</Col2>
-              <Col2 className="bold">{projectDetails[2][2]}</Col2>
+              <Col className="color">{t('projectList:client')}</Col>
+              <Col className="bold">{projectDetails[2][2]}</Col>
             </Row>
             <Row>
-              <Col2 className="color">{t('projectList:expediente')}</Col2>
-              <Col2 className="bold">{projectDetails[1]}</Col2>
+              <Col style={{width:"115px"}} className="color">{t('projectList:expediente')}</Col>
+              <Col className="bold">{projectDetails[1]}</Col>
             </Row>
             <Row>
-              <Col2 className="color">{t('projectList:oc')}</Col2>
-              <Col2 className="bold">{projectDetails[4]}</Col2>
+              <Col className="color">{t('projectList:oc')}</Col>
+              <Col className="bold">{projectDetails[4]}</Col>
             </Row>
             <ProcesosTit>{t('projectList:processes')}</ProcesosTit>
             <HeadRow>
-              <Col3>{t('projectList:name')}</Col3>
-              <Col3>{t('projectList:supplier')}</Col3>
-              <Col3>{t('projectList:documents')}</Col3>
+              <Col>{t('projectList:name')}</Col>
+              <Col>{t('projectList:supplier')}</Col>
+              <Col>{t('projectList:documents')}</Col>
             </HeadRow>
             {processes &&
               processes.map((process) => (
                 <Row key={process[3]}>
-                  <Col3>{process[1]}</Col3>
-                  <Col3>{process[0][2]}</Col3>
-                  <Col3>
+                  <Col>{process[1]}</Col>
+                  <Col>{process[0][2]}</Col>
+                  <Col>
                     <Link to={'/documents/' + process[3]}>
-                      <Eye />
+                   
                       {t('projectList:view')}
                     </Link>
-                  </Col3>
+                  </Col>
                 </Row>
               ))}
             {account.type === '0' && (

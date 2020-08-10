@@ -1,21 +1,24 @@
 // tableComponents.js
 import styled from 'styled-components';
 
-export const Table = styled.div`
-  padding: 20px 0;
-  margin: 0 auto;
-  width: 1000px;
+export const Table = styled.table`
+  margin:auto;
+  padding: 20px 100px 20px 100px;
   text-align: left;
-  height: calc(100% - 75px);
+  width: 100%;
   box-sizing: border-box;
+  max-width: 1300px;
 `;
 
+export const TableBody = styled.tbody``;
+
 export const TableButton = styled.button`
+  display: inline-block;
   font-size: '12px';
   font-family: 'Roboto condensed';
   margin: 0;
   background-color: #8c6239;
-  color: #fff;
+  color: #fff !important;
   font-family: 'Montserrat', sans-serif;
   border: none;
   height: 30px;
@@ -23,17 +26,12 @@ export const TableButton = styled.button`
 `;
 
 export const TableWrap = styled.div`
-  background-color: #e6e6e6;
-  width: 100%;
+background-color: #e6e6e6;
 `;
 
-export const Row = styled.div`
-  padding: 1px 0;
-  box-sizing: border-box;
-  width: 100%;
+export const Row = styled.tr`
+  vertical-align: baseline;
   text-align: left;
-  display: flex;
-  align-items: center;
   font-size: 13px;
   letter-spacing: 0.5px;
   color: #333;
@@ -52,11 +50,7 @@ export const HeadRowMonsterrat = styled(HeadRow)`
   font-family: Montserrat, sans-serif;
 `;
 
-export const Col = styled.div`
-  width: 20%;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+export const Col = styled.td`
   a {
     text-decoration: none;
     color: #333;
@@ -65,6 +59,10 @@ export const Col = styled.div`
     color: #8c6239;
   }
 `;
+
+export const CenteredCol = styled(Col)`
+  text-align: center;
+`
 
 export const Col2 = styled.div`
   padding:3px 0;

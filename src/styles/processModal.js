@@ -86,5 +86,5 @@ export const ModalProdName = styled.div`
 
 export const ScrollBox130 = styled(Scroll)`
   height: 115px;
-  overflow: scroll;
+  overflow-y: scroll;
 `;

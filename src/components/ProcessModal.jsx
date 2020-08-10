@@ -1,7 +1,7 @@
 // modal.js
 import React, { useEffect, useState, useContext } from 'react';
 import { Button } from '../styles/components';
-import { Row, HeadRow, Col4 } from '../styles/tableComponents';
+import { Row, HeadRow, Col, Table, TableBody} from '../styles/tableComponents';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -60,17 +60,23 @@ function ProcessModal(props) {
             <form onSubmit={handleSubmit(onSubmit)}>
               <ModalTop>
                 <ModalTit>{t('processModal:title')}</ModalTit>
-                <ModalInput placeholder="BUSCAR" ref={register}></ModalInput>
+                <ModalInput
+                  placeholder={t('processModal:search')}
+                  ref={register}
+                ></ModalInput>
                 <ModalTxt>{t('processModal:explainer')}</ModalTxt>
                 <ModalProdName>{props.project[3]}</ModalProdName>
               </ModalTop>
               <ModalBottom>
-                <HeadRow>
-                  <Col4>{t('processModal:name')}</Col4>
-                  <Col4>{t('processModal:supplier')}</Col4>
-                  <Col4>{t('processModal:documents')}</Col4>
-                </HeadRow>
                 <ScrollBox130>
+                <table>
+                <HeadRow>
+                  <Col></Col>
+                  <Col>{t('processModal:name')}</Col>
+                  <Col>{t('processModal:supplier')}</Col>
+                  <Col>{t('processModal:documents')}</Col>
+                </HeadRow>
+                <TableBody>
                   {processes.map((process) => (
                     <Row key={process[3]}>
                       <input
@@ -85,16 +91,39 @@ function ProcessModal(props) {
                         value={process[3]}
                         ref={register}
                       />
-                      <Col4>{process[1]}</Col4>
-                      <Col4>{process[0][2]}</Col4>
-                      <Col4>
+                      <Col>{process[1]}</Col>
+                      <Col>{process[0][2]}</Col>
+                      <Col>
                         <Link to={'/documents/' + process[3]}>
-                          <Eye />
                           {t('processModal:view')}
                         </Link>
-                      </Col4>
+                      </Col>
+                    </Row>
+                  ))}      {processes.map((process) => (
+                    <Row key={process[3]}>
+                      <input
+                        type="radio"
+                        style={{
+                          width: '15px',
+                          height: '15px',
+                          marginRight: '10px',
+                        }}
+                        id={process[3]}
+                        name="processContract"
+                        value={process[3]}
+                        ref={register}
+                      />
+                      <Col>{process[1]}</Col>
+                      <Col>{process[0][2]}</Col>
+                      <Col>
+                        <Link to={'/documents/' + process[3]}>
+                          {t('processModal:view')}
+                        </Link>
+                      </Col>
                     </Row>
                   ))}
+                </TableBody>
+                </table>
                 </ScrollBox130>
                 <Button type="submit">
                   {txHash

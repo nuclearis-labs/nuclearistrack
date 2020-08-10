@@ -4,11 +4,14 @@ import { Link } from 'react-router-dom';
 import { Title, ScrollBox400 } from '../styles/components';
 import { Top } from '../styles/form';
 import {
-  TableWrap,
   Table,
+  TableBody,
+  TableWrap,
+  TableButton,
   Row,
   HeadRowMonsterrat,
   Col,
+  CenteredCol
 } from '../styles/tableComponents';
 import { ReactComponent as Eye } from '../img/eye.svg';
 import { ReactComponent as Pen } from '../img/pen.svg';
@@ -41,59 +44,35 @@ function ProcessList() {
         <Title>{t('processList:title')}</Title>
       </Top>
       <TableWrap>
-        <Table>
-          <HeadRowMonsterrat>
-            <Col>{t('processList:name')}</Col>
-            <Col>{t('processList:supplier')}</Col>
-            <Col>{t('processList:documents')}</Col>
-            <Col>{t('processList:add')}</Col>
-            <Col>{t('processList:contract')}</Col>
-          </HeadRowMonsterrat>
-          <ScrollBox400>
-            {processes.length === 0 ? (
-              <Row>
-                <Col style={{ textAlign: 'center', width: '100%' }}>
-                  {t('processList:noItems')}
+      <Table>
+        <HeadRowMonsterrat>
+          <Col>{t('processList:name')}</Col>
+          <Col>{t('processList:supplier')}</Col>
+          <Col>{t('processList:contract')}</Col>
+          <Col>{t('processList:documents')}</Col>
+        </HeadRowMonsterrat>
+        <TableBody>
+          {processes.length === 0 ? (
+            <Row>
+              <CenteredCol colSpan="4">{t('processList:noItems')}</CenteredCol>
+            </Row>
+          ) : (
+            processes.map((process) => (
+              <Row key={process[3]}>
+                <Col>{process[1]}</Col>
+                <Col>{process[0][2]}</Col>
+                <Col>
+                  <RSKLink hash={process[3]} type="address" testnet />
+                </Col>
+                <Col>
+                <TableButton as={Link} to={'/documents/' + process[3]} style={{marginRight:"10px"}}>VER</TableButton>
+                <TableButton as={Link} to={'/documents/add/' + process[3]}>AGREGAR</TableButton>
                 </Col>
               </Row>
-            ) : (
-              processes.map((process) => (
-                <Row key={process[3]}>
-                  <Col>{process[1]}</Col>
-                  <Col>{process[0][2]}</Col>
-                  <Col>
-                    <Link to={'/documents/' + process[3]}>
-                      <Eye
-                        style={{
-                          width: '20px',
-                          verticalAlign: 'middle',
-                          marginRight: '5px',
-                          fill: '#333',
-                        }}
-                      />
-                    </Link>
-                  </Col>
-
-                  <Col>
-                    <Link to={'/documents/add/' + process[3]}>
-                      <Pen
-                        style={{
-                          width: '20px',
-                          verticalAlign: 'middle',
-                          marginRight: '5px',
-                          fill: '#333',
-                        }}
-                      />
-                    </Link>
-                  </Col>
-                  <Col>
-                    <RSKLink hash={process[3]} type="address" testnet />
-                  </Col>
-                </Row>
-              ))
-            )}
-          </ScrollBox400>
-        </Table>
+            ))
+          )}
+        </TableBody>
+      </Table>
       </TableWrap>
     </>
   );
