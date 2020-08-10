@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import ProcessModal from '../components/ProcessModal';
 import ClientModal from '../components/ClientModal';
-import { Title, Button, ScrollBox400 } from '../styles/components';
+import { Title, Button } from '../styles/components';
 import {
   TableBody,
   CenteredCol,
@@ -25,7 +25,6 @@ import {
   ResumenName,
   ProcesosTit,
 } from '../styles/projectList';
-import { ReactComponent as Eye } from '../img/eye.svg';
 import TxTrack from '../components/TxTrack';
 import { UserContext } from '../context/UserContext';
 import {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router';
 import { Title } from '../styles/components';
-import { Top, FormWrap } from '../styles/form';
+import { Top } from '../styles/form';
 import Process from '../contracts/artifacts/Process.json';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
@@ -9,10 +9,8 @@ import {
   TableBody,
   TableWrap,
   CenteredCol,
-  TableButton,
   Table,
   Row,
-  HeadRow,
   HeadRowMonsterrat,
   Col
 } from '../styles/tableComponents';import { getDocumentDetails, getProcessDetails } from '../utils/web3Helpers';
@@ -46,7 +44,12 @@ export default function DocumentList() {
               <Col>{t('documentList:details')}</Col>
           </HeadRowMonsterrat>
           <TableBody>
-            {documents.map((document) => (
+          {documents.length === 0 ? (
+            <Row>
+              <CenteredCol colSpan="4">{t('documentList:noItems')}</CenteredCol>
+            </Row>
+          ) : (
+            documents.map((document) => (
               <Row key={document[4]}>
                 <Col style={{ width: '50%' }}>{document[0]}</Col>
                 <Col>
@@ -58,7 +61,7 @@ export default function DocumentList() {
                   </Link>
                 </Col>
               </Row>
-            ))}
+            )))}
           </TableBody>
         </Table>
         </TableWrap>

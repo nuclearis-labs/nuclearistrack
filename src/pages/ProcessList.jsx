@@ -1,7 +1,7 @@
 // processes.js
 import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { Title, ScrollBox400 } from '../styles/components';
+import { Title } from '../styles/components';
 import { Top } from '../styles/form';
 import {
   Table,
@@ -13,8 +13,6 @@ import {
   Col,
   CenteredCol
 } from '../styles/tableComponents';
-import { ReactComponent as Eye } from '../img/eye.svg';
-import { ReactComponent as Pen } from '../img/pen.svg';
 import RSKLink from '../components/RSKLink';
 import { UserContext } from '../context/UserContext';
 import {

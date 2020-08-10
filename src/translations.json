@@ -128,7 +128,9 @@
       "name": "NOMBRE",
       "date": "FECHA",
       "details": "DETALLES",
-      "view": "VER"
+      "view": "VER",
+      "noItems": "NO HAY DOCUMENTOS CARGADOS."
+
     },
     "documentDetail": {
       "title": "DOCUMENTO",

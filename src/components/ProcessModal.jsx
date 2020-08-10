@@ -1,8 +1,7 @@
 // modal.js
 import React, { useEffect, useState, useContext } from 'react';
 import { Button } from '../styles/components';
-import { Row, HeadRow, Col, Table, TableBody} from '../styles/tableComponents';
-import { ReactComponent as Eye } from '../img/eye.svg';
+import { Row, HeadRow, Col, TableBody} from '../styles/tableComponents';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import OutsideClickHandler from 'react-outside-click-handler';
