@@ -173,6 +173,7 @@ export default function ProjectList() {
           <Right>
             <ResumenTit>{t('projectList:resumen')}</ResumenTit>
             <ResumenName>{projectDetails[3]}</ResumenName>
+            <table cellpadding="2">
             <Row>
               <Col className="color">{t('projectList:client')}</Col>
               <Col className="bold">{projectDetails[2][2]}</Col>
@@ -187,11 +188,13 @@ export default function ProjectList() {
               <Col className="color">{t('projectList:oc')}</Col>
               <Col className="bold">{projectDetails[4]}</Col>
             </Row>
+            </table>
             <ProcesosTit>{t('projectList:processes')}</ProcesosTit>
+            <table cellpadding="2">
             <HeadRow>
               <Col>{t('projectList:name')}</Col>
               <Col>{t('projectList:supplier')}</Col>
-              <Col>{t('projectList:documents')}</Col>
+              <Col></Col>
             </HeadRow>
             {processes &&
               processes.map((process) => (
@@ -199,12 +202,13 @@ export default function ProjectList() {
                   <Col>{process[1]}</Col>
                   <Col>{process[0][2]}</Col>
                   <Col>
-                    <Link to={'/documents/' + process[3]}>
+                    <TableButton as={Link} to={'/documents/' + process[3]}>
                       {t('projectList:view')}
-                    </Link>
+                    </TableButton>
                   </Col>
                 </Row>
               ))}
+              </table>
             {account.type === '0' && (
               <>
                 <Button

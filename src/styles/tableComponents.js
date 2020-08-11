@@ -58,6 +58,12 @@ export const Col = styled.td`
   a:hover {
     color: #8c6239;
   }
+  &.bold{
+    font-weight:700;
+  }
+  &.color{
+    color: #8c6239;
+  }
 `;
 
 export const CenteredCol = styled(Col)`

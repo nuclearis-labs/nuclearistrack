@@ -9,6 +9,7 @@ import {
   TableBody,
   TableWrap,
   CenteredCol,
+  TableButton,
   Table,
   Row,
   HeadRowMonsterrat,
@@ -70,11 +71,11 @@ export default function DocumentList() {
                             {new Date(parseInt(document[4] + '000')).toLocaleString()}
                           </Col>
                           <Col>
-                            <Link
+                            <TableButton as={Link}
                               to={'/documents/' + params.process + '/' + document[1]}
                             >
                               {t('documentList:view')}
-                            </Link>
+                            </TableButton>
                           </Col>
                         </Row>
                       ))
