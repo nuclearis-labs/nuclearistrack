@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react';
 import { useParams } from 'react-router';
 import { Title, Label } from '../styles/components';
-import { Table, Row, Col } from '../styles/tableComponents';
+import { Row, Col } from '../styles/tableComponents';
 import GoogleMap from '../components/GoogleMap';
 import Process from '../contracts/artifacts/Process.json';
 import { useDropzone } from 'react-dropzone';
@@ -96,24 +96,26 @@ export default function DocumentDetail() {
             <>
               <ResumenTit>{t('documentDetail:documentDetails')}</ResumenTit>
               <table>
-              <Row>
-                <Col width="80px" className="color">{t('documentDetail:name')}</Col>
-                <Col className="bold">{document[0]}</Col>
-              </Row>
-              <Row>
-                <Col className="color">{t('documentDetail:hash')}</Col>
-                <Col className="bold" id="hash">
-                  {document[1].substr(0, 10)}...
-                  {document[1].substr(-10)}
-                </Col>
-              </Row>
-              <Row>
-                <Col className="color">{t('documentDetail:date')}</Col>
-                <Col className="bold">
-                  {' '}
-                  {new Date(parseInt(document[4] + '000')).toLocaleString()}
-                </Col>
-              </Row>
+                <Row>
+                  <Col width="80px" className="color">
+                    {t('documentDetail:name')}
+                  </Col>
+                  <Col className="bold">{document[0]}</Col>
+                </Row>
+                <Row>
+                  <Col className="color">{t('documentDetail:hash')}</Col>
+                  <Col className="bold" id="hash">
+                    {document[1].substr(0, 10)}...
+                    {document[1].substr(-10)}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className="color">{t('documentDetail:date')}</Col>
+                  <Col className="bold">
+                    {' '}
+                    {new Date(parseInt(document[4] + '000')).toLocaleString()}
+                  </Col>
+                </Row>
               </table>
               <ProcesosTit>{t('documentDetail:location')}</ProcesosTit>
 

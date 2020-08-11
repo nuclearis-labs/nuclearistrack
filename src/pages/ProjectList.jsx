@@ -174,41 +174,41 @@ export default function ProjectList() {
             <ResumenTit>{t('projectList:resumen')}</ResumenTit>
             <ResumenName>{projectDetails[3]}</ResumenName>
             <table cellpadding="2">
-            <Row>
-              <Col className="color">{t('projectList:client')}</Col>
-              <Col className="bold">{projectDetails[2][2]}</Col>
-            </Row>
-            <Row>
-              <Col style={{ width: '115px' }} className="color">
-                {t('projectList:expediente')}
-              </Col>
-              <Col className="bold">{projectDetails[1]}</Col>
-            </Row>
-            <Row>
-              <Col className="color">{t('projectList:oc')}</Col>
-              <Col className="bold">{projectDetails[4]}</Col>
-            </Row>
+              <Row>
+                <Col className="color">{t('projectList:client')}</Col>
+                <Col className="bold">{projectDetails[2][2]}</Col>
+              </Row>
+              <Row>
+                <Col style={{ width: '115px' }} className="color">
+                  {t('projectList:expediente')}
+                </Col>
+                <Col className="bold">{projectDetails[1]}</Col>
+              </Row>
+              <Row>
+                <Col className="color">{t('projectList:oc')}</Col>
+                <Col className="bold">{projectDetails[4]}</Col>
+              </Row>
             </table>
             <ProcesosTit>{t('projectList:processes')}</ProcesosTit>
             <table cellpadding="2">
-            <HeadRow>
-              <Col>{t('projectList:name')}</Col>
-              <Col>{t('projectList:supplier')}</Col>
-              <Col></Col>
-            </HeadRow>
-            {processes &&
-              processes.map((process) => (
-                <Row key={process[3]}>
-                  <Col>{process[1]}</Col>
-                  <Col>{process[0][2]}</Col>
-                  <Col>
-                    <TableButton as={Link} to={'/documents/' + process[3]}>
-                      {t('projectList:view')}
-                    </TableButton>
-                  </Col>
-                </Row>
-              ))}
-              </table>
+              <HeadRow>
+                <Col>{t('projectList:name')}</Col>
+                <Col>{t('projectList:supplier')}</Col>
+                <Col></Col>
+              </HeadRow>
+              {processes &&
+                processes.map((process) => (
+                  <Row key={process[3]}>
+                    <Col>{process[1]}</Col>
+                    <Col>{process[0][2]}</Col>
+                    <Col>
+                      <TableButton as={Link} to={'/documents/' + process[3]}>
+                        {t('projectList:view')}
+                      </TableButton>
+                    </Col>
+                  </Row>
+                ))}
+            </table>
             {account.type === '0' && (
               <>
                 <Button
