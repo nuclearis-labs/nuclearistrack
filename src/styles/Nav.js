@@ -169,6 +169,10 @@ export const NavLogin = styled.div`
   a:hover {
     color: #fff;
   }
+  @media (max-width: 768px) {
+    width: 100%;
+    text-align: center;
+  }
 `;
 
 export const NavMenu = styled.div`
@@ -190,6 +194,9 @@ export const NavMenu = styled.div`
   a:hover {
     color: #fff;
   }
+  @media (max-width: 768px) {
+    text-align: center;
+  }
 `;
 
 export const Nav = styled.div`
@@ -203,6 +210,10 @@ export const NavHeader = styled.div`
   display: flex;
   align-items: center;
   margin: 0 auto;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 0;
+  }
 `;
 export const NavLogo = styled.div`
   width: 25%;
@@ -212,6 +223,10 @@ export const NavLogo = styled.div`
   svg {
     margin-right: 20px;
     width: 130px;
+  }
+  @media (max-width: 768px) {
+    width: unset;
+    margin: auto;
   }
 `;
 export const NavPhrase = styled.div`
