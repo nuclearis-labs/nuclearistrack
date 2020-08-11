@@ -226,6 +226,9 @@ export const NavLogo = styled.div`
   }
   @media (max-width: 768px) {
     width: unset;
+    svg {
+      margin-right: 0;
+    }
     margin: auto;
   }
 `;
