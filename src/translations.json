@@ -227,7 +227,6 @@
       "assignClient": "ASIGNAR CLIENTE"
     }
   },
-
   "de": {
     "header": {
       "home": "START",
@@ -678,7 +677,8 @@
       "processes": "PROCESSES",
       "supplier": "SUPPLIER",
       "documents": "DOCUMENTS",
-      "assignProcess": "ASSIGN PROCESS"
+      "assignProcess": "ASSIGN PROCESS",
+      "assignClient": "ASSIGN CLIENT"
     }
   }
 }
