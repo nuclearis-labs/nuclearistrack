@@ -16,6 +16,10 @@ module.exports = {
   defaultNetwork: 'buidlerevm',
   networks: {
     buidlerevm: {},
+    ganache: {
+      url: 'http://localhost:8545',
+      accounts: [process.env.GANACHE_PRIVATE_KEY]
+    },
     bfa: {
       url: 'http://localhost:8545',
       accounts: [process.env.BFA_PRIVATE_KEY],
