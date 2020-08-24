@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './.env.local' });
+require('dotenv').config({ path: './.env' });
 usePlugin('@nomiclabs/buidler-truffle5');
 usePlugin('@nomiclabs/buidler-web3');
 usePlugin('solidity-coverage');
