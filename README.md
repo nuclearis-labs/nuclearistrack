@@ -15,7 +15,7 @@ Decentralized Application for tracking components through multiple suppliers.
 
 ## Install
 
-```
+```sh
 git clone https://github.com/NRS-Soft/nuclearistrack
 cd nuclearistrack
 yarn install
@@ -23,8 +23,38 @@ yarn install
 
 ## Usage
 
+### Configure .env variables
+
+Open `.env.example` and make a copy as `.env.local` and fill out the required process variables
+
+```md
+REACT_APP_CONTRACT=<CONTRACT ADDRESS AFTER DEPLOYMENT, SEE DEPLOY SMART CONTRACTS>
+ADMIN=<ADMIN USERNAME, USED BY DEPLOYMENT>
+XXX_PRIVATE_KEYS=<FILL OUT PRIVATE KEYS YOU'LL BE USING FOR DEPLOYMENT, DO NOT COMMIT THEM ANYWHERE>
 ```
+
+### Deploy Smart Contracts
+
+```sh
+npx buidler run ./scripts/deploy.js --network <NETWORK NAME FROM BUIDLER CONFIG>
+```
+
+### Test Smart Contracts
+
+```sh
+npx buidler test
+```
+
+### Start App
+
+```sh
 yarn start
+```
+
+### Build App
+
+```sh
+yarn build
 ```
 
 ## Maintainers
