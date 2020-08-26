@@ -75,18 +75,18 @@ export default function DocumentDetail() {
                     {t('documentDetail:dragFile')}
                   </pre>
                 ) : (
-                  <pre style={{ transform: 'translateY(45px)', margin: 0 }}>
-                    {hash
-                      ? `${t('documentDetail:fileName')} ${file.name}\n${t(
+                    <pre style={{ transform: 'translateY(45px)', margin: 0, whiteSpace: "break-spaces" }}>
+                      {hash
+                        ? `${t('documentDetail:fileName')} ${file.name}\n${t(
                           'documentDetail:fileHash'
                         )} ${hash.substr(0, 8)}...${hash.substr(-8)}\n${
-                          hash === document[1]
-                            ? t('documentDetail:authentic')
-                            : t('documentDetail:fake')
+                        hash === document[1]
+                          ? t('documentDetail:authentic')
+                          : t('documentDetail:fake')
                         }`
-                      : t('documentDetail:dropFile')}
-                  </pre>
-                )}
+                        : t('documentDetail:dropFile')}
+                    </pre>
+                  )}
               </DropZone>
             )}
           </FlexWrapRight>

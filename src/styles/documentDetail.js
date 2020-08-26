@@ -14,23 +14,21 @@ to {
 `;
 
 export const DropZone = styled.div`
-height: 40vh;
-width: 400px;
+height: 200px;
+width: 500px;
 padding: 0 22px;
 background-color: ${(props) =>
-  props.valid === true
-    ? 'MEDIUMSPRINGGREEN'
-    : props.valid === false
-    ? 'lightcoral'
-    : 'none'}
+    props.valid === true
+      ? 'MEDIUMSPRINGGREEN'
+      : props.valid === false
+        ? 'lightcoral'
+        : 'none'}
 float: right;
 margin-right: 20px;
 text-align: center;
 overflow: hidden;
 cursor: pointer;
 border: 2px solid grey;
-width: fit-content;
-min-width: 400px;
 &:hover {
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 1);
   animation: ${fade} 100ms linear;
