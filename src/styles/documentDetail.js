@@ -24,7 +24,7 @@ background-color: ${(props) =>
         ? 'lightcoral'
         : 'none'}
 float: right;
-margin-right: 20px;
+margin: 13px 0;
 text-align: center;
 overflow: hidden;
 cursor: pointer;
@@ -40,7 +40,7 @@ export const FlexWrap = styled.div`
 `;
 export const FlexWrapRight = styled(FlexWrap)`
   float: right;
-  padding-right: 20px;
+  padding-right: 40px;
   height: auto;
 `;
 
