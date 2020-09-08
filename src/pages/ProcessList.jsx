@@ -81,13 +81,13 @@ function ProcessList() {
                           to={'/documents/' + process[3]}
                           style={{ marginRight: '10px' }}
                         >
-                          VER
+                          {t('processList:view')}
                         </TableButton>
                         <TableButton
                           as={Link}
                           to={'/documents/add/' + process[3]}
                         >
-                          AGREGAR
+                          {t('processList:add')}
                         </TableButton>
                       </Col>
                     </Row>

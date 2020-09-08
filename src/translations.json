@@ -117,10 +117,10 @@
       "title": "PROCESOS",
       "name": "NOMBRE",
       "supplier": "PROVEEDOR",
-      "view": "VER DOC.",
+      "view": "VER",
       "documents": "DOCUMENTOS",
       "contract": "CONTRATO",
-      "add": "AGREGAR DOC.",
+      "add": "AGREGAR",
       "noItems": "NO HAY PROCESOS CARGADOS PARA USTED"
     },
     "documentList": {
@@ -345,8 +345,9 @@
       "supplier": "LIEFERANT",
       "documents": "DOKUMENTE",
       "contract": "VERTRAG",
-      "add": "NEUES DOKUMENT",
-      "noItems": "KEINE PROZESSE FÜR IHR KONTO VERFÜGBAR."
+      "add": "HINZUFÜGEN",
+      "noItems": "KEINE PROZESSE FÜR IHR KONTO VERFÜGBAR.",
+      "view": "EINSEHEN"
     },
     "documentList": {
       "title": "DOKUMENTE",
@@ -572,9 +573,9 @@
       "title": "PROCESS",
       "name": "NAME",
       "supplier": "SUPPLIER",
-      "view": "SEE DOC.",
+      "view": "VIEW",
       "contract": "CONTRACT",
-      "add": "ADD DOC.",
+      "add": "ADD",
       "documents": "DOCUMENTS",
       "noItems": "THERE ARE NO ADDED PROCESSES FOR YOU "
     },
