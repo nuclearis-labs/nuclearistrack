@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react';
 import { useParams } from 'react-router';
 import { Title, Label } from '../styles/components';
-import { Row, Col2, Col4 } from '../styles/tableComponents';
+import { Row, Col } from '../styles/tableComponents';
 import GoogleMap from '../components/GoogleMap';
 import Process from '../contracts/artifacts/Process.json';
 import { useDropzone } from 'react-dropzone';
@@ -75,18 +75,18 @@ export default function DocumentDetail() {
                     {t('documentDetail:dragFile')}
                   </pre>
                 ) : (
-                  <pre style={{ transform: 'translateY(45px)', margin: 0 }}>
-                    {hash
-                      ? `${t('documentDetail:fileName')} ${file.name}\n${t(
+                    <pre style={{ transform: 'translateY(45px)', margin: 0, whiteSpace: "break-spaces" }}>
+                      {hash
+                        ? `${t('documentDetail:fileName')} ${file.name}\n${t(
                           'documentDetail:fileHash'
                         )} ${hash.substr(0, 8)}...${hash.substr(-8)}\n${
-                          hash === document[1]
-                            ? t('documentDetail:authentic')
-                            : t('documentDetail:fake')
+                        hash === document[1]
+                          ? t('documentDetail:authentic')
+                          : t('documentDetail:fake')
                         }`
-                      : t('documentDetail:dropFile')}
-                  </pre>
-                )}
+                        : t('documentDetail:dropFile')}
+                    </pre>
+                  )}
               </DropZone>
             )}
           </FlexWrapRight>
@@ -95,24 +95,28 @@ export default function DocumentDetail() {
           {document && (
             <>
               <ResumenTit>{t('documentDetail:documentDetails')}</ResumenTit>
-              <Row>
-                <Col4 className="color">{t('documentDetail:name')}</Col4>
-                <Col2 className="bold">{document[0]}</Col2>
-              </Row>
-              <Row>
-                <Col4 className="color">{t('documentDetail:hash')}</Col4>
-                <Col2 className="bold" id="hash">
-                  {document[1].substr(0, 10)}...
-                  {document[1].substr(-10)}
-                </Col2>
-              </Row>
-              <Row>
-                <Col4 className="color">{t('documentDetail:date')}</Col4>
-                <Col2 className="bold">
-                  {' '}
-                  {new Date(parseInt(document[4] + '000')).toLocaleString()}
-                </Col2>
-              </Row>
+              <table>
+                <Row>
+                  <Col width="80px" className="color">
+                    {t('documentDetail:name')}
+                  </Col>
+                  <Col className="bold">{document[0]}</Col>
+                </Row>
+                <Row>
+                  <Col className="color">{t('documentDetail:hash')}</Col>
+                  <Col className="bold" id="hash">
+                    {document[1].substr(0, 10)}...
+                    {document[1].substr(-10)}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className="color">{t('documentDetail:date')}</Col>
+                  <Col className="bold">
+                    {' '}
+                    {new Date(parseInt(document[4] + '000')).toLocaleString()}
+                  </Col>
+                </Row>
+              </table>
               <ProcesosTit>{t('documentDetail:location')}</ProcesosTit>
 
               <GoogleMap

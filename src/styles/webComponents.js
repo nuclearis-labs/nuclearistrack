@@ -37,6 +37,9 @@ export const WebTop = styled.div`
   background-color: #000;
   width: 100%;
   height: 370px;
+  @media (max-width: 768px) {
+    height: 320px;
+  }
 `;
 
 export const WebTopTit = styled.div`

@@ -9,6 +9,7 @@ import {
   TableBody,
   TableWrap,
   CenteredCol,
+  TableButton,
   Table,
   Row,
   HeadRowMonsterrat,
@@ -55,30 +56,37 @@ export default function DocumentList() {
                 </td>
               </tr>
             ) : (
-                <>
-                  {documents.length === 0 ? (
-                    <Row>
-                      <CenteredCol colSpan="4">
-                        {t('documentList:noItems')}
-                      </CenteredCol>
+              <>
+                {documents.length === 0 ? (
+                  <Row>
+                    <CenteredCol colSpan="4">
+                      {t('documentList:noItems')}
+                    </CenteredCol>
+                  </Row>
+                ) : (
+                  documents.map((document) => (
+                    <Row key={document[4]}>
+                      <Col style={{ width: '50%' }}>{document[0]}</Col>
+                      <Col>
+                        {new Date(
+                          parseInt(document[4] + '000')
+                        ).toLocaleString()}
+                      </Col>
+                      <Col>
+                        <TableButton
+                          as={Link}
+                          to={
+                            '/documents/' + params.process + '/' + document[1]
+                          }
+                        >
+                          {t('documentList:view')}
+                        </TableButton>
+                      </Col>
                     </Row>
-                  ) : (
-                      documents.map((document) => (
-                        <Row key={document[4]}>
-                          <Col style={{ width: '50%' }}>{document[0]}</Col>
-                          <Col>
-                            {new Date(parseInt(document[4] + '000')).toLocaleString()}
-                          </Col>
-                          <Col>
-                            <Link
-                              to={'/documents/' + params.process + '/' + document[1]}
-                            >
-                              {t('documentList:view')}
-                            </Link>
-                          </Col>
-                        </Row>
-                      ))
-                    )} </>)}
+                  ))
+                )}{' '}
+              </>
+            )}
           </TableBody>
         </Table>
       </TableWrap>

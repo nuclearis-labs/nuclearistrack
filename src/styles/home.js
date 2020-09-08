@@ -121,9 +121,7 @@ export const Heptagram = styled.img`
   }
   @media (max-width: 767px) {
     left: 50%;
-  }
-  @media (max-width: 580px) {
-    margin-left: -200px;
+    display: none;
   }
 `;
 

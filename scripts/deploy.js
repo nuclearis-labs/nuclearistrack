@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 async function main() {
   const {
     abi,
@@ -10,7 +12,7 @@ async function main() {
 
   const contract = await NuclearPoE.deploy({
     data: bytecode,
-    arguments: ['NRS-ADMIN'],
+    arguments: [process.env.ADMIN],
   })
     .send({
       from: accounts[0],
@@ -18,12 +20,10 @@ async function main() {
       gasPrice: '1',
       value: '0',
     })
-    .on('transactionHash', console.log)
-    .on('receipt', console.log);
+    .on('transactionHash', (txHash) => console.log(`Transactionhash: ${txHash}`))
+    .on('receipt', ({ blockNumber }) => console.log(`BlockNumber: ${blockNumber}`));
 
-  console.log(contract);
-
-  console.log('NuclearPoE deployed to:', contract.address);
+  console.log('Contract deployed to:', contract.options.address);
 }
 
 main()
