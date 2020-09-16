@@ -19,7 +19,7 @@ export default function PublicHeader() {
       <NavHeader>
         <NavLogo>
           <Link to="/">
-            <Logo style={{ width: '150px', marginTop: '7px' }} />
+            <Logo style={{ width: '150px', marginTop: '3px' }} />
           </Link>
         </NavLogo>
         <NavMenu>
