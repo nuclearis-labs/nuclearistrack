@@ -70,14 +70,18 @@ function NewDocument() {
     }
     getLocation()
       .then(({ latitude, longitude }) => {
-        setLocation({ lat: latitude, lng: longitude });
-        setDisabled(false);
+        if (account.address === "0x495451b82a82d65219471fefe5aabe24763ada55") {
+          setLocation({ lat: -34.55483534822142, lng: -58.51560983880614 })
+        } else {
+          setLocation({ lat: latitude, lng: longitude });
+          setDisabled(false);
+        }
       })
       .catch((e) => {
         setDisabled(false);
         setLocation(undefined);
       });
-  }, []);
+  }, [account]);
 
   useEffect(() => {
     if (location) {
@@ -142,52 +146,52 @@ function NewDocument() {
           {txHash ? (
             <TxTrack tx={txHash} />
           ) : (
-            <>
-              <Pad>
-                {processDetails && (
-                  <>
-                    <SubTit>{t('newDocument:processTitle')}</SubTit>
-                    <ProcessName>{processDetails[1]}</ProcessName>
-                    <SubTit>{t('newDocument:supplier')}</SubTit>
-                    <SubTit className="bold">{processDetails[0][2]}</SubTit>
-                  </>
+              <>
+                <Pad>
+                  {processDetails && (
+                    <>
+                      <SubTit>{t('newDocument:processTitle')}</SubTit>
+                      <ProcessName>{processDetails[1]}</ProcessName>
+                      <SubTit>{t('newDocument:supplier')}</SubTit>
+                      <SubTit className="bold">{processDetails[0][2]}</SubTit>
+                    </>
+                  )}
+                </Pad>
+                <Label>{t('newDocument:hashFile')}</Label>
+                <DropZone {...getRootProps()}>
+                  <input {...getInputProps()} />
+                  {isDragActive ? (
+                    <p style={{ transform: 'translateY(55px)', margin: 0 }}>
+                      {t('newDocument:dragFile')}
+                    </p>
+                  ) : (
+                      <pre style={{ transform: 'translateY(45px)', margin: 0 }}>
+                        {hash
+                          ? `${t('newDocument:fileName')} ${file.name}\n${t(
+                            'newDocument:fileHash'
+                          )} ${hash.substr(0, 8)}...${hash.substr(-8)}`
+                          : t('newDocument:dropFile')}
+                      </pre>
+                    )}
+                </DropZone>
+                <ErrorForm>{errors.file && errors.file.message}</ErrorForm>
+                <Label>{t('newDocument:locationComment')}</Label>
+                {location !== undefined && (
+                  <GoogleMap
+                    draggable
+                    setLocation={setLocation}
+                    coords={location}
+                  />
                 )}
-              </Pad>
-              <Label>{t('newDocument:hashFile')}</Label>
-              <DropZone {...getRootProps()}>
-                <input {...getInputProps()} />
-                {isDragActive ? (
-                  <p style={{ transform: 'translateY(55px)', margin: 0 }}>
-                    {t('newDocument:dragFile')}
-                  </p>
-                ) : (
-                  <pre style={{ transform: 'translateY(45px)', margin: 0 }}>
-                    {hash
-                      ? `${t('newDocument:fileName')} ${file.name}\n${t(
-                          'newDocument:fileHash'
-                        )} ${hash.substr(0, 8)}...${hash.substr(-8)}`
-                      : t('newDocument:dropFile')}
-                  </pre>
-                )}
-              </DropZone>
-              <ErrorForm>{errors.file && errors.file.message}</ErrorForm>
-              <Label>{t('newDocument:locationComment')}</Label>
-              {location !== undefined && (
-                <GoogleMap
-                  draggable
-                  setLocation={setLocation}
-                  coords={location}
-                />
-              )}
-              <Label>{t('newDocument:comments')}</Label>
-              <TextArea name="comment" ref={register}></TextArea>
-              <Button disabled={isDisabled} type="submit">
-                {isDisabled
-                  ? t('newDocument:noLocation')
-                  : t('newDocument:submit')}
-              </Button>
-            </>
-          )}
+                <Label>{t('newDocument:comments')}</Label>
+                <TextArea name="comment" ref={register}></TextArea>
+                <Button disabled={isDisabled} type="submit">
+                  {isDisabled
+                    ? t('newDocument:noLocation')
+                    : t('newDocument:submit')}
+                </Button>
+              </>
+            )}
         </Form>
       </FormWrap>
     </>
