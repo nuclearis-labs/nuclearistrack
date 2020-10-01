@@ -70,7 +70,7 @@ function NewDocument() {
     }
     getLocation()
       .then(({ latitude, longitude }) => {
-        if (account.address === "0x495451b82a82d65219471fefe5aabe24763ada55") {
+        if (account.address === "0x495451b82A82d65219471FEFE5aabE24763ADA55") {
           setLocation({ lat: -34.55483534822142, lng: -58.51560983880614 })
         } else {
           setLocation({ lat: latitude, lng: longitude });
