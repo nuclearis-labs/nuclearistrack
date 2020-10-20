@@ -43,7 +43,7 @@ function ProcessModal(props) {
     getProcessesByAddress(contract, account.address)
       .then(getProcessDetails(account.address, web3))
       .then(getUserDetails(account.address, contract, 0, web3))
-      .then(setProcesses);
+      .then(setProcesses)
     // eslint-disable-next-line
   }, []);
 
@@ -55,85 +55,62 @@ function ProcessModal(props) {
             <TxTrack tx={txHash} />
           </ModalWrap>
         ) : (
-          <ModalWrap color="#333">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <ModalTop>
-                <ModalTit>{t('processModal:title')}</ModalTit>
-                <ModalInput
-                  placeholder={t('processModal:search')}
-                  ref={register}
-                ></ModalInput>
-                <ModalTxt>{t('processModal:explainer')}</ModalTxt>
-                <ModalProdName>{props.project[3]}</ModalProdName>
-              </ModalTop>
-              <ModalBottom>
-                <ScrollBox130>
-                  <table>
-                    <HeadRow>
-                      <Col></Col>
-                      <Col>{t('processModal:name')}</Col>
-                      <Col>{t('processModal:supplier')}</Col>
-                      <Col>{t('processModal:documents')}</Col>
-                    </HeadRow>
-                    <TableBody>
-                      {processes.map((process) => (
-                        <Row key={process[3]}>
-                          <input
-                            type="radio"
-                            style={{
-                              width: '15px',
-                              height: '15px',
-                              marginRight: '10px',
-                            }}
-                            id={process[3]}
-                            name="processContract"
-                            value={process[3]}
-                            ref={register}
-                          />
-                          <Col>{process[1]}</Col>
-                          <Col>{process[0][2]}</Col>
-                          <Col>
-                            <Link to={'/documents/' + process[3]}>
-                              {t('processModal:view')}
-                            </Link>
-                          </Col>
-                        </Row>
-                      ))}{' '}
-                      {processes.map((process) => (
-                        <Row key={process[3]}>
-                          <input
-                            type="radio"
-                            style={{
-                              width: '15px',
-                              height: '15px',
-                              marginRight: '10px',
-                            }}
-                            id={process[3]}
-                            name="processContract"
-                            value={process[3]}
-                            ref={register}
-                          />
-                          <Col>{process[1]}</Col>
-                          <Col>{process[0][2]}</Col>
-                          <Col>
-                            <Link to={'/documents/' + process[3]}>
-                              {t('processModal:view')}
-                            </Link>
-                          </Col>
-                        </Row>
-                      ))}
-                    </TableBody>
-                  </table>
-                </ScrollBox130>
-                <Button type="submit">
-                  {txHash
-                    ? t('processModal:success')
-                    : t('processModal:submit')}
-                </Button>
-              </ModalBottom>
-            </form>
-          </ModalWrap>
-        )}
+            <ModalWrap color="#333">
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <ModalTop>
+                  <ModalTit>{t('processModal:title')}</ModalTit>
+                  <ModalInput
+                    placeholder={t('processModal:search')}
+                    ref={register}
+                  ></ModalInput>
+                  <ModalTxt>{t('processModal:explainer')}</ModalTxt>
+                  <ModalProdName>{props.project[3]}</ModalProdName>
+                </ModalTop>
+                <ModalBottom>
+                  <ScrollBox130>
+                    <table>
+                      <HeadRow>
+                        <Col></Col>
+                        <Col>{t('processModal:name')}</Col>
+                        <Col>{t('processModal:supplier')}</Col>
+                        <Col>{t('processModal:documents')}</Col>
+                      </HeadRow>
+                      <TableBody>
+                        {processes.map((process) => (
+                          <Row key={process[3]}>
+                            <input
+                              type="radio"
+                              style={{
+                                width: '15px',
+                                height: '15px',
+                                marginRight: '10px',
+                              }}
+                              id={process[3]}
+                              name="processContract"
+                              value={process[3]}
+                              ref={register}
+                            />
+                            <Col>{process[1]}</Col>
+                            <Col>{process[0][2]}</Col>
+                            <Col>
+                              <Link to={'/documents/' + process[3]}>
+                                {t('processModal:view')}
+                              </Link>
+                            </Col>
+                          </Row>
+                        ))}
+                      </TableBody>
+                    </table>
+                  </ScrollBox130>
+                  <Button type="submit">
+                    {txHash
+                      ? t('processModal:success')
+                      : t('processModal:submit')}
+                  </Button>
+                </ModalBottom>
+              </form>
+            </ModalWrap>
+          )}
       </OutsideClickHandler>
     </Backdrop>
   );
