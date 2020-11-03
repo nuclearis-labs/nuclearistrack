@@ -9,6 +9,7 @@ Decentralized Application for tracking components through multiple suppliers.
 
 - [Install](#install)
 - [Usage](#usage)
+- [Docker](#docker)
 - [Maintainers](#maintainers)
 - [Contributing](#contributing)
 - [License](#license)
@@ -56,6 +57,15 @@ yarn start
 ```sh
 yarn build
 ```
+
+## Docker
+
+To mount NuclearisTrack in Docker for local development please complete the following steps:
+
+1. Duplicate `.env.example` and name it `.env.local`
+2. Open `.env.local`
+3. Set the process variable `ADMIN` to the desired administrator username
+4. Start `docker-compose` with the following command `docker-compose up`
 
 ## Maintainers
 
