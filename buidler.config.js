@@ -1,4 +1,3 @@
-require('dotenv').config({ path: './.env' });
 usePlugin('@nomiclabs/buidler-truffle5');
 usePlugin('@nomiclabs/buidler-web3');
 usePlugin('solidity-coverage');
@@ -17,17 +16,8 @@ module.exports = {
   networks: {
     buidlerevm: {},
     ganache: {
-      url: 'http://localhost:8545',
-      accounts: [process.env.GANACHE_PRIVATE_KEY]
-    },
-    bfa: {
-      url: 'http://localhost:8545',
-      accounts: [process.env.BFA_PRIVATE_KEY],
-    },
-    rsk: {
-      url: 'https://public-node.rsk.co:443',
-      accounts: [process.env.RSK_PRIVATE_KEY],
-    },
+      url: 'http://ganache:8545',
+    }
   },
   solc: {
     version: '0.6.11',

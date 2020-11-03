@@ -1,10 +1,14 @@
-require('dotenv').config()
+require('dotenv').config({ path: './.env.local' });
+const fs = require("fs");
+const modifyEnv = require("../modify-env")
 
 async function main() {
   const {
     abi,
     bytecode,
   } = require('../src/contracts/artifacts/NuclearPoE.json');
+
+  const web3 = new Web3("http://ganache:8545")
 
   const accounts = await web3.eth.getAccounts();
 
@@ -16,13 +20,13 @@ async function main() {
   })
     .send({
       from: accounts[0],
-      gas: '8000000',
-      gasPrice: '1',
+      gas: "6000000",
       value: '0',
     })
     .on('transactionHash', (txHash) => console.log(`Transactionhash: ${txHash}`))
     .on('receipt', ({ blockNumber }) => console.log(`BlockNumber: ${blockNumber}`));
 
+  modifyEnv(contract.options.address)
   console.log('Contract deployed to:', contract.options.address);
 }
 

@@ -1,0 +1,15 @@
+version: "3"
+services:
+  ganache:
+    image: trufflesuite/ganache-cli
+    command: ganache-cli -h 0.0.0.0
+    ports:
+      - "8545:8545"
+  react:
+    build: .
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    depends_on:
+      - ganache
+    command: bash -c "/usr/wait-for-it.sh --timeout=0 ganache:8545 && npx buidler run ./scripts/deploy.js && yarn start"
