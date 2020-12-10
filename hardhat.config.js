@@ -1,6 +1,5 @@
-usePlugin('@nomiclabs/buidler-truffle5');
-usePlugin('@nomiclabs/buidler-web3');
-usePlugin('solidity-coverage');
+require('@nomiclabs/hardhat-truffle5');
+require('@nomiclabs/hardhat-web3');
 
 task('balance', "Prints an account's balance")
   .addParam('account', "The account's address")
@@ -12,17 +11,19 @@ task('balance', "Prints an account's balance")
   });
 
 module.exports = {
-  defaultNetwork: 'buidlerevm',
+  defaultNetwork: 'hardhat',
   networks: {
-    buidlerevm: {},
+    hardhat: {},
     ganache: {
       url: 'http://ganache:8545',
     }
   },
-  solc: {
+  solidity: {
     version: '0.6.11',
-    optimizer: {
-      enabled: false,
+    settings: {
+      optimizer: {
+        enabled: false,
+      },
     },
   },
   paths: {
