@@ -30,6 +30,6 @@ module.exports = {
     sources: './src/contracts',
     tests: './src/contracts/test',
     cache: './cache',
-    artifacts: './src/contracts/artifacts',
+    artifacts: './artifacts',
   },
 };
