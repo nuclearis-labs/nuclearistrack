@@ -1,0 +1,110 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/home/smartinez/Documents/github/nuclearistrack/src/contracts/NuclearPoE.sol": {
+      "lastModificationDate": 1607557284193,
+      "contentHash": "96cf9ce101ed45f6ec00388d5833f3d3",
+      "sourceName": "contracts/NuclearPoE.sol",
+      "solcConfig": {
+        "version": "0.6.11",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Process.sol",
+        "./Ownable.sol"
+      ],
+      "versionPragmas": [
+        "0.6.11"
+      ],
+      "artifacts": [
+        "NuclearPoE"
+      ]
+    },
+    "/home/smartinez/Documents/github/nuclearistrack/src/contracts/Process.sol": {
+      "lastModificationDate": 1607557284193,
+      "contentHash": "e7689985ea8f3731139b023bc50dea4f",
+      "sourceName": "contracts/Process.sol",
+      "solcConfig": {
+        "version": "0.6.11",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.6.11"
+      ],
+      "artifacts": [
+        "Process"
+      ]
+    },
+    "/home/smartinez/Documents/github/nuclearistrack/src/contracts/Ownable.sol": {
+      "lastModificationDate": 1607557284193,
+      "contentHash": "fe125750f649a7cf6f5b4c5422ede986",
+      "sourceName": "contracts/Ownable.sol",
+      "solcConfig": {
+        "version": "0.6.11",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.6.11"
+      ],
+      "artifacts": [
+        "Ownable"
+      ]
+    }
+  }
+}
