@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "Ownable",
-  "sourceName": "src/contracts/Ownable.sol",
+  "sourceName": "contracts/Ownable.sol",
   "abi": [
     {
       "anonymous": false,
@@ -21,19 +21,6 @@
       ],
       "name": "OwnershipTransferred",
       "type": "event"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "c__0xfc4c55b1",
-          "type": "bytes32"
-        }
-      ],
-      "name": "c_0xfc4c55b1",
-      "outputs": [],
-      "stateMutability": "pure",
-      "type": "function"
     },
     {
       "inputs": [],

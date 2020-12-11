@@ -1,6 +1,6 @@
 import Web3 from 'web3';
 import { useEffect, useReducer } from 'react';
-import NuclearPoE from '../artifacts/NuclearPoE.json';
+import NuclearPoE from '../artifacts/contracts/NuclearPoE.sol/NuclearPoE.json';
 
 export default function useWeb3(props) {
   const [state, dispatch] = useReducer(reducer, {

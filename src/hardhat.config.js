@@ -28,8 +28,8 @@ module.exports = {
     },
   },
   paths: {
-    sources: './src/contracts',
-    tests: './src/contracts/test',
+    sources: './contracts',
+    tests: './contracts/test',
     cache: './cache',
     artifacts: './artifacts',
   },

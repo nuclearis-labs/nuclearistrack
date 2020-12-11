@@ -1,4 +1,4 @@
-import Process from '../contracts/artifacts/Process.json';
+import Process from '../artifacts//contracts/Process.sol/Process.json';
 
 export const getBalance = async (web3, address) =>
   parseFloat(web3.utils.fromWei(await web3.eth.getBalance(address))).toFixed(6);
