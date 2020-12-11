@@ -1,5 +1,6 @@
 require('@nomiclabs/hardhat-truffle5');
 require('@nomiclabs/hardhat-web3');
+require('solidity-coverage')
 
 task('balance', "Prints an account's balance")
   .addParam('account', "The account's address")
