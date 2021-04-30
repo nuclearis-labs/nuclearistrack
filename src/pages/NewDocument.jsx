@@ -27,7 +27,7 @@ function NewDocument() {
   const [hash, setHash] = useState(null);
   const [isDisabled, setDisabled] = useState(false);
   const params = useParams();
-  const [txHash, setTxHash] = useState(["hash1", "hash2"]);
+  const [txHash, setTxHash] = useState([]);
   const [processDetails, setProcessDetails] = useState();
   const { register, handleSubmit, setValue, errors } = useForm();
   const [location, setLocation] = useState(undefined);
