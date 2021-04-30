@@ -11,11 +11,12 @@ to {
 `;
 
 export const DropZone = styled.div`
-  height: 140px;
   width: 400px;
   padding: 0 22px;
   text-align: center;
-  overflow: hidden;
+  display: block;
+  min-height: 140px;
+  overflow: auto;
   cursor: pointer;
   border: 2px solid grey;
   width: fit-content;
