@@ -17,14 +17,12 @@ import { useDropzone } from 'react-dropzone';
 import GoogleMap from '../components/GoogleMap';
 import { hashFile } from '../utils/hashFile';
 import { UserContext } from '../context/UserContext';
-import TxTrack from '../components/TxTrack';
 import { DropZone } from '../styles/newDocument';
 import { useTranslation, Trans } from 'react-i18next';
 
 function NewDocument() {
   const { t } = useTranslation();
   const [files, setFiles] = useState([]);
-  const [hash, setHash] = useState(null);
   const [isDisabled, setDisabled] = useState(false);
   const params = useParams();
   const [txHash, setTxHash] = useState([]);
